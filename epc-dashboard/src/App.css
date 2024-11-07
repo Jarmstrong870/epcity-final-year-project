@@ -36,25 +36,6 @@
   font-weight: bold; /* Make links bold */
 }
 
-.profile-icon {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.profile-img {
-  width: 40px; /* Adjust size as needed */
-  height: 40px;
-  border-radius: 50%; /* Makes the image circular */
-  border: 2px solid #fff; /* Adds a border for better visibility */
-  transition: transform 0.2s; /* Adds a hover effect */
-}
-
-.profile-img:hover {
-  transform: scale(1.1); /* Slightly enlarges the image on hover */
-}
-
 .table-container {
   margin: 0 auto; /* Center the table container */
   max-width: 800px; /* Set a max width for the table */
@@ -79,46 +60,6 @@ th, td {
 
 th {
   background-color: #f2f2f2; /* Background color for table header */
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 50px; /* Adjust as necessary to align the dropdown */
-  right: 0; /* Aligns to the right edge of the profile icon */
-  background-color: #333;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dropdown-menu a {
-  color: white;
-  text-decoration: none;
-  padding: 5px 10px;
-  transition: background-color 0.2s;
-}
-
-.dropdown-menu a:hover {
-  background-color: #444; /* Hover color */
-}
-
-.header-container {
-  display: flex;
-  justify-content: center; /* Center the content */
-  align-items: center;
-  background-color: #282c34; /* Same color as navbar for a consistent look */
-  padding: 10px 20px; /* Add padding for spacing */
-  position: relative;
-}
-.app-title {
-  margin: 0 auto; /* Center the title */
-  color: white; /* Adjust color as needed */
-  font-size: 1.5rem; /* Adjust size as needed */
-  flex-grow: 1; /* Ensures the title takes up available space */
-  text-align: center; /* Centers the text within its container */
 }
 
 .App-link {
