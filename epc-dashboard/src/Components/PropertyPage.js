@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import EPCGraph from './EPCGraph'; // Import EPCGraph component
 
 const PropertyPage = () => {
   const location = useLocation();
@@ -34,7 +35,7 @@ const PropertyPage = () => {
           const { lat, lng } = data.results[0].geometry.location;
           setLocationCoords({ lat, lng });
 
-          const streetView = `https://maps.googleapis.com/maps/api/streetview?size=600x300&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`;
+          const streetView = `https://maps.googleapis.com/maps/api/streetview?size=800x600&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`;
           setStreetViewURL(streetView);
         } else {
           setErrorMessage("Address not found.");
@@ -47,20 +48,30 @@ const PropertyPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column', padding: '10px' }}>
-      
-      {/* Street View */}
-      <div style={{ width: '100%', marginBottom: '10px' }}>
-        <h3 style={{ marginBottom: '10px' }}>Street View</h3>
-        {streetViewURL ? (
-          <img src={streetViewURL} alt="Street View" style={{ width: '100%', maxWidth: '600px', height: '300px', marginBottom: '20px' }} />
-        ) : (
-          <p>Loading street view...</p>
-        )}
+    <div style={{ display: 'flex', minHeight: '10vh', flexDirection: 'column', padding: '10px' }}>
+      {/* Street View and EPC Graph Section */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%' }}>
+        {/* Street View Section */}
+        <div style={{ width: '48%', marginRight: '2%' }}>
+          <h3 style={{ color: 'black', fontSize: '18px', marginBottom: '10px' }}>Street View</h3>
+          {streetViewURL ? (
+            <img src={streetViewURL} alt="Street View" style={{ width: '100%', height: 'auto', objectFit: 'cover' }} />
+          ) : (
+            <p>Loading street view...</p>
+          )}
+        </div>
+
+        {/* EPC Graph Section */}
+        <div style={{ width: '48%' }}>
+          <EPCGraph
+            currentEnergyEfficiency={propertyData.currentEnergyEfficiency}
+            potentialEnergyEfficiency={propertyData.potentialEnergyEfficiency}
+          />
+        </div>
       </div>
 
-      {/* Property Information Table */}
-      <div style={{ width: '100%', marginBottom: '10px' }}>
+      {/* Property Information Section */}
+      <div style={{ width: '100%', marginTop: '40px' }}>
         <h3>Property Information</h3>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
           <tbody>
@@ -104,20 +115,21 @@ const PropertyPage = () => {
         </table>
       </div>
 
-      {/* Map View */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <h3 style={{ marginBottom: '10px' }}>Map View</h3>
-        <div style={{ height: '400px', width: '100%' }}>
-          <LoadScript googleMapsApiKey="AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c">
-            <GoogleMap
-              mapContainerStyle={{ height: '100%', width: '100%' }} // Ensures map takes full space of container
-              center={locationCoords} // Center the map at the fetched coordinates
-              zoom={18} // Max zoom level for a detailed view
-            >
-              {/* No marker here */}
-            </GoogleMap>
-          </LoadScript>
-        </div>
+      {/* Google Map Section */}
+      <div style={{ width: '100%', height: '400px', marginTop: '40px' }}>
+        <h3 style={{ color: 'black', fontSize: '18px', marginBottom: '50px' }}> Map View</h3>
+        <LoadScript googleMapsApiKey="AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c">
+          <GoogleMap
+            mapContainerStyle={{
+              width: '100%',
+              height: '100%',
+            }}
+            center={locationCoords}
+            zoom={15}
+          >
+            <Marker position={locationCoords} />
+          </GoogleMap>
+        </LoadScript>
       </div>
     </div>
   );
