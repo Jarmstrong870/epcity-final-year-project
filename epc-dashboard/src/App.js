@@ -4,7 +4,7 @@ import './App.css';
 import profileIcon from './assets/profileicon.png'; // Adjust path as needed
 import Login from './Login'; // Make sure these paths are correct
 import Register from './Register';
-import PropertyPage from './Components/PropertyPage'; // Add the PropertyPage import
+import PropertyPage from './Components/PropertyPage'; // Import PropertyPage
 
 function App() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
@@ -41,7 +41,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/property" element={<PropertyPage />} /> {/* Add the route for PropertyPage */}
+          <Route path="/property" element={<PropertyPage />} /> {/* Route to PropertyPage */}
         </Routes>
 
         <div className="table-container">
@@ -51,7 +51,7 @@ function App() {
               <tbody>
                 <tr>
                   <td>
-                    {/* Pass the address as state to PropertyPage */}
+                    {/* Link to PropertyPage with the address as state */}
                     <Link to="/property" state={{ address: "44 Gladstone Court, Spring Drive SG2 8AY" }}>
                       30 Sep 2024
                     </Link>
