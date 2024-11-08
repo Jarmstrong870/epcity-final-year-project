@@ -1,0 +1,76 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.navbar {
+  background-color: #282c34; /* Background color for the navbar */
+  padding: 10px; /* Padding around the navbar */
+  margin-bottom: 20px; /* Space below the navbar */
+}
+
+.navbar ul {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove padding */
+  display: flex; /* Use flexbox for horizontal layout */
+  justify-content: center; /* Center the navbar items */
+}
+
+.navbar li {
+  margin: 0 15px; /* Margin between items */
+}
+
+.navbar a {
+  color: white; /* Text color for links */
+  text-decoration: none; /* Remove underline from links */
+  font-weight: bold; /* Make links bold */
+}
+
+.table-container {
+  margin: 0 auto; /* Center the table container */
+  max-width: 800px; /* Set a max width for the table */
+}
+
+.table-border {
+  border: 1px solid #ccc; /* Border around the table */
+  border-radius: 5px; /* Optional rounded corners */
+  padding: 10px; /* Padding inside the border */
+}
+
+table {
+  width: 100%; /* Full width of the container */
+  border-collapse: collapse; /* Collapse borders */
+}
+
+th, td {
+  border: 1px solid #ccc; /* Border for table cells */
+  padding: 8px; /* Padding inside table cells */
+  text-align: left; /* Align text to the left */
+}
+
+th {
+  background-color: #f2f2f2; /* Background color for table header */
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
