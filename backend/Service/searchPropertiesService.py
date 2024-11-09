@@ -79,6 +79,6 @@ def searchProperties(userInput):
     # Keep only the most recent entry for each 'uprn'
     df_most_recent = df_sorted.drop_duplicates(subset='uprn', keep='first')
 
-    print(df_most_recent)
+    properties = df_most_recent.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 'current-energy-rating': 'current_energy_rating'})
 
-    return df_most_recent
+    return properties
