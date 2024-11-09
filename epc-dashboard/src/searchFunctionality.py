@@ -1,4 +1,0 @@
-userInput = ""
-
-def searchProperties(userInput):
-    

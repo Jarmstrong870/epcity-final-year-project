@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const SearchBar = ({ placeholder, onSearch }) => {
+const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
 
   const handleInputChange = (e) => {
@@ -8,7 +8,13 @@ const SearchBar = ({ placeholder, onSearch }) => {
   };
 
   const handleSearch = () => {
-    onSearch(query);
+    onSearch(query); // Call the parent function with the search query
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
   };
 
   return (
@@ -17,7 +23,8 @@ const SearchBar = ({ placeholder, onSearch }) => {
         type="text"
         value={query}
         onChange={handleInputChange}
-        placeholder={placeholder || 'Search...'}
+        onKeyPress={handleKeyPress}
+        placeholder="Search..."
       />
       <button onClick={handleSearch}>Search</button>
     </div>

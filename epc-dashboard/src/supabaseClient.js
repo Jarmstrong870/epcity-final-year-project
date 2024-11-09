@@ -1,4 +1,4 @@
-// src/supabaseClient.js
+//src/supabaseClient.js
 //this is to connect to the database.
 import { createClient } from '@supabase/supabase-js';
 

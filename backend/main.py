@@ -1,0 +1,16 @@
+from flask import Flask
+from flask_cors import CORS
+from Controller.loadPropertyController import property_blueprint
+from Controller.searchController import search_property_blueprint
+
+# Initialize the Flask app
+app = Flask(__name__)
+CORS(app)  # Enable CORS for the entire app
+
+# Register blueprints
+app.register_blueprint(property_blueprint, url_prefix='/api')
+app.register_blueprint(search_property_blueprint, url_prefix='/api')
+
+# Run the server
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)

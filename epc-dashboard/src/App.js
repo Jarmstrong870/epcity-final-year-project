@@ -1,16 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import profileIcon from './assets/profileicon.png'; // Adjust path as needed
 import Login from './Login'; // Make sure these paths are correct
 import Register from './Register';
+import SearchBar from './Components/SearchBarComponent';
+import PropertyList from './Components/PropertyList';
 
 function App() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
+
+  // Function to fetch properties from backend
+  const fetchProperties = (query = '') => {
+    setLoading(true);
+    const url = query
+      ? `http://127.0.0.1:5000/api/property/search?query=${query}`
+      : 'http://127.0.0.1:5000/api/property/loadCSV';
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setProperties(data);
+      })
+      .catch((error) => {
+        console.error('There was an error fetching the property data!', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  // Load properties when the component is mounted
+  useEffect(() => {
+    fetchProperties();
+  }, []);
 
   return (
     <Router>
@@ -41,6 +70,12 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
+
+        <div className='search-bar'>
+          <h3>Search for Properties</h3>
+          <SearchBar onSearch={fetchProperties} />
+          <PropertyList properties={properties} loading={loading} />
+        </div>
 
         <div className="table-container">
           <h2>Table Area</h2>
