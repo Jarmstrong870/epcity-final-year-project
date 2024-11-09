@@ -1,0 +1,4 @@
+userInput = ""
+
+def searchProperties(userInput):
+    

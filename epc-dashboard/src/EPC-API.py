@@ -13,7 +13,7 @@ headers = {
 
 # Define base URL and query parameters
 base_url = 'https://epc.opendatacommunities.org/api/v1/domestic/search'
-query_params = {"local-authority": 'E08000012'}  
+query_params = {"local-authority": 'Liverpool'}  
 
 # Encode query parameters
 encoded_params = urlencode(query_params)

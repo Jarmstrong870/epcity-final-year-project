@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import './App.css';
 import PropertyPage from './Components/PropertyPage';
+import SearchBarComponent from './Components/SearchBarComponent';
 
 function App() {
   return (
@@ -17,7 +18,12 @@ function App() {
             <li><a href="#contact">Contact</a></li>
           </ul>
         </nav>
-        
+        <div>
+          <SearchBarComponent placeholder="Search by address or postcode..." />
+          <ul>
+            
+          </ul>
+        </div>
         <Routes>
           {/* Main page route */}
           <Route
