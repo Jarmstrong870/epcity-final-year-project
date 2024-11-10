@@ -12,7 +12,7 @@ class SupabaseAPI:
 
     def add_record(self, record: dict):
         try:
-            # Insert the record into the 'properties' table
+            # Insert the record into the 'properties' table.
             response = self.client.table('properties').insert(record).execute()
 
             if response.status_code == 201:
