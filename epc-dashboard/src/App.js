@@ -1,34 +1,52 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import profileIcon from './assets/profileicon.png'; // Adjust path as needed
-import Login from './Login'; // Make sure these paths are correct
+import profileIcon from './assets/profileicon.png';
+import epcLogo from './assets/EPCITY-LOGO-UPDATED.png'; 
+import Login from './Login'; 
 import Register from './Register';
 import PropertyPage from './Components/PropertyPage'; // Import PropertyPage
 
 function App() {
+  const [user, setUser] = useState(null); // State to track logged-in user
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const handleLogout = () => {
+    setUser(null); // Clear user state on logout
+    setDropdownVisible(false);
+  };
+
   return (
     <Router>
       <div className="App">
         <div className="header-container">
-          <h1 className="app-title">EP<i>City</i></h1>
+          {/* Display the logo image */}
+          <Link to= "/" ><img src={epcLogo} alt="EPCity Logo" className="logo-img"  /></Link>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
             {dropdownVisible && (
               <div className="dropdown-menu">
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
+                {user ? (
+                  <>
+                    <p>Welcome, {user.firstname}</p>
+                    <Link to="/property">My Properties</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
               </div>
             )}
           </div>
         </div>
-
+      {/*}
         <nav className="navbar">
           <ul>
             <li><a href="#home">Home</a></li>
@@ -36,10 +54,10 @@ function App() {
             <li><a href="#services">Services</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
-        </nav>
-
+        </nav> COMMENTING OUT THE NAV BAR AT THE MINUTE UNTIL WE DECIDE WHAT TO DO WITH IT
+      */} 
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/property" element={<PropertyPage />} /> {/* Route to PropertyPage */}
         </Routes>
@@ -72,3 +90,4 @@ function App() {
 }
 
 export default App;
+

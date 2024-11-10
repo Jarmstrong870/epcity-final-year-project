@@ -13,27 +13,45 @@
   }
 }
 
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2c3e3d;
+  padding: 10px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo-img {
+  height: 50px;
+  width: auto;
+}
+
 .navbar {
-  background-color: #282c34; /* Background color for the navbar */
-  padding: 10px; /* Padding around the navbar */
-  margin-bottom: 20px; /* Space below the navbar */
+  display: flex;
+  justify-content: center;
+  background-color: #2c3e3d;
+  padding: 10px 0;
+  width: 100%;
 }
 
 .navbar ul {
-  list-style-type: none; /* Remove default list styling */
-  padding: 0; /* Remove padding */
-  display: flex; /* Use flexbox for horizontal layout */
-  justify-content: center; /* Center the navbar items */
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .navbar li {
-  margin: 0 15px; /* Margin between items */
+  margin: 0;
 }
 
 .navbar a {
-  color: white; /* Text color for links */
-  text-decoration: none; /* Remove underline from links */
-  font-weight: bold; /* Make links bold */
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .profile-icon {
@@ -44,81 +62,124 @@
 }
 
 .profile-img {
-  width: 40px; /* Adjust size as needed */
+  width: 40px;
   height: 40px;
-  border-radius: 50%; /* Makes the image circular */
-  border: 2px solid #fff; /* Adds a border for better visibility */
-  transition: transform 0.2s; /* Adds a hover effect */
+  border-radius: 50%;
+  border: 2px solid #fff;
+  transition: transform 0.2s;
 }
 
 .profile-img:hover {
-  transform: scale(1.1); /* Slightly enlarges the image on hover */
+  transform: scale(1.1);
 }
 
 .table-container {
-  margin: 0 auto; /* Center the table container */
-  max-width: 800px; /* Set a max width for the table */
+  margin: 40px auto;
+  max-width: 800px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .table-border {
-  border: 1px solid #ccc; /* Border around the table */
-  border-radius: 5px; /* Optional rounded corners */
-  padding: 10px; /* Padding inside the border */
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 table {
-  width: 100%; /* Full width of the container */
-  border-collapse: collapse; /* Collapse borders */
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
 th, td {
-  border: 1px solid #ccc; /* Border for table cells */
-  padding: 8px; /* Padding inside table cells */
-  text-align: left; /* Align text to the left */
+  border: 1px solid #d4d4d4;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
 }
 
 th {
-  background-color: #f2f2f2; /* Background color for table header */
+  background-color: #0a2e15;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+td a {
+  color: #0a2e15;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+td a:hover {
+  color: #183d25;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 50px; /* Adjust as necessary to align the dropdown */
-  right: 0; /* Aligns to the right edge of the profile icon */
-  background-color: #333;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
+  top: 50px;
+  right: 0;
+  background-color: #2c3e3d;
+  border: 1px solid #1a2524;
+  border-radius: 8px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+}
+
+.dropdown-menu p {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
 }
 
 .dropdown-menu a {
-  color: white;
+  color: #d4edda;
+  font-size: 0.95rem;
+  font-weight: bold;
   text-decoration: none;
-  padding: 5px 10px;
-  transition: background-color 0.2s;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .dropdown-menu a:hover {
-  background-color: #444; /* Hover color */
+  background-color: #183d25;
+  color: #ffffff;
 }
 
-.header-container {
-  display: flex;
-  justify-content: center; /* Center the content */
-  align-items: center;
-  background-color: #282c34; /* Same color as navbar for a consistent look */
-  padding: 10px 20px; /* Add padding for spacing */
-  position: relative;
+.dropdown-menu button {
+  background-color: #e63946;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
 }
+
+.dropdown-menu button:hover {
+  background-color: #c5303e;
+}
+
 .app-title {
-  margin: 0 auto; /* Center the title */
-  color: white; /* Adjust color as needed */
-  font-size: 1.5rem; /* Adjust size as needed */
-  flex-grow: 1; /* Ensures the title takes up available space */
-  text-align: center; /* Centers the text within its container */
+  margin: 0 auto;
+  color: white;
+  font-size: 1.5rem;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .App-link {
@@ -133,3 +194,5 @@ th {
     transform: rotate(360deg);
   }
 }
+
+
