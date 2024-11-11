@@ -2,6 +2,10 @@ import urllib.request
 from urllib.parse import urlencode
 import json
 import pandas as pd
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 query_size = 5000
 #PMethod that queries API with every search
@@ -14,10 +18,12 @@ def searchProperties(userInput):
     # Base url and example query parameters
     base_url = 'https://epc.opendatacommunities.org/api/v1/domestic/search'
 
+    api_key = os.getenv("EPC_API_KEY")
+
     # Set up authentication
     headers = {
         'Accept': 'application/json',
-        'Authorization': 'Basic am9obm1jYXRhbW5leTAyQGdtYWlsLmNvbTozZDJmMGQzZTAyYWE3ZmU3MGQ1ZGEzODQ4NzdmMGM3YzZmNjQ5ZGYy'
+        'Authorization': api_key
     }
 
     # Keep track of whether we have made at least one request for CSV headers and search-after
