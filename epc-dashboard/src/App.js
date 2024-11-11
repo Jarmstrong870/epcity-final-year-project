@@ -1,59 +1,93 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import PropertyPage from './Components/PropertyPage';
+import profileIcon from './assets/profileicon.png';
+import epcLogo from './assets/EPCITY-LOGO-UPDATED.png'; 
+import Login from './Login'; 
+import Register from './Register';
+import PropertyPage from './Components/PropertyPage'; // Import PropertyPage
 
 function App() {
+  const [user, setUser] = useState(null); // State to track logged-in user
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible);
+  };
+
+  const handleLogout = () => {
+    setUser(null); // Clear user state on logout
+    setDropdownVisible(false);
+  };
+
   return (
     <Router>
       <div className="App">
-        <h1>EPC City</h1>
+        <div className="header-container">
+          {/* Display the logo image */}
+          <Link to= "/" ><img src={epcLogo} alt="EPCity Logo" className="logo-img"  /></Link>
+          <div className="profile-icon" onClick={toggleDropdown}>
+            <img src={profileIcon} alt="Profile" className="profile-img" />
+            {dropdownVisible && (
+              <div className="dropdown-menu">
+                {user ? (
+                  <>
+                    <p>Welcome, {user.firstname}</p>
+                    <Link to="/property">My Properties</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      {/*}
         <nav className="navbar">
           <ul>
-            {/* Using Link for navigation to prevent full page reload */}
-            <li><Link to="/">Home</Link></li> 
+            <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#services">Services</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
-        </nav>
-        
+        </nav> COMMENTING OUT THE NAV BAR AT THE MINUTE UNTIL WE DECIDE WHAT TO DO WITH IT
+      */} 
         <Routes>
-          {/* Main page route */}
-          <Route
-            path="/"
-            element={
-              <div className="table-container">
-                <h2>Property Information</h2>
-                <div className="table-border">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td>
-                          {/* Pass the address as state to PropertyPage */}
-                          <Link to="/property" state={{ address: "44 Gladstone Court, Spring Drive SG2 8AY" }}>
-                            30 Sep 2024
-                          </Link>
-                        </td>
-                        <td>
-                          <Link to="/property" state={{ address: "44 Gladstone Court, Spring Drive SG2 8AY" }}>
-                            44 Gladstone Court, Spring Drive SG2 8AY
-                          </Link>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            }
-          />
-
-          {/* Property page route */}
-          <Route path="/property" element={<PropertyPage />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/property" element={<PropertyPage />} /> {/* Route to PropertyPage */}
         </Routes>
+
+        <div className="table-container">
+          <h2>Property Information</h2>
+          <div className="table-border">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    {/* Link to PropertyPage with the address as state */}
+                    <Link to="/property" state={{ address: "44 Gladstone Court, Spring Drive SG2 8AY" }}>
+                      30 Sep 2024
+                    </Link>
+                  </td>
+                  <td>
+                    <Link to="/property" state={{ address: "44 Gladstone Court, Spring Drive SG2 8AY" }}>
+                      44 Gladstone Court, Spring Drive SG2 8AY
+                    </Link>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </Router>
   );
 }
 
 export default App;
+
