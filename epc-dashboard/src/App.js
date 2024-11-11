@@ -7,6 +7,8 @@ import Login from './Login';
 import Register from './Register';
 import SearchBar from './Components/SearchBarComponent';
 import PropertyList from './Components/PropertyList';
+import PropertyPage from './Components/PropertyPage';
+import EPCTable from './Components/EPCTable';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -17,6 +19,11 @@ function App() {
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
+
+  const handleLogout = () => {
+    setUser(null);
+    setDropdownVisible(false);
+  }
 
   // Function to fetch properties from backend
   const fetchProperties = (query = '') => {
@@ -70,44 +77,24 @@ function App() {
         </div>
 
         <Routes>
-          <Route path="/" element={<EPCTable />} /> {/* Render EPCTable on the home page */}
+          {/* Render the home page with SearchBar and PropertyList */}
+          <Route
+            path="/"
+            element={
+              <>
+                <EPCTable />
+                <div className="search-bar">
+                  <h3>Search for Properties</h3>
+                  <SearchBar onSearch={fetchProperties} />
+                  <PropertyList properties={properties} loading={loading} />
+                </div>
+              </>
+            }
+          />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/property" element={<PropertyPage />} />
         </Routes>
-
-        <div className='search-bar'>
-          <h3>Search for Properties</h3>
-          <SearchBar onSearch={fetchProperties} />
-          <PropertyList properties={properties} loading={loading} />
-        </div>
-
-        <div className="table-container">
-          <h2>Table Area</h2>
-          <div className="table-border">
-            <table>
-              <thead>
-                <tr>
-                  <th>Header 1</th>
-                  <th>Header 2</th>
-                  <th>Header 3</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Row 1 Col 1</td>
-                  <td>Row 1 Col 2</td>
-                  <td>Row 1 Col 3</td>
-                </tr>
-                <tr>
-                  <td>Row 2 Col 1</td>
-                  <td>Row 2 Col 2</td>
-                  <td>Row 2 Col 3</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
     </Router>
   );
