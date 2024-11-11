@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
-import profileIcon from './assets/profileicon.png'; // Adjust path as needed
-import Login from './Login'; // Make sure these paths are correct
+import profileIcon from './assets/profileicon.png';
+import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
+import Login from './Login';
 import Register from './Register';
 import SearchBar from './Components/SearchBarComponent';
 import PropertyList from './Components/PropertyList';
 
 function App() {
+  const [user, setUser] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -45,30 +47,33 @@ function App() {
     <Router>
       <div className="App">
         <div className="header-container">
-          <h1 className="app-title">EP<i>City</i></h1>
+          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
-            {dropdownVisible && (  //adding in profile icon, as well as a drop down that when clicked will display login and register
+            {dropdownVisible && (
               <div className="dropdown-menu">
-                <Link to="/login">Login</Link>
-                <Link to="/register">Register</Link>
+                {user ? (
+                  <>
+                    <p>Welcome, {user.firstname}</p>
+                    <Link to="/property">My Properties</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        <nav className="navbar">
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#services">Services</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </nav>
-
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<EPCTable />} /> {/* Render EPCTable on the home page */}
+          <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/property" element={<PropertyPage />} />
         </Routes>
 
         <div className='search-bar'>
@@ -109,3 +114,4 @@ function App() {
 }
 
 export default App;
+
