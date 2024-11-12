@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from Controller.loadPropertyController import property_blueprint
-from Controller.searchController import search_property_blueprint
+from Controller.propertyController import property_blueprint
 from Controller.loginController import login_controller
 from Controller.registrationController import register_controller
 from dotenv import load_dotenv  
@@ -15,7 +14,6 @@ CORS(app)  # Enable CORS for the entire app
 
 # Register blueprints
 app.register_blueprint(property_blueprint, url_prefix='/api')
-app.register_blueprint(search_property_blueprint, url_prefix='/api')
 app.register_blueprint(login_controller, url_prefix='/')
 app.register_blueprint(register_controller, url_prefix='/') 
 
