@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import backgroundImage from './assets/house-bk.jpg'; 
 
+
 function Login({ setUser }) { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,7 +13,7 @@ function Login({ setUser }) {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5002/login', { email, password });
+      const response = await axios.post('http://localhost:5000/login', { email, password });
       setMessage(response.data.message);
 
       if (response.status === 200) {
