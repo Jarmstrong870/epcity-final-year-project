@@ -13,6 +13,7 @@ import EPCTable from './Components/EPCTable';
 function App() {
   const [user, setUser] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -20,10 +21,19 @@ function App() {
     setDropdownVisible(!dropdownVisible);
   };
 
+  const showLogoutConfirmation = () => {
+    setLogoutConfirmVisible(true);
+  };
+
   const handleLogout = () => {
     setUser(null);
     setDropdownVisible(false);
-  }
+    setLogoutConfirmVisible(false); // Hide modal after logout
+  };
+
+  const cancelLogout = () => {
+    setLogoutConfirmVisible(false);
+  };
 
   // Function to fetch properties from backend
   const fetchProperties = (query = '') => {
@@ -45,7 +55,6 @@ function App() {
       });
   };
 
-  // Load properties when the component is mounted
   useEffect(() => {
     fetchProperties();
   }, []);
@@ -63,7 +72,7 @@ function App() {
                   <>
                     <p>Welcome, {user.firstname}</p>
                     <Link to="/property">My Properties</Link>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button onClick={showLogoutConfirmation}>Logout</button>
                   </>
                 ) : (
                   <>
@@ -76,18 +85,29 @@ function App() {
           </div>
         </div>
 
+        {logoutConfirmVisible && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <h3>Are you sure you want to log out?</h3>
+              <div className="modal-buttons">
+                <button onClick={handleLogout} className="confirm-button">Yes</button>
+                <button onClick={cancelLogout} className="cancel-button">No</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <Routes>
-          {/* Render the home page with SearchBar and PropertyList */}
           <Route
             path="/"
             element={
               <>
-                <EPCTable />
-                <div className="search-bar">
+                <div className="search-bar-container">
                   <h3>Search for Properties</h3>
                   <SearchBar onSearch={fetchProperties} />
-                  <PropertyList properties={properties} loading={loading} />
                 </div>
+                <EPCTable />
+                <PropertyList properties={properties} loading={loading} />
               </>
             }
           />
@@ -101,4 +121,5 @@ function App() {
 }
 
 export default App;
+
 
