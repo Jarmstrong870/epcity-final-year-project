@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Register.css';
+import Tooltip from './Components/TooltipComponent'; // Import your custom Tooltip component
 import { useNavigate } from 'react-router-dom'; 
-import backgroundImage from './assets/house-bk.jpg'; 
+import backgroundImage from './assets/house_bkc.jpg'; // Import the background image
 
 function Register() {
   const [firstName, setFirstName] = useState('');
@@ -42,63 +43,74 @@ function Register() {
     }
   };
 
+  const handleNavigateToLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="register-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <form className="register-form">
-        <h2 className="register-title"><b>Create your EPCity Profile..</b></h2>
-        <div className="form-group">
-          <input
-            type="text"
-            className="form-input"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            className="form-input"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="email"
-            className="form-input"
-            placeholder="Email Address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            className="form-input"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label className="form-label"></label>
-          <select
-            className="form-input"
-            value={userType}
-            onChange={(e) => setUserType(e.target.value)}
-          >
-            <option value="">Select User Type</option>
-            <option value="student">Student</option>
-            <option value="landlord">Landlord</option>
-          </select>
-        </div>
-        <button type="button" className="register-button" onClick={handleRegister}>
-          <b>Register</b>
-        </button>
-        {message && <p className="register-message">{message}</p>}
-      </form>
+      <div>
+        <form className="register-form">
+          <h2 className="register-title"><b>Create your EPCity Profile..</b></h2>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-input"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="email"
+              className="form-input"
+              placeholder="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <div className="input-with-icon">
+              <input
+                type="password"
+                className="form-input"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Tooltip message="Please enter a password that's at least 7 characters long." />
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="input-with-icon">
+              <select
+                className="form-input"
+                value={userType}
+                onChange={(e) => setUserType(e.target.value)}
+              >
+                <option value="">Select User Type</option>
+                <option value="student">Student</option>
+                <option value="landlord">Landlord</option>
+              </select>
+              <Tooltip message="Please tell us whether you are a Student or a Landlord. This will affect how you interact with EPCity." />
+            </div>
+          </div>
+          <button type="button" className="register-button" onClick={handleRegister}>
+            <b>Register</b>
+          </button>
+          {message && <p className="register-message">{message}</p>}
+        </form>
+      </div>
     </div>
   );
 }
