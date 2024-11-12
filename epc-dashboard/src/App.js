@@ -29,7 +29,7 @@ function App() {
   const fetchProperties = (query = '') => {
     setLoading(true);
     const url = query
-      ? `http://127.0.0.1:5000/api/property/search?query=${query}`
+      ? `http://127.0.0.1:5000/api/property/searchCSV?query=${query}`
       : 'http://127.0.0.1:5000/api/property/loadCSV';
 
     fetch(url)
