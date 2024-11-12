@@ -5,30 +5,31 @@ import EPCGraph from './EPCGraph'; // Import EPCGraph component
 
 const PropertyPage = () => {
   const location = useLocation();
-  const address = location.state ? location.state.address : '';
+  const address = location.state?.address || '';
+  const postcode = location.state?.postcode || '';
   const [streetViewURL, setStreetViewURL] = useState('');
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [propertyData, setPropertyData] = useState({
-    lodgementDate: '30 Sep 2024',
-    currentEnergyRating: 'D',
-    potentialEnergyRating: 'B',
-    currentEnergyEfficiency: 66,
-    potentialEnergyEfficiency: 84,
-    propertyType: 'Bungalow',
-    builtForm: 'Detached',
-    constructionAgeBand: 'England and Wales: 1967-1975',
-    tenure: 'Owner-occupied'
+    lodgementDate: '',
+    currentEnergyRating: '',
+    potentialEnergyRating: '',
+    currentEnergyEfficiency: 0,
+    potentialEnergyEfficiency: 0,
+    propertyType: '',
+    builtForm: '',
+    constructionAgeBand: '',
+    tenure: '',
   });
 
   useEffect(() => {
-    if (address) {
-      fetchLocationCoords(address);
+    if (address && postcode) {
+      fetchLocationCoords(`${address}, ${postcode}`);
     }
-  }, [address]);
+  }, [address, postcode]);
 
-  const fetchLocationCoords = (address) => {
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`)
+  const fetchLocationCoords = (fullAddress) => {
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`)
       .then(response => response.json())
       .then(data => {
         if (data.results.length > 0) {
@@ -117,7 +118,7 @@ const PropertyPage = () => {
 
       {/* Google Map Section */}
       <div style={{ width: '100%', height: '400px', marginTop: '40px' }}>
-        <h3 style={{ color: 'black', fontSize: '18px', marginBottom: '50px' }}> Map View</h3>
+        <h3 style={{ color: 'black', fontSize: '18px', marginBottom: '50px' }}>Map View</h3>
         <LoadScript googleMapsApiKey="AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c">
           <GoogleMap
             mapContainerStyle={{
