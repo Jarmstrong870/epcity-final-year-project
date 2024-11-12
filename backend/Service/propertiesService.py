@@ -129,6 +129,7 @@ def getAllProperties():
 
 # Call this on backend start up to load properties into all_properties
 def getPropertiesFromCSV():
+    global all_properties
     properties = pd.read_csv('properties_for_search.csv', low_memory=False)
     properties = properties.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 'current-energy-rating': 'current_energy_rating', 
                             'number-habitable-rooms': 'number_habitable_rooms'})
@@ -219,6 +220,8 @@ def searchPropertiesAPI(userInput):
 
 # can search by address or postcode
 def searchPropertiesCSV(userInput):
+    global all_properties
+    global searched_properties
     # Check if the input is a postcode (assuming UK postcode format starting with 'L')
     if len(userInput) >= 2 and userInput[0] == 'L' and userInput[1].isdigit():
         # Use postcode to filter properties
@@ -231,7 +234,7 @@ def searchPropertiesCSV(userInput):
     if searched_properties.empty:
         print("No properties found for the given search criteria.")
     
-    return searched_properties
+    return searched_properties.head(30)
 
 # finds info for when a property is selected by user
 def getPropertyInfo(address):
