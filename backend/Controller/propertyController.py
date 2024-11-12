@@ -30,3 +30,20 @@ def property_search():
     """
     user_input = request.args.get('query', '').lower()
     return jsonify(properties.searchPropertiesAPI(user_input).to_dict(orient='records'))
+
+@property_blueprint.route('/property/searchCSV', methods=['GET'])
+def property_search_csv():
+    """
+    Handles GET requests to search properties.
+    """
+    user_input = request.args.get('query', '').lower()
+    return jsonify(properties.searchPropertiesCSV(user_input).to_dict(orient='records'))
+
+@property_blueprint.route('/property/getInfo', methods=['GET'])
+def get_property_info():
+    """
+    Returns data for a single property
+    """
+    address = request.args.get('query', '').lower()
+    return jsonify(properties.getPropertyInfo(address).to_dict(orient='records'))
+
