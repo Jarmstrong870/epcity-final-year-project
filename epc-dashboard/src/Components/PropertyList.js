@@ -1,8 +1,8 @@
+// PropertyList.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const PropertyList = ({ properties, loading }) => {
-
-  
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -27,7 +27,14 @@ const PropertyList = ({ properties, loading }) => {
         <tbody>
           {properties.map((property, index) => (
             <tr key={index}>
-              <td>{property.address}</td>
+              <td>
+                <Link 
+                  to="/property" 
+                  state={{ address: property.address, postcode: property.postcode }}
+                >
+                  {property.address}
+                </Link>
+              </td>
               <td>{property.postcode}</td>
               <td>{property.property_type}</td>
               <td>{property.current_energy_rating}</td>
