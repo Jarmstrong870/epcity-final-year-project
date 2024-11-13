@@ -133,6 +133,7 @@ def getAllProperties():
 # Call this on backend start up to load properties into all_properties
 def getPropertiesFromCSV():
     global all_properties
+    global altered
     # Load the CSV into a DataFrame
     properties = pd.read_csv('properties_for_search.csv', low_memory=False)
 
@@ -145,14 +146,23 @@ def getPropertiesFromCSV():
     # Assign the DataFrame to the global variable and return the first 30 rows
     all_properties = properties
 
+    # set altered to false
+    altered = False
+
     return all_properties.head(30)
 
 # Call this to load first 30 properties to backend and when loading a new page of properties
 def getPage(pageNumber):
+    global altered
+    global all_properties
+    global altered_properties
     page_size = 30
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size) - 1
-    thisPage = all_properties.iloc[firstProperty:lastProperty]
+    if altered:
+        thisPage = altered_properties.iloc[firstProperty:lastProperty]
+    else:
+        thisPage = all_properties.iloc[firstProperty:lastProperty]
     return thisPage
 
 # finds info for when a property is selected by user
@@ -244,6 +254,9 @@ def searchProperties(userInput):
 def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     global all_properties
     global altered_properties
+    global altered
+
+    altered = True
     altered_properties = all_properties
 
     # Apply search filter
