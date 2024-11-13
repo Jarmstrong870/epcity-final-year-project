@@ -68,29 +68,38 @@ const PropertyPage = () => {
   return (
     <div style={{ display: 'flex', minHeight: '10vh', flexDirection: 'column', padding: '10px' }}>
       <h2>Property Details</h2>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
+      
+      {/* Container to ensure the same width for Street View and EPCGraph */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        {/* Street View Image with fixed height */}
+        <div style={{ flex: 1, maxWidth: '45%', marginRight: '10px' }}>
           <h3>Street View</h3>
           {streetViewURL ? (
-            <img src={streetViewURL} alt="Street View" style={{ width: '100%' }} />
+            <img src={streetViewURL} alt="Street View" style={{ width: '100%', height: '400px', objectFit: 'cover' }} />
           ) : (
             <p>{errorMessage || 'Loading street view...'}</p>
           )}
         </div>
-        {propertyData && (
-          <EPCGraph
-            currentEnergyEfficiency={propertyData.currentEnergyEfficiency}
-            potentialEnergyEfficiency={propertyData.potentialEnergyEfficiency}
-          />
-        )}
+
+        {/* EPC Graph with matched width */}
+        <div style={{ flex: 1, maxWidth: '45%' }}>
+          {propertyData && (
+            <EPCGraph
+              currentEnergyEfficiency={propertyData.current_energy_efficiency}
+              potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+            />
+          )}
+        </div>
       </div>
 
+      {/* EPC Full Table */}
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} />
       ) : (
         <p>Loading property data...</p>
       )}
 
+      {/* Map View */}
       <div style={{ width: '100%', height: '400px', marginTop: '20px' }}>
         <h3>Map View</h3>
         {isLoaded ? (
