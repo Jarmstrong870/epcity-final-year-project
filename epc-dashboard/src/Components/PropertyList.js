@@ -1,6 +1,8 @@
 import React from 'react';
 
 const PropertyList = ({ properties, loading }) => {
+
+  
   if (loading) {
     return <p>Loading...</p>;
   }

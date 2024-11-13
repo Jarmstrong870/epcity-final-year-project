@@ -5,7 +5,7 @@ import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
 import Login from './Login';
 import Register from './Register';
-import SearchBar from './Components/SearchBarComponent';
+import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
 import EPCTable from './Components/EPCTable';
@@ -36,11 +36,23 @@ function App() {
   };
 
   // Function to fetch properties from backend
-  const fetchProperties = (query = '') => {
+  const fetchProperties = (query = '', propertyTypes = [], epcRatings = []) => {
     setLoading(true);
-    const url = query
-      ? `http://127.0.0.1:5000/api/property/searchCSV?query=${query}`
-      : 'http://127.0.0.1:5000/api/property/loadCSV';
+    let url = 'http://127.0.0.1:5000/api/property/loadCSV';
+
+    // If any filters are provided, use the /property/alter endpoint instead
+    if (query || propertyTypes.length > 0 || epcRatings.length > 0) {
+      url = 'http://127.0.0.1:5000/api/property/alter?';
+      if (query) {
+        url += `search=${query}&`;
+      }
+      if (propertyTypes.length > 0) {
+        url += `pt=${propertyTypes.join(',')}&`;
+      }
+      if (epcRatings.length > 0) {
+        url += `epc=${epcRatings.join(',')}&`;
+      }
+    }
 
     fetch(url)
       .then((response) => response.json())
@@ -104,7 +116,7 @@ function App() {
               <>
                 <div className="search-bar-container">
                   <h3>Search for Properties</h3>
-                  <SearchBar onSearch={fetchProperties} />
+                  <PropertyFilter onFilterChange={fetchProperties} />
                 </div>
                 <EPCTable />
                 <PropertyList properties={properties} loading={loading} />
@@ -121,5 +133,3 @@ function App() {
 }
 
 export default App;
-
-
