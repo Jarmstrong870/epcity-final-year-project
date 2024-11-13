@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropertyPage from './PropertyPage';
 
 const PropertyList = ({ properties, loading }) => {
+
+  
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -31,6 +34,7 @@ const PropertyList = ({ properties, loading }) => {
                   to={{
                     pathname: '/property',
                     state: { address: property.address },
+
                   }}
                 >
                   {property.address}

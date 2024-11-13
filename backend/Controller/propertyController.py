@@ -6,7 +6,7 @@ from Service import propertiesService as properties
 property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
-# Route to get all properties
+# Route to update properties monthly
 @property_blueprint.route('/property/load', methods=['GET'])
 def property_load():
     """
@@ -22,28 +22,30 @@ def property_load_csv():
     """
     return jsonify(properties.getPropertiesFromCSV().to_dict(orient='records'))
 
-# Define route for property search
-@property_blueprint.route('/property/search', methods=['GET'])
-def property_search():
-    """
-    Handles GET requests to search properties.
-    """
-    user_input = request.args.get('query', '').lower()
-    return jsonify(properties.searchPropertiesAPI(user_input).to_dict(orient='records'))
-
-@property_blueprint.route('/property/searchCSV', methods=['GET'])
-def property_search_csv():
-    """
-    Handles GET requests to search properties.
-    """
-    user_input = request.args.get('query', '').lower()
-    return jsonify(properties.searchPropertiesCSV(user_input).to_dict(orient='records'))
-
+# Route to get info on a selected property
 @property_blueprint.route('/property/getInfo', methods=['GET'])
 def get_property_info():
     """
     Returns data for a single property
     """
-    address = request.args.get('query', '').lower()
-    return jsonify(properties.getPropertyInfo(address).to_dict(orient='records'))
+    uprn = request.args.get('uprn', '').lower()
+    return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
 
+# Route to for searching and filtering data
+@property_blueprint.route('/property/alter', methods=['GET'])
+def alter_properties():
+    """
+    Checks if searching or filtering has been applied and returns the altered list of properties
+    """
+    search_value = request.args.get('search', '').lower()  # Use 'search' from query params
+    property_types = request.args.get('pt', '').split(',') if request.args.get('pt', '') else []
+    epc_ratings = request.args.get('epc', '').split(',') if request.args.get('epc', '') else []
+
+    # Calling alterProperties with the corrected parameter names
+    altered_properties = properties.alterProperties(
+        searchValue=search_value,
+        property_types=property_types,
+        epc_ratings=epc_ratings
+    )
+
+    return jsonify(altered_properties.to_dict(orient='records'))

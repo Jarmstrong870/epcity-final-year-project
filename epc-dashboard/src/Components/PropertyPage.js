@@ -22,11 +22,23 @@ const PropertyPage = () => {
     tenure: '',
   });
 
+  const propertyInfo = (uprn = 0) => {
+    const link = uprn ? 'http://127.0.0.1:5000/api/property/getInfo?query=${uprn}'
+    : 'http://127.0.0.1:5000/api/property/loadCSV';
+    fetch(link)
+    .then((response) => response.json)
+    .then((data) => {
+      setPropertyData(data);
+    })
+  }
+
   useEffect(() => {
     if (address && postcode) {
       fetchLocationCoords(`${address}, ${postcode}`);
     }
   }, [address, postcode]);
+
+  
 
   const fetchLocationCoords = (fullAddress) => {
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`)
