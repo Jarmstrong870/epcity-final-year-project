@@ -1,34 +1,37 @@
 import React from 'react';
 
 const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
-  // Define the color ranges for EPC ratings with a darker yellow for 'D'
+  // Define color ranges for EPC ratings
   const ratingColors = {
     A: '#006400', // Dark green
     B: '#228B22', // Green
     C: '#32CD32', // Light green
-    D: '#FFD700', // Darkened yellow for better contrast
+    D: '#FFD700', // Yellow
     E: '#FF8C00', // Orange
     F: '#FF4500', // Red-orange
     G: '#B22222', // Dark red
   };
 
-  // Rating labels and corresponding thresholds (percentages)
+  // Rating labels, corresponding thresholds, and range boundaries
   const ratingLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  const thresholds = [92, 81, 69, 55, 39, 21, 1]; // Lower bounds for the ratings
+  const thresholds = [92, 81, 69, 55, 39, 21, 1];
   const ranges = [
     '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D', 
     '(39-54) E', '(21-38) F', '(1-20) G'
-  ]; // Boundaries to display inside the bars
+  ];
 
-  // Function to determine which section the energy efficiency falls into
+  // Determine which section each energy efficiency score falls into
   const getEfficiencyPosition = (efficiency) => {
     for (let i = 0; i < thresholds.length; i++) {
       if (efficiency >= thresholds[i]) {
         return i;
       }
     }
-    return 6; // Default to the lowest section (G)
+    return 6; // Default to lowest section (G)
   };
+
+  const currentEfficiencyPosition = getEfficiencyPosition(currentEnergyEfficiency);
+  const potentialEfficiencyPosition = getEfficiencyPosition(potentialEnergyEfficiency);
 
   return (
     <div style={{ width: '100%', marginTop: '20px' }}>
@@ -37,102 +40,101 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
       {/* EPC Rating Bars */}
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '10px' }}>
         {ratingLabels.map((label, index) => {
-          const barWidth = '90%'; // Increase bar width to 90% of the container
-          const isCurrentEfficiency = getEfficiencyPosition(currentEnergyEfficiency) === index;
-          const isPotentialEfficiency = getEfficiencyPosition(potentialEnergyEfficiency) === index;
-
-          // The position for the text inside the square will be fixed, centered in the bar
-          const currentPosition = '50%'; // Centered position for the text
-          const potentialPosition = '50%'; // Centered position for the text
+          const barWidth = '90%';
+          const isCurrentEfficiency = currentEfficiencyPosition === index;
+          const isPotentialEfficiency = potentialEfficiencyPosition === index;
 
           return (
             <div 
               key={label}
               style={{
                 display: 'flex',
-                justifyContent: 'flex-start', // Align bars to the left
+                justifyContent: 'flex-start',
                 alignItems: 'center',
                 marginBottom: '10px',
                 position: 'relative',
               }}
             >
-              {/* The bar itself */}
+              {/* Rating Bar */}
               <div
                 style={{
-                  height: '50px', // Increased height for wider bars
+                  height: '50px',
                   width: barWidth,
                   backgroundColor: ratingColors[label],
                   position: 'relative',
                   borderRadius: '5px',
                 }}
               >
-                {/* Display boundaries inside the bar */}
+                {/* Display rating range inside the bar */}
                 <div
                   style={{
                     position: 'absolute',
                     top: '50%',
-                    left: '10px', // Move text to the left side of the bar
+                    left: '10px',
                     transform: 'translateY(-50%)',
-                    color: 'black', // Black color for range text
+                    color: 'black',
                     fontWeight: 'bold',
-                    fontSize: '20px', // Increased font size
+                    fontSize: '20px',
                     textAlign: 'left',
                   }}
                 >
-                  {/* Split the range and letter for different styling */}
                   <span style={{ color: 'black' }}>
                     {ranges[index].split(' ')[0]} {/* Range part */}
                   </span>
                   <span style={{ color: 'white' }}>
-                    {ranges[index].split(' ')[1]} {/* Letter part */}
+                    {ranges[index].split(' ')[1]} {/* Label part */}
                   </span>
                 </div>
 
-                {/* Current Efficiency Marker - Square icon with the percentage */}
+                {/* Current Efficiency Marker with label */}
                 {isCurrentEfficiency && (
                   <div
                     style={{
                       position: 'absolute',
-                      left: currentPosition, // Fixed position at center
+                      left: '80%', // Fixed position closer to the right side
                       top: '50%',
-                      transform: 'translate(-50%, -50%)', // Centering the square marker
-                      height: '40px', // Increased size of the square icon
-                      width: '40px', // Same width for square
-                      backgroundColor: ratingColors[label], // Match the bar's color
+                      transform: 'translate(-50%, -50%)',
+                      height: '40px',
+                      width: '60px', // Adjusted width to fit label
+                      backgroundColor: ratingColors[label],
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      borderRadius: '5px', // Rounded corners for the square
+                      borderRadius: '5px',
                       color: 'white',
-                      fontSize: '16px', // Increased font size for percentage inside square
-                      fontWeight: 'bold', // Bold text inside the square
+                      fontSize: '14px', // Adjusted font size
+                      fontWeight: 'bold',
+                      flexDirection: 'column', // Stack label and value vertically
                     }}
                   >
-                    {currentEnergyEfficiency}%
+                    <span>Current</span>
+                    <span>{currentEnergyEfficiency}%</span>
                   </div>
                 )}
 
-                {/* Potential Efficiency Marker - Square icon with the percentage */}
+                {/* Potential Efficiency Marker with label */}
                 {isPotentialEfficiency && (
                   <div
                     style={{
                       position: 'absolute',
-                      left: potentialPosition, // Fixed position at center
+                      left: '20%', // Fixed position closer to the left side
                       top: '50%',
-                      transform: 'translate(-50%, -50%)', // Centering the square marker
-                      height: '40px', // Increased size of the square icon
-                      width: '40px', // Same width for square
-                      backgroundColor: ratingColors[label], // Match the bar's color
+                      transform: 'translate(-50%, -50%)',
+                      height: '40px',
+                      width: '60px', // Adjusted width to fit label
+                      backgroundColor: ratingColors[label],
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      borderRadius: '5px', // Rounded corners for the square
+                      borderRadius: '5px',
                       color: 'white',
-                      fontSize: '16px', // Increased font size for percentage inside square
-                      fontWeight: 'bold', // Bold text inside the square
+                      fontSize: '14px', // Adjusted font size
+                      fontWeight: 'bold',
+                      flexDirection: 'column', // Stack label and value vertically
                     }}
                   >
-                    {potentialEnergyEfficiency}%
+                    <span>Potential</span>
+                    <span>{potentialEnergyEfficiency}%</span>
                   </div>
                 )}
               </div>
