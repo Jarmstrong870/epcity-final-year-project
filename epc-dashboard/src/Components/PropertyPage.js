@@ -21,6 +21,16 @@ const PropertyPage = () => {
     tenure: 'Owner-occupied'
   });
 
+  const propertyInfo = (uprn = 0) => {
+    const link = uprn ? 'http://127.0.0.1:5000/api/property/getInfo?query=${uprn}'
+    : 'http://127.0.0.1:5000/api/property/loadCSV';
+    fetch(link)
+    .then((response) => response.json)
+    .then((data) => {
+      setPropertyData(data);
+    })
+  }
+
   useEffect(() => {
     if (address) {
       fetchLocationCoords(address);
@@ -136,3 +146,4 @@ const PropertyPage = () => {
 };
 
 export default PropertyPage;
+
