@@ -223,6 +223,7 @@ def getPropertyInfo(uprn):
 def filterProperties(property_types, epc_ratings):
     global altered_properties
 
+    print(epc_ratings)
     # Start with the full set of searched_properties
     filtered_properties = altered_properties
 
@@ -263,8 +264,8 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     if searchValue:
         altered_properties = searchProperties(searchValue)
 
-    # Apply property type filter
-    if property_types:
+    # Apply filters
+    if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
 
     return altered_properties.head(30)
