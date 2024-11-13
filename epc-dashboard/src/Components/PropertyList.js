@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import PropertyPage from './PropertyPage';
 
 const PropertyList = ({ properties, loading }) => {
 
@@ -29,17 +27,7 @@ const PropertyList = ({ properties, loading }) => {
         <tbody>
           {properties.map((property, index) => (
             <tr key={index}>
-              <td>
-                <Link
-                  to={{
-                    pathname: '/property',
-                    state: { address: property.address },
-
-                  }}
-                >
-                  {property.address}
-                </Link>
-              </td>
+              <td>{property.address}</td>
               <td>{property.postcode}</td>
               <td>{property.property_type}</td>
               <td>{property.current_energy_rating}</td>
