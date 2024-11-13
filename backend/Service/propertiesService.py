@@ -215,8 +215,6 @@ def getPropertyInfo(uprn):
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
 
-    print(df.columns)
-
     return df
 
 # filter properties by property type or epc rating
