@@ -29,8 +29,7 @@ const PropertyList = ({ properties, loading }) => {
             <tr key={index}>
               <td>
                 <Link 
-                  to="/property" 
-                  state={{ address: property.address, postcode: property.postcode }}
+                  to={`/property/${property.uprn}`}  // Use `uprn` in URL parameter
                 >
                   {property.address}
                 </Link>

@@ -28,7 +28,7 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setDropdownVisible(false);
-    setLogoutConfirmVisible(false); // Hide modal after logout
+    setLogoutConfirmVisible(false);
   };
 
   const cancelLogout = () => {
@@ -40,7 +40,6 @@ function App() {
     setLoading(true);
     let url = 'http://127.0.0.1:5000/api/property/loadCSV';
 
-    // If any filters are provided, use the /property/alter endpoint instead
     if (query || propertyTypes.length > 0 || epcRatings.length > 0) {
       url = 'http://127.0.0.1:5000/api/property/alter?';
       if (query) {
@@ -125,7 +124,7 @@ function App() {
           />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/property" element={<PropertyPage />} />
+          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
         </Routes>
       </div>
     </Router>
