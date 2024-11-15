@@ -1,0 +1,110 @@
+/* Title Styling */
+.titleStyling {
+  font-style: italic;
+  text-decoration: underline;
+  font-weight: bold;
+  text-align: center;
+  display: block;
+}
+
+/* Home Page Styling */
+.homePageStyling {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px;
+}
+
+.propertyDetails {
+  width: calc(33.33% - 20px);
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  /*display: flex;*/
+  border-radius: 4px;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.propertyAddressStyling {
+  font-style: italic;
+  font-weight: bold;
+  text-align: left;
+  font-size: 30px;
+  display: block;
+  margin: 10px 0;
+}
+
+.propertyImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 12px solid #000;
+  border-radius: 8px;
+  overflow:hidden;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.propertyImageStyling {
+  height: 200px;
+  width: 100%;
+  /*border: 40px solid #100;*/
+  object-fit: cover;
+}
+
+.propertyDisplayStyling {
+  text-align: left;
+  padding: 10px;
+  border: 12px solid #100;
+  margin-top: 30px;
+  align-items: center;
+  margin:0 auto;
+  box-sizing: border-box;
+  flex-grow: 1;
+  width: 70%;
+}
+
+.searchBarStyling input{
+  height: 40px;
+  width: 80%;
+  font-size: 18px;
+  padding: 10px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  box-sizing: border-box;
+  margin-top: 10px;
+}
+
+.searchBarStyling button{
+  height: 40px;
+  width: 10%;
+  font-size: 18px;
+  padding: 8px;
+  border: 2px solid #000;
+  border-radius: 15px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.propertyDetailsStructure{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.propertyDetailsStructure td, .propertyDetailsStructure th {
+  padding: 10px;
+  border: 1px solid #000;
+  text-align: center;
+  font-style: italic;
+}
+
+.propertyDetailsStructure td {
+  font-size: 16px;
+}
+
+.propertyDetailsStructure th {
+  font-weight: bold;
+}

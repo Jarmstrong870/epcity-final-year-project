@@ -1,0 +1,48 @@
+/* Home Page Styling */
+.cardStyle {
+    flex: '1 1 calc(33.33% - 25px)';
+    box-sizing: 'border-box';
+    margin-bottom: '16px';
+};
+
+.imageBaseStyle {
+    display: 'inline-block';
+    width: '56%';
+    height: '60%';
+    border-width: '7px';
+    border-style: 'solid';
+    border-color: 'black';
+    padding: '5px';
+    border-radius: '5px';
+    box-sizing: 'border-box';
+};
+
+.imageStyle {
+    width: '70%';
+    height: '70%';
+    object-fit: 'cover';
+    border-radius: '5px';
+}
+
+.detailsBaseStyle {
+    text-align: 'left';
+    display: 'inline-block';
+    width: '56%';
+    height: '40%';
+    border-width: '7px';
+    border-style: 'solid';
+    border-color: 'black';
+    padding: '5px';
+    border-radius: '5px';
+    box-sizing: 'border-box';
+    margin-bottom: '40px';
+};
+
+.addressStyle {
+    font-size: '20px';
+}
+
+.detailsStyle {
+    font-size: '10px';
+    
+}
