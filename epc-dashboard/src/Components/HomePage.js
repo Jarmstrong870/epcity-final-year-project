@@ -57,7 +57,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <h2 className="stylingTitle">Top 6 Properties</h2>
+      <h2 className="stylingTitle">Six Highest Rated Properties</h2>
       <div className="homePageGrid">
         {topRatedProperties.map((property, index) => (
           <TopRatedPropertyCard key={index} property={property} />
