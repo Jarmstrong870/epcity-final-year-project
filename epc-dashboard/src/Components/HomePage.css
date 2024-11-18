@@ -1,13 +1,14 @@
+/* Search Bar Styling */
 .stylingSearchBar{
   text-align: center;
   padding: 600px;
   background-image: url(../assets/house_bkc.jpg);
-  box-shadow: 0,0,0,0.1;
   margin-bottom: 10px;
 }
 
-.stylingTitle input[type="text"]{
-  width: 60%;
+/* Top Properties Title Styling */
+.stylingSearchInput input[type="text"]{
+  width: 80%;
   padding: 10px;
   margin-right: 10px;
   border: 1px;
@@ -15,6 +16,13 @@
   font-size: 14px;
 }
 
+.naigationLinks {
+  display: flex;
+  justify-content: center;
+  background-color: #2c3e3d;
+  color: #fff;
+  padding: 10px;
+}
 
 /* Title Styling */
 .homePageStyling {
@@ -50,6 +58,7 @@
   border-collapse: collapse;
 }
 
+/* Basic Footer Styling */
 .footer {
   background-color: #2c3e3d;
   color: #fff;
@@ -58,3 +67,4 @@
   margin-top: 20px;
   font-size: 14px;
 }
+

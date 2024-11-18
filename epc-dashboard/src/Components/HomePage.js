@@ -51,7 +51,12 @@ const HomePage = () => {
 return (
     <>
         <div className = "stylingSearchBar">
-            <button onceClicked={handleSearch}>View All Properties</button>
+        <input className = "stylingSearchInput" 
+                type="text"
+                value={searchTerm}
+                onChange={handleInputChange}
+                placeholder="Search by property address or postcode..." />
+            <button onClick={handleSearch}>Search</button>
         </div>
         <h2 className = "stylingTitle">Here are the Top 6 Properties</h2>    
         <div className = "homePageStyling">
