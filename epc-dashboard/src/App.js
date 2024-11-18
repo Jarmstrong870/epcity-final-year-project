@@ -76,6 +76,12 @@ function App() {
       <div className="App">
         <div className="header-container">
           <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+          <div className="navLinks">
+            <a href="/home">Home</a>
+            <a href="/properties">Button 1</a>
+            <a href="/contact">Button 2</a>
+            <a href="/about">Button 3</a>
+        </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
             {dropdownVisible && (

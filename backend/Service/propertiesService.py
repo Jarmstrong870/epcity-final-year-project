@@ -157,7 +157,7 @@ def getPropertiesFromCSV():
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
     global all_properties
-    global altered
+    global changed
     # Load the CSV into a DataFrame
     properties = pd.read_csv('properties_for_search.csv', low_memory=False)
 
@@ -174,7 +174,7 @@ def getTopRatedProperties():
     all_properties = top_rated_properties
 
     # set altered to false
-    altered = False
+    changed = False
 
     return all_properties.head(6)
 

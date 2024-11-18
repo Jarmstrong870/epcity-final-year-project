@@ -12,7 +12,7 @@ const PropertyList = ({ properties, loading }) => {
   }
 
   // Limit to first 3 properties
-  const limitedProperties = properties.slice(0, 3);
+  const limitedProperties = properties.slice(0, 12);
 
   return (
     <div className="property-list">

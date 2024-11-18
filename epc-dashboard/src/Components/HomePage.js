@@ -48,49 +48,41 @@ const HomePage = () => {
       return <p>No Top Rated Properties found!</p>;
 }
 
-    return (
-        <div className = "searchBarStyling">
-            <input
-            type = "text" 
-            position = "Search for a property's address"
-            value={searchTerm}
-            output={handleInputChange}
-            />
-            <button onClick={handleSearch}>View All Properties</button>
-
-        <h2 class = "titleStyling">Top 6 Rated Properties</h2>
-
-        <div className="homePageStyling">
-          {topRatedProperties.map((property, index) => (
-            <div key={index} className="propertyDetails">
-                <div className = "propertyImage">
-                <StreetViewComponent address={property.address} className="propertyImageStyling"/>
-                </div>
-            <div className="propertyDisplayStyling">
-                <h3 className = "propertyAddressStyling" >{property.address}</h3>
-                <p><strong>Postcode:</strong> {property.postcode}</p>
-                <table className = "propertyDetailsStructure">
-                    <tbody>
-                        <tr>
-                <td><strong>Property Type:</strong></td>
-                <td><strong>Energy Rating:</strong></td>
-                <td><strong>Energy Efficiency:</strong></td>
-                </tr>
-                <tr>
-                <td>{property.property_type}</td>
-                <td>{property.current_energy_rating}</td>
-                <td>{property.current_energy_efficiency}</td>
-                </tr>
-                    </tbody>
-                </table>
-                </div>
-                </div>
-            ))}
-            </div>
+return (
+    <>
+        <div className = "stylingSearchBar">
+            <button onceClicked={handleSearch}>View All Properties</button>
         </div>
+        <h2 className = "stylingTitle">Here are the Top 6 Properties</h2>    
+        <div className = "homePageStyling">
+            {topRatedProperties.map((property, index) => (
+                <div key = {index} className = "stylingPropertiesDetails">
+                    <div className = "stylingPropertyImage">
+                        <StreetViewComponent address = {property.address}/>
+                    </div>
+                <div className = "displayingProperties">
+                    <h3 className = "propertyAddressStyling">{property.address}</h3>
+                    <p><strong>Postcode</strong>{property.postcode}</p>
+                    <table className = "importantPropertyDetails">
+                            <tr>
+                                <td><strong>Property Type:</strong></td>
+                                <td><strong>Energy Rating:</strong></td>
+                                <td><strong>Energy Efficiency:</strong></td>
+                            </tr>
+                            <tr>
+                                <td><italic>{property.property_type}</italic></td>
+                                <td><italic>{property.current_energy_rating}</italic></td>
+                                <td><italic>{property.current_energy_efficiency}</italic></td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        ))}
+        </div>
+        <div className = "footer">
+            EPCity - Helping make properties more efficient! c.2024
+        </div>
+    </>
     );
 };
-
-  export default HomePage;
-  
- 
+    export default HomePage;
