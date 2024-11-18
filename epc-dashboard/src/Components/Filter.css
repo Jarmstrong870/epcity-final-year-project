@@ -1,0 +1,46 @@
+.baseStyling{
+    padding: 20px;
+}
+
+.searchAddress{
+    width:  100%;
+    color: #000000;
+    border: 2px;
+    border-radius: 2px;
+    font-size: 15px;  
+    align-items: center;
+    text-align: center;
+}
+
+.searchInput{
+    width: 100%;
+    align-items:center;
+    border: 1px;
+    border-radius: 4px;
+    font-size: 14px; 
+}
+
+.propertyTypeFilter{
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between input and button */
+  padding: 15px;
+  align-items: center;
+  text-align: center;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+.ratingLetterFilter{
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between input and button */
+    padding: 15px;
+    align-items: center;
+    text-align: center;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

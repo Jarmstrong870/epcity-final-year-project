@@ -119,7 +119,6 @@ function App() {
             element={
               <>
                 <div className="search-bar-container">
-                  <h3>Search for Properties</h3>
                   <PropertyFilter onFilterChange={fetchProperties} />
                 </div>
                 {/*<EPCTable />*/}

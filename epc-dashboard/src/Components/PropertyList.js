@@ -1,7 +1,7 @@
 // src/Components/PropertyList.js
 import React from 'react';
 import PropertyCard from './PropertyCard';
-import '.Components/PropertyCard.css'
+import './PropertyCard.css'
 
 const PropertyList = ({ properties, loading }) => {
   if (loading) {

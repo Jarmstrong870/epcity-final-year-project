@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Filter.css'
 
 const PropertyFilter = ({ onFilterChange }) => {
   // State variables for search and filter criteria
@@ -39,12 +40,12 @@ const PropertyFilter = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="property-filter">
+    <div className = "baseStyling">
       <form onSubmit={handleFilterSubmit}>
         {/* Search Input */}
-        <div>
-          <label htmlFor="searchQuery">Search by Address or Postcode:</label>
-          <input
+        <div className="searchAddress">
+          <label htmlFor="searchQuery"><strong>Search by Address or Postcode:</strong></label>
+          <input className = "searchInput"
             type="text"
             id="searchQuery"
             value={searchQuery}
@@ -53,8 +54,8 @@ const PropertyFilter = ({ onFilterChange }) => {
         </div>
 
         {/* Property Type Filter (Checkboxes) */}
-        <div>
-          <label>Property Types:</label>
+        <div className = "propertyTypeFilter">
+          <label><strong>Property Types:</strong></label>
           <div>
             {['bungalow', 'flat', 'house', 'maisonette'].map((type) => (
               <label key={type}>
@@ -70,8 +71,8 @@ const PropertyFilter = ({ onFilterChange }) => {
         </div>
 
         {/* EPC Rating Filter (Checkboxes) */}
-        <div>
-          <label>EPC Ratings:</label>
+        <div className = "ratingLetterFilter">
+          <label><strong>EPC Ratings:</strong></label>
           <div>
             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
               <label key={rating}>
