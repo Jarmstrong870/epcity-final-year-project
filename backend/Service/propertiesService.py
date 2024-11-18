@@ -165,7 +165,7 @@ def getTopRatedProperties():
     properties = pd.read_csv('properties_for_search.csv', low_memory=False)
 
     # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating', 'number_habitable_rooms']]
+    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
 
     # Convert columns to object type to handle mixed values properly
     properties = properties.astype(object).fillna(pd.NA)

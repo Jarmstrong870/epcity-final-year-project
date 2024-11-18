@@ -1,24 +1,26 @@
-// PropertyPage.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
 
 const PropertyPage = () => {
-  const { uprn } = useParams();
+  const { uprn } = useParams(); // Get UPRN from URL (for PropertyList)
+  const location = useLocation(); // Get state (for TopRatedPropertyCard)
+  const addressFromState = location.state?.address; 
+  const postcodeFromState = location.state?.postcode;
+
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Load Google Maps API script only once
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c",
   });
 
-  const fetchPropertyDetails = () => {
+  const fetchPropertyDetails = (uprn) => {
     fetch(`http://127.0.0.1:5000/api/property/getInfo?uprn=${encodeURIComponent(uprn)}`)
       .then(response => response.json())
       .then(data => {
@@ -30,19 +32,6 @@ const PropertyPage = () => {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    if (uprn) {
-      fetchPropertyDetails();
-    }
-  }, [uprn]);
-
-  useEffect(() => {
-    if (propertyData && propertyData.address && propertyData.postcode) {
-      const fullAddress = `${propertyData.address}, ${propertyData.postcode}`;
-      fetchLocationCoords(fullAddress);
-    }
-  }, [propertyData]);
 
   const fetchLocationCoords = (fullAddress) => {
     const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
@@ -56,7 +45,6 @@ const PropertyPage = () => {
           setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x600&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
         } else {
           setErrorMessage("Address not found. Unable to display map or street view.");
-          console.warn("No results found for the given address and postcode.");
         }
       })
       .catch(error => {
@@ -65,13 +53,29 @@ const PropertyPage = () => {
       });
   };
 
+  useEffect(() => {
+    if (uprn) {
+      // Fetch data using UPRN
+      fetchPropertyDetails(uprn);
+    } else if (addressFromState && postcodeFromState) {
+      // Use address and postcode from state for top-rated properties
+      const fullAddress = `${addressFromState}, ${postcodeFromState}`;
+      fetchLocationCoords(fullAddress);
+    }
+  }, [uprn, addressFromState, postcodeFromState]);
+
+  useEffect(() => {
+    if (propertyData && propertyData.address && propertyData.postcode) {
+      const fullAddress = `${propertyData.address}, ${propertyData.postcode}`;
+      fetchLocationCoords(fullAddress);
+    }
+  }, [propertyData]);
+
   return (
     <div style={{ display: 'flex', minHeight: '10vh', flexDirection: 'column', padding: '10px' }}>
       <h2>Property Details</h2>
-      
-      {/* Container to ensure the same width for Street View and EPCGraph */}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        {/* Street View Image with fixed height */}
         <div style={{ flex: 1, maxWidth: '45%', marginRight: '10px' }}>
           <h3>Street View</h3>
           {streetViewURL ? (
@@ -81,7 +85,6 @@ const PropertyPage = () => {
           )}
         </div>
 
-        {/* EPC Graph with matched width */}
         <div style={{ flex: 1, maxWidth: '45%' }}>
           {propertyData && (
             <EPCGraph
@@ -92,14 +95,12 @@ const PropertyPage = () => {
         </div>
       </div>
 
-      {/* EPC Full Table */}
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} />
       ) : (
         <p>Loading property data...</p>
       )}
 
-      {/* Map View */}
       <div style={{ width: '100%', height: '400px', marginTop: '20px' }}>
         <h3>Map View</h3>
         {isLoaded ? (
