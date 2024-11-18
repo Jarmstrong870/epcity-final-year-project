@@ -86,3 +86,41 @@
   font-size: 14px;
 }
 
+.homePageGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.backgroundImageStyling {
+  /* Add background image or color styles here */
+}
+
+.stylingSearchBar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.stylingSearchInput {
+  padding: 10px;
+  width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.stylingSearchButton {
+  padding: 10px;
+  margin-left: 10px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.stylingSearchButton:hover {
+  background-color: #0056b3;
+}
