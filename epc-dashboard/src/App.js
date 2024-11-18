@@ -131,6 +131,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
           <Route path="/propertylist" element={<PropertyList />} />
+          <Route path="/property/:address" element={<PropertyPage />} />
         
         </Routes>
       </div>

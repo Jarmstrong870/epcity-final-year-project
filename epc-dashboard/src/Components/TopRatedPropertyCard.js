@@ -1,39 +1,29 @@
 import React from 'react';
-import './PropertyCard.css'; // Ensure this file exists for styling
+import { useNavigate } from 'react-router-dom';
+import StreetViewComponent from './StreetViewComponent';
+import './TopRatedPropertyCard.css';
 
 const TopRatedPropertyCard = ({ property }) => {
-  const { address, postcode, property_type, current_energy_rating, current_energy_efficiency } = property;
+  const navigate = useNavigate();
 
-  const generateStreetViewImageUrl = (address, postcode, size = '400x400') => {
-    const apiKey = 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c';
-    const location = `${encodeURIComponent(address)},${encodeURIComponent(postcode)}`;
-    return `https://maps.googleapis.com/maps/api/streetview?size=${size}&location=${location}&fov=90&heading=235&pitch=10&key=${apiKey}`;
+  const handleClick = () => {
+    navigate(`/property/${property.uprn}`, {
+      state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
+    });
   };
 
-  const streetViewURL = generateStreetViewImageUrl(address, postcode);
-
   return (
-    <div className="propertyCard">
+    <div className="topRatedPropertyCard" onClick={handleClick}>
       <div className="propertyImage">
-        <img src={streetViewURL} alt="Street View" />
+        <StreetViewComponent address={property.address} postcode={property.postcode} />
       </div>
       <div className="propertyDetails">
-      <h3>Property Address: {address}</h3>
-      <table>
-      <tr>
-          <td><strong>Postcode:</strong> </td>
-          <td><strong>Property Type:</strong></td>
-          <td><strong>Energy Rating:</strong></td>
-          <td><strong>Energy Efficiency:</strong></td>
-        </tr>
-        <tr>
-          <td><i>{property.postcode}</i></td>
-          <td><i>{property.property_type}</i></td>
-          <td><i>{property.current_energy_rating}</i></td>
-          <td><i>{property.current_energy_efficiency}</i></td>
-        </tr>      
-        </table>
-        </div>
+        <h3>{property.address}</h3>
+        <p><strong>Postcode:</strong> {property.postcode}</p>
+        <p><strong>Type:</strong> {property.property_type}</p>
+        <p><strong>Energy Rating:</strong> {property.current_energy_rating}</p>
+        <p><strong>Efficiency:</strong> {property.current_energy_efficiency}</p>
+      </div>
     </div>
   );
 };
