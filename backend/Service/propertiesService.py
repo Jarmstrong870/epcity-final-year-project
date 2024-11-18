@@ -114,6 +114,9 @@ def getAllProperties():
     #Convert 'lodgement-datetime' to datetime for sorting
     search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
 
+    # Drop properties with no uprn
+    search_results = search_results.dropna(subset=['uprn'])
+
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
 
@@ -121,11 +124,11 @@ def getAllProperties():
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
 
     search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 'number-habitable-rooms': 'number_habitable_rooms', 
+                                                    'current-energy-rating': 'current_energy_rating', 
                                                     'lodgement-datetime': 'lodgement_datetime'})
     
     search_results = search_results[['uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime', 'current_energy_efficiency', 
-                                     'current_energy_rating', 'number_habitable_rooms']]
+                                     'current_energy_rating']]
 
     # save the filtered DataFrame to a new CSV file
     search_results.to_csv('properties_for_search.csv', index=False)
@@ -138,7 +141,7 @@ def getPropertiesFromCSV():
     properties = pd.read_csv('properties_for_search.csv', low_memory=False)
 
     # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating', 'number_habitable_rooms']]
+    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
 
     # Convert columns to object type to handle mixed values properly
     properties = properties.astype(object).fillna(pd.NA)
@@ -245,8 +248,6 @@ def getPropertyInfo(uprn):
     new_columns = {col: col.replace('-', '_') for col in df.columns}
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
-
-    print(df.columns)
 
     return df
 
