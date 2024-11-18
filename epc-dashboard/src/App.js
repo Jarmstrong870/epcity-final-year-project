@@ -10,6 +10,7 @@ import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
+import './Components/HomePage.css';
 
 function App() {
   const [user, setUser] = useState(null);

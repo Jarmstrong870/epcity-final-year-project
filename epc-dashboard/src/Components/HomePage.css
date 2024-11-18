@@ -1,27 +1,45 @@
 /* Search Bar Styling */
-.stylingSearchBar{
+.backgroundImageStyling{
   text-align: center;
-  padding: 600px;
+  padding: 500px;
   background-image: url(../assets/house_bkc.jpg);
   margin-bottom: 10px;
+}s
+
+.stylingSearchBar {
+  width:  80%;
+  color: #f6f0f0;
+  border: solid 2px;
+  border-radius: 2px;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-around;
 }
 
-/* Top Properties Title Styling */
-.stylingSearchInput input[type="text"]{
+.stylingSearchInput {
   width: 80%;
   padding: 10px;
-  margin-right: 10px;
+  margin-right: 5px;
   border: 1px;
   border-radius: 4px;
   font-size: 14px;
 }
 
-.naigationLinks {
+.stylingSearchButton {
+  width: 10%;
+  height: 10%;
+  border: 1px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.navigationLinks {
   display: flex;
   justify-content: center;
-  background-color: #2c3e3d;
+  background-color: #edf5f4;
   color: #fff;
   padding: 10px;
+  border-radius: 2em;
 }
 
 /* Title Styling */
