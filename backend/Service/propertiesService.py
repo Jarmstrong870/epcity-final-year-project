@@ -179,7 +179,7 @@ def getTopRatedProperties():
     # set altered to false
     changed = False
 
-    return all_properties.head(6)
+    return all_properties.head(12)
 
 
 # srot All  Properties - sort by EPC rating (current efficiency)

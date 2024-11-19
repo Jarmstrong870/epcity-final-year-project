@@ -3,22 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
 
-const HomePage = () => {
+const HomePage = ({ fetchProperties }) => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0); // Index for carousel
   const navigate = useNavigate();
 
-  const propertiesPerSlide = 3; // Number of properties per carousel slide
+  const propertiesPerSlide = 3; // Number of properties per slide
 
   useEffect(() => {
-    // Fetch initial top-rated properties
     const fetchTopRatedProperties = async () => {
       try {
         const response = await fetch('http://127.0.0.1:5000/api/property/loadTopRated');
         const data = await response.json();
-        setTopRatedProperties(data); // Set all properties for the carousel
+        setTopRatedProperties(data);
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -29,54 +28,27 @@ const HomePage = () => {
     fetchTopRatedProperties();
   }, []);
 
-  const fetchFilteredProperties = (searchQuery) => {
-    // Fetch filtered properties based on the search query
-    setLoading(true);
-
-    let url = 'http://127.0.0.1:5000/api/property/alter?';
-    if (searchQuery) {
-      url += `search=${encodeURIComponent(searchQuery)}&`;
-    }
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setTopRatedProperties(data); // Update displayed properties
-      })
-      .catch((error) => {
-        console.error('Error fetching filtered properties:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const handleSearch = () => {
-    // Perform search and navigate to property list if needed
     if (searchTerm.trim()) {
-      fetchFilteredProperties(searchTerm); // Fetch properties matching the search
-      navigate('/propertylist', { state: { searchQuery: searchTerm } }); // Navigate to the property list
+      fetchProperties(searchTerm);
+      navigate('/propertylist');
     }
   };
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex + propertiesPerSlide < topRatedProperties.length
-        ? prevIndex + propertiesPerSlide
-        : 0
-    );
+    if (currentIndex + propertiesPerSlide < topRatedProperties.length) {
+      setCurrentIndex(currentIndex + propertiesPerSlide);
+    }
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex - propertiesPerSlide >= 0
-        ? prevIndex - propertiesPerSlide
-        : Math.max(0, topRatedProperties.length - propertiesPerSlide)
-    );
+    if (currentIndex - propertiesPerSlide >= 0) {
+      setCurrentIndex(currentIndex - propertiesPerSlide);
+    }
   };
 
   if (loading) {
@@ -84,7 +56,7 @@ const HomePage = () => {
   }
 
   if (topRatedProperties.length === 0) {
-    return <p>No properties found.</p>;
+    return <p>No top-rated properties found.</p>;
   }
 
   const visibleProperties = topRatedProperties.slice(
@@ -112,18 +84,24 @@ const HomePage = () => {
 
       {/* Carousel Section */}
       <div className="carousel-container">
-        <h2 className="stylingTitle">Highest Rated Properties</h2>
-        <button className="arrow left" onClick={prevSlide}>
-          &#8592;
-        </button>
+        <h2 className="stylingTitle">Top Rated Properties</h2>
         <div className="carousel">
-          {visibleProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} />
-          ))}
+          <button className="arrow left" onClick={prevSlide} disabled={currentIndex === 0}>
+            &#8592;
+          </button>
+          <div className="carousel-content">
+            {visibleProperties.map((property, index) => (
+              <TopRatedPropertyCard key={index} property={property} />
+            ))}
+          </div>
+          <button
+            className="arrow right"
+            onClick={nextSlide}
+            disabled={currentIndex + propertiesPerSlide >= topRatedProperties.length}
+          >
+            &#8594;
+          </button>
         </div>
-        <button className="arrow right" onClick={nextSlide}>
-          &#8594;
-        </button>
       </div>
     </>
   );

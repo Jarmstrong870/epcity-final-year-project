@@ -127,7 +127,7 @@ function App() {
               </>
             }
           />
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
