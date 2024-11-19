@@ -22,12 +22,13 @@ const PropertyPage = () => {
 
   const fetchPropertyDetails = (uprn) => {
     fetch(`http://127.0.0.1:5000/api/property/getInfo?uprn=${encodeURIComponent(uprn)}`)
-      .then(response => response.json())
-      .then(data => {
-        setPropertyData(data[0]);
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('API Response:', data); // Log the response
+        setPropertyData(data[0]); // Ensure this matches the expected structure
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error fetching property data:', error);
         setLoading(false);
       });
