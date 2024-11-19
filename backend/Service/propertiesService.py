@@ -168,7 +168,8 @@ def getTopRatedProperties():
     properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
 
     # Convert columns to object type to handle mixed values properly
-    properties = properties.astype(object).fillna(pd.NA)
+    properties = properties.infer_objects(copy=False)
+
 
     # Sort by descending current efficiency and return top 6
     top_rated_properties = properties.sort_values(by='current_energy_efficiency', ascending=False)
@@ -178,7 +179,7 @@ def getTopRatedProperties():
 
     # set altered to false
     changed = False
-
+    print(all_properties.head())
     return all_properties.head(12)
 
 
