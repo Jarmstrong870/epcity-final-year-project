@@ -155,3 +155,89 @@ body {
 .hidden {
   display: none;
 }
+/* Background and Search Bar Styling */
+.backgroundImageStyling {
+  background-image: url('../assets/house_bkc.jpg'); /* Ensure this path is correct */
+  background-size: cover;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stylingSearchBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 30px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
+.stylingSearchInput {
+  width: 300px;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+}
+
+.stylingSearchInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.stylingSearchButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.stylingSearchButton:hover {
+  background-color: #0056b3;
+}
+
+/* Carousel Styling */
+.carousel-container {
+  text-align: center;
+  margin: 20px auto;
+}
+
+.stylingTitle {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.arrow:hover {
+  color: #0056b3;
+}
