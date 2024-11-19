@@ -22,7 +22,7 @@ const PropertyPage = () => {
       .then(response => response.json())
       .then(data => {
         if (data && data.length > 0) {
-          setPropertyData(data[0]);
+          setPropertyData(data[0]); // Ensure we're passing only the first property in case of multiple results
         } else {
           setErrorMessage("No property data available.");
         }
@@ -57,9 +57,10 @@ const PropertyPage = () => {
         if (data.results && data.results.length > 0) {
           const { lat, lng } = data.results[0].geometry.location;
           setLocationCoords({ lat, lng });
-          setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=400x400&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
+          setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
         } else {
           setErrorMessage("Address not found. Unable to display map or street view.");
+          console.warn("No results found for the given address and postcode.");
         }
       })
       .catch(error => {
@@ -69,43 +70,36 @@ const PropertyPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Property Details</h2>
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
+      <h2>Property Details</h2>
 
-      {/* Street View and Map Side-by-Side */}
+      {/* Image and Map Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        {/* Street View Image */}
-        <div style={{ flex: 1, marginRight: '10px' }}>
-          <h3 style={{ textAlign: 'center' }}>Street View</h3>
+        {/* Street View */}
+        <div style={{ flex: 1, marginRight: '20px', height: '400px' }}>
+          <h3>Street View</h3>
           {streetViewURL ? (
-            <img
-              src={streetViewURL}
-              alt="Street View"
-              style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '10px' }}
-            />
+            <img src={streetViewURL} alt="Street View" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} />
           ) : (
-            <p style={{ textAlign: 'center' }}>{errorMessage || 'Loading street view...'}</p>
+            <p>{errorMessage || 'Loading street view...'}</p>
           )}
         </div>
 
         {/* Google Map */}
-        <div style={{ flex: 1, marginLeft: '10px' }}>
-          <h3 style={{ textAlign: 'center' }}>Map View</h3>
+        <div style={{ flex: 1, height: '400px' }}>
+          <h3>Map View</h3>
           {isLoaded ? (
-            <GoogleMap
-              center={locationCoords}
-              zoom={15}
-              mapContainerStyle={{ width: '100%', height: '400px', borderRadius: '10px' }}
-            >
+            <GoogleMap center={locationCoords} zoom={15} mapContainerStyle={{ height: '100%', width: '100%' }}>
               <Marker position={locationCoords} />
             </GoogleMap>
           ) : (
-            <p style={{ textAlign: 'center' }}>Loading map...</p>
+            <p>Loading map...</p>
           )}
+          {errorMessage && <p>{errorMessage}</p>}
         </div>
       </div>
 
-      {/* EPC Full Table */}
+      {/* EPC Table */}
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} />
       ) : (
@@ -113,14 +107,12 @@ const PropertyPage = () => {
       )}
 
       {/* EPC Graph */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+      <div style={{ marginTop: '40px', textAlign: 'center' }}>
         {propertyData && (
-          <div style={{ maxWidth: '600px', width: '100%' }}>
-            <EPCGraph
-              currentEnergyEfficiency={propertyData.current_energy_efficiency}
-              potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
-            />
-          </div>
+          <EPCGraph
+            currentEnergyEfficiency={propertyData.current_energy_efficiency}
+            potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+          />
         )}
       </div>
     </div>
