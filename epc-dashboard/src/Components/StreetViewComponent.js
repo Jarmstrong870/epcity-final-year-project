@@ -3,34 +3,37 @@ import React, { useState, useEffect } from "react";
 const StreetViewComponent = ({ address, postcode }) => {
   const [streetViewURL, setStreetViewURL] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
 
   useEffect(() => {
-    const fetchLocationCoords = () => {
-      const formatAddress = (address, postcode) => {
-        let formattedAddress = address.split(",")[0]; // Main part of the address
-        if (postcode) {
-          formattedAddress += `, ${postcode}`;
-        }
-        return formattedAddress.trim();
-      };
+    if (address) {
+      // Encode the address
+      const encodedAddress = encodeURIComponent(address);
 
-      const fullAddress = formatAddress(address, postcode);
+      // Construct the components parameter if postcode is provided
+      let componentsParam = "";
+      if (postcode) {
+        const encodedPostcode = encodeURIComponent(postcode);
+        componentsParam = `&components=postal_code:${encodedPostcode}|country:GB`;
+      } else {
+        // If no postcode, you can optionally specify the country to bias results
+        componentsParam = `&components=country:GB`;
+      }
 
-      console.log("Geocoding address:", fullAddress);
+      // Construct the API URL
+      const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}${componentsParam}&key=${API_KEY}`;
 
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-          fullAddress
-        )}&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`
-      )
+      console.log("Geocoding API URL:", apiUrl);
+
+      fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
           console.log("Geocoding API response:", data);
 
           if (data.results && data.results.length > 0) {
             const { lat, lng } = data.results[0].geometry.location;
-            const streetView = `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c`;
-            setStreetViewURL(streetView);
+            const streetViewURL = `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`;
+            setStreetViewURL(streetViewURL);
           } else {
             setErrorMessage(
               "Address not found. Unable to load Street View."
@@ -41,12 +44,10 @@ const StreetViewComponent = ({ address, postcode }) => {
           console.error("Error fetching location:", error);
           setErrorMessage("Failed to fetch Street View.");
         });
-    };
-
-    if (address) {
-      fetchLocationCoords();
+    } else {
+      setErrorMessage("Address is required.");
     }
-  }, [address, postcode]);
+  }, [address, postcode, API_KEY]);
 
   return (
     <div>

@@ -7,9 +7,9 @@ const TopRatedPropertyCard = ({ property }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    
     navigate(`/property/${property.uprn}`, {
       state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
-      
       
     });
   };

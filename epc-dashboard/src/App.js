@@ -78,7 +78,7 @@ function App() {
         <div className="header-container">
           <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
           <div className="navigationLinks">
-            <a href="/propertylist">View All Properties</a>
+            <a href="/propertylist" className='cta-button'>View All Properties</a>
         </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />

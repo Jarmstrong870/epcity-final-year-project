@@ -36,7 +36,10 @@ def get_property_info():
     """
     Returns data for a single property
     """
+    
+
     uprn = request.args.get('uprn', '').lower()
+    print(f"Received UPRN: {uprn}")
     return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
 
 # Route to for searching and filtering data

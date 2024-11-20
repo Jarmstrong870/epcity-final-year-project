@@ -5,12 +5,15 @@ import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
 
 const PropertyPage = () => {
-  const { uprn } = useParams();
+  const {uprn} = useParams();
+  
+  console.log('uprn is:', uprn, 'Type:', typeof uprn);
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
+  console.log("uprn is:",uprn);
 
   // Load Google Maps API script only once
   const { isLoaded } = useJsApiLoader({
