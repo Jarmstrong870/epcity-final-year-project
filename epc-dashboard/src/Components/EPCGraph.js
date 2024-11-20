@@ -108,7 +108,7 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
                     }}
                   >
                     <span>Current</span>
-                    <span>{currentEnergyEfficiency}%</span>
+                    <span>{currentEnergyEfficiency}</span> {/* Removed % */}
                   </div>
                 )}
 
@@ -134,7 +134,7 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
                     }}
                   >
                     <span>Potential</span>
-                    <span>{potentialEnergyEfficiency}%</span>
+                    <span>{potentialEnergyEfficiency}</span> {/* Removed % */}
                   </div>
                 )}
               </div>

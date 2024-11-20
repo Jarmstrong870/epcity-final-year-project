@@ -43,24 +43,44 @@ const PropertyPage = () => {
 
   useEffect(() => {
     if (propertyData && propertyData.address && propertyData.postcode) {
-      const fullAddress = `${propertyData.address}, ${propertyData.postcode}`;
-      fetchLocationCoords(fullAddress);
+      fetchLocationCoords(propertyData.address, propertyData.postcode);
     }
   }, [propertyData]);
 
-  const fetchLocationCoords = (fullAddress) => {
+  const fetchLocationCoords = (fullAddress, postcode) => {
     const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
 
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=${API_KEY}`)
+    // Combine address and postcode, ensuring proper formatting
+    const sanitizedAddress = `${fullAddress}, ${postcode}`.replace(/,+/g, ',').trim();
+
+    // Try fetching with full address first
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(sanitizedAddress)}&key=${API_KEY}`)
       .then(response => response.json())
       .then(data => {
         if (data.results && data.results.length > 0) {
+          // Use the result if the address resolves
           const { lat, lng } = data.results[0].geometry.location;
           setLocationCoords({ lat, lng });
           setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
         } else {
-          setErrorMessage("Address not found. Unable to display map or street view.");
-          console.warn("No results found for the given address and postcode.");
+          // Fallback to using postcode only
+          console.warn("Full address failed. Attempting to resolve with postcode only.");
+          fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(postcode)}&key=${API_KEY}`)
+            .then(response => response.json())
+            .then(postcodeData => {
+              if (postcodeData.results && postcodeData.results.length > 0) {
+                // Use the result if postcode resolves
+                const { lat, lng } = postcodeData.results[0].geometry.location;
+                setLocationCoords({ lat, lng });
+                setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
+              } else {
+                setErrorMessage("Postcode not found. Unable to display map or street view.");
+              }
+            })
+            .catch(error => {
+              console.error("Failed to fetch location data with postcode fallback:", error);
+              setErrorMessage("Failed to fetch location data with postcode fallback.");
+            });
         }
       })
       .catch(error => {
@@ -79,7 +99,11 @@ const PropertyPage = () => {
         <div style={{ flex: 1, marginRight: '20px', height: '400px' }}>
           <h3>Street View</h3>
           {streetViewURL ? (
-            <img src={streetViewURL} alt="Street View" style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }} />
+            <img
+              src={streetViewURL}
+              alt="Street View"
+              style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }}
+            />
           ) : (
             <p>{errorMessage || 'Loading street view...'}</p>
           )}
