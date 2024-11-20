@@ -1,0 +1,169 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+/* Background and Search Bar Styling */
+.backgroundImageStyling {
+  background-image: url('../assets/house_bkc.jpg'); /* Ensure this path is correct */
+  background-size: cover;
+  background-position: center;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stylingSearchBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 30px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
+.stylingSearchInput {
+  width: 300px;
+  max-width: 500px;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.stylingSearchInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.stylingSearchButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.stylingSearchButton:hover {
+  background-color: #0056b3;
+}
+
+/* Title Styling */
+.stylingTitle {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin: 30px 0;
+  color: #333;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  border-bottom: 3px solid #007bff;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+/* Carousel Styling */
+.carousel-container {
+  text-align: center;
+  margin: 20px auto;
+}
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+}
+
+.carousel-content {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.arrow {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.arrow:hover {
+  color: #0056b3;
+}
+
+.arrow:disabled {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Property Card Styling */
+.topRatedPropertyCard {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+  width: 300px;
+}
+
+.topRatedPropertyCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.propertyImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.propertyDetails {
+  padding: 15px;
+}
+
+.propertyDetails h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+.propertyDetails p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Footer Styling */
+.footer {
+  background-color: #2c3e3d;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Utility Classes */
+.hidden {
+  display: none;
+}
