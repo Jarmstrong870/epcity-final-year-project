@@ -9,6 +9,8 @@ import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
 import EPCTable from './Components/EPCTable';
+import HomePage from './Components/HomePage';
+import './Components/HomePage.css';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -75,6 +77,9 @@ function App() {
       <div className="App">
         <div className="header-container">
           <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+          <div className="navigationLinks">
+            <a href="/propertylist">View All Properties</a>
+        </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -110,21 +115,25 @@ function App() {
 
         <Routes>
           <Route
-            path="/"
+            path="/propertylist"
             element={
               <>
                 <div className="search-bar-container">
                   <h3>Search for Properties</h3>
                   <PropertyFilter onFilterChange={fetchProperties} />
                 </div>
-                <EPCTable />
+                {/*<EPCTable />*/}
                 <PropertyList properties={properties} loading={loading} />
               </>
             }
           />
+          <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
+          <Route path="/propertylist" element={<PropertyList />} />
+          <Route path="/property/:address" element={<PropertyPage />} />
+        
         </Routes>
       </div>
     </Router>

@@ -1,4 +1,3 @@
-// PropertyPage.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -22,11 +21,16 @@ const PropertyPage = () => {
     fetch(`http://127.0.0.1:5000/api/property/getInfo?uprn=${encodeURIComponent(uprn)}`)
       .then(response => response.json())
       .then(data => {
-        setPropertyData(data[0]);
+        if (data && data.length > 0) {
+          setPropertyData(data[0]); // Ensure we're passing only the first property in case of multiple results
+        } else {
+          setErrorMessage("No property data available.");
+        }
         setLoading(false);
       })
       .catch(error => {
         console.error('Error fetching property data:', error);
+        setErrorMessage("Failed to fetch property details.");
         setLoading(false);
       });
   };
@@ -39,24 +43,44 @@ const PropertyPage = () => {
 
   useEffect(() => {
     if (propertyData && propertyData.address && propertyData.postcode) {
-      const fullAddress = `${propertyData.address}, ${propertyData.postcode}`;
-      fetchLocationCoords(fullAddress);
+      fetchLocationCoords(propertyData.address, propertyData.postcode);
     }
   }, [propertyData]);
 
-  const fetchLocationCoords = (fullAddress) => {
+  const fetchLocationCoords = (fullAddress, postcode) => {
     const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
 
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(fullAddress)}&key=${API_KEY}`)
+    // Combine address and postcode, ensuring proper formatting
+    const sanitizedAddress = `${fullAddress}, ${postcode}`.replace(/,+/g, ',').trim();
+
+    // Try fetching with full address first
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(sanitizedAddress)}&key=${API_KEY}`)
       .then(response => response.json())
       .then(data => {
         if (data.results && data.results.length > 0) {
+          // Use the result if the address resolves
           const { lat, lng } = data.results[0].geometry.location;
           setLocationCoords({ lat, lng });
-          setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x600&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
+          setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
         } else {
-          setErrorMessage("Address not found. Unable to display map or street view.");
-          console.warn("No results found for the given address and postcode.");
+          // Fallback to using postcode only
+          console.warn("Full address failed. Attempting to resolve with postcode only.");
+          fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(postcode)}&key=${API_KEY}`)
+            .then(response => response.json())
+            .then(postcodeData => {
+              if (postcodeData.results && postcodeData.results.length > 0) {
+                // Use the result if postcode resolves
+                const { lat, lng } = postcodeData.results[0].geometry.location;
+                setLocationCoords({ lat, lng });
+                setStreetViewURL(`https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`);
+              } else {
+                setErrorMessage("Postcode not found. Unable to display map or street view.");
+              }
+            })
+            .catch(error => {
+              console.error("Failed to fetch location data with postcode fallback:", error);
+              setErrorMessage("Failed to fetch location data with postcode fallback.");
+            });
         }
       })
       .catch(error => {
@@ -66,50 +90,54 @@ const PropertyPage = () => {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '10vh', flexDirection: 'column', padding: '10px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
       <h2>Property Details</h2>
-      
-      {/* Container to ensure the same width for Street View and EPCGraph */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-        {/* Street View Image with fixed height */}
-        <div style={{ flex: 1, maxWidth: '45%', marginRight: '10px' }}>
+
+      {/* Image and Map Section */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+        {/* Street View */}
+        <div style={{ flex: 1, marginRight: '20px', height: '400px' }}>
           <h3>Street View</h3>
           {streetViewURL ? (
-            <img src={streetViewURL} alt="Street View" style={{ width: '100%', height: '400px', objectFit: 'cover' }} />
+            <img
+              src={streetViewURL}
+              alt="Street View"
+              style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }}
+            />
           ) : (
             <p>{errorMessage || 'Loading street view...'}</p>
           )}
         </div>
 
-        {/* EPC Graph with matched width */}
-        <div style={{ flex: 1, maxWidth: '45%' }}>
-          {propertyData && (
-            <EPCGraph
-              currentEnergyEfficiency={propertyData.current_energy_efficiency}
-              potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
-            />
+        {/* Google Map */}
+        <div style={{ flex: 1, height: '400px' }}>
+          <h3>Map View</h3>
+          {isLoaded ? (
+            <GoogleMap center={locationCoords} zoom={15} mapContainerStyle={{ height: '100%', width: '100%' }}>
+              <Marker position={locationCoords} />
+            </GoogleMap>
+          ) : (
+            <p>Loading map...</p>
           )}
+          {errorMessage && <p>{errorMessage}</p>}
         </div>
       </div>
 
-      {/* EPC Full Table */}
+      {/* EPC Table */}
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} />
       ) : (
-        <p>Loading property data...</p>
+        <p>{errorMessage || "Loading property details..."}</p>
       )}
 
-      {/* Map View */}
-      <div style={{ width: '100%', height: '400px', marginTop: '20px' }}>
-        <h3>Map View</h3>
-        {isLoaded ? (
-          <GoogleMap center={locationCoords} zoom={15} mapContainerStyle={{ height: '100%', width: '100%' }}>
-            <Marker position={locationCoords} />
-          </GoogleMap>
-        ) : (
-          <p>Loading map...</p>
+      {/* EPC Graph */}
+      <div style={{ marginTop: '40px', textAlign: 'center' }}>
+        {propertyData && (
+          <EPCGraph
+            currentEnergyEfficiency={propertyData.current_energy_efficiency}
+            potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+          />
         )}
-        {errorMessage && <p>{errorMessage}</p>}
       </div>
     </div>
   );

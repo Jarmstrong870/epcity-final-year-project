@@ -1,0 +1,26 @@
+.property-card{
+    flex: '1 1 calc(33.33% - 25px)';
+    box-sizing: 'border-box';
+    margin-bottom: '16px';
+};
+    
+.property-details{
+    text-align: 'left';
+    display: 'inline-block';
+    width: '56%';
+    height: '40%';
+    border-width: '7px';
+    border-style: 'solid';
+    border-color: 'black';
+    padding: '5px';
+    border-radius: '5px';
+    box-sizing: 'border-box';
+    margin-bottom: '40px';
+}
+
+.property-image{
+    width: '40%';
+    height: '40%';
+    object-fit: 'cover';
+    border-radius: '5px';
+}

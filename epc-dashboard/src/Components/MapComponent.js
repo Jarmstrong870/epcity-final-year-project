@@ -31,7 +31,7 @@ const MapComponent = () => {
       </form>
       <LoadScript googleMapsApiKey="AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c">
         <GoogleMap
-          mapContainerStyle={{ height: '200px', width: '300px' }} // Set smaller dimensions
+          mapContainerStyle={{ height: '200px', width: '200px' }} // Set smaller dimensions
           center={location}
           zoom={zoom}
         >
