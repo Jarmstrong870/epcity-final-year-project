@@ -8,6 +8,7 @@ import Register from './Register';
 import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
+import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
@@ -37,7 +38,6 @@ function App() {
     setLogoutConfirmVisible(false);
   };
 
-  // Function to fetch properties from backend
   const fetchProperties = (query = '', propertyTypes = [], epcRatings = []) => {
     setLoading(true);
     let url = 'http://127.0.0.1:5000/api/property/loadCSV';
@@ -76,10 +76,12 @@ function App() {
     <Router>
       <div className="App">
         <div className="header-container">
-          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+          <Link to="/">
+            <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
+          </Link>
           <div className="navigationLinks">
             <a href="/propertylist">View All Properties</a>
-        </div>
+          </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -106,8 +108,12 @@ function App() {
             <div className="modal">
               <h3>Are you sure you want to log out?</h3>
               <div className="modal-buttons">
-                <button onClick={handleLogout} className="confirm-button">Yes</button>
-                <button onClick={cancelLogout} className="cancel-button">No</button>
+                <button onClick={handleLogout} className="confirm-button">
+                  Yes
+                </button>
+                <button onClick={cancelLogout} className="cancel-button">
+                  No
+                </button>
               </div>
             </div>
           </div>
@@ -122,7 +128,6 @@ function App() {
                   <h3>Search for Properties</h3>
                   <PropertyFilter onFilterChange={fetchProperties} />
                 </div>
-                {/*<EPCTable />*/}
                 <PropertyList properties={properties} loading={loading} />
               </>
             }
@@ -130,10 +135,10 @@ function App() {
           <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
+          <Route path="/property/:uprn" element={<PropertyPage />} />
           <Route path="/propertylist" element={<PropertyList />} />
           <Route path="/property/:address" element={<PropertyPage />} />
-        
+          <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}
         </Routes>
       </div>
     </Router>
