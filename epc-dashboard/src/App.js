@@ -38,6 +38,7 @@ function App() {
     setLogoutConfirmVisible(false);
   };
 
+  // Function to fetch properties from backend
   const fetchProperties = (query = '', propertyTypes = [], epcRatings = []) => {
     setLoading(true);
     let url = 'http://127.0.0.1:5000/api/property/loadCSV';
@@ -135,7 +136,7 @@ function App() {
           <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/property/:uprn" element={<PropertyPage />} />
+          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
           <Route path="/propertylist" element={<PropertyList />} />
           <Route path="/property/:address" element={<PropertyPage />} />
           <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}

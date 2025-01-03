@@ -1,2 +1,4 @@
 .env
 __pycache__
+/Controller/__pycache__
+/Service/__pycache__
