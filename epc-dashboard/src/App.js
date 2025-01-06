@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom'; // Removed BrowserRouter
+import { Routes, Route, Link, Router } from 'react-router-dom'; // Removed BrowserRouter
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -8,6 +8,7 @@ import Register from './Register';
 import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
+import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import AccountOverview from './Components/AccountOverview'; // Import AccountOverview
@@ -76,6 +77,7 @@ function App() {
   }, []);
 
   return (
+    <Router>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -116,28 +118,31 @@ function App() {
         </div>
       )}
 
-      <Routes>
-        <Route
-          path="/propertylist"
-          element={
-            <>
-              <div className="search-bar-container">
-                <h3>Search for Properties</h3>
-                <PropertyFilter onFilterChange={fetchProperties} />
-              </div>
-              <PropertyList properties={properties} loading={loading} />
-            </>
-          }
-        />
-        <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/property/:uprn" element={<PropertyPage />} />
-        <Route path="/propertylist" element={<PropertyList />} />
-        <Route path="/property/:address" element={<PropertyPage />} />
-        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} />} />
-      </Routes>
-    </div>
+        <Routes>
+          <Route
+            path="/propertylist"
+            element={
+              <>
+                <div className="search-bar-container">
+                  <h3>Search for Properties</h3>
+                  <PropertyFilter onFilterChange={fetchProperties} />
+                </div>
+                {/*<EPCTable />*/}
+                <PropertyList properties={properties} loading={loading} />
+              </>
+            }
+          />
+          <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
+          <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
+          <Route path="/propertylist" element={<PropertyList />} />
+          <Route path="/property/:address" element={<PropertyPage />} />
+          <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}
+          <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
