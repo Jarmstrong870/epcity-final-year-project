@@ -20,6 +20,7 @@ function Login({ setUser }) {
         // Set the user information in the state
         setUser({
           firstname: response.data.firstname, 
+          lastname: response.data.lastname,
           email,
         });
         navigate('/'); // Redirect to the home page
