@@ -77,7 +77,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -142,7 +142,7 @@ function App() {
           <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} />} />
         </Routes>
       </div>
-    </Router>
+ 
   );
 }
 
