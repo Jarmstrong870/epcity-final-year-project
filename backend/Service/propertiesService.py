@@ -256,7 +256,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     global altered_properties
     global altered
     
-    if searchValue is None & property_types is None & epc_ratings is None:
+    if searchValue is None and property_types is None and epc_ratings is None:
         altered = False
         return all_properties.head(30)
         
@@ -279,5 +279,8 @@ def sortProperties(attribute, ascending=True):
     Sort properties by EPC energy efficiency (current_energy_efficiency).
     :param ascending: Sort order. True for ascending, False for descending.
     """
-    source = altered_properties if altered else all_properties
-    return source.sort_values(by=attribute, ascending=ascending)
+    if altered:
+        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
+        return altered_properties
+    else:
+        all_properties = all_properties.sort_values
