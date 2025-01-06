@@ -24,39 +24,6 @@ headers = {
     'Authorization': api_key
 }
 
-column_names = ['low_energy_fixed_light_count', 'address', 'uprn_source',
-       'floor_height', 'heating_cost_potential', 'unheated_corridor_length',
-       'hot_water_cost_potential', 'construction_age_band',
-       'potential_energy_rating', 'mainheat_energy_eff', 'windows_env_eff',
-       'lighting_energy_eff', 'environmental_impact_potential', 'glazed_type',
-       'heating_cost_current', 'address3', 'mainheatcont_description',
-       'sheating_energy_eff', 'property_type', 'local_authority_label',
-       'fixed_lighting_outlets_count', 'energy_tariff',
-       'mechanical_ventilation', 'hot_water_cost_current', 'county',
-       'postcode', 'solar_water_heating_flag', 'constituency',
-       'co2_emissions_potential', 'number_heated_rooms', 'floor_description',
-       'energy_consumption_potential', 'local_authority', 'built_form',
-       'number_open_fireplaces', 'windows_description', 'glazed_area',
-       'inspection_date', 'mains_gas_flag', 'co2_emiss_curr_per_floor_area',
-       'address1', 'heat_loss_corridor', 'flat_storey_count',
-       'constituency_label', 'roof_energy_eff', 'total_floor_area',
-       'building_reference_number', 'environmental_impact_current',
-       'co2_emissions_current', 'roof_description', 'floor_energy_eff',
-       'number_habitable_rooms', 'address2', 'hot_water_env_eff', 'posttown',
-       'mainheatc_energy_eff', 'main_fuel', 'lighting_env_eff',
-       'windows_energy_eff', 'floor_env_eff', 'sheating_env_eff',
-       'lighting_description', 'roof_env_eff', 'walls_energy_eff',
-       'photo_supply', 'lighting_cost_potential', 'mainheat_env_eff',
-       'multi_glaze_proportion', 'main_heating_controls', 'lodgement_datetime',
-       'flat_top_storey', 'current_energy_rating', 'secondheat_description',
-       'walls_env_eff', 'transaction_type', 'uprn',
-       'current_energy_efficiency', 'energy_consumption_current',
-       'mainheat_description', 'lighting_cost_current', 'lodgement_date',
-       'extension_count', 'mainheatc_env_eff', 'lmk_key', 'wind_turbine_count',
-       'tenure', 'floor_level', 'potential_energy_efficiency',
-       'hot_water_energy_eff', 'low_energy_lighting', 'walls_description',
-       'hotwater_description']
-
 #Potentially call this method once a month to get the most up to date property data
 def getAllProperties():
     # Page size (max 5000)
@@ -192,7 +159,7 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    firstProperty = pageNumber * page_size
+    firstProperty = pageNumber * page_size - 1
     lastProperty = (firstProperty + page_size) - 1
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
@@ -289,11 +256,16 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     global all_properties
     global altered_properties
     global altered
+    
+    if searchValue is None and property_types is None and epc_ratings is None:
+        altered = False
+        return all_properties.head(30)
+        
 
     altered = True
     altered_properties = all_properties
 
-    # Apply search filter
+    # Apply search
     if searchValue:
         altered_properties = searchProperties(searchValue)
 
@@ -302,3 +274,14 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
         altered_properties = filterProperties(property_types, epc_ratings)
 
     return altered_properties.head(30)
+
+def sortProperties(attribute, ascending=True):
+    """
+    Sort properties by EPC energy efficiency (current_energy_efficiency).
+    :param ascending: Sort order. True for ascending, False for descending.
+    """
+    if altered:
+        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
+        return altered_properties
+    else:
+        all_properties = all_properties.sort_values

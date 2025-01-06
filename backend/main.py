@@ -3,6 +3,7 @@ from flask_cors import CORS
 from Controller.propertyController import property_blueprint
 from Controller.loginController import login_controller
 from Controller.registrationController import register_controller
+from Controller.accountOverviewController import account_overview_controller
 from dotenv import load_dotenv  
 import os 
 
@@ -16,6 +17,7 @@ CORS(app)
 app.register_blueprint(property_blueprint, url_prefix='/api')
 app.register_blueprint(login_controller, url_prefix='/')
 app.register_blueprint(register_controller, url_prefix='/') 
+app.register_blueprint(account_overview_controller)
 
 # Run the server
 if __name__ == '__main__':

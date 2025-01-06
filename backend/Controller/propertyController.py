@@ -60,3 +60,19 @@ def alter_properties():
     )
 
     return jsonify(altered_properties.to_dict(orient='records'))
+
+# Route for sorting data
+@property_blueprint.route('/property/sort', methods=['GET'])
+def sort_properties():
+    attribute = request.args.get('attribute', '')
+    ascending = request.args.get('ascending', '')
+    
+    sorted_properties = properties.sortProperties(attribute, ascending)
+    return jsonify(sorted_properties.to_dict(orient='records'))
+
+# Route for 
+@property_blueprint.route('property/paginate', methods=['GET'])
+def get_property_page():
+    page_number = request.args.get('pageNumber', '')
+    page = properties.getPage(page_number)
+    return jsonify(page.to_dict(orient='records'))
