@@ -159,8 +159,9 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    firstProperty = pageNumber * page_size - 1
-    lastProperty = (firstProperty + page_size) - 1
+    pageNumber = int(pageNumber)
+    firstProperty = pageNumber * page_size
+    lastProperty = (firstProperty + page_size)
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
     else:
@@ -273,15 +274,18 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
 
-    return altered_properties.head(30)
+    return altered_properties
 
 def sortProperties(attribute, ascending=True):
     """
     Sort properties by EPC energy efficiency (current_energy_efficiency).
     :param ascending: Sort order. True for ascending, False for descending.
     """
+    global all_properties
+    global altered_properties
+    global altered
     if altered:
         altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
         return altered_properties
     else:
-        all_properties = all_properties.sort_values
+        all_properties = all_properties.sort_values(by=attribute, ascending=ascending)

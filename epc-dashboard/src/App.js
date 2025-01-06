@@ -8,6 +8,7 @@ import Register from './Register';
 import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
+import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
@@ -38,48 +39,62 @@ function App() {
   };
 
   // Function to fetch properties from backend
-  const fetchProperties = (query = '', propertyTypes = [], epcRatings = []) => {
+  const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
     setLoading(true);
-    let url = 'http://127.0.0.1:5000/api/property/loadCSV';
+  
+    try {
+      // Build the property search URL
+      let url = query || propertyTypes.length || epcRatings.length 
+        ? `http://127.0.0.1:5000/api/property/alter?` 
+        : `http://127.0.0.1:5000/api/property/loadCSV`;
+  
+      if (query) url += `search=${query}&`;
+      if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
+      if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
+  
+      // Fetch property search results
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch property data');
+      const data = await response.json();
+      setProperties(data);
+  
+      // Build and fetch paginated results
+      const pageUrl = `http://127.0.0.1:5000/api/property/paginate?pageNumber=${pageNumber}`;
+      const pageResponse = await fetch(pageUrl);
+      if (!pageResponse.ok) throw new Error('Failed to fetch pagination data');
+      const pageData = await pageResponse.json();
+      setProperties(pageData);
 
-    if (query || propertyTypes.length > 0 || epcRatings.length > 0) {
-      url = 'http://127.0.0.1:5000/api/property/alter?';
-      if (query) {
-        url += `search=${query}&`;
-      }
-      if (propertyTypes.length > 0) {
-        url += `pt=${propertyTypes.join(',')}&`;
-      }
-      if (epcRatings.length > 0) {
-        url += `epc=${epcRatings.join(',')}&`;
-      }
+      const sortUrl = `http://127.0.0.1:5000/api/property/sort?attribute=${sortValue}`;
+      const sortResponse = await fetch(sortUrl);
+      if (!sortResponse.ok) throw new Error('Failed to fetch sort data');
+      const sortData = await sortResponse.json();
+      setProperties(sortData);
+      
+    } catch (error) {
+      console.error('There was an error fetching the property data!', error);
+    } finally {
+      setLoading(false);
     }
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setProperties(data);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the property data!', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
-
+  
   useEffect(() => {
     fetchProperties();
   }, []);
+  
+
+
 
   return (
     <Router>
       <div className="App">
         <div className="header-container">
-          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+          <Link to="/">
+            <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
+          </Link>
           <div className="navigationLinks">
-            <a href="/propertylist" className='cta-button'>View All Properties</a>
-        </div>
+            <a href="/propertylist">View All Properties</a>
+          </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -106,8 +121,12 @@ function App() {
             <div className="modal">
               <h3>Are you sure you want to log out?</h3>
               <div className="modal-buttons">
-                <button onClick={handleLogout} className="confirm-button">Yes</button>
-                <button onClick={cancelLogout} className="cancel-button">No</button>
+                <button onClick={handleLogout} className="confirm-button">
+                  Yes
+                </button>
+                <button onClick={cancelLogout} className="cancel-button">
+                  No
+                </button>
               </div>
             </div>
           </div>
@@ -122,7 +141,6 @@ function App() {
                   <h3>Search for Properties</h3>
                   <PropertyFilter onFilterChange={fetchProperties} />
                 </div>
-                {/*<EPCTable />*/}
                 <PropertyList properties={properties} loading={loading} />
               </>
             }
@@ -133,8 +151,7 @@ function App() {
           <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
           <Route path="/propertylist" element={<PropertyList />} />
           <Route path="/property/:address" element={<PropertyPage />} />
-          
-        
+          <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}
         </Routes>
       </div>
     </Router>

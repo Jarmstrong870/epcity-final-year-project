@@ -65,9 +65,9 @@ def alter_properties():
 @property_blueprint.route('/property/sort', methods=['GET'])
 def sort_properties():
     attribute = request.args.get('attribute', '')
-    ascending = request.args.get('ascending', '')
+    #ascending = request.args.get('ascending', '')
     
-    sorted_properties = properties.sortProperties(attribute, ascending)
+    sorted_properties = properties.sortProperties(attribute, ascending = True)
     return jsonify(sorted_properties.to_dict(orient='records'))
 
 # Route for 

@@ -48,8 +48,7 @@ const StreetViewComponent = ({ address, postcode }) => {
       setErrorMessage("Address is required.");
     }
   }, [address, postcode, API_KEY]);
-  }, [address, postcode, API_KEY]);
-
+ 
   return (
     <div>
       {streetViewURL ? (
