@@ -5,6 +5,7 @@ from flask import jsonify
 import pandas as pd
 from dotenv import load_dotenv
 import os
+from Repository import propertyRepo as repo
 
 load_dotenv()
 
@@ -97,32 +98,17 @@ def getAllProperties():
     search_results = search_results[['uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime', 'current_energy_efficiency', 
                                      'current_energy_rating']]
 
-    # save the filtered DataFrame to a new CSV file
-    search_results.to_csv('properties_for_search.csv', index=False)
+    # save the filtered DataFrame to the hosted database
+    repo.update_properties_in_db(search_results)
 
 # Call this on backend start up to load properties into all_properties
-def getPropertiesFromCSV():
+def loadAllProperties():
     global all_properties
     global altered
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.astype(object).fillna(pd.NA)
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency')
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = properties
-
-    # set altered to false
+    
+    all_properties = repo.getPropertiesFromDB()
+    
     altered = False
-
-    return all_properties.head(30)
 
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
@@ -272,7 +258,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
 
-    return altered_properties.head(30)
+    return getPage(1)
 
 def sortProperties(attribute, ascending=True):
     """
@@ -280,7 +266,8 @@ def sortProperties(attribute, ascending=True):
     :param ascending: Sort order. True for ascending, False for descending.
     """
     if altered:
-        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
-        return altered_properties
+        altered_properties.sort_values(by=attribute, ascending=ascending)
+        return getPage(1)
     else:
-        all_properties = all_properties.sort_values
+        all_properties.sort_values(by=attribute, ascending=ascending)
+        return getPage(1)
