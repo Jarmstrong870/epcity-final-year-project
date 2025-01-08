@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './AccountOverview.css';
-import defaultProfileImage from '../assets/profile.jpg'; // Import default profile image
+import defaultProfileImage from '../assets/profileicon.png'; //default image
 
-function AccountOverview({ user, setUser }) {
+function AccountOverview({ user, setUser, setProfileImage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [profileImage, setProfileImage] = useState(defaultProfileImage);
+  const [profileImage, setLocalProfileImage] = useState(defaultProfileImage);
   const [message, setMessage] = useState('');
   const [passwordMessage, setPasswordMessage] = useState('');
   const [profileMessage, setProfileMessage] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
-  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false); 
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const navigate = useNavigate();
 
+  // Fetch user details
   useEffect(() => {
-    if (user) {
-      setFirstName(user.firstname || '');
-      setLastName(user.lastname || '');
-      setEmail(user.email || '');
-      setProfileImage(user.profileImage || defaultProfileImage);
-    }
-  }, [user]);
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/get-user/${user.email}`);
+        if (response.ok) {
+          const data = await response.json();
+          setFirstName(data.firstname || '');
+          setLastName(data.lastname || '');
+          setEmail(data.email || '');
+          setLocalProfileImage(data.profile_image_url || defaultProfileImage); // Update profile image
+          setProfileImage(profileImage);
+        } else {
+          console.error('Failed to fetch user data. Default values will be used.');
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    if (user) fetchUserProfile();
+  }, [profileImage, user]);
 
   const handleSaveChanges = async () => {
     if (!firstName || !lastName || !email) {
@@ -35,31 +49,20 @@ function AccountOverview({ user, setUser }) {
     try {
       const response = await fetch('http://localhost:5000/edit-details', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstname: firstName,
-          lastname: lastName,
-          email,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstname: firstName, lastname: lastName, email }),
       });
 
       if (response.ok) {
         const data = await response.json();
         setMessage(data.message || 'Details updated successfully!');
-        setUser({
-          ...user,
-          firstname: firstName,
-          lastname: lastName,
-          email,
-        });
+        setUser({ ...user, firstname: firstName, lastname: lastName, email });
       } else {
         const errorData = await response.json();
         setMessage(errorData.message || 'Failed to update user details.');
       }
     } catch (error) {
-      console.error('Error updating user details:', error.message || error);
+      console.error('Error updating user details:', error);
       setMessage('An error occurred while saving your changes. Please try again.');
     }
   };
@@ -68,11 +71,9 @@ function AccountOverview({ user, setUser }) {
     try {
       const response = await fetch('http://localhost:5000/change-password', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email, 
+          email,
           current_password: currentPassword,
           new_password: newPassword,
         }),
@@ -93,21 +94,51 @@ function AccountOverview({ user, setUser }) {
     }
   };
 
+  const handleProfileImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setProfileMessage('No file selected.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('email', user.email); // Send email to backend
+
+    try {
+      const response = await fetch('http://localhost:5000/upload-profile-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfileMessage(data.message || 'Profile image updated successfully!');
+        setLocalProfileImage(data.url); // Update local image
+        setProfileImage(data.url); // Update App.js navigation bar profile image
+      } else {
+        const errorData = await response.json();
+        setProfileMessage(errorData.message || 'Failed to update profile image.');
+      }
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+      setProfileMessage('An error occurred while updating your profile image.');
+    }
+  };
+
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch('http://localhost:5000/delete-account', {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }), 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
         const data = await response.json();
         setDeleteMessage(data.message || 'Account deleted successfully!');
-        setUser(null); // Log out the user
-        navigate('/'); // Redirect to the home page
+        setUser(null); // Clear user session
+        navigate('/'); // Redirect to homepage
       } else {
         const errorData = await response.json();
         setDeleteMessage(errorData.message || 'Failed to delete account.');
@@ -118,169 +149,68 @@ function AccountOverview({ user, setUser }) {
     }
   };
 
-  const cancelDeleteAccount = () => {
-    setDeleteConfirmVisible(false);
-  };
-
-  const confirmDeleteAccount = () => {
-    setDeleteConfirmVisible(true);
-  };
-
-  const handleProfileImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      setProfileMessage("No file selected.");
-      return;
-    }
-  
-    if (!user || !user.id || !user.token) {
-      setProfileMessage("User is not authenticated.");
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('user_id', user.id); // Include user ID for backend
-  
-    try {
-      const response = await fetch('http://localhost:5000/api/upload-profile-image', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${user.token}`, // Token for authenticated requests
-        },
-        body: formData,
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        setProfileMessage(data.message || 'Profile image updated successfully!');
-        setProfileImage(data.url); // Use the public URL returned from the backend
-      } else {
-        const errorData = await response.json();
-        setProfileMessage(errorData.message || 'Failed to update profile image.');
-      }
-    } catch (error) {
-      console.error('Error updating profile image:', error);
-      setProfileMessage('An error occurred while updating your profile image.');
-    }
-  };  
-
   return (
     <div className="account-overview">
-      {/* Navigation Bar */}
+      {/* Navigation */}
       <div className="nav-bar">
-        <Link to="/account-overview" className="nav-item">
-          Account Overview
-        </Link>
-        <Link to="/property" className="nav-item">
-          My Properties
-        </Link>
-        <button className="nav-item logout-button" onClick={() => setUser(null)}>
-          Logout
-        </button>
+        <Link to="/account-overview" className="nav-item">Account Overview</Link>
+        <Link to="/property" className="nav-item">My Properties</Link>
+        <button className="nav-item logout-button" onClick={() => setUser(null)}>Logout</button>
       </div>
 
-      {/* Content Section */}
+      {/* Main Content */}
       <div className="account-content">
         <h1>Welcome, {firstName || 'User'}!</h1>
 
-        {/* Profile Image Section */}
+        {/* Profile Image */}
         <div className="profile-section">
-          <img
-            src={profileImage || defaultProfileImage}
-            alt="Profile"
-            className="profile-image"
-          />
+          <img src={profileImage} alt="Profile" className="profile-image" />
           <div className="file-input-wrapper">
             <button className="custom-file-button">Choose File</button>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-            />
+            <input type="file" accept="image/*" onChange={handleProfileImageChange} />
           </div>
-          <span className="file-input-label">No file chosen</span>
           {profileMessage && <p className="profile-message">{profileMessage}</p>}
         </div>
 
-        {/* Edit Details Section */}
+        {/* Edit Details */}
         <div className="form-section">
           <h2>Edit Your Details</h2>
           {message && <p className="account-message">{message}</p>}
           <div className="form-group">
             <label>First Name:</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Enter your first name"
-            />
+            <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div className="form-group">
             <label>Last Name:</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Enter your last name"
-            />
+            <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
           <div className="form-group">
             <label>Email:</label>
-            <input
-              type="email"
-              value={email}
-              readOnly
-              className="read-only-input"
-              placeholder="Email cannot be changed"
-            />
+            <input type="email" value={email} readOnly className="read-only-input" />
           </div>
-          <button className="save-button" onClick={handleSaveChanges}>
-            Save Changes
-          </button>
+          <button className="save-button" onClick={handleSaveChanges}>Save Changes</button>
         </div>
 
-        {/* Change Password Section */}
+        {/* Change Password */}
         <div className="form-section">
           <h2>Change Password</h2>
           {passwordMessage && <p className="account-message">{passwordMessage}</p>}
           <div className="form-group">
             <label>Current Password:</label>
-            <input
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter your current password"
-            />
+            <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
           </div>
           <div className="form-group">
             <label>New Password:</label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Enter a new password"
-            />
+            <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
           </div>
-          <button className="save-button" onClick={handleChangePassword}>
-            Change Password
-          </button>
+          <button className="save-button" onClick={handleChangePassword}>Change Password</button>
         </div>
 
-        {/* Delete Account Section */}
+        {/* Delete Account */}
         <div className="form-section">
           <h2>Delete Account</h2>
           {deleteMessage && <p className="account-message">{deleteMessage}</p>}
-          <p>
-            If you delete your account, all your data will be permanently
-            removed. This action cannot be undone.
-          </p>
-          <button
-            className="delete-button"
-            onClick={confirmDeleteAccount}
-          >
-            Delete Account
-          </button>
+          <button className="delete-button" onClick={() => setDeleteConfirmVisible(true)}>Delete Account</button>
         </div>
       </div>
 
@@ -289,15 +219,8 @@ function AccountOverview({ user, setUser }) {
         <div className="modal-overlay">
           <div className="modal">
             <h3>Are you sure you want to delete your account?</h3>
-            <p>This action cannot be undone.</p>
-            <div className="modal-buttons">
-              <button onClick={handleDeleteAccount} className="confirm-button">
-                Yes
-              </button>
-              <button onClick={cancelDeleteAccount} className="cancel-button">
-                No
-              </button>
-            </div>
+            <button onClick={handleDeleteAccount} className="confirm-button">Yes</button>
+            <button onClick={() => setDeleteConfirmVisible(false)} className="cancel-button">No</button>
           </div>
         </div>
       )}
@@ -306,3 +229,4 @@ function AccountOverview({ user, setUser }) {
 }
 
 export default AccountOverview;
+
