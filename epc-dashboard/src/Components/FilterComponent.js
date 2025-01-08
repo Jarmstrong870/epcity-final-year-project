@@ -5,6 +5,8 @@ const PropertyFilter = ({ onFilterChange }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [epcRatings, setEpcRatings] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [sortValue, setSortValue] = useState('current_energy_rating');
 
   // Handler for search input change
   const handleSearchChange = (e) => {
@@ -35,8 +37,16 @@ const PropertyFilter = ({ onFilterChange }) => {
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     // Call the parent component's method
-    onFilterChange(searchQuery, propertyTypes, epcRatings);
+    onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
   };
+  const handlePageChange = (e) => {
+    setPageNumber(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    setSortValue(e.target.value);
+  }
+
 
   return (
     <div className="property-filter">
@@ -84,6 +94,23 @@ const PropertyFilter = ({ onFilterChange }) => {
               </label>
             ))}
           </div>
+        </div>
+        <div>
+          <label>Page Number:</label>
+          <input type="number" id="page" name="page" min="1" max="100" defaultValue={1} value={pageNumber} onChange={handlePageChange} />
+          
+
+        </div>
+        <div>
+          <label>Sort By:</label>
+          <select defaultValue={"current_energy_rating"} onChange={handleSortChange}>
+            <option value="address">Address</option>
+            <option value="postcode">Postcode</option>
+            <option value="property_type">Property Type</option>
+            <option value="current_energy_rating">Current Energy Rating</option>
+            <option value="current_energy_efficiency">Current Energy Efficiency</option>
+          </select>
+          <h3>{sortValue}</h3>
         </div>
 
         {/* Submit Button */}

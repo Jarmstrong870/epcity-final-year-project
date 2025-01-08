@@ -11,7 +11,7 @@ load_dotenv()
 
 # Initialize the Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for the entire app
+CORS(app)
 
 # Register blueprints
 app.register_blueprint(property_blueprint, url_prefix='/api')

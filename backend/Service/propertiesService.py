@@ -135,7 +135,8 @@ def getTopRatedProperties():
     properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
 
     # Convert columns to object type to handle mixed values properly
-    properties = properties.astype(object).fillna(pd.NA)
+    properties = properties.infer_objects(copy=False)
+
 
     # Sort by descending current efficiency and return top 6
     top_rated_properties = properties.sort_values(by='current_energy_efficiency', ascending=False)
@@ -145,7 +146,7 @@ def getTopRatedProperties():
 
     # set altered to false
     changed = False
-
+    print(all_properties.head())
     return all_properties.head(12)
 
 
@@ -158,8 +159,9 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    firstProperty = pageNumber * page_size - 1
-    lastProperty = (firstProperty + page_size) - 1
+    pageNumber = int(pageNumber)
+    firstProperty = pageNumber * page_size
+    lastProperty = (firstProperty + page_size)
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
     else:
@@ -272,15 +274,18 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
 
-    return altered_properties.head(30)
+    return altered_properties
 
 def sortProperties(attribute, ascending=True):
     """
     Sort properties by EPC energy efficiency (current_energy_efficiency).
     :param ascending: Sort order. True for ascending, False for descending.
     """
+    global all_properties
+    global altered_properties
+    global altered
     if altered:
         altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
         return altered_properties
     else:
-        all_properties = all_properties.sort_values
+        all_properties = all_properties.sort_values(by=attribute, ascending=ascending)
