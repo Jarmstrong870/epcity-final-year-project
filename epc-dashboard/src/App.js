@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+//import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // For navigation
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -12,6 +14,7 @@ import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
+import AccountOverview from './Components/AccountOverview';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -117,7 +120,7 @@ function App() {
           <a href="/propertylist">View All Properties</a>
         </div>
         <div className="profile-icon" onClick={toggleDropdown}>
-          <img src={profileIcon} alt="Profile" className="profile-img" />
+          <img src={profileImage} alt="Profile" className="profile-img" />
           {dropdownVisible && (
             <div className="dropdown-menu">
               {user ? (
