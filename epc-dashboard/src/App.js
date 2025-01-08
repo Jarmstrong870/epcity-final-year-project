@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+//import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // For navigation
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -12,9 +14,11 @@ import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
+import AccountOverview from './Components/AccountOverview';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState(profileIcon); // State for the profile image
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
@@ -30,6 +34,7 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    setProfileImage(profileIcon); // Reset to default image
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
   };
@@ -77,6 +82,27 @@ function App() {
       setLoading(false);
     }
   };
+//if user is logged in, get current profile image.
+   const fetchProfileImage = async () => {
+    if (!user || !user.email) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/get-user/${user.email}`);
+      if (response.ok) {
+        const data = await response.json();
+        setProfileImage(data.profile_image_url || profileIcon);
+      }
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchProfileImage(); // Fetch the profile image when the user logs in/ page loads
+    }
+  }, [user]);
+
   
   useEffect(() => {
     fetchProperties();
@@ -86,35 +112,34 @@ function App() {
 
 
   return (
-    <Router>
-      <div className="App">
-        <div className="header-container">
-          <Link to="/">
-            <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
-          </Link>
-          <div className="navigationLinks">
-            <a href="/propertylist">View All Properties</a>
-          </div>
-          <div className="profile-icon" onClick={toggleDropdown}>
-            <img src={profileIcon} alt="Profile" className="profile-img" />
-            {dropdownVisible && (
-              <div className="dropdown-menu">
-                {user ? (
-                  <>
-                    <p>Welcome, {user.firstname}</p>
-                    <Link to="/property">My Properties</Link>
-                    <button onClick={showLogoutConfirmation}>Logout</button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
+
+    <div className="App">
+      <div className="header-container">
+        <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <div className="navigationLinks">
+          <a href="/propertylist">View All Properties</a>
         </div>
+        <div className="profile-icon" onClick={toggleDropdown}>
+          <img src={profileImage} alt="Profile" className="profile-img" />
+          {dropdownVisible && (
+            <div className="dropdown-menu">
+              {user ? (
+                <>
+                  <p>Welcome, {user.firstname}</p>
+                  <Link to="/account-overview">Account Overview</Link>
+                  <Link to="/property">My Properties</Link>
+                  <button onClick={showLogoutConfirmation}>Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">Login</Link>
+                  <Link to="/register">Register</Link>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
         {logoutConfirmVisible && (
           <div className="modal-overlay">
@@ -132,30 +157,32 @@ function App() {
           </div>
         )}
 
-        <Routes>
-          <Route
-            path="/propertylist"
-            element={
-              <>
-                <div className="search-bar-container">
-                  <h3>Search for Properties</h3>
-                  <PropertyFilter onFilterChange={fetchProperties} />
-                </div>
-                <PropertyList properties={properties} loading={loading} />
-              </>
-            }
-          />
-          <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
-          <Route path="/propertylist" element={<PropertyList />} />
-          <Route path="/property/:address" element={<PropertyPage />} />
-          <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}
-        </Routes>
-      </div>
-    </Router>
+      <Routes>
+        <Route
+          path="/propertylist"
+          element={
+            <>
+              <div className="search-bar-container">
+                <h3>Search for Properties</h3>
+                <PropertyFilter onFilterChange={fetchProperties} />
+              </div>
+              <PropertyList properties={properties} loading={loading} />
+            </>
+          }
+        />
+        <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/property/:uprn" element={<PropertyPage />} />
+        <Route path="/propertylist" element={<PropertyList />} />
+        <Route path="/property/:address" element={<PropertyPage />} />
+        <Route path="/glossary" element={<GlossaryPage />} />
+        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage}/>} />
+      </Routes>
+    </div>
   );
 }
 
 export default App;
+
+
