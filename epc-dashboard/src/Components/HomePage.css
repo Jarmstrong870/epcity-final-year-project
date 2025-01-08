@@ -8,7 +8,8 @@ body {
 
 /* Background and Search Bar Styling */
 .backgroundImageStyling {
-  background-image: url('../assets/house_bkc.jpg'); /* Ensure this path is correct */
+  text-align: center;
+  background-image: url('../assets/house_bkc.jpg'); /* Replace with your actual image path */
   background-size: cover;
   background-position: center;
   height: 250px;
@@ -28,19 +29,17 @@ body {
   background: rgba(255, 255, 255, 0.9);
   border-radius: 30px;
   padding: 10px 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   gap: 10px;
 }
 
 .stylingSearchInput {
   width: 300px;
-  max-width: 500px;
   padding: 10px 15px;
   border: 2px solid #ddd;
   border-radius: 25px;
   font-size: 16px;
   outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .stylingSearchInput:focus {
@@ -77,93 +76,67 @@ body {
   padding-bottom: 10px;
 }
 
-/* Carousel Styling */
-.carousel-container {
-  text-align: center;
-  margin: 20px auto;
-}
-
-.carousel {
-  display: flex;
+/* Property Grid Styling */
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
   justify-content: center;
-  gap: 20px;
-  overflow: hidden;
-  position: relative;
-  align-items: center;
 }
 
-.carousel-content {
-  display: flex;
-  gap: 20px;
-  transition: transform 0.3s ease-in-out;
+@media (max-width: 768px) {
+  .property-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.arrow {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #007bff;
-  transition: color 0.3s ease;
-}
-
-.arrow:hover {
-  color: #0056b3;
-}
-
-.arrow:disabled {
-  color: #ccc;
-  cursor: not-allowed;
+@media (max-width: 480px) {
+  .property-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Property Card Styling */
-.topRatedPropertyCard {
+.property-card {
   background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease;
   text-align: left;
-  width: 300px;
 }
 
-.topRatedPropertyCard:hover {
+.property-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-.propertyImage img {
+.property-card img {
   width: 100%;
   height: auto;
-  display: block;
+  border-bottom: 1px solid #ddd;
 }
 
-.propertyDetails {
+.property-card .property-details {
   padding: 15px;
 }
 
-.propertyDetails h3 {
+.property-card .property-details h3 {
   margin: 0 0 10px;
   font-size: 18px;
   color: #333;
 }
 
-.propertyDetails p {
+.property-card .property-details p {
   margin: 5px 0;
   font-size: 14px;
   color: #666;
 }
 
-/* Footer Styling */
-.footer {
-  background-color: #2c3e3d;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  font-size: 14px;
-}
-
-/* Utility Classes */
-.hidden {
-  display: none;
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .stylingSearchInput {
+    width: 100%;
+  }
 }
