@@ -344,4 +344,17 @@ td a:hover {
     transform: rotate(360deg);
   }
 }
+.cta-button {
+  display: inline-block;
+  background-color: #007BFF; /* Replace with your desired color */
+  color: #FFFFFF;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
 
+.cta-button:hover {
+  background-color: #0056b3; /* Adjust hover color as needed */
+}

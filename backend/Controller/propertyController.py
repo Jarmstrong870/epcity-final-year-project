@@ -36,7 +36,10 @@ def get_property_info():
     """
     Returns data for a single property
     """
+    
+
     uprn = request.args.get('uprn', '').lower()
+    print(f"Received UPRN: {uprn}")
     return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
 
 # Route to for searching and filtering data
@@ -62,9 +65,9 @@ def alter_properties():
 @property_blueprint.route('/property/sort', methods=['GET'])
 def sort_properties():
     attribute = request.args.get('attribute', '')
-    ascending = request.args.get('ascending', '')
+    #ascending = request.args.get('ascending', '')
     
-    sorted_properties = properties.sortProperties(attribute, ascending)
+    sorted_properties = properties.sortProperties(attribute, ascending = True)
     return jsonify(sorted_properties.to_dict(orient='records'))
 
 # Route for 
