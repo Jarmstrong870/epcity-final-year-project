@@ -88,6 +88,55 @@
   font-weight: bold;
 }
 
+.login-redirect {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.login-redirect a {
+  color: #0a2e15;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-redirect a:hover {
+  color: #183d25;
+  text-decoration: underline;
+}
+
+/* Wrapper for the password field and toggle */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Password input field */
+.password-wrapper .form-input {
+  flex: 1;
+  padding-right: 40px; /* Add space for the eye icon */
+}
+
+/* Eye icon for toggling password visibility */
+.toggle-password-icon {
+  position: absolute;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.7; /* Slightly transparent for a subtle look */
+  transition: opacity 0.3s ease;
+}
+
+/* Fully opaque when hovered */
+.toggle-password-icon:hover {
+  opacity: 1;
+}
+
+
+
   
   
   
