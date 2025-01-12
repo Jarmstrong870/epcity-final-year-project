@@ -20,7 +20,7 @@ def property_load_csv():
     """
     Handles GET requests to retrieve properties from CSV.
     """
-    return jsonify(properties.getPropertiesFromCSV().to_dict(orient='records'))
+    return jsonify(properties.loadAllProperties().to_dict(orient='records'))
 
 # Route to load top 6 properties from CSV for Home Page
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])

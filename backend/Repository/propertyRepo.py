@@ -39,7 +39,7 @@ def getPropertiesFromDB():
         
     return df
     
-def update_properties_in_db(dataframe):
+def updatePropertiesInDB(dataframe):
     """
     Connect to the database, wipe the properties table, and populate it with new data.
     """

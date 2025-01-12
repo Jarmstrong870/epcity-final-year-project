@@ -99,7 +99,7 @@ def getAllProperties():
                                      'current_energy_rating']]
 
     # save the filtered DataFrame to the hosted database
-    repo.update_properties_in_db(search_results)
+    repo.updatePropertiesInDB(search_results)
 
 # Call this on backend start up to load properties into all_properties
 def loadAllProperties():
@@ -109,31 +109,12 @@ def loadAllProperties():
     all_properties = repo.getPropertiesFromDB()
     
     altered = False
+    return all_properties.head(30)
 
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
     global all_properties
-    global changed
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.infer_objects(copy=False)
-
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency', ascending=False)
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = top_rated_properties
-
-    # set altered to false
-    changed = False
-    print(all_properties.head())
-    return all_properties.head(12)
+    return all_properties.head(6)
 
 
 # srot All  Properties - sort by EPC rating (current efficiency)
@@ -145,7 +126,7 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    pageNumber = int(pageNumber)
+    pageNumber = int(pageNumber) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size)
     if altered:
@@ -210,7 +191,6 @@ def getPropertyInfo(uprn):
 def filterProperties(property_types, epc_ratings):
     global altered_properties
 
-    print(epc_ratings)
     # Start with the full set of searched_properties
     filtered_properties = altered_properties
 
@@ -246,7 +226,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     
     if searchValue is None and property_types is None and epc_ratings is None:
         altered = False
-        return all_properties.head(30)
+        return getPage(1)
         
 
     altered = True
@@ -276,3 +256,71 @@ def sortProperties(attribute, ascending=True):
     else:
         all_properties.sort_values(by=attribute, ascending=ascending)
         return getPage(1)
+    
+def calculateUtilityCosts(df):
+    # Extract necessary columns
+    heating_cost = df.get('heating_cost_current', [0]).iloc[0]
+    lighting_cost = df.get('lighting_cost_current', [0]).iloc[0]
+    hot_water_cost = df.get('hot_water_cost_current', [0]).iloc[0]
+    
+    lodgement_date = df.get('lodgement_datetime', [None]).iloc[0]
+
+    # Validate lodgement date
+    if pd.isnull(lodgement_date):
+        print("No valid lodgement date found.")
+        return None
+
+    # Format dates for API
+    start_date = lodgement_date.strftime("%Y-%m-%d")  # Lodgement date as YYYY-MM
+
+    # Adjust each utility cost for inflation
+    adjusted_heating_cost = calculateInflationAdjustedPrice(heating_cost, start_date)
+    adjusted_lighting_cost = calculateInflationAdjustedPrice(lighting_cost, start_date)
+    adjusted_hot_water_cost = calculateInflationAdjustedPrice(hot_water_cost, start_date)
+
+    # Validate CPI results
+    if any(cost is None for cost in [adjusted_heating_cost, adjusted_lighting_cost, adjusted_hot_water_cost]):
+        print("Failed to adjust costs for inflation.")
+        return None
+
+    # Create a summary
+    summary = {
+        "Heating Cost (Adjusted)": adjusted_heating_cost,
+        "Lighting Cost (Adjusted)": adjusted_lighting_cost,
+        "Hot Water Cost (Adjusted)": adjusted_hot_water_cost,
+        "Total Utility Cost (Adjusted)": float(adjusted_heating_cost) + float(adjusted_lighting_cost) + float(adjusted_hot_water_cost)
+    }
+
+    return summary
+
+def calculateInflationAdjustedPrice(start_price, start_date):
+    
+    api_url = 'https://www.statbureau.org/calculate-inflation-price-json'
+    
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+    # Query parameters
+    params = {
+        'country': 'united-kingdom',
+        'start': start_date,
+        'end': end_date,  # Current date in YYYY-MM-DD format
+        'amount': start_price,
+        'format': True  # Format the result as currency
+    }
+    
+    # Construct the full URL with encoded parameters
+    full_url = f"{api_url}?{urlencode(params)}"
+    
+    try:
+        # Make the API request
+        request = urllib.request.Request(full_url)
+        with urllib.request.urlopen(request) as response:
+            # Read and decode the response
+            response_body = response.read().decode()
+            # Remove currency symbols or any non-numeric characters
+            cleaned_response = ''.join(c for c in response_body if c.isdigit() or c == '.' or c == '-')
+            adjusted_price = float(cleaned_response)
+            return adjusted_price
+    except Exception as e:
+        print(f"Error fetching inflation-adjusted price: {e}")
+        return None
