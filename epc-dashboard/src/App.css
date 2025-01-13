@@ -13,11 +13,12 @@
   }
 }
 
+/* Header Container */
 .header-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #2c3e3d;
+  justify-content: space-between; /* Space between logo and header-right */
+  align-items: center; /* Align items vertically */
+  background-color: #2c3e3d; /* Dark green */
   padding: 10px 20px;
   width: 100%;
   box-sizing: border-box;
@@ -28,104 +29,37 @@
   width: auto;
 }
 
-.navbar {
+/* Header Right Section (Profile Icon + Language Selector) */
+.header-right {
   display: flex;
-  justify-content: center;
-  background-color: #2c3e3d;
-  padding: 10px 0;
-  width: 100%;
+  align-items: center; /* Align items vertically */
+  gap: 20px; /* Add space between profile icon and language selector */
 }
 
-.navbar ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.navbar li {
-  margin: 0;
-}
-
-.navbar a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
+/* Profile Icon */
 .profile-icon {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
   position: relative;
-  z-index: 10; 
+  cursor: pointer;
 }
 
 .profile-img {
-  width: 40px;
-  height: 40px;
+  width: 50px; /* Updated size */
+  height: 50px; /* Updated size */
   border-radius: 50%;
   border: 2px solid #fff;
   transition: transform 0.2s;
 }
 
 .profile-img:hover {
-  transform: scale(1.1);
+  transform: scale(1.1); /* Hover effect */
 }
 
-.table-container {
-  margin: 40px auto;
-  max-width: 800px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.table-border {
-  border: 1px solid #d4d4d4;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-th, td {
-  border: 1px solid #d4d4d4;
-  padding: 12px;
-  text-align: center;
-  font-size: 1rem;
-  color: #333;
-}
-
-th {
-  background-color: #0a2e15;
-  color: #ffffff;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-td a {
-  color: #0a2e15;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-td a:hover {
-  color: #183d25;
-}
-
+/* Dropdown Menu for Profile */
 .dropdown-menu {
   position: absolute;
-  top: 50px;
+  top: 60px; /* Adjusted for updated icon size */
   right: 0;
-  background-color: #2c3e3d;
+  background-color: #2c3e3d; /* Matches header background */
   border: 1px solid #1a2524;
   border-radius: 8px;
   padding: 15px;
@@ -155,7 +89,7 @@ td a:hover {
 }
 
 .dropdown-menu a:hover {
-  background-color: #183d25;
+  background-color: #183d25; /* Darker green hover effect */
   color: #ffffff;
 }
 
@@ -175,12 +109,95 @@ td a:hover {
   background-color: #c5303e;
 }
 
-/* Styling the search bar container */
+/* Language Selector */
+.language-selector {
+  position: relative;
+  cursor: pointer;
+}
+
+.flag-img {
+  width: 55px;
+  height: 50px;
+}
+
+
+.flag-img:hover {
+  transform: scale(1.1); /* Hover effect */
+}
+
+
+/* Language Dropdown Menu */
+.language-dropdown-menu {
+  position: absolute;
+  top: 60px; /* Adjusted for flag size */
+  right: 0;
+  background-color: #2c3e3d; /* Matches header background */
+  border: 1px solid #1a2524;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 200px;
+}
+
+.language-dropdown-menu div {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #d4edda;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.language-dropdown-menu div:hover {
+  background-color: #183d25; /* Darker green hover effect */
+  color: #ffffff;
+}
+
+.flag-img-dropdown {
+  width: 20px;
+  height: 15px;
+  margin-right: 8px;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: #2c3e3d;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.navbar ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.navbar li {
+  margin: 0;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Miscellaneous Styles */
 .search-bar-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Space between input and button */
+  gap: 10px;
   margin: 20px 0;
   padding: 15px;
   background-color: #f5f5f5;
@@ -188,9 +205,8 @@ td a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling the input field */
 .search-bar-container input[type="text"] {
-  flex: 1; /* Takes up available space */
+  flex: 1;
   max-width: 600px;
   padding: 12px 20px;
   border: none;
@@ -201,33 +217,30 @@ td a:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling the button */
 .search-bar-container button {
   padding: 12px 20px;
   border: none;
-  border-radius: 20px; /* Adjusted to be less round */
-  background-color: #2c5f2d; /* Dark green color */
+  border-radius: 20px;
+  background-color: #2c5f2d;
   color: white;
   font-size: 16px;
-  font-weight: bold; /* Bold text */
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
 
-/* Button hover effect */
 .search-bar-container button:hover {
-  background-color: #1e4020; /* Slightly darker shade */
+  background-color: #1e4020;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .search-bar-container {
     flex-direction: column;
   }
 
   .search-bar-container button {
-    margin-top: 10px; /* Adds space when button stacks below input */
-    width: 100%; /* Full width on smaller screens */
+    margin-top: 10px;
+    width: 100%;
   }
 }
 
@@ -244,11 +257,11 @@ td a:hover {
 }
 
 .info-icon:hover {
-  color: #0a2e15; /* Darker color on hover */
+  color: #0a2e15;
 }
 
 .delete-account-button {
-  background-color: #e63946; /* Red color for emphasis */
+  background-color: #e63946;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -260,7 +273,7 @@ td a:hover {
 }
 
 .delete-account-button:hover {
-  background-color: #c5303e; /* Darker shade on hover */
+  background-color: #c5303e;
 }
 
 .modal-overlay {
@@ -269,11 +282,11 @@ td a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100; /* High z-index to overlay on top of everything */
+  z-index: 100;
 }
 
 .modal {
@@ -307,7 +320,7 @@ td a:hover {
 }
 
 .confirm-button {
-  background-color: #e63946; /* Red for confirm */
+  background-color: #e63946;
   color: white;
 }
 
@@ -316,7 +329,7 @@ td a:hover {
 }
 
 .cancel-button {
-  background-color: #0a2e15; /* Dark green for cancel */
+  background-color: #0a2e15;
   color: white;
 }
 
@@ -344,4 +357,3 @@ td a:hover {
     transform: rotate(360deg);
   }
 }
-

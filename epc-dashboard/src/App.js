@@ -11,6 +11,7 @@ import PropertyPage from './Components/PropertyPage';
 import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
+import LanguageSelector from './Components/LanguageSelector';
 import './Components/HomePage.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState('en'); // Default language: English
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -82,24 +84,30 @@ function App() {
           <div className="navigationLinks">
             <a href="/propertylist">View All Properties</a>
           </div>
-          <div className="profile-icon" onClick={toggleDropdown}>
-            <img src={profileIcon} alt="Profile" className="profile-img" />
-            {dropdownVisible && (
-              <div className="dropdown-menu">
-                {user ? (
-                  <>
-                    <p>Welcome, {user.firstname}</p>
-                    <Link to="/property">My Properties</Link>
-                    <button onClick={showLogoutConfirmation}>Logout</button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login">Login</Link>
-                    <Link to="/register">Register</Link>
-                  </>
-                )}
-              </div>
-            )}
+          <div className="header-right">
+            {/* Profile Icon */}
+            <div className="profile-icon" onClick={toggleDropdown}>
+              <img src={profileIcon} alt="Profile" className="profile-img" />
+              {dropdownVisible && (
+                <div className="dropdown-menu">
+                  {user ? (
+                    <>
+                      <p>Welcome, {user.firstname}</p>
+                      <Link to="/property">My Properties</Link>
+                      <button onClick={showLogoutConfirmation}>Logout</button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login">Login</Link>
+                      <Link to="/register">Register</Link>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Language Selector */}
+            <LanguageSelector setLanguage={setLanguage} />
           </div>
         </div>
 
@@ -136,9 +144,7 @@ function App() {
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/property/:uprn" element={<PropertyPage />} />
-          <Route path="/propertylist" element={<PropertyList />} />
-          <Route path="/property/:address" element={<PropertyPage />} />
-          <Route path="/glossary" element={<GlossaryPage />} /> {/* Add glossary route */}
+          <Route path="/glossary" element={<GlossaryPage language={language} />} />
         </Routes>
       </div>
     </Router>
