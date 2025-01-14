@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -9,17 +10,22 @@ import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
 import GlossaryPage from './Components/Glossarypage';
+import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
-import LanguageSelector from './Components/LanguageSelector';
+import ForgotPassword from './Components/ForgotPassword';
 import './Components/HomePage.css';
+import AccountOverview from './Components/AccountOverview';
+import LanguageSelector from './Components/LanguageSelector';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState(profileIcon); // Profile image state
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState('en'); // Default language: English
+  const [language, setLanguage] = useState('en'); // Language state
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -31,154 +37,152 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    setProfileImage(profileIcon); // Reset to default image
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
+    navigate('/');
   };
 
   const cancelLogout = () => {
     setLogoutConfirmVisible(false);
   };
 
-  const fetchProperties = (query = '', propertyTypes = [], epcRatings = []) => {
+  // Function to fetch properties from backend
+  const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
     setLoading(true);
-    let url = 'http://127.0.0.1:5000/api/property/loadCSV';
 
-    if (query || propertyTypes.length > 0 || epcRatings.length > 0) {
-      url = 'http://127.0.0.1:5000/api/property/alter?';
-      if (query) {
-        url += `search=${query}&`;
-      }
-      if (propertyTypes.length > 0) {
-        url += `pt=${propertyTypes.join(',')}&`;
-      }
-      if (epcRatings.length > 0) {
-        url += `epc=${epcRatings.join(',')}&`;
-      }
+    try {
+      let url = query || propertyTypes.length || epcRatings.length 
+        ? `http://127.0.0.1:5000/api/property/alter?` 
+        : `http://127.0.0.1:5000/api/property/loadCSV`;
+
+      if (query) url += `search=${query}&`;
+      if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
+      if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
+
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Failed to fetch property data');
+      const data = await response.json();
+      setProperties(data);
+
+      const pageUrl = `http://127.0.0.1:5000/api/property/paginate?pageNumber=${pageNumber}`;
+      const pageResponse = await fetch(pageUrl);
+      if (!pageResponse.ok) throw new Error('Failed to fetch pagination data');
+      const pageData = await pageResponse.json();
+      setProperties(pageData);
+
+      const sortUrl = `http://127.0.0.1:5000/api/property/sort?attribute=${sortValue}`;
+      const sortResponse = await fetch(sortUrl);
+      if (!sortResponse.ok) throw new Error('Failed to fetch sort data');
+      const sortData = await sortResponse.json();
+      setProperties(sortData);
+    } catch (error) {
+      console.error('There was an error fetching the property data!', error);
+    } finally {
+      setLoading(false);
     }
-
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        setProperties(data);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the property data!', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
+
+  const fetchProfileImage = async () => {
+    if (!user || !user.email) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/get-user/${user.email}`);
+      if (response.ok) {
+        const data = await response.json();
+        setProfileImage(data.profile_image_url || profileIcon);
+      }
+    } catch (error) {
+      console.error('Error fetching profile image:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchProfileImage();
+    }
+  }, [user]);
 
   useEffect(() => {
     fetchProperties();
   }, []);
 
   return (
-    <Router>
-      <div className="App">
-        <div className="header-container">
-          <Link to="/">
-            <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
-          </Link>
-          <div className="navigationLinks">
-            <a href="/propertylist">View All Properties</a>
-          </div>
-          <div className="header-right">
-            {/* Profile Icon */}
-            <div className="profile-icon" onClick={toggleDropdown}>
-              <img src={profileIcon} alt="Profile" className="profile-img" />
-              {dropdownVisible && (
-                <div className="dropdown-menu">
-                  {user ? (
-                    <>
-                      <p>Welcome, {user.firstname}</p>
-                      <Link to="/property">My Properties</Link>
-                      <button onClick={showLogoutConfirmation}>Logout</button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login">Login</Link>
-                      <Link to="/register">Register</Link>
-                    </>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Language Selector */}
-            <LanguageSelector setLanguage={setLanguage} />
+    <div className="App">
+      <div className="header-container">
+        <Link to="/">
+          <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
+        </Link>
+        <div className="navigationLinks">
+          <a href="/propertylist">View All Properties</a>
+        </div>
+        <div className="header-right">
+          <LanguageSelector setLanguage={setLanguage} />
+          <div className="profile-icon" onClick={toggleDropdown}>
+            <img src={profileImage} alt="Profile" className="profile-img" />
+            {dropdownVisible && (
+              <div className="dropdown-menu">
+                {user ? (
+                  <>
+                    <p>Welcome, {user.firstname}</p>
+                    <Link to="/account-overview">Account Overview</Link>
+                    <Link to="/property">My Properties</Link>
+                    <button onClick={showLogoutConfirmation}>Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
+      </div>
 
-        {logoutConfirmVisible && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>Are you sure you want to log out?</h3>
-              <div className="modal-buttons">
-                <button onClick={handleLogout} className="confirm-button">
-                  Yes
-                </button>
-                <button onClick={cancelLogout} className="cancel-button">
-                  No
-                </button>
-              </div>
+      {logoutConfirmVisible && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Are you sure you want to log out?</h3>
+            <div className="modal-buttons">
+              <button onClick={handleLogout} className="confirm-button">
+                Yes
+              </button>
+              <button onClick={cancelLogout} className="cancel-button">
+                No
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <Routes>
-          {/* Property List Page */}
-          <Route
-            path="/propertylist"
-            element={
-              <>
-                <div className="search-bar-container">
-                  <h3>Search for Properties</h3>
-                  <PropertyFilter onFilterChange={fetchProperties} />
-                </div>
-                <PropertyList properties={properties} loading={loading} />
-              </>
-            }
-          />
-
-          {/* Home Page */}
-          <Route
-            path="/"
-            element={<HomePage fetchProperties={fetchProperties} />}
-          />
-
-          {/* Login Page */}
-          <Route
-            path="/login"
-            element={<Login setUser={setUser} />}
-          />
-
-          {/* Register Page */}
-          <Route
-            path="/register"
-            element={<Register />}
-          />
-
-          {/* Property Details Page */}
-          <Route
-            path="/property/:uprn"
-            element={
-              <PropertyPage
-                properties={properties}
-                loading={loading}
-                language={language}
-              />
-            }
-          />
-
-          {/* Glossary Page */}
-          <Route
-            path="/glossary"
-            element={<GlossaryPage language={language} />}
-          />
-        </Routes>
-      </div>
-    </Router>
+      <Routes>
+        <Route
+          path="/propertylist"
+          element={
+            <>
+              <div className="search-bar-container">
+                <h3>Search for Properties</h3>
+                <PropertyFilter onFilterChange={fetchProperties} />
+              </div>
+              <PropertyList properties={properties} loading={loading} />
+            </>
+          }
+        />
+        <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/property/:uprn"
+          element={<PropertyPage properties={properties} loading={loading} language={language} />}
+        />
+        <Route path="/property/:address" element={<PropertyPage />} />
+        <Route path="/glossary" element={<GlossaryPage language={language} />} />
+        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+      </Routes>
+    </div>
   );
 }
 

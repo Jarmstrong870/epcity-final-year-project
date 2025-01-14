@@ -12,7 +12,7 @@ const PropertyPage = ({ language }) => {
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Translations
+  // Translations for multilingual support
   const translations = {
     en: {
       streetView: 'Street View',
@@ -27,9 +27,9 @@ const PropertyPage = ({ language }) => {
       mapView: 'Vista del Mapa',
     },
   };
-
   const t = translations[language] || translations.en; // Default to English
 
+  // Load Google Maps API script
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c",
   });
@@ -114,6 +114,8 @@ const PropertyPage = ({ language }) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
+      <h2>Property Details</h2>
+
       {/* Image and Map Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
         {/* Street View */}
@@ -123,12 +125,7 @@ const PropertyPage = ({ language }) => {
             <img
               src={streetViewURL}
               alt={t.streetView}
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '10px',
-                objectFit: 'cover',
-              }}
+              style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }}
             />
           ) : (
             <p>{errorMessage || 'Loading street view...'}</p>
@@ -149,7 +146,7 @@ const PropertyPage = ({ language }) => {
         </div>
       </div>
 
-      {/* EPC Table with Translation */}
+      {/* EPC Table with Translations */}
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} language={language} />
       ) : (
