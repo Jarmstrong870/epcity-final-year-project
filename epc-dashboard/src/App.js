@@ -9,7 +9,6 @@ import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
 import GlossaryPage from './Components/Glossarypage';
-import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import LanguageSelector from './Components/LanguageSelector';
 import './Components/HomePage.css';
@@ -128,6 +127,7 @@ function App() {
         )}
 
         <Routes>
+          {/* Property List Page */}
           <Route
             path="/propertylist"
             element={
@@ -140,11 +140,42 @@ function App() {
               </>
             }
           />
-          <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/property/:uprn" element={<PropertyPage />} />
-          <Route path="/glossary" element={<GlossaryPage language={language} />} />
+
+          {/* Home Page */}
+          <Route
+            path="/"
+            element={<HomePage fetchProperties={fetchProperties} />}
+          />
+
+          {/* Login Page */}
+          <Route
+            path="/login"
+            element={<Login setUser={setUser} />}
+          />
+
+          {/* Register Page */}
+          <Route
+            path="/register"
+            element={<Register />}
+          />
+
+          {/* Property Details Page */}
+          <Route
+            path="/property/:uprn"
+            element={
+              <PropertyPage
+                properties={properties}
+                loading={loading}
+                language={language}
+              />
+            }
+          />
+
+          {/* Glossary Page */}
+          <Route
+            path="/glossary"
+            element={<GlossaryPage language={language} />}
+          />
         </Routes>
       </div>
     </Router>

@@ -2,47 +2,59 @@ import React, { useState } from 'react';
 import ukFlag from '../assets/uk-flag.png';
 import frenchFlag from '../assets/french-flag.png';
 import spanishFlag from '../assets/spanish-flag.png';
-import './LanguageSelector.css'; // Styles for the component
+import './LanguageSelector.css';
 
-function LanguageSelector({ setLanguage }) {
+const languages = [
+  { code: 'UK', label: 'English', flag: ukFlag },
+  { code: 'FR', label: 'French', flag: frenchFlag },
+  { code: 'ES', label: 'Spanish', flag: spanishFlag },
+];
+
+function LanguageSelector({ setLanguage, defaultLanguage = 'UK' }) {
   const [languageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('UK'); // Default to UK
+  const [selectedLanguage, setSelectedLanguage] = useState(defaultLanguage);
 
   const toggleLanguageDropdown = () => {
-    setLanguageDropdownVisible(!languageDropdownVisible);
+    setLanguageDropdownVisible((prev) => !prev);
   };
 
-  const handleLanguageChange = (language) => {
-    setSelectedLanguage(language); // Update the local state for flag selection
-    setLanguage(language === 'UK' ? 'en' : language === 'FR' ? 'fr' : 'es'); // Update App's global state
+  const handleLanguageChange = (languageCode) => {
+    setSelectedLanguage(languageCode);
+    const langMap = {
+      UK: 'en',
+      FR: 'fr',
+      ES: 'es',
+    };
+    setLanguage(langMap[languageCode]);
     setLanguageDropdownVisible(false);
   };
 
+  const selectedLang = languages.find((lang) => lang.code === selectedLanguage);
+
   return (
     <div className="language-selector">
-      <img
-        src={
-          selectedLanguage === 'UK'
-            ? ukFlag
-            : selectedLanguage === 'FR'
-            ? frenchFlag
-            : spanishFlag
-        }
-        alt="Selected Language"
-        className="flag-img"
-        onClick={toggleLanguageDropdown} // Toggle dropdown on flag click
-      />
+      {/* Display selected flag */}
+      <button
+        className="flag-button"
+        onClick={toggleLanguageDropdown}
+        aria-expanded={languageDropdownVisible}
+        aria-label={`Selected Language: ${selectedLang.label}`}
+      >
+        <img src={selectedLang.flag} alt={`${selectedLang.label} Flag`} className="flag-img" />
+      </button>
+
       {languageDropdownVisible && (
         <div className="language-dropdown-menu">
-          <div onClick={() => handleLanguageChange('UK')}>
-            <img src={ukFlag} alt="UK Flag" className="flag-img-dropdown" /> English
-          </div>
-          <div onClick={() => handleLanguageChange('FR')}>
-            <img src={frenchFlag} alt="French Flag" className="flag-img-dropdown" /> French
-          </div>
-          <div onClick={() => handleLanguageChange('ES')}>
-            <img src={spanishFlag} alt="Spanish Flag" className="flag-img-dropdown" /> Spanish
-          </div>
+          {languages.map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => handleLanguageChange(lang.code)}
+              className="dropdown-item"
+              aria-label={lang.label}
+            >
+              <img src={lang.flag} alt={`${lang.label} Flag`} className="flag-img-dropdown" /> {lang.label}
+            </button>
+          ))}
         </div>
       )}
     </div>
