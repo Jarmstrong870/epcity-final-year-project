@@ -13,6 +13,7 @@ const PropertyPage = ({ language }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
+  console.log("uprn is:",uprn);
 
   // Translations for multilingual support
   const translations = {
