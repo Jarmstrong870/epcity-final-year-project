@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+//import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, Navigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // For navigation
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -48,23 +49,27 @@ function App() {
   };
 
   // Function to fetch properties from backend
+  // Function to fetch properties from backend
   const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
     setLoading(true);
-
+  
     try {
+      // Build the property search URL
       let url = query || propertyTypes.length || epcRatings.length 
         ? `http://127.0.0.1:5000/api/property/alter?` 
         : `http://127.0.0.1:5000/api/property/loadCSV`;
-
+  
       if (query) url += `search=${query}&`;
       if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
       if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-
+  
+      // Fetch property search results
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch property data');
       const data = await response.json();
       setProperties(data);
-
+  
+      // Build and fetch paginated results
       const pageUrl = `http://127.0.0.1:5000/api/property/paginate?pageNumber=${pageNumber}`;
       const pageResponse = await fetch(pageUrl);
       if (!pageResponse.ok) throw new Error('Failed to fetch pagination data');
@@ -104,8 +109,18 @@ function App() {
   }, [user]);
 
   useEffect(() => {
+    if (user) {
+      fetchProfileImage(); // Fetch the profile image when the user logs in/ page loads
+    }
+  }, [user]);
+
+  
+  useEffect(() => {
     fetchProperties();
   }, []);
+  
+
+
 
   return (
     <div className="App">
@@ -187,3 +202,5 @@ function App() {
 }
 
 export default App;
+
+

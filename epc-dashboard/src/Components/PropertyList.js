@@ -66,7 +66,7 @@ const PropertyList = ({ properties, loading }) => {
       ) : (
         <div className="property-cards-container">
           {limitedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} />
+            <TopRatedPropertyCard property={property} key={index}  />
           ))}
         </div>
       )}
