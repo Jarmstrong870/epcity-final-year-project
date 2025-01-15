@@ -6,6 +6,7 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 from Repository import propertyRepo as repo
+import datetime
 
 load_dotenv()
 
@@ -184,6 +185,10 @@ def getPropertyInfo(uprn):
     new_columns = {col: col.replace('-', '_') for col in df.columns}
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
+    
+    df['hot_water_cost'] = calculateInflationAdjustedPrice(df['hot_water_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['heating_cost'] = calculateInflationAdjustedPrice(df['heating_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['lighting_cost'] = calculateInflationAdjustedPrice(df['lighting_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
 
     return df
 
@@ -256,42 +261,6 @@ def sortProperties(attribute, ascending=True):
     else:
         all_properties.sort_values(by=attribute, ascending=ascending)
         return getPage(1)
-    
-def calculateUtilityCosts(df):
-    # Extract necessary columns
-    heating_cost = df.get('heating_cost_current', [0]).iloc[0]
-    lighting_cost = df.get('lighting_cost_current', [0]).iloc[0]
-    hot_water_cost = df.get('hot_water_cost_current', [0]).iloc[0]
-    
-    lodgement_date = df.get('lodgement_datetime', [None]).iloc[0]
-
-    # Validate lodgement date
-    if pd.isnull(lodgement_date):
-        print("No valid lodgement date found.")
-        return None
-
-    # Format dates for API
-    start_date = lodgement_date.strftime("%Y-%m-%d")  # Lodgement date as YYYY-MM
-
-    # Adjust each utility cost for inflation
-    adjusted_heating_cost = calculateInflationAdjustedPrice(heating_cost, start_date)
-    adjusted_lighting_cost = calculateInflationAdjustedPrice(lighting_cost, start_date)
-    adjusted_hot_water_cost = calculateInflationAdjustedPrice(hot_water_cost, start_date)
-
-    # Validate CPI results
-    if any(cost is None for cost in [adjusted_heating_cost, adjusted_lighting_cost, adjusted_hot_water_cost]):
-        print("Failed to adjust costs for inflation.")
-        return None
-
-    # Create a summary
-    summary = {
-        "Heating Cost (Adjusted)": adjusted_heating_cost,
-        "Lighting Cost (Adjusted)": adjusted_lighting_cost,
-        "Hot Water Cost (Adjusted)": adjusted_hot_water_cost,
-        "Total Utility Cost (Adjusted)": float(adjusted_heating_cost) + float(adjusted_lighting_cost) + float(adjusted_hot_water_cost)
-    }
-
-    return summary
 
 def calculateInflationAdjustedPrice(start_price, start_date):
     

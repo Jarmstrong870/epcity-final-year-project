@@ -7,18 +7,18 @@ property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
 # Route to update properties monthly
-@property_blueprint.route('/property/load', methods=['GET'])
+@property_blueprint.route('/property/replace', methods=['GET'])
 def property_load():
     """
-    Handles GET requests to retrieve all properties.
+    Handles GET requests to retrieve all properties from API and update database.
     """
     return jsonify(properties.getAllProperties().to_dict(orient='records'))
 
 # Route to load properties from CSV
-@property_blueprint.route('/property/loadCSV', methods=['GET'])
+@property_blueprint.route('/property/loadDB', methods=['GET'])
 def property_load_csv():
     """
-    Handles GET requests to retrieve properties from CSV.
+    Handles GET requests to retrieve properties from Aiven Database.
     """
     return jsonify(properties.loadAllProperties().to_dict(orient='records'))
 
@@ -26,7 +26,7 @@ def property_load_csv():
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
 def property_load_toprated():
     """
-    Handles GET requests to retrieve top rated properties from CSV.
+    Handles GET requests to retrieve top rated properties from .
     """
     return jsonify(properties.getTopRatedProperties().to_dict(orient='records'))
 
