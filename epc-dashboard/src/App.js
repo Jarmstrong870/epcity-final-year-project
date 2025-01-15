@@ -16,16 +16,18 @@ import HomePage from './Components/HomePage';
 import ForgotPassword from './Components/ForgotPassword';
 import './Components/HomePage.css';
 import AccountOverview from './Components/AccountOverview';
+import LanguageSelector from './Components/LanguageSelector';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [profileImage, setProfileImage] = useState(profileIcon); // State for the profile image
+  const [profileImage, setProfileImage] = useState(profileIcon); // Profile image state
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [language, setLanguage] = useState('en'); // Language state
   const navigate = useNavigate();
-  
+
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
@@ -46,6 +48,7 @@ function App() {
     setLogoutConfirmVisible(false);
   };
 
+  // Function to fetch properties from backend
   // Function to fetch properties from backend
   const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
     setLoading(true);
@@ -78,15 +81,14 @@ function App() {
       if (!sortResponse.ok) throw new Error('Failed to fetch sort data');
       const sortData = await sortResponse.json();
       setProperties(sortData);
-      
     } catch (error) {
       console.error('There was an error fetching the property data!', error);
     } finally {
       setLoading(false);
     }
   };
-//if user is logged in, get current profile image.
-   const fetchProfileImage = async () => {
+
+  const fetchProfileImage = async () => {
     if (!user || !user.email) return;
 
     try {
@@ -99,6 +101,12 @@ function App() {
       console.error('Error fetching profile image:', error);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      fetchProfileImage();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -115,50 +123,54 @@ function App() {
 
 
   return (
-
     <div className="App">
       <div className="header-container">
-        <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <Link to="/">
+          <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
+        </Link>
         <div className="navigationLinks">
           <a href="/propertylist">View All Properties</a>
         </div>
-        <div className="profile-icon" onClick={toggleDropdown}>
-          <img src={profileImage} alt="Profile" className="profile-img" />
-          {dropdownVisible && (
-            <div className="dropdown-menu">
-              {user ? (
-                <>
-                  <p>Welcome, {user.firstname}</p>
-                  <Link to="/account-overview">Account Overview</Link>
-                  <Link to="/property">My Properties</Link>
-                  <button onClick={showLogoutConfirmation}>Logout</button>
-                </>
-              ) : (
-                <>
-                  <Link to="/login">Login</Link>
-                  <Link to="/register">Register</Link>
-                </>
-              )}
-            </div>
-          )}
+        <div className="header-right">
+          <LanguageSelector setLanguage={setLanguage} />
+          <div className="profile-icon" onClick={toggleDropdown}>
+            <img src={profileImage} alt="Profile" className="profile-img" />
+            {dropdownVisible && (
+              <div className="dropdown-menu">
+                {user ? (
+                  <>
+                    <p>Welcome, {user.firstname}</p>
+                    <Link to="/account-overview">Account Overview</Link>
+                    <Link to="/property">My Properties</Link>
+                    <button onClick={showLogoutConfirmation}>Logout</button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">Register</Link>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-        {logoutConfirmVisible && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>Are you sure you want to log out?</h3>
-              <div className="modal-buttons">
-                <button onClick={handleLogout} className="confirm-button">
-                  Yes
-                </button>
-                <button onClick={cancelLogout} className="cancel-button">
-                  No
-                </button>
-              </div>
+      {logoutConfirmVisible && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Are you sure you want to log out?</h3>
+            <div className="modal-buttons">
+              <button onClick={handleLogout} className="confirm-button">
+                Yes
+              </button>
+              <button onClick={cancelLogout} className="cancel-button">
+                No
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
       <Routes>
         <Route
@@ -176,11 +188,13 @@ function App() {
         <Route path="/" element={<HomePage fetchProperties={fetchProperties} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/property/:uprn" element={<PropertyPage />} />
-        <Route path="/propertylist" element={<PropertyList />} />
+        <Route
+          path="/property/:uprn"
+          element={<PropertyPage properties={properties} loading={loading} language={language} />}
+        />
         <Route path="/property/:address" element={<PropertyPage />} />
-        <Route path="/glossary" element={<GlossaryPage />} />
-        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage}/>} />
+        <Route path="/glossary" element={<GlossaryPage language={language} />} />
+        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>
