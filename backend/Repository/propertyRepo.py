@@ -2,6 +2,7 @@ import psycopg2
 import pandas as pd
 from dotenv import load_dotenv
 import os
+from psycopg2.extras import execute_values
 
 load_dotenv()
 
@@ -53,15 +54,15 @@ def updatePropertiesInDB(dataframe):
 
         # Wipe the existing data
         cursor.execute("DELETE FROM properties")
-
+        
         # Prepare data for insertion
-        records = dataframe.to_records(index=False)
-        insert_data = [tuple(row) for row in records]
+        #records = dataframe.to_records(index=False)
+        insert_data = [list(row) for row in dataframe.itertuples(index=False)]
 
         # Bulk insert into the properties table
         insert_query = """
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
-                                    current_energy_efficiency, current_energy_rating)
+                                    current_energy_efficiency, current_energy_rating, heating_cost_current, hot_water_cost_current, lighting_cost_current, total_floor_area)
             VALUES %s
         """
         execute_values(cursor, insert_query, insert_data)

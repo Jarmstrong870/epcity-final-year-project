@@ -32,7 +32,10 @@ def getAllProperties():
     query_size = 5000
 
     #Query Parameters
-    query_params = {'size': query_size, 'local-authority': 'E08000012'}
+    query_params = {
+        'size': query_size,
+        'local-authority': 'E08000012',        
+    }
 
     # Initialize a list to store all rows
     all_rows = []
@@ -79,12 +82,12 @@ def getAllProperties():
 
     # Convert the data to a DataFrame
     search_results = pd.DataFrame(all_rows)
+    
+    search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
+    search_results = search_results.dropna(subset=['uprn'])
 
     #Convert 'lodgement-datetime' to datetime for sorting
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
-
-    # Drop properties with no uprn
-    search_results = search_results.dropna(subset=['uprn'])
+    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce').dt.date    
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
@@ -93,12 +96,25 @@ def getAllProperties():
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
 
     search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 
-                                                    'lodgement-datetime': 'lodgement_datetime'})
+                                                    'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
+                                                    'heating-cost-current': 'heating_cost_current', 'hot-water-cost-current': 'hot_water_cost_current',
+                                                    'lighting-cost-current': 'lighting_cost_current', 'total-floor-area': 'total_floor_area'})
     
-    search_results = search_results[['uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime', 'current_energy_efficiency', 
-                                     'current_energy_rating']]
-
+    required_columns = [
+        'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
+        'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
+        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area'
+    ]
+    
+    search_results = search_results[required_columns]
+    
+    search_results['heating_cost_current'] = pd.to_numeric(search_results['heating_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['heating_cost_current'])
+    search_results['hot_water_cost_current'] = pd.to_numeric(search_results['hot_water_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['hot_water_cost_current'])
+    search_results['lighting_cost_current'] = pd.to_numeric(search_results['lighting_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    
     # save the filtered DataFrame to the hosted database
     repo.updatePropertiesInDB(search_results)
 
