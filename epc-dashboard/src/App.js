@@ -182,6 +182,7 @@ function App() {
         <Route path="/glossary" element={<GlossaryPage />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage}/>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<resetPassword />} />
       </Routes>
     </div>
   );
