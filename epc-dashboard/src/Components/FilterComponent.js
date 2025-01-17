@@ -1,121 +1,149 @@
 import React, { useState } from 'react';
 
-const PropertyFilter = ({ onFilterChange }) => {
-  // State variables for search and filter criteria
+const PropertyFilter = ({ onFilterChange, language }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [epcRatings, setEpcRatings] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState('current_energy_rating');
 
-  // Handler for search input change
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+  // Translations
+  const translations = {
+    en: {
+      search: 'Search by Address or Postcode:',
+      propertyTypes: 'Property Types:',
+      epcRatings: 'EPC Ratings:',
+      findProperties: 'Find Properties',
+      pageNumber: 'Page Number:',
+      sortBy: 'Sort By:',
+      sortOptions: {
+        address: 'Address',
+        postcode: 'Postcode',
+        property_type: 'Property Type',
+        current_energy_rating: 'Current Energy Rating',
+        current_energy_efficiency: 'Current Energy Efficiency',
+      },
+    },
+    fr: {
+      search: 'Rechercher par adresse ou code postal :',
+      propertyTypes: 'Types de propriété :',
+      epcRatings: 'Classements EPC :',
+      findProperties: 'Trouver des propriétés',
+      pageNumber: 'Numéro de page :',
+      sortBy: 'Trier par :',
+      sortOptions: {
+        address: 'Adresse',
+        postcode: 'Code Postal',
+        property_type: 'Type de Propriété',
+        current_energy_rating: 'Classement Énergétique Actuel',
+        current_energy_efficiency: 'Efficacité Énergétique Actuelle',
+      },
+    },
+    es: {
+      search: 'Buscar por dirección o código postal:',
+      propertyTypes: 'Tipos de propiedad:',
+      epcRatings: 'Clasificaciones EPC:',
+      findProperties: 'Encontrar propiedades',
+      pageNumber: 'Número de página:',
+      sortBy: 'Ordenar por:',
+      sortOptions: {
+        address: 'Dirección',
+        postcode: 'Código Postal',
+        property_type: 'Tipo de Propiedad',
+        current_energy_rating: 'Clasificación Energética Actual',
+        current_energy_efficiency: 'Eficiencia Energética Actual',
+      },
+    },
   };
 
-  // Handler for property type selection
+  const t = translations[language] || translations.en;
+
+  const handleSearchChange = (e) => setSearchQuery(e.target.value);
+
   const handlePropertyTypeChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setPropertyTypes([...propertyTypes, value]);
-    } else {
-      setPropertyTypes(propertyTypes.filter((type) => type !== value));
-    }
+    setPropertyTypes(
+      checked ? [...propertyTypes, value] : propertyTypes.filter((type) => type !== value)
+    );
   };
 
-  // Handler for EPC rating selection
   const handleEpcRatingChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setEpcRatings([...epcRatings, value]);
-    } else {
-      setEpcRatings(epcRatings.filter((rating) => rating !== value));
-    }
+    setEpcRatings(
+      checked ? [...epcRatings, value] : epcRatings.filter((rating) => rating !== value)
+    );
   };
 
-  // Handler to submit the filters
   const handleFilterSubmit = (e) => {
     e.preventDefault();
-    // Call the parent component's method
     onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
   };
-  const handlePageChange = (e) => {
-    setPageNumber(e.target.value);
-  };
 
-  const handleSortChange = (e) => {
-    setSortValue(e.target.value);
-  }
+  const handlePageChange = (e) => setPageNumber(e.target.value);
 
+  const handleSortChange = (e) => setSortValue(e.target.value);
 
   return (
     <div className="property-filter">
       <form onSubmit={handleFilterSubmit}>
-        {/* Search Input */}
         <div>
-          <label htmlFor="searchQuery">Search by Address or Postcode:</label>
-          <input
-            type="text"
-            id="searchQuery"
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
+          <label htmlFor="searchQuery">{t.search}</label>
+          <input type="text" id="searchQuery" value={searchQuery} onChange={handleSearchChange} />
         </div>
 
-        {/* Property Type Filter (Checkboxes) */}
         <div>
-          <label>Property Types:</label>
+          <label>{t.propertyTypes}</label>
           <div>
             {['bungalow', 'flat', 'house', 'maisonette'].map((type) => (
               <label key={type}>
-                <input
-                  type="checkbox"
-                  value={type}
-                  onChange={handlePropertyTypeChange}
-                />
+                <input type="checkbox" value={type} onChange={handlePropertyTypeChange} />
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </label>
             ))}
           </div>
         </div>
 
-        {/* EPC Rating Filter (Checkboxes) */}
         <div>
-          <label>EPC Ratings:</label>
+          <label>{t.epcRatings}</label>
           <div>
             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
               <label key={rating}>
-                <input
-                  type="checkbox"
-                  value={rating}
-                  onChange={handleEpcRatingChange}
-                />
+                <input type="checkbox" value={rating} onChange={handleEpcRatingChange} />
                 {rating}
               </label>
             ))}
           </div>
         </div>
-        <div>
-          <label>Page Number:</label>
-          <input type="number" id="page" name="page" min="1" max="100" defaultValue={1} value={pageNumber} onChange={handlePageChange} />
-          
 
-        </div>
         <div>
-          <label>Sort By:</label>
-          <select defaultValue={"current_energy_rating"} onChange={handleSortChange}>
-            <option value="address">Address</option>
-            <option value="postcode">Postcode</option>
-            <option value="property_type">Property Type</option>
-            <option value="current_energy_rating">Current Energy Rating</option>
-            <option value="current_energy_efficiency">Current Energy Efficiency</option>
+          <label>{t.pageNumber}</label>
+          <input
+            type="number"
+            id="page"
+            name="page"
+            min="1"
+            max="100"
+            defaultValue={1}
+            value={pageNumber}
+            onChange={handlePageChange}
+          />
+        </div>
+
+        <div>
+          <label>{t.sortBy}</label>
+          <select defaultValue="current_energy_rating" onChange={handleSortChange}>
+            {Object.keys(t.sortOptions).map((key) => (
+              <option key={key} value={key}>
+                {t.sortOptions[key]}
+              </option>
+            ))}
           </select>
-          <h3>{sortValue}</h3>
+          {/* Display the translated sort value */}
+          <h3>{t.sortOptions[sortValue]}</h3>
         </div>
 
-        {/* Submit Button */}
         <div>
-          <button type="submit">Find Properties</button>
+          <button type="submit">{t.findProperties}</button>
         </div>
       </form>
     </div>

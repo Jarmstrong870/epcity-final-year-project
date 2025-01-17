@@ -3,15 +3,57 @@ import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './PropertyList.css';
 
-const PropertyList = ({ properties, loading }) => {
+const PropertyList = ({ properties, loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
 
+  // Translations
+  const translations = {
+    en: {
+      propertyList: 'Property List',
+      tableView: 'Table View',
+      cardView: 'Card View',
+      loading: 'Loading...',
+      noProperties: 'No properties found.',
+      address: 'Address',
+      postcode: 'Postcode',
+      propertyType: 'Property Type',
+      currentEnergyRating: 'Current Energy Rating',
+      currentEnergyEfficiency: 'Current Energy Efficiency',
+    },
+    fr: {
+      propertyList: 'Liste des propriétés',
+      tableView: 'Vue tableau',
+      cardView: 'Vue carte',
+      loading: 'Chargement...',
+      noProperties: 'Aucune propriété trouvée.',
+      address: 'Adresse',
+      postcode: 'Code Postal',
+      propertyType: 'Type de Propriété',
+      currentEnergyRating: 'Classement Énergétique Actuel',
+      currentEnergyEfficiency: 'Efficacité Énergétique Actuelle',
+    },
+    es: {
+      propertyList: 'Lista de Propiedades',
+      tableView: 'Vista de Tabla',
+      cardView: 'Vista de Tarjeta',
+      loading: 'Cargando...',
+      noProperties: 'No se encontraron propiedades.',
+      address: 'Dirección',
+      postcode: 'Código Postal',
+      propertyType: 'Tipo de Propiedad',
+      currentEnergyRating: 'Clasificación Energética Actual',
+      currentEnergyEfficiency: 'Eficiencia Energética Actual',
+    },
+  };
+
+  const t = translations[language] || translations.en; // Default to English
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (properties.length === 0) {
-    return <p>No properties found.</p>;
+    return <p>{t.noProperties}</p>;
   }
 
   // Limit to first 12 properties for the card view
@@ -19,21 +61,21 @@ const PropertyList = ({ properties, loading }) => {
 
   return (
     <div className="property-list">
-      <h2>Property List</h2>
-      
+      <h2>{t.propertyList}</h2>
+
       {/* View Mode Toggle */}
       <div className="view-toggle">
         <button 
           onClick={() => setViewMode('table')} 
           className={viewMode === 'table' ? 'active' : ''}
         >
-          Table View
+          {t.tableView}
         </button>
         <button 
           onClick={() => setViewMode('card')} 
           className={viewMode === 'card' ? 'active' : ''}
         >
-          Card View
+          {t.cardView}
         </button>
       </div>
 
@@ -42,11 +84,11 @@ const PropertyList = ({ properties, loading }) => {
         <table>
           <thead>
             <tr>
-              <th>Address</th>
-              <th>Postcode</th>
-              <th>Property Type</th>
-              <th>Current Energy Rating</th>
-              <th>Current Energy Efficiency</th>
+              <th>{t.address}</th>
+              <th>{t.postcode}</th>
+              <th>{t.propertyType}</th>
+              <th>{t.currentEnergyRating}</th>
+              <th>{t.currentEnergyEfficiency}</th>
             </tr>
           </thead>
           <tbody>
@@ -66,7 +108,7 @@ const PropertyList = ({ properties, loading }) => {
       ) : (
         <div className="property-cards-container">
           {limitedProperties.map((property, index) => (
-            <TopRatedPropertyCard property={property} key={index}  />
+            <TopRatedPropertyCard property={property} key={index} />
           ))}
         </div>
       )}
