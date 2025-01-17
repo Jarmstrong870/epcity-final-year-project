@@ -260,7 +260,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     
     if searchValue is None and property_types is None and epc_ratings is None:
         altered = False
-        return all_properties.head(30)
+        return all_properties
         
 
     altered = True
@@ -273,6 +273,8 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     # Apply filters
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
+        
+    
 
     return altered_properties
 
@@ -289,3 +291,4 @@ def sortProperties(attribute, ascending=True):
         return altered_properties
     else:
         all_properties = all_properties.sort_values(by=attribute, ascending=ascending)
+        return all_properties

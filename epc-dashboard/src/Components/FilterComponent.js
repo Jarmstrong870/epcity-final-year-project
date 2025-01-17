@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { PropertyContext } from './propertyContext';
 
-const PropertyFilter = ({ onFilterChange }) => {
+const PropertyFilter = () => {
   // State variables for search and filter criteria
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [epcRatings, setEpcRatings] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState('current_energy_rating');
+  const { fetchProperties, changePage, sortProperties, properties } = useContext(PropertyContext);
+
+  
 
   // Handler for search input change
   const handleSearchChange = (e) => {
@@ -37,14 +41,17 @@ const PropertyFilter = ({ onFilterChange }) => {
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     // Call the parent component's method
-    onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
+    //onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
+    fetchProperties(searchQuery, propertyTypes, epcRatings);
   };
   const handlePageChange = (e) => {
     setPageNumber(e.target.value);
+    changePage(e.target.value);
   };
 
   const handleSortChange = (e) => {
     setSortValue(e.target.value);
+    sortProperties(e.target.value);
   }
 
 
