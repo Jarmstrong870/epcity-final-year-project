@@ -33,8 +33,11 @@ const HomePage = ({ fetchProperties }) => {
   };
 
   const handleSearch = () => {
-    navigate(`/propertylist?search=${searchTerm}`);
-  };  
+    if (searchTerm.trim()) {
+      fetchProperties(searchTerm);
+      navigate(`/propertylist?search=${searchTerm}`);
+    }
+  };
 
   if (loading) {
     return <p>Loading...</p>;
