@@ -102,7 +102,10 @@ const GlossaryPage = ({ language }) => {
           ? 'Glosario de Términos'
           : 'Glossary of Terms'}
       </h2>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
       {Object.entries(glossary).map(([section, terms]) => (
         <div key={section} style={{ marginBottom: '40px' }}>
           <h3 style={{ borderBottom: '1px solid #ccc', paddingBottom: '5px' }}>{section}</h3>
@@ -131,4 +134,7 @@ const GlossaryPage = ({ language }) => {
 };
 
 export default GlossaryPage;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d

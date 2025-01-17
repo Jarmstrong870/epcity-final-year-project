@@ -1,6 +1,39 @@
 import React from 'react';
 
-const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
+const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language }) => {
+  // Define translations
+  const translations = {
+    en: {
+      epcRatingGraph: 'EPC Rating Graph',
+      current: 'Current',
+      potential: 'Potential',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+    fr: {
+      epcRatingGraph: 'Graphique des Classements EPC',
+      current: 'Actuel',
+      potential: 'Potentiel',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+    es: {
+      epcRatingGraph: 'Gráfico de Clasificación EPC',
+      current: 'Actual',
+      potential: 'Potencial',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+  };
+
+  const t = translations[language] || translations.en;
+
   // Define color ranges for EPC ratings
   const ratingColors = {
     A: '#006400', // Dark green
@@ -12,15 +45,11 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
     G: '#B22222', // Dark red
   };
 
-  // Rating labels, corresponding thresholds, and range boundaries
+  // Rating labels and thresholds
   const ratingLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
   const thresholds = [92, 81, 69, 55, 39, 21, 1];
-  const ranges = [
-    '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D', 
-    '(39-54) E', '(21-38) F', '(1-20) G'
-  ];
 
-  // Determine which section each energy efficiency score falls into
+  // Determine the section each energy efficiency score falls into
   const getEfficiencyPosition = (efficiency) => {
     for (let i = 0; i < thresholds.length; i++) {
       if (efficiency >= thresholds[i]) {
@@ -35,7 +64,7 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
 
   return (
     <div style={{ width: '100%', marginTop: '20px' }}>
-      <h3>EPC Rating Graph</h3>
+      <h3>{t.epcRatingGraph}</h3>
 
       {/* EPC Rating Bars */}
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '10px' }}>
@@ -79,10 +108,10 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
                   }}
                 >
                   <span style={{ color: 'black' }}>
-                    {ranges[index].split(' ')[0]} {/* Range part */}
+                    {t.ranges[index].split(' ')[0]} {/* Range part */}
                   </span>
                   <span style={{ color: 'white' }}>
-                    {ranges[index].split(' ')[1]} {/* Label part */}
+                    {t.ranges[index].split(' ')[1]} {/* Label part */}
                   </span>
                 </div>
 
@@ -91,24 +120,24 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
                   <div
                     style={{
                       position: 'absolute',
-                      left: '80%', // Fixed position closer to the right side
+                      left: '80%',
                       top: '50%',
                       transform: 'translate(-50%, -50%)',
                       height: '40px',
-                      width: '60px', // Adjusted width to fit label
+                      width: '60px',
                       backgroundColor: ratingColors[label],
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
                       borderRadius: '5px',
                       color: 'white',
-                      fontSize: '14px', // Adjusted font size
+                      fontSize: '14px',
                       fontWeight: 'bold',
-                      flexDirection: 'column', // Stack label and value vertically
+                      flexDirection: 'column',
                     }}
                   >
-                    <span>Current</span>
-                    <span>{currentEnergyEfficiency}%</span>
+                    <span>{t.current}</span>
+                    <span>{currentEnergyEfficiency}</span>
                   </div>
                 )}
 
@@ -117,24 +146,24 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency }) => {
                   <div
                     style={{
                       position: 'absolute',
-                      left: '20%', // Fixed position closer to the left side
+                      left: '20%',
                       top: '50%',
                       transform: 'translate(-50%, -50%)',
                       height: '40px',
-                      width: '60px', // Adjusted width to fit label
+                      width: '60px',
                       backgroundColor: ratingColors[label],
                       display: 'flex',
                       justifyContent: 'center',
                       alignItems: 'center',
                       borderRadius: '5px',
                       color: 'white',
-                      fontSize: '14px', // Adjusted font size
+                      fontSize: '14px',
                       fontWeight: 'bold',
-                      flexDirection: 'column', // Stack label and value vertically
+                      flexDirection: 'column',
                     }}
                   >
-                    <span>Potential</span>
-                    <span>{potentialEnergyEfficiency}%</span>
+                    <span>{t.potential}</span>
+                    <span>{potentialEnergyEfficiency}</span>
                   </div>
                 )}
               </div>

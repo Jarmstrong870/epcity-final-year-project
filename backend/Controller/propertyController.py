@@ -7,26 +7,26 @@ property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
 # Route to update properties monthly
-@property_blueprint.route('/property/load', methods=['GET'])
+@property_blueprint.route('/property/replace', methods=['GET'])
 def property_load():
     """
-    Handles GET requests to retrieve all properties.
+    Handles GET requests to retrieve all properties from API and update database.
     """
     return jsonify(properties.getAllProperties().to_dict(orient='records'))
 
 # Route to load properties from CSV
-@property_blueprint.route('/property/loadCSV', methods=['GET'])
+@property_blueprint.route('/property/loadDB', methods=['GET'])
 def property_load_csv():
     """
-    Handles GET requests to retrieve properties from CSV.
+    Handles GET requests to retrieve properties from Aiven Database.
     """
-    return jsonify(properties.getPropertiesFromCSV().to_dict(orient='records'))
+    return jsonify(properties.loadAllProperties().to_dict(orient='records'))
 
 # Route to load top 6 properties from CSV for Home Page
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
 def property_load_toprated():
     """
-    Handles GET requests to retrieve top rated properties from CSV.
+    Handles GET requests to retrieve top rated properties from .
     """
     return jsonify(properties.getTopRatedProperties().to_dict(orient='records'))
 
@@ -36,7 +36,10 @@ def get_property_info():
     """
     Returns data for a single property
     """
+    
+
     uprn = request.args.get('uprn', '').lower()
+    print(f"Received UPRN: {uprn}")
     return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
 
 # Route to for searching and filtering data
@@ -57,3 +60,19 @@ def alter_properties():
     )
 
     return jsonify(altered_properties.to_dict(orient='records'))
+
+# Route for sorting data
+@property_blueprint.route('/property/sort', methods=['GET'])
+def sort_properties():
+    attribute = request.args.get('attribute', '')
+    #ascending = request.args.get('ascending', '')
+    
+    sorted_properties = properties.sortProperties(attribute, ascending = True)
+    return jsonify(sorted_properties.to_dict(orient='records'))
+
+# Route for 
+@property_blueprint.route('/property/paginate', methods=['GET'])
+def get_property_page():
+    page_number = request.args.get('pageNumber', '')
+    page = properties.getPage(page_number)
+    return jsonify(page.to_dict(orient='records'))

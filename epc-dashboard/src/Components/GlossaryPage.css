@@ -1,4 +1,5 @@
 h3 {
+<<<<<<< HEAD
   font-size: 1.5rem;
   color: #333;
   margin-bottom: 10px;
@@ -32,3 +33,38 @@ p {
   color: #555;
 }
 
+=======
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  
+  .glossary-section {
+    margin-bottom: 40px;
+  }
+  
+  .glossary-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: left;
+    transition: background-color 0.3s, border 0.3s;
+  }
+  
+  .glossary-item.highlighted {
+    border: 2px solid blue;
+    background-color: #f0f8ff;
+  }
+  
+  .glossary-item:hover {
+    background-color: #e6f7ff;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d

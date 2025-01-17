@@ -31,20 +31,27 @@ def register_user_service(data):
         connection = connect(**db_config)
         cursor = connection.cursor()
 
+        # Check if the email already exists
         cursor.execute("SELECT * FROM users WHERE email_address = %s;", (email,))
         if cursor.fetchone():
             cursor.close()
             connection.close()
             return {"message": "An account with this email already exists. All fields have been cleared."}, 409
 
+        # Fetch the maximum user_id and increment it by 1
+        cursor.execute("SELECT COALESCE(MAX(user_id), 0) + 1 FROM users;")
+        new_user_id = cursor.fetchone()[0]
+
+        # Hash the password
         password_hash = hashpw(password.encode('utf-8'), gensalt())
 
+        # Insert the new user into the database
         cursor.execute(
             """
-            INSERT INTO users (firstname, lastname, email_address, password_hash, "userType")
-            VALUES (%s, %s, %s, %s, %s);
+            INSERT INTO users (user_id, firstname, lastname, email_address, password_hash, "userType")
+            VALUES (%s, %s, %s, %s, %s, %s);
             """,
-            (firstname, lastname, email, password_hash.decode('utf-8'), userType)
+            (new_user_id, firstname, lastname, email, password_hash.decode('utf-8'), userType)
         )
         connection.commit()
 
@@ -58,4 +65,5 @@ def register_user_service(data):
         return {"message": "An internal error occurred. Please try again later."}, 500
 
     return {"message": "Registration successful!"}, 201
+
 

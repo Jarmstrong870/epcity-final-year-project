@@ -5,7 +5,7 @@ import './HomePage.css';
 import './PropertyCard.css'
 import PropertyFilter from './FilterComponent';
 
-const HomePage = () => {
+const HomePage = ({ fetchProperties }) => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,7 +16,8 @@ const HomePage = () => {
       try {
         const response = await fetch('http://127.0.0.1:5000/api/property/loadTopRated');
         const data = await response.json();
-        setTopRatedProperties(data.slice(0, 6)); // Fetch only the top 6 properties
+        setTopRatedProperties(data.slice(0, 3)); // Limit to top 6 properties
+        console.log("Top Rated Properties:", data); // Debugging output
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -32,8 +33,16 @@ const HomePage = () => {
   };
 
   const handleSearch = () => {
+<<<<<<< HEAD
     navigate(`/propertylist?search=${searchTerm}`);
   };  
+=======
+    if (searchTerm.trim()) {
+      fetchProperties(searchTerm);
+      navigate(`/propertylist?search=${searchTerm}`);
+    }
+  };
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
 
   if (loading) {
     return <p>Loading...</p>;
@@ -45,6 +54,7 @@ const HomePage = () => {
 
   return (
     <>
+      {/* Search Bar Section */}
       <div className="backgroundImageStyling">
         <div className="stylingSearchBar">
           <input
@@ -59,11 +69,15 @@ const HomePage = () => {
           </button>
         </div>
       </div>
-      <h2 className="stylingTitle">Six Highest Rated Properties</h2>
-      <div className="homePageGrid">
-        {topRatedProperties.map((property, index) => (
-          <TopRatedPropertyCard key={index} property={property} />
-        ))}
+
+      {/* Top Rated Properties Section */}
+      <div className="top-rated-properties">
+        <h2 className="stylingTitle">Top Rated Properties</h2>
+        <div className="property-grid">
+          {topRatedProperties.map((property, index) => (
+            <TopRatedPropertyCard key={index} property={property} />
+          ))}
+        </div>
       </div>
     </>
   );
