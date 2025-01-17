@@ -1,0 +1,75 @@
+/* Center the property finder pop-up */
+.propertyPopUp {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 200px;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+.propertyPopUp h1 {
+    font-size: 1.8rem;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.propertyPopUp p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input field styling */
+.input-text {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-text:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Error message styling */
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* Search button styling */
+.search-button {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+.search-button:active {
+    transform: scale(0.95);
+}

@@ -1,0 +1,117 @@
+.property-list {
+    text-align: center;
+    margin: 20px auto;
+    max-width: 1200px; /* Limit the maximum width for better alignment */
+  }
+  
+  /* Toggle View Buttons */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .view-toggle button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    background-color: #f8f9fa;
+    color: #333;
+    cursor: pointer;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+  
+  .view-toggle button.active {
+    background-color: #007bff;
+    color: white;
+    border: 2px solid #0056b3;
+  }
+  
+  .view-toggle button:hover {
+    background-color: #0056b3;
+    color: white;
+    border-color: #003a75;
+  }
+  
+  /* Table View Styling */
+  .table-view table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 90%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-view th {
+    background-color: #007bff;
+    color: white;
+    text-align: left;
+    padding: 12px;
+  }
+  
+  .table-view td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .table-view tr:hover {
+    background-color: #f2f2f2; /* Add hover effect for rows */
+  }
+  
+  /* Card View Styling */
+  .property-cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three cards per row */
+    gap: 20px;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .property-cards-container {
+      grid-template-columns: repeat(2, 1fr); /* Two cards per row for tablets */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .property-cards-container {
+      grid-template-columns: 1fr; /* One card per row for small screens */
+    }
+  }
+  
+  .property-cards-container > .topRatedPropertyCard {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .property-cards-container > .topRatedPropertyCard:hover {
+    transform: scale(1.05); /* Slight zoom effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Card Content Styling */
+  .topRatedPropertyCard h3 {
+    font-size: 18px;
+    margin: 10px;
+    color: #333;
+  }
+  
+  .topRatedPropertyCard p {
+    margin: 5px 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .topRatedPropertyCard .propertyImage img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  

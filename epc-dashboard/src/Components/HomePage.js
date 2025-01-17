@@ -4,7 +4,6 @@ import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
 import './PropertyCard.css'
 import PropertyFilter from './FilterComponent';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
 
 const HomePage = () => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
@@ -34,7 +33,7 @@ const HomePage = () => {
 
   const handleSearch = () => {
     navigate(`/propertylist?search=${searchTerm}`);
-  };
+  };  
 
   if (loading) {
     return <p>Loading...</p>;

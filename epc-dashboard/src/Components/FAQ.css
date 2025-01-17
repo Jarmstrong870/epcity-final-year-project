@@ -1,0 +1,42 @@
+.tutorialGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: center;
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .propertyCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 300px;
+    align-items: center;
+    padding: 20px;
+    margin: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    cursor: pointer;
+  }
+  
+  .propertyCard h3{
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .propertyCard:hover {
+    background-color: #f5f5f5; /* Light grey */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+  }

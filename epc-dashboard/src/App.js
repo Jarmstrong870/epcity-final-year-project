@@ -11,6 +11,14 @@ import PropertyPage from './Components/PropertyPage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
+import FAQs from './Components/FAQs';
+import GlossaryPage from './Components/Glossarypage';
+import Tutorials from './Components/Tutorials';
+import EICalculator from './Components/EICalculator';
+import Checklist from './Components/Checklist';
+import SocialMedia from './Components/Social Media';
+import PropertyFinder from './Components/PropertyFinder';
+import TutorialMenu  from './Components/TutorialMenu';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -78,7 +86,8 @@ function App() {
         <div className="header-container">
           <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
           <div className="navigationLinks">
-            <a href="/propertylist">View All Properties</a>
+            <Link to="/propertylist" className="navigation-button">View All Properties</Link>
+            <Link to="/FAQs" className="navigation-button">Frequently Asked Questions</Link>
         </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileIcon} alt="Profile" className="profile-img" />
@@ -132,7 +141,14 @@ function App() {
           <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
           <Route path="/propertylist" element={<PropertyList />} />
           <Route path="/property/:address" element={<PropertyPage />} />
-        
+          <Route path="/FAQs" element={<FAQs/>} />
+          <Route path="/faq/glossary-page" element={<GlossaryPage/>} />
+          <Route path="/faq/tutorials" element={<Tutorials/>} />
+          <Route path="/faq/property-finder" element={<PropertyFinder/>} />
+          <Route path="/faq/environmental-impact-calculator" element={<EICalculator/>} />
+          <Route path="/faq/checklist" element={<Checklist/>} />
+          <Route path="/faq/socialmedia" element={<SocialMedia/>} />
+          <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />
         </Routes>
       </div>
     </Router>

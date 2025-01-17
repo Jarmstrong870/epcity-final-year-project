@@ -1,42 +1,40 @@
+.tutorialGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-content: center;
+  padding: 50px;
+}
+
 .propertyCard {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    padding: 20px;
-    margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-  }
-  
-  .propertyCard:hover {
-    background-color: #f5f5f5; /* Light grey */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
-  }
-  
-  .propertyImage img {
-    border-radius: 8px;
-    max-width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  .propertyDetails {
-    text-align: center;
-    margin: 10px auto;
-  }
-  
-  .propertyDetails h3 {
-    margin: 5px 0;
-    font-size: 1.2em;
-    color: #333;
-  }
-  
-  .propertyDetails tr {
-    font-size: 0.9em;
-    color: #666;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 300px;
+  align-items: center;
+  padding: 20px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+}
+
+.propertyCard h3{
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+.propertyCard:hover {
+  background-color: #f5f5f5; /* Light grey */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+}
+
