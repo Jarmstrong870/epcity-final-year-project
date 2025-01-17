@@ -5,15 +5,13 @@ import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
 
 const PropertyPage = ({ language }) => {
-  const {uprn} = useParams();
-  
-  console.log('uprn is:', uprn, 'Type:', typeof uprn);
+  const { uprn } = useParams();
+
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
-  console.log("uprn is:",uprn);
 
   // Translations for multilingual support
   const translations = {
@@ -30,11 +28,12 @@ const PropertyPage = ({ language }) => {
       mapView: 'Vista del Mapa',
     },
   };
+
   const t = translations[language] || translations.en; // Default to English
 
   // Load Google Maps API script
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c",
+    googleMapsApiKey: 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c',
   });
 
   const fetchPropertyDetails = () => {
@@ -68,7 +67,7 @@ const PropertyPage = ({ language }) => {
   }, [propertyData]);
 
   const fetchLocationCoords = (fullAddress, postcode) => {
-    const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
+    const API_KEY = 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c';
 
     const sanitizedAddress = `${fullAddress}, ${postcode}`.replace(/,+/g, ',').trim();
 
@@ -139,7 +138,11 @@ const PropertyPage = ({ language }) => {
         <div style={{ flex: 1, height: '400px' }}>
           <h3>{t.mapView}</h3>
           {isLoaded ? (
-            <GoogleMap center={locationCoords} zoom={15} mapContainerStyle={{ height: '100%', width: '100%' }}>
+            <GoogleMap
+              center={locationCoords}
+              zoom={15}
+              mapContainerStyle={{ height: '100%', width: '100%' }}
+            >
               <Marker position={locationCoords} />
             </GoogleMap>
           ) : (
@@ -156,12 +159,13 @@ const PropertyPage = ({ language }) => {
         <p>{errorMessage || 'Loading property details...'}</p>
       )}
 
-      {/* EPC Graph */}
+      {/* EPC Graph with Translations */}
       <div style={{ marginTop: '40px', textAlign: 'center' }}>
         {propertyData && (
           <EPCGraph
             currentEnergyEfficiency={propertyData.current_energy_efficiency}
             potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+            language={language} // Pass the language prop to EPCGraph
           />
         )}
       </div>

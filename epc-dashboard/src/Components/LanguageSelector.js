@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ukFlag from '../assets/uk-flag.png';
 import frenchFlag from '../assets/french-flag.png';
 import spanishFlag from '../assets/spanish-flag.png';
@@ -10,9 +10,22 @@ const languages = [
   { code: 'ES', label: 'Spanish', flag: spanishFlag },
 ];
 
-function LanguageSelector({ setLanguage, defaultLanguage = 'UK' }) {
+function LanguageSelector({ setLanguage }) {
   const [languageDropdownVisible, setLanguageDropdownVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState(defaultLanguage);
+
+  // Initialize selectedLanguage from localStorage or default to 'UK'
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    localStorage.getItem('selectedLanguage') || 'UK'
+  );
+
+  useEffect(() => {
+    const langMap = {
+      UK: 'en',
+      FR: 'fr',
+      ES: 'es',
+    };
+    setLanguage(langMap[selectedLanguage]);
+  }, [selectedLanguage, setLanguage]);
 
   const toggleLanguageDropdown = () => {
     setLanguageDropdownVisible((prev) => !prev);
@@ -20,6 +33,8 @@ function LanguageSelector({ setLanguage, defaultLanguage = 'UK' }) {
 
   const handleLanguageChange = (languageCode) => {
     setSelectedLanguage(languageCode);
+    localStorage.setItem('selectedLanguage', languageCode);
+
     const langMap = {
       UK: 'en',
       FR: 'fr',
@@ -52,7 +67,8 @@ function LanguageSelector({ setLanguage, defaultLanguage = 'UK' }) {
               className="dropdown-item"
               aria-label={lang.label}
             >
-              <img src={lang.flag} alt={`${lang.label} Flag`} className="flag-img-dropdown" /> {lang.label}
+              <img src={lang.flag} alt={`${lang.label} Flag`} className="flag-img-dropdown" />{' '}
+              {lang.label}
             </button>
           ))}
         </div>
