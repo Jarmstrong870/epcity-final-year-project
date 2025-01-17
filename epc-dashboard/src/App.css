@@ -227,16 +227,9 @@ td a:hover {
 /* Search Bar */
 .search-bar-container {
   display: flex;
-<<<<<<< HEAD
   justify-content: left;
   align-items: left;
   gap: 10px; /* Space between input and button */
-=======
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin: 20px 0;
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   padding: 15px;
   background-color: #f5f5f5;
   border-radius: 10px;
@@ -299,7 +292,6 @@ td a:hover {
     transform: rotate(360deg);
   }
 }
-<<<<<<< HEAD
 
 .navigation-button {
   display: inline-block;
@@ -317,5 +309,3 @@ td a:hover {
   background-color: #0a2315;
   text-decoration: none;
 }
-=======
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d

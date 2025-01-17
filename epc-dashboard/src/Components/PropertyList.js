@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './PropertyList.css';
-<<<<<<< HEAD
-
-const PropertyList = ({ properties, loading }) => {
-  const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
-
-=======
 
 const PropertyList = ({ properties, loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
@@ -54,7 +48,6 @@ const PropertyList = ({ properties, loading, language }) => {
 
   const t = translations[language] || translations.en; // Default to English
 
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   if (loading) {
     return <p>{t.loading}</p>;
   }
@@ -68,34 +61,21 @@ const PropertyList = ({ properties, loading, language }) => {
 
   return (
     <div className="property-list">
-<<<<<<< HEAD
-      <h2>Property List</h2>
-      
-=======
       <h2>{t.propertyList}</h2>
 
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
       {/* View Mode Toggle */}
       <div className="view-toggle">
         <button 
           onClick={() => setViewMode('table')} 
           className={viewMode === 'table' ? 'active' : ''}
         >
-<<<<<<< HEAD
-          Table View
-=======
           {t.tableView}
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
         </button>
         <button 
           onClick={() => setViewMode('card')} 
           className={viewMode === 'card' ? 'active' : ''}
         >
-<<<<<<< HEAD
-          Card View
-=======
           {t.cardView}
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
         </button>
       </div>
 
@@ -104,19 +84,11 @@ const PropertyList = ({ properties, loading, language }) => {
         <table>
           <thead>
             <tr>
-<<<<<<< HEAD
-              <th>Address</th>
-              <th>Postcode</th>
-              <th>Property Type</th>
-              <th>Current Energy Rating</th>
-              <th>Current Energy Efficiency</th>
-=======
               <th>{t.address}</th>
               <th>{t.postcode}</th>
               <th>{t.propertyType}</th>
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
             </tr>
           </thead>
           <tbody>
@@ -136,11 +108,7 @@ const PropertyList = ({ properties, loading, language }) => {
       ) : (
         <div className="property-cards-container">
           {limitedProperties.map((property, index) => (
-<<<<<<< HEAD
-            <TopRatedPropertyCard property={property} key={index}  />
-=======
             <TopRatedPropertyCard property={property} key={index} />
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
           ))}
         </div>
       )}

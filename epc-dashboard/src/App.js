@@ -8,23 +8,19 @@ import Register from './Register';
 import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
-import GlossaryPage from './Components/Glossarypage';
 import HomePage from './Components/HomePage';
-<<<<<<< HEAD
 import './Components/HomePage.css';
 import FAQs from './Components/FAQs';
-import GlossaryPage from './Components/Glossarypage';
+import GlossaryPage from './Components/GlossaryPage';
 import Tutorials from './Components/Tutorials';
 import EICalculator from './Components/EICalculator';
 import Checklist from './Components/Checklist';
 import SocialMedia from './Components/Social Media';
 import PropertyFinder from './Components/PropertyFinder';
 import TutorialMenu  from './Components/TutorialMenu';
-=======
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
 
 function App() {
   const [user, setUser] = useState(null);
@@ -124,23 +120,12 @@ function App() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <Router>
       <div className="App">
         <div className="header-container">
           <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
           <div className="navigationLinks">
             <Link to="/propertylist" className="navigation-button">View All Properties</Link>
             <Link to="/FAQs" className="navigation-button">Frequently Asked Questions</Link>
-=======
-    <div className="App">
-      <div className="header-container">
-        <Link to="/">
-          <img src={epcLogo} alt="EPCity Logo" className="logo-img" />
-        </Link>
-        <div className="navigationLinks">
-          <a href="/propertylist">View All Properties</a>
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
         </div>
         <div className="header-right">
           <LanguageSelector setLanguage={handleLanguageChange} language={language} />
@@ -183,38 +168,6 @@ function App() {
         </div>
       )}
 
-<<<<<<< HEAD
-        <Routes>
-          <Route
-            path="/propertylist"
-            element={
-              <>
-                <div className="search-bar-container">
-                  <PropertyFilter onFilterChange={fetchProperties} />
-                </div>
-                {/*<EPCTable />*/}
-                <PropertyList properties={properties} loading={loading} />
-              </>
-            }
-          />
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/property/:uprn" element={<PropertyPage />} /> {/* New route for property details */}
-          <Route path="/propertylist" element={<PropertyList />} />
-          <Route path="/property/:address" element={<PropertyPage />} />
-          <Route path="/FAQs" element={<FAQs/>} />
-          <Route path="/faq/glossary-page" element={<GlossaryPage/>} />
-          <Route path="/faq/tutorials" element={<Tutorials/>} />
-          <Route path="/faq/property-finder" element={<PropertyFinder/>} />
-          <Route path="/faq/environmental-impact-calculator" element={<EICalculator/>} />
-          <Route path="/faq/checklist" element={<Checklist/>} />
-          <Route path="/faq/socialmedia" element={<SocialMedia/>} />
-          <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />
-        </Routes>
-      </div>
-    </Router>
-=======
       <Routes>
         <Route
           path="/propertylist"
@@ -231,21 +184,25 @@ function App() {
         <Route path="/" element={<HomePage fetchProperties={fetchProperties} language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/property/:uprn"
-          element={<PropertyPage properties={properties} loading={loading} language={language} />}
-        />
+        <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
+        <Route path="/propertylist" element={<PropertyList />} />
+        <Route path="/property/:address" element={<PropertyPage />} />
+        <Route path="/FAQs" element={<FAQs/>} />
+        <Route path="/faq/tutorials" element={<Tutorials/>} />
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
-        <Route
-          path="/account-overview"
-          element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />}
-        />
+        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />}/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<resetPassword />} />
+        <Route path="/faq/property-finder" element={<PropertyFinder/>} />
+        <Route path="/faq/glossary-page" element={<GlossaryPage/>} />
+        <Route path="/faq/environmental-impact-calculator" element={<EICalculator/>} />
+        <Route path="/faq/checklist" element={<Checklist/>} />
+        <Route path="/faq/socialmedia" element={<SocialMedia/>} />
+        <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />
+
       </Routes>
     </div>
->>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   );
-}
+};
 
 export default App;
