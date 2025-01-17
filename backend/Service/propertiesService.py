@@ -5,6 +5,8 @@ from flask import jsonify
 import pandas as pd
 from dotenv import load_dotenv
 import os
+from Repository import propertyRepo as repo
+import datetime
 
 load_dotenv()
 
@@ -30,7 +32,10 @@ def getAllProperties():
     query_size = 5000
 
     #Query Parameters
-    query_params = {'size': query_size, 'local-authority': 'E08000012'}
+    query_params = {
+        'size': query_size,
+        'local-authority': 'E08000012',        
+    }
 
     # Initialize a list to store all rows
     all_rows = []
@@ -77,12 +82,12 @@ def getAllProperties():
 
     # Convert the data to a DataFrame
     search_results = pd.DataFrame(all_rows)
+    
+    search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
+    search_results = search_results.dropna(subset=['uprn'])
 
     #Convert 'lodgement-datetime' to datetime for sorting
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
-
-    # Drop properties with no uprn
-    search_results = search_results.dropna(subset=['uprn'])
+    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce').dt.date    
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
@@ -91,63 +96,42 @@ def getAllProperties():
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
 
     search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 
-                                                    'lodgement-datetime': 'lodgement_datetime'})
+                                                    'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
+                                                    'heating-cost-current': 'heating_cost_current', 'hot-water-cost-current': 'hot_water_cost_current',
+                                                    'lighting-cost-current': 'lighting_cost_current', 'total-floor-area': 'total_floor_area'})
     
-    search_results = search_results[['uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime', 'current_energy_efficiency', 
-                                     'current_energy_rating']]
-
-    # save the filtered DataFrame to a new CSV file
-    search_results.to_csv('properties_for_search.csv', index=False)
+    required_columns = [
+        'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
+        'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
+        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area'
+    ]
+    
+    search_results = search_results[required_columns]
+    
+    search_results['heating_cost_current'] = pd.to_numeric(search_results['heating_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['heating_cost_current'])
+    search_results['hot_water_cost_current'] = pd.to_numeric(search_results['hot_water_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['hot_water_cost_current'])
+    search_results['lighting_cost_current'] = pd.to_numeric(search_results['lighting_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    
+    # save the filtered DataFrame to the hosted database
+    repo.updatePropertiesInDB(search_results)
 
 # Call this on backend start up to load properties into all_properties
-def getPropertiesFromCSV():
+def loadAllProperties():
     global all_properties
     global altered
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.astype(object).fillna(pd.NA)
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency')
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = properties
-
-    # set altered to false
+    
+    all_properties = repo.getPropertiesFromDB()
+    
     altered = False
-
     return all_properties.head(30)
 
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
     global all_properties
-    global changed
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.infer_objects(copy=False)
-
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency', ascending=False)
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = top_rated_properties
-
-    # set altered to false
-    changed = False
-    print(all_properties.head())
-    return all_properties.head(12)
+    return all_properties.head(6)
 
 
 # srot All  Properties - sort by EPC rating (current efficiency)
@@ -159,7 +143,7 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    pageNumber = int(pageNumber)
+    pageNumber = int(pageNumber) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size)
     if altered:
@@ -217,6 +201,10 @@ def getPropertyInfo(uprn):
     new_columns = {col: col.replace('-', '_') for col in df.columns}
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
+    
+    df['hot_water_cost'] = calculateInflationAdjustedPrice(df['hot_water_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['heating_cost'] = calculateInflationAdjustedPrice(df['heating_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['lighting_cost'] = calculateInflationAdjustedPrice(df['lighting_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
 
     return df
 
@@ -224,7 +212,6 @@ def getPropertyInfo(uprn):
 def filterProperties(property_types, epc_ratings):
     global altered_properties
 
-    print(epc_ratings)
     # Start with the full set of searched_properties
     filtered_properties = altered_properties
 
@@ -260,7 +247,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     
     if searchValue is None and property_types is None and epc_ratings is None:
         altered = False
-        return all_properties.head(30)
+        return getPage(1)
         
 
     altered = True
@@ -274,7 +261,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
 
-    return altered_properties
+    return getPage(1)
 
 def sortProperties(attribute, ascending=True):
     """
@@ -285,7 +272,40 @@ def sortProperties(attribute, ascending=True):
     global altered_properties
     global altered
     if altered:
-        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
-        return altered_properties
+        altered_properties.sort_values(by=attribute, ascending=ascending)
+        return getPage(1)
     else:
-        all_properties = all_properties.sort_values(by=attribute, ascending=ascending)
+        all_properties.sort_values(by=attribute, ascending=ascending)
+        return getPage(1)
+
+def calculateInflationAdjustedPrice(start_price, start_date):
+    
+    api_url = 'https://www.statbureau.org/calculate-inflation-price-json'
+    
+    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        
+    # Query parameters
+    params = {
+        'country': 'united-kingdom',
+        'start': start_date,
+        'end': end_date,  # Current date in YYYY-MM-DD format
+        'amount': start_price,
+        'format': True  # Format the result as currency
+    }
+    
+    # Construct the full URL with encoded parameters
+    full_url = f"{api_url}?{urlencode(params)}"
+    
+    try:
+        # Make the API request
+        request = urllib.request.Request(full_url)
+        with urllib.request.urlopen(request) as response:
+            # Read and decode the response
+            response_body = response.read().decode()
+            # Remove currency symbols or any non-numeric characters
+            cleaned_response = ''.join(c for c in response_body if c.isdigit() or c == '.' or c == '-')
+            adjusted_price = float(cleaned_response)
+            return adjusted_price
+    except Exception as e:
+        print(f"Error fetching inflation-adjusted price: {e}")
+        return None

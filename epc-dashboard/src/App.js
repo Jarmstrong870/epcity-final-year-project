@@ -187,6 +187,7 @@ function App() {
           element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<resetPassword />} />
       </Routes>
     </div>
   );
