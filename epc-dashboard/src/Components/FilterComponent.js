@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Filter.css'
 
 const PropertyFilter = ({ onFilterChange, language }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -84,8 +85,24 @@ const PropertyFilter = ({ onFilterChange, language }) => {
   const handleSortChange = (e) => setSortValue(e.target.value);
 
   return (
-    <div className="property-filter">
+    <div className = "baseStyling">
       <form onSubmit={handleFilterSubmit}>
+<<<<<<< HEAD
+        {/* Search Input */}
+        <div className="searchAddress">
+          <label htmlFor="searchQuery"><strong>Search by Address or Postcode:</strong></label>
+          <input className = "searchInput"
+            type="text"
+            id="searchQuery"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        </div>
+
+        {/* Property Type Filter (Checkboxes) */}
+        <div className = "propertyTypeFilter">
+          <label><strong>Property Types:</strong></label>
+=======
         <div>
           <label htmlFor="searchQuery">{t.search}</label>
           <input type="text" id="searchQuery" value={searchQuery} onChange={handleSearchChange} />
@@ -93,6 +110,7 @@ const PropertyFilter = ({ onFilterChange, language }) => {
 
         <div>
           <label>{t.propertyTypes}</label>
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
           <div>
             {['bungalow', 'flat', 'house', 'maisonette'].map((type) => (
               <label key={type}>
@@ -103,8 +121,14 @@ const PropertyFilter = ({ onFilterChange, language }) => {
           </div>
         </div>
 
+<<<<<<< HEAD
+        {/* EPC Rating Filter (Checkboxes) */}
+        <div className = "ratingLetterFilter">
+          <label><strong>EPC Ratings:</strong></label>
+=======
         <div>
           <label>{t.epcRatings}</label>
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
           <div>
             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
               <label key={rating}>

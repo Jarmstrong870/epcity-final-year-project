@@ -244,3 +244,4 @@ const EPCFullTable = ({ properties, loading, language }) => {
 };
 
 export default EPCFullTable;
+

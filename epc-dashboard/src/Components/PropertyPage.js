@@ -5,13 +5,20 @@ import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
 
 const PropertyPage = ({ language }) => {
+<<<<<<< HEAD
+  const {uprn} = useParams();
+  
+  console.log('uprn is:', uprn, 'Type:', typeof uprn);
+=======
   const { uprn } = useParams();
 
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
+  console.log("uprn is:",uprn);
 
   // Translations for multilingual support
   const translations = {
@@ -28,12 +35,19 @@ const PropertyPage = ({ language }) => {
       mapView: 'Vista del Mapa',
     },
   };
+<<<<<<< HEAD
+=======
 
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   const t = translations[language] || translations.en; // Default to English
 
   // Load Google Maps API script
   const { isLoaded } = useJsApiLoader({
+<<<<<<< HEAD
+    googleMapsApiKey: "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c",
+=======
     googleMapsApiKey: 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c',
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
   });
 
   const fetchPropertyDetails = () => {
@@ -67,7 +81,11 @@ const PropertyPage = ({ language }) => {
   }, [propertyData]);
 
   const fetchLocationCoords = (fullAddress, postcode) => {
+<<<<<<< HEAD
+    const API_KEY = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c";
+=======
     const API_KEY = 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c';
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
 
     const sanitizedAddress = `${fullAddress}, ${postcode}`.replace(/,+/g, ',').trim();
 
@@ -138,11 +156,15 @@ const PropertyPage = ({ language }) => {
         <div style={{ flex: 1, height: '400px' }}>
           <h3>{t.mapView}</h3>
           {isLoaded ? (
+<<<<<<< HEAD
+            <GoogleMap center={locationCoords} zoom={15} mapContainerStyle={{ height: '100%', width: '100%' }}>
+=======
             <GoogleMap
               center={locationCoords}
               zoom={15}
               mapContainerStyle={{ height: '100%', width: '100%' }}
             >
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
               <Marker position={locationCoords} />
             </GoogleMap>
           ) : (
@@ -159,13 +181,20 @@ const PropertyPage = ({ language }) => {
         <p>{errorMessage || 'Loading property details...'}</p>
       )}
 
+<<<<<<< HEAD
+      {/* EPC Graph */}
+=======
       {/* EPC Graph with Translations */}
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
       <div style={{ marginTop: '40px', textAlign: 'center' }}>
         {propertyData && (
           <EPCGraph
             currentEnergyEfficiency={propertyData.current_energy_efficiency}
             potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+<<<<<<< HEAD
+=======
             language={language} // Pass the language prop to EPCGraph
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
           />
         )}
       </div>

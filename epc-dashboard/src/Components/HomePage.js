@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
+import './PropertyCard.css'
+import PropertyFilter from './FilterComponent';
 
 const HomePage = ({ fetchProperties }) => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
@@ -31,11 +33,16 @@ const HomePage = ({ fetchProperties }) => {
   };
 
   const handleSearch = () => {
+<<<<<<< HEAD
+    navigate(`/propertylist?search=${searchTerm}`);
+  };  
+=======
     if (searchTerm.trim()) {
       fetchProperties(searchTerm);
       navigate(`/propertylist?search=${searchTerm}`);
     }
   };
+>>>>>>> 84b1b27d892a63ffe830f249d681a328ad43e64d
 
   if (loading) {
     return <p>Loading...</p>;
