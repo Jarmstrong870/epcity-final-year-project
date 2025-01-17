@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Routes, Route, Link} from 'react-router-dom';
+import { Routes, Route, Link, Navigate} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'; // For navigation
 import './App.css';
 import profileIcon from './assets/profileicon.png';
@@ -13,6 +13,7 @@ import PropertyPage from './Components/PropertyPage';
 import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
+import ForgotPassword from './Components/ForgotPassword';
 import './Components/HomePage.css';
 import AccountOverview from './Components/AccountOverview';
 
@@ -23,7 +24,8 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
@@ -37,6 +39,7 @@ function App() {
     setProfileImage(profileIcon); // Reset to default image
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
+    navigate('/');
   };
 
   const cancelLogout = () => {
@@ -178,6 +181,7 @@ function App() {
         <Route path="/property/:address" element={<PropertyPage />} />
         <Route path="/glossary" element={<GlossaryPage />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage}/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </div>
   );

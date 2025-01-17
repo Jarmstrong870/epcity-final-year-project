@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom'; 
 import './Login.css';
 import backgroundImage from './assets/house-bk.jpg'; 
+import eyeIcon from './assets/eye-icon.jpg'; // Import the eye icon
 
-
-function Login({ setUser }) { 
+function Login({ setUser }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [message, setMessage] = useState('');
-  const navigate = useNavigate(); // For navigation after login
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -17,9 +18,8 @@ function Login({ setUser }) {
       setMessage(response.data.message);
 
       if (response.status === 200) {
-        // Set the user information in the state
         setUser({
-          firstname: response.data.firstname, 
+          firstname: response.data.firstname,
           lastname: response.data.lastname,
           email,
         });
@@ -40,7 +40,6 @@ function Login({ setUser }) {
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <form className="login-form">
-        
         <div className="form-group">
           <input
             type="email"
@@ -51,17 +50,32 @@ function Login({ setUser }) {
           />
         </div>
         <div className="form-group">
-          <input
-            type="password"
-            className="form-input"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <img
+              src={eyeIcon}
+              alt="Toggle visibility"
+              className="toggle-password-icon"
+              onMouseEnter={() => setShowPassword(true)} // Show password on hover
+              onMouseLeave={() => setShowPassword(false)} // Hide password when hover ends
+            />
+          </div>
+        </div>
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgotten Password?</Link>
         </div>
         <button type="button" className="login-button" onClick={handleLogin}>
           <b>Login</b>
         </button>
+        <div className="register-redirect">
+          <p>Don't have an account yet? <Link to="/register">Register</Link></p>
+        </div>
         {message && <p className="login-message">{message}</p>}
       </form>
     </div>
@@ -69,4 +83,7 @@ function Login({ setUser }) {
 }
 
 export default Login;
+
+
+
 
