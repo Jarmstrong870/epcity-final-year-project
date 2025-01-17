@@ -28,24 +28,20 @@ def request_reset_password():
 @reset_password_controller.route('/reset-password', methods=['POST'])
 def reset_password():
     """
-    Endpoint to reset the password using the OTP.
+    Endpoint to reset the password directly after OTP verification.
     """
     try:
         data = request.json
         email = data.get('email')
-        otp = data.get('otp')
         new_password = data.get('newPassword')
 
         # Validate input
-        if not email or not otp or not new_password:
-            return jsonify({'message': 'Email, OTP, and new password are required.'}), 400
+        if not email or not new_password:
+            return jsonify({'message': 'Email and new password are required.'}), 400
 
-        # Reset password
-        success, response = reset_password_service.reset_password(email, new_password, otp)
-        if success:
-            return jsonify({'message': 'Password has been reset successfully.'}), 200
-        else:
-            return jsonify({'message': response}), 400
+        # Delegate to the service to update the password
+        response, status_code = reset_password_service.update_password(email, new_password)
+        return jsonify(response), status_code
     except Exception as e:
         print(f"Error in reset-password: {e}")
         return jsonify({'message': 'An error occurred while resetting your password.'}), 500

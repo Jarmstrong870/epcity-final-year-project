@@ -21,6 +21,8 @@ import TutorialMenu  from './Components/TutorialMenu';
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
+import VerifyOtp from './Components/VerifyOtp';
+import ResetPassword from './Components/resetPassword';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -192,14 +194,14 @@ function App() {
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} />}/>
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<resetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/faq/property-finder" element={<PropertyFinder/>} />
         <Route path="/faq/glossary-page" element={<GlossaryPage/>} />
         <Route path="/faq/environmental-impact-calculator" element={<EICalculator/>} />
         <Route path="/faq/checklist" element={<Checklist/>} />
         <Route path="/faq/socialmedia" element={<SocialMedia/>} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />
-
+        <Route path="/verify-otp" element={<VerifyOtp />} />
       </Routes>
     </div>
   );
