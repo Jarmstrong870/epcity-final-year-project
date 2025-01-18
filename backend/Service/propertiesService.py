@@ -145,7 +145,7 @@ def getPage(pageNumber):
     page_size = 30
     pageNumber = int(pageNumber) - 1
     firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size)
+    lastProperty = (firstProperty + page_size) - 1
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
     else:
