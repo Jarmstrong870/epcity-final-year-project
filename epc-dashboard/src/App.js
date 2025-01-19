@@ -11,7 +11,7 @@ import PropertyPage from './Components/PropertyPage';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
 import FAQs from './Components/FAQs';
-import GlossaryPage from './Components/GlossaryPage';
+import GlossaryPage from './Components/Glossarypage';
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
