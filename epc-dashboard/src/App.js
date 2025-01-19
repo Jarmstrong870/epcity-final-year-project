@@ -15,6 +15,13 @@ import GlossaryPage from './Components/GlossaryPage';
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
+import VerifyOtp from './Components/VerifyOtp';
+import ResetPassword from './Components/resetPassword';
+import PropertyFinder from './Components/PropertyFinder';
+import EICalculator from './Components/EICalculator';
+import Checklist from './Components/Checklist';
+import SocialMedia from './Components/SocialMedia';
+import TutorialMenu from './Components/TutorialMenu';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -87,14 +94,13 @@ function App() {
     setLogoutConfirmVisible(false);
   };
 
-  // Fetch properties from backend
   const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
     setLoading(true);
 
     try {
       let url = query || propertyTypes.length || epcRatings.length
         ? `http://127.0.0.1:5000/api/property/alter?`
-        : `http://127.0.0.1:5000/api/property/loadCSV`;
+        : `http://127.0.0.1:5000/api/property/loadDB`;
 
       if (query) url += `search=${query}&`;
       if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
@@ -209,11 +215,16 @@ function App() {
         <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
         <Route path="/FAQs" element={<FAQs />} />
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
-        <Route
-          path="/account-overview"
-          element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />}
-        />
-        <Route path="/forgot-password" element={<ForgotPassword  language={language} />} />
+        <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
+        <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/faq/property-finder" element={<PropertyFinder />} />
+        <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
+        <Route path="/faq/environmental-impact-calculator" element={<EICalculator />} />
+        <Route path="/faq/checklist" element={<Checklist />} />
+        <Route path="/faq/socialmedia" element={<SocialMedia />} />
+        <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu />} />
+        <Route path="/verify-otp" element={<VerifyOtp />} />
       </Routes>
     </div>
   );
