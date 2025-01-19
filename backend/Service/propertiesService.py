@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 from Repository import propertyRepo as repo
 import datetime
+import locale
 
 load_dotenv()
 
@@ -131,7 +132,8 @@ def loadAllProperties():
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
     global all_properties
-    return all_properties.head(6)
+    top6 = all_properties.sort_values(by='current_energy_efficiency', ascending=False).head(6)
+    return top6
 
 
 # srot All  Properties - sort by EPC rating (current efficiency)
@@ -145,7 +147,7 @@ def getPage(pageNumber):
     page_size = 30
     pageNumber = int(pageNumber) - 1
     firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size)
+    lastProperty = (firstProperty + page_size) - 1
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
     else:
@@ -187,10 +189,7 @@ def getPropertyInfo(uprn):
     df = pd.DataFrame(all_rows)
 
     #Convert 'lodgement-datetime' to datetime for sorting
-    df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce')
-
-    # Drop rows with invalid 'lodgement_datetime' values
-    #df = df.dropna(subset=['lodgement-datetime'])
+    df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce').dt.date
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     df = df.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
@@ -202,9 +201,23 @@ def getPropertyInfo(uprn):
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
     
-    df['hot_water_cost'] = calculateInflationAdjustedPrice(df['hot_water_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
-    df['heating_cost'] = calculateInflationAdjustedPrice(df['heating_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
-    df['lighting_cost'] = calculateInflationAdjustedPrice(df['lighting_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    adjusted_hot_water_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'hot_water_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
+    adjusted_heating_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'heating_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
+    adjusted_lighting_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'lighting_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
+
+    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
+    
+    adjusted_hot_water_cost_value = float(adjusted_hot_water_cost)
+    adjusted_heating_cost_value = float(adjusted_heating_cost)
+    adjusted_lighting_cost_value = float(adjusted_lighting_cost)
+    
+    hw_currency = locale.currency(adjusted_hot_water_cost_value)
+    h_currency = locale.currency(adjusted_heating_cost_value)
+    l_currency = locale.currency(adjusted_lighting_cost_value)
+    
+    df.loc[df.index[0], 'hot_water_cost_current'] = hw_currency
+    df.loc[df.index[0], 'heating_cost_current'] = h_currency
+    df.loc[df.index[0], 'lighting_cost_current'] = l_currency
 
     return df
 
@@ -290,7 +303,7 @@ def calculateInflationAdjustedPrice(start_price, start_date):
         'start': start_date,
         'end': end_date,  # Current date in YYYY-MM-DD format
         'amount': start_price,
-        'format': True  # Format the result as currency
+        'format': False  # Format the result as currency
     }
     
     # Construct the full URL with encoded parameters
@@ -302,9 +315,8 @@ def calculateInflationAdjustedPrice(start_price, start_date):
         with urllib.request.urlopen(request) as response:
             # Read and decode the response
             response_body = response.read().decode()
-            # Remove currency symbols or any non-numeric characters
-            cleaned_response = ''.join(c for c in response_body if c.isdigit() or c == '.' or c == '-')
-            adjusted_price = float(cleaned_response)
+            # Parse the JSON response (Statbureau API returns a quoted string)
+            adjusted_price = response_body  # Remove quotes and convert to float
             return adjusted_price
     except Exception as e:
         print(f"Error fetching inflation-adjusted price: {e}")
