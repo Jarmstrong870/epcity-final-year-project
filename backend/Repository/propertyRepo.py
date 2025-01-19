@@ -8,11 +8,11 @@ load_dotenv()
 
 # Database connection parameters
 DB_PARAMS = {
-    "dbname": os.getenv('AIVEN_NAME'),
-    "user": os.getenv('AIVEN_USER'),
-    "password": os.getenv('AIVEN_PASSWORD'),
-    "host": os.getenv('AIVEN_HOST'),
-    "port": os.getenv('AIVEN_PORT')
+    "dbname": os.getenv('DATABASE_NAME'),
+    "user": os.getenv('DATABASE_USER'),
+    "password": os.getenv('DATABASE_PASSWORD'),
+    "host": os.getenv('DATABASE_HOST'),
+    "port": os.getenv('DATABASE_PORT')
 }
 
 def getPropertiesFromDB():

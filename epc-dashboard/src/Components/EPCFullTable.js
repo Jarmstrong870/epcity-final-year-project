@@ -174,7 +174,7 @@ const EPCFullTable = ({ properties, loading, language }) => {
                 ?
               </Link>
             </h4>
-            <p>{property.heating_cost_current ? `£${property.heating_cost_current}` : 'N/A'}</p>
+            <p>{property.heating_cost_current ? `${property.heating_cost_current}` : 'N/A'}</p>
           </div>
           <div className="epc-card">
             <h4>
@@ -183,7 +183,7 @@ const EPCFullTable = ({ properties, loading, language }) => {
                 ?
               </Link>
             </h4>
-            <p>{property.lighting_cost_current ? `£${property.lighting_cost_current}` : 'N/A'}</p>
+            <p>{property.lighting_cost_current ? `${property.lighting_cost_current}` : 'N/A'}</p>
           </div>
           <div className="epc-card">
             <h4>
@@ -192,7 +192,7 @@ const EPCFullTable = ({ properties, loading, language }) => {
                 ?
               </Link>
             </h4>
-            <p>{property.hot_water_cost_current ? `£${property.hot_water_cost_current}` : 'N/A'}</p>
+            <p>{property.hot_water_cost_current ? `${property.hot_water_cost_current}` : 'N/A'}</p>
           </div>
         </div>
       </section>

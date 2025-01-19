@@ -68,7 +68,7 @@ function App() {
     try {
       let url = query || propertyTypes.length || epcRatings.length 
         ? `http://127.0.0.1:5000/api/property/alter?` 
-        : `http://127.0.0.1:5000/api/property/loadCSV`;
+        : `http://127.0.0.1:5000/api/property/loadDB`;
 
       if (query) url += `search=${query}&`;
       if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
