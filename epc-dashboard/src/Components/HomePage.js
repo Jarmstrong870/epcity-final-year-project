@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
+import {PropertyContext } from './propertyContext'
 
-const HomePage = ({ fetchProperties }) => {
-  const [topRatedProperties, setTopRatedProperties] = useState([]);
+const HomePage = () => {
+  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
+  
 
   useEffect(() => {
-    const fetchTopRatedProperties = async () => {
+    const fetchTopProperties = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/property/loadTopRated');
-        const data = await response.json();
-        setTopRatedProperties(data.slice(0, 3)); // Limit to top 6 properties
-        console.log("Top Rated Properties:", data); // Debugging output
+        fetchTopRatedProperties();
+        const data = topRatedProperties;
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -23,7 +24,7 @@ const HomePage = ({ fetchProperties }) => {
       }
     };
 
-    fetchTopRatedProperties();
+    fetchTopProperties();
   }, []);
 
   const handleInputChange = (event) => {
@@ -33,20 +34,21 @@ const HomePage = ({ fetchProperties }) => {
   const handleSearch = () => {
     if (searchTerm.trim()) {
       fetchProperties(searchTerm);
-      navigate(`/propertylist?search=${searchTerm}`);
+      navigate('/propertylist?search=${searchTerm}');
     }
   };
 
   if (loading) {
     return <p>Loading...</p>;
   }
-
+  
   if (topRatedProperties.length === 0) {
     return <p>No top-rated properties found.</p>;
   }
 
   return (
     <>
+      
       {/* Search Bar Section */}
       <div className="backgroundImageStyling">
         <div className="stylingSearchBar">
@@ -74,6 +76,7 @@ const HomePage = ({ fetchProperties }) => {
       </div>
     </>
   );
+
 };
 
 export default HomePage;

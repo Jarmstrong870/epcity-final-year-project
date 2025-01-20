@@ -29,7 +29,7 @@ def login_user_service(data):
 
         # Query for the user in the database
         print(f"Executing query to find user with email: {email}") 
-        cursor.execute("SELECT firstname, password_hash FROM users WHERE email_address = %s;", (email,))
+        cursor.execute("SELECT firstname, lastname, password_hash FROM users WHERE email_address = %s;", (email,))
         user = cursor.fetchone()
         print("Query result:", user)  
 
@@ -39,7 +39,7 @@ def login_user_service(data):
             connection.close()
             return {"message": "No account has been found with this email. Please register first."}, 404
 
-        firstname, stored_password_hash = user
+        firstname, lastname, stored_password_hash = user
 
        
         if isinstance(stored_password_hash, memoryview):
@@ -52,7 +52,7 @@ def login_user_service(data):
             print("Password verification successful.") 
             cursor.close()
             connection.close()
-            return {"message": f"Welcome back to EPCity, {firstname}!", "firstname": firstname}, 200
+            return {"message": f"Welcome back to EPCity, {firstname}!", "lastname": lastname, "firstname": firstname}, 200
         else:
             print("Password verification failed.")  
             cursor.close()
