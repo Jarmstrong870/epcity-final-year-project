@@ -1,85 +1,111 @@
-import React, {useState} from 'react';
-import {jsPDF} from 'jspdf';
+import React, { useState, useEffect } from 'react';
+import { jsPDF } from 'jspdf';
 import './Checklist.css';
+import translationsChecklist from '../locales/translations_checklist'; 
 import PropertyIcon from '../assets/property icon.jpg';
 import DocumentIcon from '../assets/documents file icon.jpg';
 import MoneyIcon from '../assets/money icon.jpg';
 
-const Checklist = () => {
-    const[checklist, setChecklist] = useState([
-        {checklistID: 1, description: 'Go through the property and inspect for mould, damp etc', checkBox: false, categories: 'Properties Conditions'},
-        {checklistID: 2, description: 'Make sure to read and understand the tenancy agreement thoroughly', checkBox: false, categories: 'Tenancy Documents'},
-        {checklistID: 3, description: 'Check billing and payment responsibilities between tenants', checkBox: false, categories: 'Student Finances'},
-        {checklistID: 4, description: 'Make sure to check if there is a deposit to be paid and any requirements asscoiated', checkBox: false, categories: 'Tenancy Documents'},
-        {checklistID: 5, description: 'Check with previous tenants what they thought about property', checkBox: false, categories: 'Properties Conditions'},
-        {checklistID: 6, description: 'Using our Utility Cost Calculator to see the costs for your favourite property', checkBox: false, categories: 'Student Finances'}
-    ]);
+const Checklist = ({ language }) => {
+  const t = translationsChecklist[language] || translationsChecklist.en; // Get translations for the current language
 
-    const tickBox = (boxID) => {
-        setChecklist((propertyChecklist) =>
-            propertyChecklist.map((chosenItem) =>
-                chosenItem.checklistID === boxID
-                    ? {...chosenItem, checkBox: !chosenItem.checkBox}
-                    : chosenItem
-            )
-        );
-    };
+  const [checklist, setChecklist] = useState([]);
 
-    const downloadingChecklist = () => {
-        const checklistDocument = new jsPDF();
-        checklistDocument.setFontSize(14);
-        checklistDocument.text('Student Rent Checklist', 12, 12);
-        checklistDocument.setFontSize(12);
-        checklist.forEach((listItem, index) => {
-            checklistDocument.text(`[${listItem.checkBox ? 'X' : ' '}] ${listItem.description}`, 10, 20 + index * 10);
-        });
-        checklistDocument.save('Student_Property_Checklist.pdf');
-    };
+  // Update checklist dynamically when language changes
+  useEffect(() => {
+    setChecklist(
+      t.checklistItems.map((description, index) => ({
+        checklistID: index + 1,
+        description,
+        checkBox: false,
+        categories:
+          index < 2
+            ? t.categories.propertyConditions
+            : index < 4
+            ? t.categories.tenancyDocuments
+            : t.categories.studentFinances,
+      }))
+    );
+  }, [language, t]);
 
-    return (
-        <div className="checklist-main">
-            <h1>Student Rental Checklist</h1>
-            <p>Do you feel like you forget the questions to ask when viewing a property? <br />
-               <br />
-               Download and view our checklist below with the key points to consider 
-               before signing onto a property!!</p>
+  const tickBox = (boxID) => {
+    setChecklist((propertyChecklist) =>
+      propertyChecklist.map((chosenItem) =>
+        chosenItem.checklistID === boxID
+          ? { ...chosenItem, checkBox: !chosenItem.checkBox }
+          : chosenItem
+      )
+    );
+  };
 
-        <div className="checklist-groupings">
-            {['Properties Conditions', 'Tenancy Documents', 'Student Finances'].map((categories) => (
-                <div key={categories} className="checklist-groups">
-                <h2>
-                    <img src = {
-                        categories === 'Properties Conditions' ? PropertyIcon
-                        : categories === 'Tenancy Documents' ? DocumentIcon
-                        : MoneyIcon}
-                    alt = {`${categories} icon`}
-                    className="categories-icon" 
+  const downloadingChecklist = () => {
+    const checklistDocument = new jsPDF();
+    checklistDocument.setFontSize(14);
+    checklistDocument.text(t.pdfTitle, 12, 12);
+    checklistDocument.setFontSize(12);
+    checklist.forEach((listItem, index) => {
+      checklistDocument.text(
+        `[${listItem.checkBox ? 'X' : ' '}] ${listItem.description}`,
+        10,
+        20 + index * 10
+      );
+    });
+    checklistDocument.save('Student_Property_Checklist.pdf');
+  };
+
+  return (
+    <div className="checklist-main">
+      <h1>{t.title}</h1>
+      <p>{t.description}</p>
+
+      <div className="checklist-groupings">
+        {[
+          t.categories.propertyConditions,
+          t.categories.tenancyDocuments,
+          t.categories.studentFinances,
+        ].map((category) => (
+          <div key={category} className="checklist-groups">
+            <h2>
+              <img
+                src={
+                  category === t.categories.propertyConditions
+                    ? PropertyIcon
+                    : category === t.categories.tenancyDocuments
+                    ? DocumentIcon
+                    : MoneyIcon
+                }
+                alt={`${category} icon`}
+                className="categories-icon"
+              />
+              {category}
+            </h2>
+            <ul>
+              {checklist
+                .filter((item) => item.categories === category)
+                .map((item) => (
+                  <li
+                    key={item.checklistID}
+                    className={`checklist-individualItem ${
+                      item.checkBox ? 'checklist-selectedItem' : ''
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={item.checkBox}
+                      onChange={() => tickBox(item.checklistID)}
                     />
-                    {categories}
-                </h2>
-                    <ul>
-                        {checklist.filter((selectedItem) => selectedItem.categories === categories).map((selectedItem) => (
-                            <li 
-                                key={selectedItem.checklistID} 
-                                className={`checklist-individualItem ${selectedItem.checkBox ? 'checklist-selectedItem' : ''
-                                }`}>
-                                <input
-                                    type = "checkbox"
-                                    checked = {selectedItem.checkBox}
-                                    onChange={() => tickBox(selectedItem.checklistID)} 
-                                />
-                               
-                                <label>{selectedItem.description}</label>
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
+                    <label>{item.description}</label>
+                  </li>
                 ))}
-            </div>
-                <button onClick= {downloadingChecklist} className="downloadButton">Download Checklist</button>
-            </div>
-        );
-    };
+            </ul>
+          </div>
+        ))}
+      </div>
+      <button onClick={downloadingChecklist} className="downloadButton">
+        {t.downloadButton}
+      </button>
+    </div>
+  );
+};
 
 export default Checklist;
-

@@ -2,78 +2,140 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './TutorialMenu.css';
 import introVideo from '../assets/intro.mp4';
+import translations from '../locales/translations_tutorialmenu';
 
-const TutorialMenu = () => {
-  const {tutorialCategory} = useParams();
+const TutorialMenu = ({ language }) => {
+  const { tutorialCategory } = useParams();
+
+  const [t, setTranslations] = useState(translations[language] || translations.en);
+  const [selectedTutorialID, setSelectedTutorialID] = useState(null);
 
   const checkCategory = tutorialCategory.replace(/-/g, ' ').toLowerCase();
 
   const tutorialOptions = {
     'home page tutorials': [
-        {tutorialID: 1, title: 'EPCity Welcome Tutorial', description: 'Welcome to EPC City - the home of energy efficiency! \n \n Find a tutorial below seeing how EPCity can help you find the best information about properties in the region of Liverpool!!', link: introVideo },
-        {tutorialID: 2, title: 'Custom Algorithm Survey Tutorial', description: 'Learn more about our custom algorithm', link: '/video/welcome' },
+      {
+        tutorialID: 1,
+        title: t.homePage.welcomeTutorialTitle,
+        description: t.homePage.welcomeTutorialDesc,
+        link: introVideo,
+      },
+      {
+        tutorialID: 2,
+        title: t.homePage.customAlgorithmTutorialTitle,
+        description: t.homePage.customAlgorithmTutorialDesc,
+        link: '/video/custom-algorithm',
+      },
     ],
-
     'properties tutorials': [
-        {tutorialID: 3, title: 'View All Properties', description: 'Learn more about viewing all the properties', link: '/video/welcome' },
-        {tutorialID: 4, title: 'Individual Property Information', description: 'Want to learn more about a specific property, click below to see the tutorial', link: '/video/welcome' },
+      {
+        tutorialID: 3,
+        title: t.properties.viewAllPropertiesTitle,
+        description: t.properties.viewAllPropertiesDesc,
+        link: '/video/view-all-properties',
+      },
+      {
+        tutorialID: 4,
+        title: t.properties.propertyInfoTitle,
+        description: t.properties.propertyInfoDesc,
+        link: '/video/property-info',
+      },
+      {
+        tutorialID: 5,
+        title: t.properties.propertyFiltersTitle,
+        description: t.properties.propertyFiltersDesc,
+        link: '/video/filters',
+      },
     ],
-
     'accounts tutorials': [
-        {tutorialID: 5, title: 'Sign Up Tutorial', description: 'Learn how to sign up', link: '/video/welcome' },
-        {tutorialID: 6, title: 'Managing Account', description: 'Learn how to manage your personal account', link: '/video/welcome' },
-        {tutorialID: 7, title: 'Logging In Tutorial', description: 'Learn how to log in to see your saved properties, custom algorithm etc', link: '/video/welcome' },
-        {tutorialID: 8, title: 'My Favourites Tutorial', description: 'Learn how to save properties into your favourites', link: '/video/welcome' },
+      {
+        tutorialID: 6,
+        title: t.accounts.signUpTitle,
+        description: t.accounts.signUpDesc,
+        link: '/video/sign-up',
+      },
+      {
+        tutorialID: 7,
+        title: t.accounts.manageAccountTitle,
+        description: t.accounts.manageAccountDesc,
+        link: '/video/manage-account',
+      },
+      {
+        tutorialID: 8,
+        title: t.accounts.loginTitle,
+        description: t.accounts.loginDesc,
+        link: '/video/login',
+      },
+      {
+        tutorialID: 9,
+        title: t.accounts.favouritesTitle,
+        description: t.accounts.favouritesDesc,
+        link: '/video/favourites',
+      },
+      {
+        tutorialID: 10,
+        title: t.accounts.passwordRecoveryTitle,
+        description: t.accounts.passwordRecoveryDesc,
+        link: '/video/password-recovery',
+      },
     ],
-};
+  };
 
-    const availableTutorials = tutorialOptions[checkCategory] || [];
-    const [selectedTutorial, setSelectedTutorial] = useState(null);
+  const availableTutorials = tutorialOptions[checkCategory] || [];
 
-    useEffect(() => {
-        if(availableTutorials.length > 0 && !selectedTutorial){
-            setSelectedTutorial(availableTutorials[0]);
-        }
-    }, [availableTutorials, selectedTutorial]);
+  // Update translations dynamically when the language changes
+  useEffect(() => {
+    setTranslations(translations[language] || translations.en);
+  }, [language]);
 
-    return (
-        <div className="tutorialMenu">
-            {/*Navigation sidebar */}
-            <div className="navigationSidebar">
-                <h3>{tutorialCategory.replace(/-/g, ' ').toUpperCase()}</h3>
-                
-                {/*List all available tutorials for the category*/}
-                {availableTutorials.map((availableTutorial) => (
-                    <div 
-                        key = {availableTutorial.tutorialID}
-                        onClick = {() => setSelectedTutorial(availableTutorial)}
-                        className={`navigationBarElement ${selectedTutorial?.tutorialID === availableTutorial.tutorialID ? 'selected' : ''}`} >
-                            {availableTutorial.title}
-                        </div>
-                ))}
-                {availableTutorials.length === 0 && (
-                    <p className="errorMessage">No tutorials are available for this section yet</p>
-                )}
-            </div>
-        
-        {/*Main Page view */}
-        <div className = "contentView">
+  // Update the selected tutorial dynamically when language or selected ID changes
+  const selectedTutorial = availableTutorials.find(
+    (tutorial) => tutorial.tutorialID === selectedTutorialID
+  );
 
-            <div className ="titleStyle">
-                <h3>{selectedTutorial?.title || "No tutorial selected"}</h3>
-            </div>
-            
-            {/* Tutorial description */}
-            <p className = "descriptionStyle">{selectedTutorial?.description || "Please choose a tutorial from the sidebar"}</p>
+  useEffect(() => {
+    if (availableTutorials.length > 0 && selectedTutorialID === null) {
+      setSelectedTutorialID(availableTutorials[0].tutorialID);
+    }
+  }, [availableTutorials, selectedTutorialID]);
 
-                {/*Video player for the selected tutorial */}
-            {selectedTutorial && (
-                <video src={selectedTutorial.link} controls className = "tutorialVideos" />
-            )}   
+  return (
+    <div className="tutorialMenu">
+      {/* Navigation sidebar */}
+      <div className="navigationSidebar">
+        <h3>{t.categories[checkCategory]}</h3>
+
+        {/* List all available tutorials for the category */}
+        {availableTutorials.map((tutorial) => (
+          <div
+            key={tutorial.tutorialID}
+            onClick={() => setSelectedTutorialID(tutorial.tutorialID)}
+            className={`navigationBarElement ${
+              selectedTutorialID === tutorial.tutorialID ? 'selected' : ''
+            }`}
+          >
+            {tutorial.title}
+          </div>
+        ))}
+        {availableTutorials.length === 0 && <p className="errorMessage">{t.errorNoTutorials}</p>}
+      </div>
+
+      {/* Main Page view */}
+      <div className="contentView">
+        <div className="titleStyle">
+          <h3>{selectedTutorial?.title || t.noTutorialSelected}</h3>
         </div>
+
+        {/* Tutorial description */}
+        <p className="descriptionStyle">{selectedTutorial?.description || t.chooseTutorial}</p>
+
+        {/* Video player for the selected tutorial */}
+        {selectedTutorial?.link && (
+          <video src={selectedTutorial.link} controls className="tutorialVideos" />
+        )}
+      </div>
     </div>
-    );
+  );
 };
 
-
-    export default TutorialMenu;
+export default TutorialMenu;
