@@ -119,15 +119,69 @@ def edit_details_service(data):
 
     return {"message": "User details updated successfully!"}, 200
 
-def upload_profile_image(file, user_id):
-    file_name = f"profile-images/{user_id}_{file.filename}"
+def upload_profile_image(file, email):
+    file_name = f"profile-images/{email}_{file.filename}"
     try:
-        response = supabase.storage.from_("profile-images").upload(file_name, file.stream)
-        if response.status_code != 200:
-            raise Exception(f"Failed to upload: {response.json()}")
-        # Get public URL
-        public_url = supabase.storage.from_("profile-images").get_public_url(file_name)
+        bucket = supabase.storage.from_("profile-images")
+
+        prefix = f"{email}_"  # Prefix based on the email and naming convention
+        print(f"Retrieving old images for user: {email} with prefix: {prefix}")
+
+        list_response = bucket.list()
+        if not isinstance(list_response, list):
+            raise Exception("Failed to list files in the bucket or invalid response format.")
+        
+        old_files = [file_info for file_info in list_response if file_info.get("name", "").startswith(prefix)]
+        print(f"Found old files for user {email}: {old_files}")
+
+        if old_files:
+            for old_file in old_files:
+                file_name_to_delete = old_file.get("name")
+                if file_name_to_delete:
+                    print(f"Deleting old image: {file_name_to_delete}")
+                    bucket.remove([file_name_to_delete])
+        else:
+            print(f"No old images found for user {email}.")
+
+        print(f"Uploading new file for email: {email} to {file_name}")
+        file_content = file.read()
+        upload_response = bucket.upload(file_name, file_content)
+
+        if not upload_response or not hasattr(upload_response, "path"):
+            raise Exception("Failed to upload file to Supabase.")
+
+        # Generate a public URL for the uploaded file
+        public_url = bucket.get_public_url(file_name)
+
+        if not isinstance(public_url, str) or not public_url:
+            raise Exception("Failed to retrieve a valid public URL.")
+
+        print(f"Generated public URL: {public_url}")
         return public_url
     except Exception as e:
         print(f"Error uploading profile image: {e}")
         return None
+
+def update_user_profile_image(email, public_url):
+    try:
+        connection = connect(**db_config)
+        cursor = connection.cursor()
+
+        # Update the profile image URL
+        print(f"Updating profile image URL in database for user: {email}")
+        cursor.execute(
+            "UPDATE users SET profile_image_url = %s WHERE email_address = %s;",
+            (public_url, email),
+        )
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print(f"Profile image URL updated successfully for user {email}")
+        return True
+    except Exception as e:
+        print(f"Error updating profile image URL in database: {e}")
+        return False
+
+
+    
+

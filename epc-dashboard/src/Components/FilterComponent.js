@@ -20,24 +20,18 @@ const PropertyFilter = () => {
   // Handler for property type selection
   const handlePropertyTypeChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setPropertyTypes([...propertyTypes, value]);
-    } else {
-      setPropertyTypes(propertyTypes.filter((type) => type !== value));
-    }
+    setPropertyTypes(
+      checked ? [...propertyTypes, value] : propertyTypes.filter((type) => type !== value)
+    );
   };
 
-  // Handler for EPC rating selection
   const handleEpcRatingChange = (e) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setEpcRatings([...epcRatings, value]);
-    } else {
-      setEpcRatings(epcRatings.filter((rating) => rating !== value));
-    }
+    setEpcRatings(
+      checked ? [...epcRatings, value] : epcRatings.filter((rating) => rating !== value)
+    );
   };
 
-  // Handler to submit the filters
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     // Call the parent component's method
@@ -56,12 +50,12 @@ const PropertyFilter = () => {
 
 
   return (
-    <div className="property-filter">
+    <div className = "baseStyling">
       <form onSubmit={handleFilterSubmit}>
         {/* Search Input */}
-        <div>
-          <label htmlFor="searchQuery">Search by Address or Postcode:</label>
-          <input
+        <div className="searchAddress">
+          <label htmlFor="searchQuery"><strong>Search by Address or Postcode:</strong></label>
+          <input className = "searchInput"
             type="text"
             id="searchQuery"
             value={searchQuery}
@@ -70,16 +64,12 @@ const PropertyFilter = () => {
         </div>
 
         {/* Property Type Filter (Checkboxes) */}
-        <div>
-          <label>Property Types:</label>
+        <div className = "propertyTypeFilter">
+          <label><strong>Property Types:</strong></label>
           <div>
             {['bungalow', 'flat', 'house', 'maisonette'].map((type) => (
               <label key={type}>
-                <input
-                  type="checkbox"
-                  value={type}
-                  onChange={handlePropertyTypeChange}
-                />
+                <input type="checkbox" value={type} onChange={handlePropertyTypeChange} />
                 {type.charAt(0).toUpperCase() + type.slice(1)}
               </label>
             ))}
@@ -87,16 +77,12 @@ const PropertyFilter = () => {
         </div>
 
         {/* EPC Rating Filter (Checkboxes) */}
-        <div>
-          <label>EPC Ratings:</label>
+        <div className = "ratingLetterFilter">
+          <label><strong>EPC Ratings:</strong></label>
           <div>
             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
               <label key={rating}>
-                <input
-                  type="checkbox"
-                  value={rating}
-                  onChange={handleEpcRatingChange}
-                />
+                <input type="checkbox" value={rating} onChange={handleEpcRatingChange} />
                 {rating}
               </label>
             ))}
@@ -120,9 +106,8 @@ const PropertyFilter = () => {
           <h3>{sortValue}</h3>
         </div>
 
-        {/* Submit Button */}
         <div>
-          <button type="submit">Find Properties</button>
+          <button type="submit">{t.findProperties}</button>
         </div>
       </form>
     </div>

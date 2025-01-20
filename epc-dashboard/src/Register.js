@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './Register.css';
 import Tooltip from './Components/TooltipComponent'; // Import your custom Tooltip component
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, Link } from 'react-router-dom'; 
 import backgroundImage from './assets/house_bkc.jpg'; // Import the background image
+import eyeIcon from './assets/eye-icon.jpg'; // Import the eye icon
 
 function Register() {
   const [firstName, setFirstName] = useState('');
@@ -11,6 +12,7 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userType, setUserType] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -41,10 +43,6 @@ function Register() {
         setMessage('An error occurred. Please try again.');
       }
     }
-  };
-
-  const handleNavigateToLogin = () => {
-    navigate('/login');
   };
 
   return (
@@ -80,16 +78,22 @@ function Register() {
             />
           </div>
           <div className="form-group">
-            <div className="input-with-icon">
-              <input
-                type="password"
-                className="form-input"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Tooltip message="Please enter a password that's at least 7 characters long." />
-            </div>
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="form-input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <img
+              src={eyeIcon}
+              alt="Show Password"
+              className="toggle-password-icon"
+              onMouseEnter={() => setShowPassword(true)} // Show password on hover
+              onMouseLeave={() => setShowPassword(false)} // Hide password when hover ends
+            />
+          </div>
           </div>
           <div className="form-group">
             <div className="input-with-icon">
@@ -109,6 +113,11 @@ function Register() {
             <b>Register</b>
           </button>
           {message && <p className="register-message">{message}</p>}
+
+          {/* New text below the register button */}
+          <div className="login-redirect">
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+          </div>
         </form>
       </div>
     </div>
@@ -116,4 +125,6 @@ function Register() {
 }
 
 export default Register;
+
+
 

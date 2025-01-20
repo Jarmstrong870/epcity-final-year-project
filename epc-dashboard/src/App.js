@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Routes, Route, Link, useNavigate, Router } from 'react-router-dom';
 import './App.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
@@ -8,7 +8,6 @@ import Register from './Register';
 import PropertyFilter from './Components/FilterComponent';
 import PropertyList from './Components/PropertyList';
 import PropertyPage from './Components/PropertyPage';
-import GlossaryPage from './Components/Glossarypage';
 import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
@@ -16,10 +15,24 @@ import { PropertyProvider } from './Components/propertyContext';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [profileImage, setProfileImage] = useState(profileIcon); 
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+  
+  
+ 
+
+  // Initialize language from localStorage or default to 'en'
+  const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
+  const navigate = useNavigate();
+
+  // Persist language selection in localStorage
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('language', newLanguage);
+  };
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
@@ -31,8 +44,10 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    setProfileImage(profileIcon); 
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
+    navigate('/');
   };
 
   const cancelLogout = () => {
@@ -119,6 +134,6 @@ function App() {
       </Router>
     </PropertyProvider>
   );
-}
+};
 
 export default App;

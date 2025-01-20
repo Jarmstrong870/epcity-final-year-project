@@ -5,6 +5,8 @@ from flask import jsonify
 import pandas as pd
 from dotenv import load_dotenv
 import os
+from Repository import propertyRepo as repo
+import datetime
 
 load_dotenv()
 
@@ -24,13 +26,49 @@ headers = {
     'Authorization': api_key
 }
 
+column_names = ['low_energy_fixed_light_count', 'address', 'uprn_source',
+       'floor_height', 'heating_cost_potential', 'unheated_corridor_length',
+       'hot_water_cost_potential', 'construction_age_band',
+       'potential_energy_rating', 'mainheat_energy_eff', 'windows_env_eff',
+       'lighting_energy_eff', 'environmental_impact_potential', 'glazed_type',
+       'heating_cost_current', 'address3', 'mainheatcont_description',
+       'sheating_energy_eff', 'property_type', 'local_authority_label',
+       'fixed_lighting_outlets_count', 'energy_tariff',
+       'mechanical_ventilation', 'hot_water_cost_current', 'county',
+       'postcode', 'solar_water_heating_flag', 'constituency',
+       'co2_emissions_potential', 'number_heated_rooms', 'floor_description',
+       'energy_consumption_potential', 'local_authority', 'built_form',
+       'number_open_fireplaces', 'windows_description', 'glazed_area',
+       'inspection_date', 'mains_gas_flag', 'co2_emiss_curr_per_floor_area',
+       'address1', 'heat_loss_corridor', 'flat_storey_count',
+       'constituency_label', 'roof_energy_eff', 'total_floor_area',
+       'building_reference_number', 'environmental_impact_current',
+       'co2_emissions_current', 'roof_description', 'floor_energy_eff',
+       'number_habitable_rooms', 'address2', 'hot_water_env_eff', 'posttown',
+       'mainheatc_energy_eff', 'main_fuel', 'lighting_env_eff',
+       'windows_energy_eff', 'floor_env_eff', 'sheating_env_eff',
+       'lighting_description', 'roof_env_eff', 'walls_energy_eff',
+       'photo_supply', 'lighting_cost_potential', 'mainheat_env_eff',
+       'multi_glaze_proportion', 'main_heating_controls', 'lodgement_datetime',
+       'flat_top_storey', 'current_energy_rating', 'secondheat_description',
+       'walls_env_eff', 'transaction_type', 'uprn',
+       'current_energy_efficiency', 'energy_consumption_current',
+       'mainheat_description', 'lighting_cost_current', 'lodgement_date',
+       'extension_count', 'mainheatc_env_eff', 'lmk_key', 'wind_turbine_count',
+       'tenure', 'floor_level', 'potential_energy_efficiency',
+       'hot_water_energy_eff', 'low_energy_lighting', 'walls_description',
+       'hotwater_description']
+
 #Potentially call this method once a month to get the most up to date property data
 def getAllProperties():
     # Page size (max 5000)
     query_size = 5000
 
     #Query Parameters
-    query_params = {'size': query_size, 'local-authority': 'E08000012'}
+    query_params = {
+        'size': query_size,
+        'local-authority': 'E08000012',        
+    }
 
     # Initialize a list to store all rows
     all_rows = []
@@ -77,12 +115,12 @@ def getAllProperties():
 
     # Convert the data to a DataFrame
     search_results = pd.DataFrame(all_rows)
+    
+    search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
+    search_results = search_results.dropna(subset=['uprn'])
 
     #Convert 'lodgement-datetime' to datetime for sorting
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
-
-    # Drop properties with no uprn
-    search_results = search_results.dropna(subset=['uprn'])
+    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce').dt.date    
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
@@ -91,63 +129,42 @@ def getAllProperties():
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
 
     search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 
-                                                    'lodgement-datetime': 'lodgement_datetime'})
+                                                    'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
+                                                    'heating-cost-current': 'heating_cost_current', 'hot-water-cost-current': 'hot_water_cost_current',
+                                                    'lighting-cost-current': 'lighting_cost_current', 'total-floor-area': 'total_floor_area'})
     
-    search_results = search_results[['uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime', 'current_energy_efficiency', 
-                                     'current_energy_rating']]
-
-    # save the filtered DataFrame to a new CSV file
-    search_results.to_csv('properties_for_search.csv', index=False)
+    required_columns = [
+        'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
+        'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
+        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area'
+    ]
+    
+    search_results = search_results[required_columns]
+    
+    search_results['heating_cost_current'] = pd.to_numeric(search_results['heating_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['heating_cost_current'])
+    search_results['hot_water_cost_current'] = pd.to_numeric(search_results['hot_water_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['hot_water_cost_current'])
+    search_results['lighting_cost_current'] = pd.to_numeric(search_results['lighting_cost_current'], errors='coerce')
+    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    
+    # save the filtered DataFrame to the hosted database
+    repo.updatePropertiesInDB(search_results)
 
 # Call this on backend start up to load properties into all_properties
-def getPropertiesFromCSV():
+def loadAllProperties():
     global all_properties
     global altered
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.astype(object).fillna(pd.NA)
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency')
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = properties
-
-    # set altered to false
+    
+    all_properties = repo.getPropertiesFromDB()
+    
     altered = False
-
     return all_properties.head(30)
 
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
     global all_properties
-    global changed
-    # Load the CSV into a DataFrame
-    properties = pd.read_csv('properties_for_search.csv', low_memory=False)
-
-    # Select only the required columns
-    properties = properties[['uprn', 'address', 'postcode', 'property_type', 'current_energy_efficiency', 'current_energy_rating']]
-
-    # Convert columns to object type to handle mixed values properly
-    properties = properties.infer_objects(copy=False)
-
-
-    # Sort by descending current efficiency and return top 6
-    top_rated_properties = properties.sort_values(by='current_energy_efficiency', ascending=False)
-   
-    # Assign the DataFrame to the global variable and return the first 30 rows
-    all_properties = top_rated_properties
-
-    # set altered to false
-    changed = False
-    print(all_properties.head())
-    return all_properties.head(12)
+    return all_properties.head(6)
 
 
 # srot All  Properties - sort by EPC rating (current efficiency)
@@ -161,7 +178,7 @@ def getPage(pageNumber):
     page_size = 30
     pageNumber = int(pageNumber)
     firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size)
+    lastProperty = (firstProperty + page_size) - 1
     if altered:
         thisPage = altered_properties.iloc[firstProperty:lastProperty]
     else:
@@ -217,6 +234,10 @@ def getPropertyInfo(uprn):
     new_columns = {col: col.replace('-', '_') for col in df.columns}
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
+    
+    df['hot_water_cost'] = calculateInflationAdjustedPrice(df['hot_water_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['heating_cost'] = calculateInflationAdjustedPrice(df['heating_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
+    df['lighting_cost'] = calculateInflationAdjustedPrice(df['lighting_cost'], df['lodgement-datetime'].strftime("%Y-%m-%d"))
 
     return df
 
@@ -224,7 +245,6 @@ def getPropertyInfo(uprn):
 def filterProperties(property_types, epc_ratings):
     global altered_properties
 
-    print(epc_ratings)
     # Start with the full set of searched_properties
     filtered_properties = altered_properties
 
@@ -266,7 +286,7 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     altered = True
     altered_properties = all_properties
 
-    # Apply search
+    # Apply search filter
     if searchValue:
         altered_properties = searchProperties(searchValue)
 

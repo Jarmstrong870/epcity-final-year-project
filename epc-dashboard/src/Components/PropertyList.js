@@ -10,11 +10,11 @@ const PropertyList = ({  loading }) => {
   const [sortValue, setSortValue] = useState("current_energy_rating");
   const  { properties, changePage, sortProperties} = useContext(PropertyContext);
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (properties.length === 0) {
-    return <p>No properties found.</p>;
+    return <p>{t.noProperties}</p>;
   }
 
   const handlePageChange = (newPage) => {
@@ -61,13 +61,13 @@ const PropertyList = ({  loading }) => {
           onClick={() => setViewMode('table')} 
           className={viewMode === 'table' ? 'active' : ''}
         >
-          Table View
+          {t.tableView}
         </button>
         <button 
           onClick={() => setViewMode('card')} 
           className={viewMode === 'card' ? 'active' : ''}
         >
-          Card View
+          {t.cardView}
         </button>
       </div>
 
@@ -76,11 +76,11 @@ const PropertyList = ({  loading }) => {
         <table>
           <thead>
             <tr>
-              <th>Address</th>
-              <th>Postcode</th>
-              <th>Property Type</th>
-              <th>Current Energy Rating</th>
-              <th>Current Energy Efficiency</th>
+              <th>{t.address}</th>
+              <th>{t.postcode}</th>
+              <th>{t.propertyType}</th>
+              <th>{t.currentEnergyRating}</th>
+              <th>{t.currentEnergyEfficiency}</th>
             </tr>
           </thead>
           <tbody>
@@ -100,7 +100,7 @@ const PropertyList = ({  loading }) => {
       ) : (
         <div className="property-cards-container">
           {limitedProperties.map((property, index) => (
-            <TopRatedPropertyCard property={property} key={index}  />
+            <TopRatedPropertyCard property={property} key={index} />
           ))}
         </div>
       )}

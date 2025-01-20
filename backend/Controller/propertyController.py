@@ -7,26 +7,26 @@ property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
 # Route to update properties monthly
-@property_blueprint.route('/property/load', methods=['GET'])
+@property_blueprint.route('/property/replace', methods=['GET'])
 def property_load():
     """
-    Handles GET requests to retrieve all properties.
+    Handles GET requests to retrieve all properties from API and update database.
     """
     return jsonify(properties.getAllProperties().to_dict(orient='records'))
 
 # Route to load properties from CSV
-@property_blueprint.route('/property/loadCSV', methods=['GET'])
+@property_blueprint.route('/property/loadDB', methods=['GET'])
 def property_load_csv():
     """
-    Handles GET requests to retrieve properties from CSV.
+    Handles GET requests to retrieve properties from Aiven Database.
     """
-    return jsonify(properties.getPropertiesFromCSV().to_dict(orient='records'))
+    return jsonify(properties.loadAllProperties().to_dict(orient='records'))
 
 # Route to load top 6 properties from CSV for Home Page
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
 def property_load_toprated():
     """
-    Handles GET requests to retrieve top rated properties from CSV.
+    Handles GET requests to retrieve top rated properties from .
     """
     return jsonify(properties.getTopRatedProperties().to_dict(orient='records'))
 
@@ -71,7 +71,7 @@ def sort_properties():
     return jsonify(sorted_properties.to_dict(orient='records'))
 
 # Route for 
-@property_blueprint.route('property/paginate', methods=['GET'])
+@property_blueprint.route('/property/paginate', methods=['GET'])
 def get_property_page():
     page_number = request.args.get('pageNumber', '')
     page = properties.getPage(page_number)

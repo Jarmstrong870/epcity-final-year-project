@@ -41,13 +41,14 @@ const HomePage = () => {
   if (loading) {
     return <p>Loading...</p>;
   }
-
+  
   if (topRatedProperties.length === 0) {
     return <p>No top-rated properties found.</p>;
   }
 
   return (
     <>
+      
       {/* Search Bar Section */}
       <div className="backgroundImageStyling">
         <div className="stylingSearchBar">
@@ -75,6 +76,7 @@ const HomePage = () => {
       </div>
     </>
   );
+
 };
 
 export default HomePage;
