@@ -2,22 +2,49 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
-import './PropertyCard.css'
+import './PropertyCard.css';
 import PropertyFilter from './FilterComponent';
 
-const HomePage = ({ fetchProperties }) => {
+const HomePage = ({ fetchProperties, language }) => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  // Translations
+  const translations = {
+    en: {
+      searchPlaceholder: 'Search by property address or postcode...',
+      searchButton: 'Search',
+      topRatedProperties: 'Top Rated Properties',
+      loading: 'Loading...',
+      noProperties: 'No top-rated properties found.',
+    },
+    fr: {
+      searchPlaceholder: 'Rechercher par adresse ou code postal...',
+      searchButton: 'Rechercher',
+      topRatedProperties: 'Propriétés les Mieux Notées',
+      loading: 'Chargement...',
+      noProperties: 'Aucune propriété parmi les mieux notées trouvée.',
+    },
+    es: {
+      searchPlaceholder: 'Buscar por dirección o código postal...',
+      searchButton: 'Buscar',
+      topRatedProperties: 'Propiedades Mejor Valoradas',
+      loading: 'Cargando...',
+      noProperties: 'No se encontraron propiedades mejor valoradas.',
+    },
+  };
+
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     const fetchTopRatedProperties = async () => {
       try {
         const response = await fetch('http://127.0.0.1:5000/api/property/loadTopRated');
         const data = await response.json();
-        setTopRatedProperties(data.slice(0, 3)); // Limit to top 6 properties
-        console.log("Top Rated Properties:", data); // Debugging output
+        setTopRatedProperties(data.slice(0, 3)); // Limit to top 3 properties
+        console.log('Top Rated Properties:', data); // Debugging output
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -40,11 +67,11 @@ const HomePage = ({ fetchProperties }) => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>{t.loading}</p>;
   }
 
   if (topRatedProperties.length === 0) {
-    return <p>No top-rated properties found.</p>;
+    return <p>{t.noProperties}</p>;
   }
 
   return (
@@ -57,20 +84,20 @@ const HomePage = ({ fetchProperties }) => {
             type="text"
             value={searchTerm}
             onChange={handleInputChange}
-            placeholder="Search by property address or postcode..."
+            placeholder={t.searchPlaceholder}
           />
           <button className="stylingSearchButton" onClick={handleSearch}>
-            Search
+            {t.searchButton}
           </button>
         </div>
       </div>
 
       {/* Top Rated Properties Section */}
       <div className="top-rated-properties">
-        <h2 className="stylingTitle">Top Rated Properties</h2>
+        <h2 className="stylingTitle">{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} />
+            <TopRatedPropertyCard key={index} property={property} language={language} />
           ))}
         </div>
       </div>

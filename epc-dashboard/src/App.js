@@ -22,6 +22,7 @@ import EICalculator from './Components/EICalculator';
 import Checklist from './Components/Checklist';
 import SocialMedia from './Components/SocialMedia';
 import TutorialMenu from './Components/TutorialMenu';
+import Tutorials from './Components/Tutorials';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -213,18 +214,19 @@ function App() {
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
-        <Route path="/FAQs" element={<FAQs />} />
+        <Route path="/FAQs" element={<FAQs language={language} />} />
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
         <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/faq/property-finder" element={<PropertyFinder />} />
+        <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
         <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
-        <Route path="/faq/environmental-impact-calculator" element={<EICalculator />} />
-        <Route path="/faq/checklist" element={<Checklist />} />
+        <Route path="/faq/budget-calculator" element={<EICalculator language={language} />} />
+        <Route path="/faq/checklist" element={<Checklist language={language} />} />
         <Route path="/faq/socialmedia" element={<SocialMedia />} />
-        <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu />} />
+        <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
+        <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
       </Routes>
     </div>
   );
