@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Filter.css'
+import './Filter.css';
 
 const PropertyFilter = ({ onFilterChange, language }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -24,6 +24,7 @@ const PropertyFilter = ({ onFilterChange, language }) => {
         current_energy_rating: 'Current Energy Rating',
         current_energy_efficiency: 'Current Energy Efficiency',
       },
+      propertyTypeOptions: ['Bungalow', 'Flat', 'House', 'Maisonette'],
     },
     fr: {
       search: 'Rechercher par adresse ou code postal :',
@@ -39,6 +40,7 @@ const PropertyFilter = ({ onFilterChange, language }) => {
         current_energy_rating: 'Classement Énergétique Actuel',
         current_energy_efficiency: 'Efficacité Énergétique Actuelle',
       },
+      propertyTypeOptions: ['Pavillon', 'Appartement', 'Maison', 'Duplex'],
     },
     es: {
       search: 'Buscar por dirección o código postal:',
@@ -54,6 +56,7 @@ const PropertyFilter = ({ onFilterChange, language }) => {
         current_energy_rating: 'Clasificación Energética Actual',
         current_energy_efficiency: 'Eficiencia Energética Actual',
       },
+      propertyTypeOptions: ['Bungaló', 'Apartamento', 'Casa', 'Dúplex'],
     },
   };
 
@@ -85,12 +88,13 @@ const PropertyFilter = ({ onFilterChange, language }) => {
   const handleSortChange = (e) => setSortValue(e.target.value);
 
   return (
-    <div className = "baseStyling">
+    <div className="baseStyling">
       <form onSubmit={handleFilterSubmit}>
         {/* Search Input */}
         <div className="searchAddress">
-          <label htmlFor="searchQuery"><strong>Search by Address or Postcode:</strong></label>
-          <input className = "searchInput"
+          <label htmlFor="searchQuery"><strong>{t.search}</strong></label>
+          <input
+            className="searchInput"
             type="text"
             id="searchQuery"
             value={searchQuery}
@@ -99,21 +103,21 @@ const PropertyFilter = ({ onFilterChange, language }) => {
         </div>
 
         {/* Property Type Filter (Checkboxes) */}
-        <div className = "propertyTypeFilter">
-          <label><strong>Property Types:</strong></label>
+        <div className="propertyTypeFilter">
+          <label><strong>{t.propertyTypes}</strong></label>
           <div>
-            {['bungalow', 'flat', 'house', 'maisonette'].map((type) => (
-              <label key={type}>
+            {t.propertyTypeOptions.map((type, index) => (
+              <label key={index}>
                 <input type="checkbox" value={type} onChange={handlePropertyTypeChange} />
-                {type.charAt(0).toUpperCase() + type.slice(1)}
+                {type}
               </label>
             ))}
           </div>
         </div>
 
         {/* EPC Rating Filter (Checkboxes) */}
-        <div className = "ratingLetterFilter">
-          <label><strong>EPC Ratings:</strong></label>
+        <div className="ratingLetterFilter">
+          <label><strong>{t.epcRatings}</strong></label>
           <div>
             {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
               <label key={rating}>
