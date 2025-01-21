@@ -15,7 +15,7 @@ export function PropertyProvider({ children }) {
             // Build the property search URL
             let url = query || propertyTypes.length || epcRatings.length 
               ? `http://127.0.0.1:5000/api/property/alter?`
-              : `http://127.0.0.1:5000/api/property/loadCSV`;
+              : `http://127.0.0.1:5000/api/property/loadDB`;
             
             if (query) url += `search=${query}&`;
             if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
@@ -64,7 +64,7 @@ export function PropertyProvider({ children }) {
             const data = await fetch(response);
             if (!data.ok) throw new Error('Failed to fetch property data');
             const topRatedData = await data.json();
-            setTopRatedProperties(topRatedData.slice(0, 3)); 
+            setTopRatedProperties(topRatedData); 
         } catch (error) {
             console.error('Failed to fetch properties:', error);
         }

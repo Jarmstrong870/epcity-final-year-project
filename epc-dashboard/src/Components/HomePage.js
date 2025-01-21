@@ -4,12 +4,14 @@ import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
 import './PropertyCard.css';
 import PropertyFilter from './FilterComponent';
+import { PropertyContext } from './propertyContext';
 
-const HomePage = ({ fetchProperties, language }) => {
-  const [topRatedProperties, setTopRatedProperties] = useState([]);
+const HomePage = ({  language }) => {
+  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
 
   // Translations
   const translations = {
@@ -37,7 +39,7 @@ const HomePage = ({ fetchProperties, language }) => {
   };
 
   const t = translations[language] || translations.en;
-  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
+
   
 
   useEffect(() => {
@@ -62,18 +64,13 @@ const HomePage = ({ fetchProperties, language }) => {
   const handleSearch = () => {
     if (searchTerm.trim()) {
       fetchProperties(searchTerm);
-      navigate('/propertylist?search=${searchTerm}');
+      navigate(`/propertylist?search=${searchTerm}`);
     }
   };
 
-  if (loading) {
-    return <p>{t.loading}</p>;
-  }
-  
-  if (topRatedProperties.length === 0) {
-    return <p>{t.noProperties}</p>;
-  }
 
+  
+  
   return (
     <>
       

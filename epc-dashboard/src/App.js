@@ -26,6 +26,8 @@ import TutorialMenu from './Components/TutorialMenu';
 import Tutorials from './Components/Tutorials';
 import { PropertyProvider } from './Components/propertyContext';
 
+
+
 function App() {
   const [user, setUser] = useState(null);
   const [profileImage, setProfileImage] = useState(profileIcon);
@@ -33,6 +35,7 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+
   
   
  
@@ -154,6 +157,7 @@ function App() {
   }, [user]);
 
   return (
+    <PropertyProvider>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -215,7 +219,7 @@ function App() {
             </>
           }
         />
-        <Route path="/" element={<HomePage fetchProperties={fetchProperties} language={language} />} />
+        <Route path="/" element={<HomePage language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
@@ -233,7 +237,9 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
       </Routes>
+      
     </div>
+    </PropertyProvider>
   );
 }
 

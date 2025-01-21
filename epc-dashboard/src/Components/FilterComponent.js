@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+
 import './Filter.css';
 import React, { useState, useContext } from 'react';
 import { PropertyContext } from './propertyContext';
 
-const PropertyFilter = () => {
+const PropertyFilter = ({language}) => {
   // State variables for search and filter criteria
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -65,7 +65,7 @@ const PropertyFilter = () => {
 
   const t = translations[language] || translations.en;
 
-  const handleSearchChange = (e) => setSearchQuery(e.target.value);
+  
 
   const { fetchProperties, changePage, sortProperties, properties } = useContext(PropertyContext);
 
