@@ -12,7 +12,7 @@ import EPCTable from './Components/EPCTable';
 import HomePage from './Components/HomePage';
 import './Components/HomePage.css';
 import FAQs from './Components/FAQs';
-import GlossaryPage from './Components/Glossarypage';
+import GlossaryPage from './Components/GlossaryPage';
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
