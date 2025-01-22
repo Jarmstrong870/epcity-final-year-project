@@ -92,7 +92,7 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
 
   const t = translations[language] || translations.en;
 
-  // Fetch user details
+  /// Fetch user details
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -115,65 +115,191 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
     if (user) fetchUserProfile();
   }, [profileImage, user]);
 
+  const handleSaveChanges = async () => {
+    if (!firstName || !lastName || !email) {
+      setMessage('All fields are required.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/edit-details', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstname: firstName, lastname: lastName, email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage(data.message || 'Details updated successfully!');
+        setUser({ ...user, firstname: firstName, lastname: lastName, email });
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Failed to update user details.');
+      }
+    } catch (error) {
+      console.error('Error updating user details:', error);
+      setMessage('An error occurred while saving your changes. Please try again.');
+    }
+  };
+
+  const handleChangePassword = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/change-password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          current_password: currentPassword,
+          new_password: newPassword,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPasswordMessage(data.message || 'Password updated successfully!');
+        setCurrentPassword('');
+        setNewPassword('');
+      } else {
+        const errorData = await response.json();
+        setPasswordMessage(errorData.message || 'Failed to update password.');
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      setPasswordMessage('An error occurred while changing your password.');
+    }
+  };
+
+  const handleProfileImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setProfileMessage('No file selected.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('email', user.email); // Send email to backend
+
+    try {
+      const response = await fetch('http://localhost:5000/upload-profile-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProfileMessage(data.message || 'Profile image updated successfully!');
+        setLocalProfileImage(data.url); // Update local image
+        setProfileImage(data.url); // Update App.js navigation bar profile image
+      } else {
+        const errorData = await response.json();
+        setProfileMessage(errorData.message || 'Failed to update profile image.');
+      }
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+      setProfileMessage('An error occurred while updating your profile image.');
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/delete-account', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setDeleteMessage(data.message || 'Account deleted successfully!');
+        setUser(null); // Clear user session
+        navigate('/'); // Redirect to homepage
+      } else {
+        const errorData = await response.json();
+        setDeleteMessage(errorData.message || 'Failed to delete account.');
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      setDeleteMessage('An error occurred while deleting your account.');
+    }
+  };
+
+
   return (
     <div className="account-overview">
       {/* Navigation */}
       <div className="nav-bar">
-        <Link to="/account-overview" className="nav-item">{t.accountOverview}</Link>
-        <Link to="/property" className="nav-item">{t.myProperties}</Link>
-        <button className="nav-item logout-button" onClick={() => setUser(null)}>{t.logout}</button>
+        <Link to="/account-overview" className="nav-item">Account Overview</Link>
+        <Link to="/property" className="nav-item">My Properties</Link>
+        <button className="nav-item logout-button" onClick={() => setUser(null)}>Logout</button>
       </div>
 
       {/* Main Content */}
       <div className="account-content">
-        <h1>{t.welcome}, {firstName || 'User'}!</h1>
+        <h1>Welcome, {firstName || 'User'}!</h1>
 
         {/* Profile Image */}
         <div className="profile-section">
           <img src={profileImage} alt="Profile" className="profile-image" />
           <div className="file-input-wrapper">
-            <button className="custom-file-button">{t.chooseFile}</button>
-            <input type="file" accept="image/*" onChange={() => {}} />
+            <button className="custom-file-button">Choose File</button>
+            <input type="file" accept="image/*" onChange={handleProfileImageChange} />
           </div>
+          {profileMessage && <p className="profile-message">{profileMessage}</p>}
         </div>
 
         {/* Edit Details */}
         <div className="form-section">
-          <h2>{t.editDetails}</h2>
+          <h2>Edit Your Details</h2>
+          {message && <p className="account-message">{message}</p>}
           <div className="form-group">
-            <label>{t.firstName}</label>
+            <label>First Name:</label>
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>{t.lastName}</label>
+            <label>Last Name:</label>
             <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>{t.email}</label>
+            <label>Email:</label>
             <input type="email" value={email} readOnly className="read-only-input" />
           </div>
-          <button className="save-button">{t.saveChanges}</button>
+          <button className="save-button" onClick={handleSaveChanges}>Save Changes</button>
         </div>
 
         {/* Change Password */}
         <div className="form-section">
-          <h2>{t.changePassword}</h2>
+          <h2>Change Password</h2>
+          {passwordMessage && <p className="account-message">{passwordMessage}</p>}
           <div className="form-group">
-            <label>{t.currentPassword}</label>
+            <label>Current Password:</label>
             <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>{t.newPassword}</label>
+            <label>New Password:</label>
             <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
           </div>
+          <button className="save-button" onClick={handleChangePassword}>Change Password</button>
         </div>
 
         {/* Delete Account */}
         <div className="form-section">
-          <h2>{t.deleteAccount}</h2>
-          <button className="delete-button">{t.deleteAccount}</button>
+          <h2>Delete Account</h2>
+          {deleteMessage && <p className="account-message">{deleteMessage}</p>}
+          <button className="delete-button" onClick={() => setDeleteConfirmVisible(true)}>Delete Account</button>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmVisible && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Are you sure you want to delete your account?</h3>
+            <button onClick={handleDeleteAccount} className="confirm-button">Yes</button>
+            <button onClick={() => setDeleteConfirmVisible(false)} className="cancel-button">No</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
