@@ -9,12 +9,12 @@ from bcrypt import hashpw, gensalt
 class ResetPasswordService:
     # Simple database configuration
     DB_CONFIG = {
-        'host': os.getenv('DB_HOST'),  # Default values can be overridden by env vars
-        'port': os.getenv('DB_PORT'),
-        'database': os.getenv('DB_NAME'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD')
-    }
+    'host': os.getenv('DATABASE_HOST'),
+    'port': os.getenv('DATABASE_PORT'),
+    'database': os.getenv('DATABASE_NAME'),
+    'user': os.getenv('DATABASE_USER'),
+    'password': os.getenv('DATABASE_PASSWORD')
+}
 
     MAILERSEND_API_KEY = os.getenv('MAILERSEND_API_KEY')  # API Key for Testmail
     print(f"Using Testmail API Key: {os.getenv('MAILERSEND_API_KEY')}")
