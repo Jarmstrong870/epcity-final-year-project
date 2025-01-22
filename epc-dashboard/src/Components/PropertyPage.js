@@ -8,7 +8,7 @@ const FavoriteStar = ({ isFavorited, toggleFavorite }) => {
   return (
     <span
       style={{
-        fontSize: '1.5rem',
+        fontSize: '3rem',
         cursor: 'pointer',
         color: isFavorited ? 'gold' : 'gray',
         position: 'absolute',
@@ -32,8 +32,8 @@ const PropertyPage = ({ language }) => {
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState(''); // Popup message state
+  const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c',
@@ -116,18 +116,7 @@ const PropertyPage = ({ language }) => {
     <div style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
       {/* Popup Message */}
       {showPopup && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '10%',
-            right: '10%',
-            padding: '10px 20px',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: 'white',
-            borderRadius: '8px',
-            zIndex: 1000,
-          }}
-        >
+        <div className="popup">
           {popupMessage}
         </div>
       )}

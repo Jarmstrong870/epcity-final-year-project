@@ -229,20 +229,20 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
     <div className="account-overview">
       {/* Navigation */}
       <div className="nav-bar">
-        <Link to="/account-overview" className="nav-item">Account Overview</Link>
-        <Link to="/property" className="nav-item">My Properties</Link>
-        <button className="nav-item logout-button" onClick={() => setUser(null)}>Logout</button>
+        <Link to="/account-overview" className="nav-item">{t.accountOverview}</Link>
+        <Link to="/property" className="nav-item">{t.myProperties}</Link>
+        <button className="nav-item logout-button" onClick={() => setUser(null)}>{t.logout}</button>
       </div>
 
       {/* Main Content */}
       <div className="account-content">
-        <h1>Welcome, {firstName || 'User'}!</h1>
+        <h1>{t.welcome}, {firstName || 'User'}!</h1>
 
         {/* Profile Image */}
         <div className="profile-section">
           <img src={profileImage} alt="Profile" className="profile-image" />
           <div className="file-input-wrapper">
-            <button className="custom-file-button">Choose File</button>
+            <button className="custom-file-button">{t.chooseFile}</button>
             <input type="file" accept="image/*" onChange={handleProfileImageChange} />
           </div>
           {profileMessage && <p className="profile-message">{profileMessage}</p>}
@@ -250,43 +250,43 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
 
         {/* Edit Details */}
         <div className="form-section">
-          <h2>Edit Your Details</h2>
+          <h2>{t.editDetails}</h2>
           {message && <p className="account-message">{message}</p>}
           <div className="form-group">
-            <label>First Name:</label>
+            <label>{t.firstName}</label>
             <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>Last Name:</label>
+            <label>{t.lastName}</label>
             <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>Email:</label>
+            <label>{t.email}</label>
             <input type="email" value={email} readOnly className="read-only-input" />
           </div>
-          <button className="save-button" onClick={handleSaveChanges}>Save Changes</button>
+          <button className="save-button" onClick={handleSaveChanges}>{t.saveChanges}</button>
         </div>
 
         {/* Change Password */}
         <div className="form-section">
-          <h2>Change Password</h2>
+          <h2>{t.changePassword}</h2>
           {passwordMessage && <p className="account-message">{passwordMessage}</p>}
           <div className="form-group">
-            <label>Current Password:</label>
+            <label>{t.currentPassword}</label>
             <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
           </div>
           <div className="form-group">
-            <label>New Password:</label>
+            <label>{t.newPassword}</label>
             <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
           </div>
-          <button className="save-button" onClick={handleChangePassword}>Change Password</button>
+          <button className="save-button" onClick={handleChangePassword}>{t.changePassword}</button>
         </div>
 
         {/* Delete Account */}
         <div className="form-section">
-          <h2>Delete Account</h2>
+          <h2>{t.deleteAccount}</h2>
           {deleteMessage && <p className="account-message">{deleteMessage}</p>}
-          <button className="delete-button" onClick={() => setDeleteConfirmVisible(true)}>Delete Account</button>
+          <button className="delete-button" onClick={() => setDeleteConfirmVisible(true)}>{t.deleteAccount}</button>
         </div>
       </div>
 
@@ -294,14 +294,13 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
       {deleteConfirmVisible && (
         <div className="modal-overlay">
           <div className="modal">
-            <h3>Are you sure you want to delete your account?</h3>
-            <button onClick={handleDeleteAccount} className="confirm-button">Yes</button>
-            <button onClick={() => setDeleteConfirmVisible(false)} className="cancel-button">No</button>
+            <h3>{t.deleteConfirm}</h3>
+            <button onClick={handleDeleteAccount} className="confirm-button">{t.deleteYes}</button>
+            <button onClick={() => setDeleteConfirmVisible(false)} className="cancel-button">{t.deleteNo}</button>
           </div>
         </div>
       )}
     </div>
   );
 }
-
 export default AccountOverview;
