@@ -5,11 +5,11 @@ import os
 
 # Database configuration
 db_config = {
-    'host': os.getenv('DB_HOST'),
-    'port': os.getenv('DB_PORT'),
-    'database': os.getenv('DB_NAME'),
-    'user': os.getenv('DB_USER'),
-    'password': os.getenv('DB_PASSWORD')
+    'host': os.getenv('DATABASE_HOST'),
+    'port': os.getenv('DATABASE_PORT'),
+    'database': os.getenv('DATABASE_NAME'),
+    'user': os.getenv('DATABASE_USER'),
+    'password': os.getenv('DATABASE_PASSWORD')
 }
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -181,7 +181,3 @@ def update_user_profile_image(email, public_url):
     except Exception as e:
         print(f"Error updating profile image URL in database: {e}")
         return False
-
-
-    
-

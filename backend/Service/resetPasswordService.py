@@ -9,12 +9,12 @@ from bcrypt import hashpw, gensalt
 class ResetPasswordService:
     # Simple database configuration
     DB_CONFIG = {
-        'host': os.getenv('DB_HOST'),  # Default values can be overridden by env vars
-        'port': os.getenv('DB_PORT'),
-        'database': os.getenv('DB_NAME'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD')
-    }
+    'host': os.getenv('DATABASE_HOST'),
+    'port': os.getenv('DATABASE_PORT'),
+    'database': os.getenv('DATABASE_NAME'),
+    'user': os.getenv('DATABASE_USER'),
+    'password': os.getenv('DATABASE_PASSWORD')
+}
 
     MAILERSEND_API_KEY = os.getenv('MAILERSEND_API_KEY')  # API Key for Testmail
     print(f"Using Testmail API Key: {os.getenv('MAILERSEND_API_KEY')}")
@@ -123,21 +123,30 @@ class ResetPasswordService:
 
     @staticmethod
     def update_password(email, new_password):
-        """Update the user's password in the database."""
+        """
+        Update the user's password in the database.
+        """
         try:
+            # Hash the new password for security
             hashed_password = hashpw(new_password.encode('utf-8'), gensalt()).decode('utf-8')
+
+            # Connect to the database and update the password
             connection = ResetPasswordService.get_connection()
             cursor = connection.cursor()
+
             cursor.execute("""
                 UPDATE users SET password_hash = %s
-                WHERE email = %s;
+                WHERE email_address = %s;
             """, (hashed_password, email))
             connection.commit()
             cursor.close()
             connection.close()
+
+            return {"message": "Password updated successfully."}, 200
         except Exception as e:
             print(f"Error updating password: {e}")
-            raise
+            return {"message": "An internal error occurred."}, 500
+
 
     @staticmethod
     def reset_password(email, new_password, otp):
@@ -149,7 +158,7 @@ class ResetPasswordService:
         # Update the password
         try:
             ResetPasswordService.update_password(email, new_password)
-            return {"message": "Password updated successfully."}, 200
+            return {"message": "Password updated successfully. Redirecting to the Login page..."}, 200
         except Exception as e:
             print(f"Error during password reset: {e}")
             return {"message": "An internal error occurred."}, 500

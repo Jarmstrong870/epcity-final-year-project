@@ -13,7 +13,6 @@ import './Components/HomePage.css';
 import FAQs from './Components/FAQs';
 import GlossaryPage from './Components/GlossaryPage';
 import Tutorials from './Components/Tutorials';
-import EICalculator from './Components/EICalculator';
 import Checklist from './Components/Checklist';
 import SocialMedia from './Components/Social Media';
 import PropertyFinder from './Components/PropertyFinder';
@@ -21,6 +20,7 @@ import TutorialMenu  from './Components/TutorialMenu';
 import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
+import Calculator from './Components/Calculator';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -195,7 +195,7 @@ function App() {
         <Route path="/reset-password" element={<resetPassword />} />
         <Route path="/faq/property-finder" element={<PropertyFinder/>} />
         <Route path="/faq/glossary-page" element={<GlossaryPage/>} />
-        <Route path="/faq/environmental-impact-calculator" element={<EICalculator/>} />
+        <Route path="/faq/calculator" element={<Calculator/>} />
         <Route path="/faq/checklist" element={<Checklist/>} />
         <Route path="/faq/socialmedia" element={<SocialMedia/>} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />

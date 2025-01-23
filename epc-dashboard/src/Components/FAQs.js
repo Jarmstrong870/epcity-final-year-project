@@ -17,14 +17,9 @@ const FAQ = () => {
             path: '/faq/tutorials'
         },
         {
-            title: 'Find my Propertys EPC',
-            description: 'Click here to find the EPC for a property!',
-            path: '/faq/property-finder'
-        },
-        {
-            title: 'Environmental Impact Calculator',
+            title: 'Environmental Calculator',
             description: 'Click here to find your enviornmental impact calculator!',
-            path: '/faq/budget-calculator'
+            path: '/faq/ecalculator'
         },
         {
             title: 'Property Rent Checklist',

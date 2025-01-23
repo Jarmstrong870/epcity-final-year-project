@@ -16,9 +16,9 @@ def property_load():
 
 # Route to load properties from CSV
 @property_blueprint.route('/property/loadDB', methods=['GET'])
-def property_load_csv():
+def property_load_db():
     """
-    Handles GET requests to retrieve properties from Aiven Database.
+    Handles GET requests to retrieve properties from AWS Database.
     """
     return jsonify(properties.loadAllProperties().to_dict(orient='records'))
 
@@ -36,8 +36,6 @@ def get_property_info():
     """
     Returns data for a single property
     """
-    
-
     uprn = request.args.get('uprn', '').lower()
     print(f"Received UPRN: {uprn}")
     return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
