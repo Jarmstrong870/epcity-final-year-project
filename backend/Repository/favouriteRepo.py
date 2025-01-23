@@ -25,12 +25,7 @@ def getFavouritePropertiesfromDB(user_id):
 
     # SQL query to select all UPRNs for the given user_id
     query = """
-        SELECT uprn
-        FROM user_properties
-        WHERE user_id = %s AS uprns;
-        SELECT *
-        FROM properties
-        WHERE uprn = ANY(uprns);
+        SELECT * FROM getFavourites(%s)
     """
     # Create a cursor to execute the query
     cur = conn.cursor()
