@@ -21,6 +21,7 @@ import ForgotPassword from './Components/ForgotPassword';
 import AccountOverview from './Components/AccountOverview';
 import LanguageSelector from './Components/LanguageSelector';
 import Calculator from './Components/Calculator';
+import FavouritePage from './Components/FavouritePage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -126,6 +127,7 @@ function App() {
           <div className="navigationLinks">
             <Link to="/propertylist" className="navigation-button">View All Properties</Link>
             <Link to="/FAQs" className="navigation-button">Frequently Asked Questions</Link>
+            <Link to="/favouritepage" className="navigation-button">My Favourites</Link>
         </div>
         <div className="header-right">
           <LanguageSelector setLanguage={handleLanguageChange} language={language} />
@@ -137,7 +139,7 @@ function App() {
                   <>
                     <p>Welcome, {user.firstname}</p>
                     <Link to="/account-overview">Account Overview</Link>
-                    <Link to="/property">My Properties</Link>
+                    <Link to="/property">My Favourite Properties</Link>
                     <button onClick={handleLogout}>Logout</button>
                   </>
                 ) : (
@@ -199,6 +201,7 @@ function App() {
         <Route path="/faq/checklist" element={<Checklist/>} />
         <Route path="/faq/socialmedia" element={<SocialMedia/>} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu/>} />
+        <Route path="/FavouritePage" element={<FavouritePage/>} />
 
       </Routes>
     </div>

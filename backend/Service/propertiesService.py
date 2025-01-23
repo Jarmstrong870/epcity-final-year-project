@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import os
 from Repository import propertyRepo as repo
 import datetime
+import locale
 
 load_dotenv()
 
