@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ukFlag from '../assets/uk-flag.png';
-import frenchFlag from '../assets/french-flag.png';
-import spanishFlag from '../assets/spanish-flag.png';
+import ukFlag from '../assets/uk_flag.png';
+import frenchFlag from '../assets/french_flag.jpg';
+import spanishFlag from '../assets/spanish_flag.png';
 import './LanguageSelector.css';
 
 const languages = [
