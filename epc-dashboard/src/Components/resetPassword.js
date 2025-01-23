@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./ResetPassword.css"; 
+import "./resetPassword.css"; 
 
 function ResetPassword() {
   const location = useLocation();
@@ -32,7 +32,7 @@ function ResetPassword() {
 
       if (response.status === 200) {
         setMessage(response.data.message || "Password reset successfully!");
-        setTimeout(() => navigate("/login"), 2000); // Redirect
+        setTimeout(() => navigate("/login"), 2000); // Redirect to login
       } else {
         setMessage(response.data.message || "Failed to reset password.");
       }
@@ -47,36 +47,32 @@ function ResetPassword() {
 
   return (
     <div className="reset-password-container">
-      <h2>Reset Your Password</h2>
-      <p>Enter your new password below.</p>
-      <div className="form-group">
+      <div className="reset-password-card">
+        <h2>Reset Your Password</h2>
+        <p>Enter your new password below.</p>
         <input
           type="password"
           placeholder="Enter new password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-      </div>
-      <div className="form-group">
         <input
           type="password"
           placeholder="Confirm new password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        <button
+          onClick={handleResetPassword}
+          className="reset-password-button"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Submitting..." : "Reset Password"}
+        </button>
+        {message && <p className="reset-password-message">{message}</p>}
       </div>
-      <button
-        onClick={handleResetPassword}
-        className="reset-password-button"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Submitting..." : "Reset Password"}
-      </button>
-      {message && <p className="reset-password-message">{message}</p>}
     </div>
   );
 }
 
 export default ResetPassword;
-
-
