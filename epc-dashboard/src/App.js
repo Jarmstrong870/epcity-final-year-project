@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import './App.css';
+import './Components/SearchBar.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
 import Login from './Login';
@@ -152,12 +153,10 @@ function App() {
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
-        <div className="navigationLinks">
-          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
-        </div>
         <div className="header-right">
+        <div className="language-selector-container">
           <LanguageSelector setLanguage={handleLanguageChange} language={language} />
+        </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileImage} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -228,6 +227,27 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
       </Routes>
+
+      <footer className="footer-container">
+      <div className="footer-content">
+      <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <div className="navigationLinks">
+          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+        </div>
+        <nav className="footer-nav">
+          <Link to="/about-us">About Us</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
+        </nav>
+        <div className="footer-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 }

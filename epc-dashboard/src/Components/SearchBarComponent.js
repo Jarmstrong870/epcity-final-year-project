@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './SearchBar.css';
 
 
 const SearchBar = ({ onSearch }) => {
@@ -9,7 +10,7 @@ const SearchBar = ({ onSearch }) => {
   };
 
   const handleSearch = () => {
-    onSearch(query); // Call the parent function with the search query
+    onSearch(query);
   };
 
   const handleKeyPress = (e) => {
@@ -19,13 +20,13 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <div>
+    <div className="search-bar-container">
       <input
         type="text"
         value={query}
         onChange={handleInputChange}
         onKeyPress={handleKeyPress}
-        placeholder="Search..."
+        placeholder="Search properties..."
       />
       <button onClick={handleSearch}>Search</button>
     </div>

@@ -38,6 +38,7 @@
   border-color: #0a2e15;
 }
 
+/* Login button styling */
 .login-button {
   background-color: #0a2e15;
   color: white;
@@ -47,7 +48,9 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100%;
+  text-align: center;
+  width: auto; /* Prevents stretching */
+  width: 200px; /* Optional: Limits button width */
 }
 
 .login-button:hover {
