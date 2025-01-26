@@ -8,17 +8,17 @@ CORS(favourites_blueprint)
 
 @favourites_blueprint.route('/favourites/getFavourites', methods=['GET'])
 def get_favourites():
-    user_id = request.args.get('user_id', '').lower()
-    return jsonify(favourites.getFavouriteProperties(user_id).to_dict(orient='records'))
+    email = request.args.get('email', '').lower()
+    return jsonify(favourites.getFavouriteProperties(email).to_dict(orient='records'))
 
 @favourites_blueprint.route('favourites/addFavourite', methods=['POST'])
 def add_favourite():
-    user_id = request.args.get('user_id', '').lower()
+    email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.addFavouriteProperty(user_id, uprn).to_dict(orient='records'))
+    return jsonify(favourites.addFavouriteProperty(email, uprn))
 
 @favourites_blueprint.route('favourites/removeFavourite', methods=['DELETE'])
 def remove_favourite():
-    user_id = request.args.get('user_id', '').lower()
+    email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.removeFavouriteProperty(user_id, uprn).to_dict(orient='records'))
+    return jsonify(favourites.removeFavouriteProperty(email, uprn))

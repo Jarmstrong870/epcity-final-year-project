@@ -15,7 +15,7 @@ DB_PARAMS = {
     "port": os.getenv('DATABASE_PORT')
 }
 
-def getFavouritePropertiesfromDB(user_id):
+def getFavouritePropertiesfromDB(email):
     """
     Fetch all properties linked to a specific user_id from the user_properties table.
     """
@@ -29,7 +29,7 @@ def getFavouritePropertiesfromDB(user_id):
     """
     # Create a cursor to execute the query
     cur = conn.cursor()
-    cur.execute(query, (user_id))
+    cur.execute(query, (email))
     
     # Fetch column names from the cursor description
     column_names = [desc[0] for desc in cur.description]
@@ -46,7 +46,7 @@ def getFavouritePropertiesfromDB(user_id):
         
     return df
 
-def addFavouriteToDB(user_id, uprn):
+def addFavouriteToDB(email, uprn):
     """
     Adds a row to the user_properties table.
     """
@@ -57,57 +57,17 @@ def addFavouriteToDB(user_id, uprn):
 
         # SQL query to insert a new row into the user_properties table
         query = """
-            INSERT INTO user_properties (user_id, uprn)
-            VALUES (%s, %s);
+            SELECT addFavourite(%s, %s)
         """
 
         # Execute the query with provided user_id and uprn
-        cursor.execute(query, (user_id, uprn))
+        cursor.execute(query, (email, uprn))
 
         # Commit the transaction
         conn.commit()
 
-        print(f"Successfully added user_id {user_id} with uprn {uprn} to user_properties.")
-        return getFavouritePropertiesfromDB(user_id)
-
-    except psycopg2.Error as e:
-        print(f"Database error: {e}")
-        return pd.DataFrame.empty
-
-    finally:
-        # Ensure the cursor and connection are closed
-        if conn:
-            cursor.close()
-            conn.close()
-            
-def removeFavouriteFromDB(user_id, uprn):
-    """
-    Removes a row from the user_properties table.
-    """
-    try:
-        # Connect to the PostgreSQL database
-        conn = psycopg2.connect(**DB_PARAMS)
-        cursor = conn.cursor()
-
-        # SQL query to delete the specific row
-        query = """
-            DELETE FROM user_properties
-            WHERE user_id = %s AND uprn = %s;
-        """
-
-        # Execute the query with provided user_id and uprn
-        cursor.execute(query, (user_id, uprn))
-
-        # Commit the transaction
-        conn.commit()
-
-        # Check if any row was affected
-        if cursor.rowcount > 0:
-            print(f"Successfully removed user_id {user_id} with uprn {uprn} from user_properties.")
-            return getFavouritePropertiesfromDB(user_id)
-        else:
-            print(f"No matching row found for user_id {user_id} with uprn {uprn}.")
-            return pd.DataFrame.empty
+        print(f"Successfully added user {email} with uprn {uprn} to user_properties.")
+        return True
 
     except psycopg2.Error as e:
         print(f"Database error: {e}")
@@ -118,4 +78,42 @@ def removeFavouriteFromDB(user_id, uprn):
         if conn:
             cursor.close()
             conn.close()
-    
+            
+def removeFavouriteFromDB(email, uprn):
+    """
+    Removes a row from the user_properties table.
+    """
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # SQL query to delete the specific row
+        query = """
+            SELECT removeFavourite(%s, %s)
+        """
+
+        # Execute the query with provided user_id and uprn
+        cursor.execute(query, (email, uprn))
+
+        # Commit the transaction
+        conn.commit()
+
+        # Check if any row was affected
+        if cursor.rowcount > 0:
+            print(f"Successfully removed {email} with uprn {uprn} from user_properties.")
+            return True
+        else:
+            print(f"No matching row found for {email} with uprn {uprn}.")
+            return False
+
+    except psycopg2.Error as e:
+        print(f"Database error: {e}")
+        return False
+
+    finally:
+        # Ensure the cursor and connection are closed
+        if conn:
+            cursor.close()
+            conn.close()
+        
