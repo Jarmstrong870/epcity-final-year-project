@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
+import FavoriteStar from './FavoriteStar';
 
-const TopRatedPropertyCard = ({ property, language }) => {
+const TopRatedPropertyCard = ({ property, isPropertyFavourited, language, onToggle}) => {
   const navigate = useNavigate();
-  const [isFavorited, setIsFavorited] = useState(false); // State for favorite status
+  const [propertyFavourited, setIsFavorited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
@@ -33,21 +34,33 @@ const TopRatedPropertyCard = ({ property, language }) => {
 
   const t = translations[language] || translations.en;
 
+  useEffect(() => {
+    setIsFavorited(isPropertyFavourited);
+  }, [isPropertyFavourited]);
+
   const handleClick = () => {
     navigate(`/property/${property.uprn}`, {
       state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
     });
   };
 
-  const toggleFavorite = (event) => {
+  const toggleFavorite = async (event) => {
     event.stopPropagation(); // Prevent triggering the card click
-    setIsFavorited(!isFavorited);
+    const x = !propertyFavourited;
+    setIsFavorited(x);
     setPopupMessage(
-      !isFavorited
-        ? `${property.address} has been favorited.`
-        : `${property.address} has been unfavorited.`
+      !propertyFavourited
+        ? `${property.address} has been favourited.`
+        : `${property.address} has been unfavourited.`
     );
     setShowPopup(true);
+
+    try {
+        await onToggle(property, x);
+    } catch (e) {
+      console.error("Failed to updated favourite property", e);
+      setIsFavorited(!x);
+    }
 
     // Hide the popup after 5 seconds
     setTimeout(() => {
@@ -64,42 +77,12 @@ const TopRatedPropertyCard = ({ property, language }) => {
         <StreetViewComponent address={property.address} postcode={property.postcode} />
       </div>
       <div className="propertyDetails">
-      <div
-  style={{
-    display: 'flex',
-    alignItems: 'center', // Ensures vertical alignment
-    justifyContent: 'space-between', // Pushes the address to the left and the star to the right
-    position: 'relative',
-    width: '100%', // Ensures full width of the container
-  }}
->
-  <h3
-    style={{
-      margin: 0,
-      whiteSpace: 'nowrap', // Prevents address from wrapping
-      overflow: 'hidden', // Hides any overflow text
-      textOverflow: 'ellipsis', // Adds ellipsis for long addresses
-    }}
-  >
-    {property.address}
-  </h3>
-  <span
-    style={{
-      fontSize: '2rem', // Adjust size as needed
-      cursor: 'pointer',
-      color: isFavorited ? 'gold' : 'gray',
-      position: 'relative', // Enables top adjustment
-      top: '-2px', // Moves the star slightly upward
-      marginLeft: '10px', // Adds some space between the address and the star
-    }}
-    onClick={toggleFavorite}
-    title={isFavorited ? 'Unfavorite' : 'Favorite'}
-  >
-    ★
-  </span>
-</div>
-
-
+        <div className="propertyDetailsHeading">
+          <h3 className = "propertyAddressHeader">{property.address}</h3>
+          <FavoriteStar
+            isPropertyFavorited={propertyFavourited}
+            onClick={toggleFavorite}/>
+        </div>
 
         <p>
           <strong>{t.postcode}:</strong> {property.postcode}

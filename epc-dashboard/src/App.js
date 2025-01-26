@@ -24,6 +24,7 @@ import Checklist from './Components/Checklist';
 import SocialMedia from './Components/SocialMedia';
 import TutorialMenu from './Components/TutorialMenu';
 import Tutorials from './Components/Tutorials';
+import FavouritePage from './Components/FavouritePage';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -47,6 +48,7 @@ function App() {
       myProperties: 'My Properties',
       viewAllProperties: 'View All Properties',
       faqs: 'Frequently Asked Questions',
+      favourites: 'Your Favourite Properties',
     },
     fr: {
       login: 'Connexion',
@@ -153,6 +155,11 @@ function App() {
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <div className="navigationLinks">
+          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+          <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+        </div>
         <div className="header-right">
         <div className="language-selector-container">
           <LanguageSelector setLanguage={handleLanguageChange} language={language} />
@@ -226,6 +233,8 @@ function App() {
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
+        <Route path="/favourites" element={<FavouritePage language={language}/>} />
+
       </Routes>
 
       <footer className="footer-container">

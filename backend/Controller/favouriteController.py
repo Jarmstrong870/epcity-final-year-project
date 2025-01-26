@@ -11,13 +11,13 @@ def get_favourites():
     user_id = request.args.get('user_id', '').lower()
     return jsonify(favourites.getFavouriteProperties(user_id).to_dict(orient='records'))
 
-@favourites_blueprint.route('favourites/addFavourite', methods=['GET'])
+@favourites_blueprint.route('favourites/addFavourite', methods=['POST'])
 def add_favourite():
     user_id = request.args.get('user_id', '').lower()
     uprn = request.args.get('uprn', '').lower()
     return jsonify(favourites.addFavouriteProperty(user_id, uprn).to_dict(orient='records'))
 
-@favourites_blueprint.route('favourites/removeFavourite', methods=['GET'])
+@favourites_blueprint.route('favourites/removeFavourite', methods=['DELETE'])
 def remove_favourite():
     user_id = request.args.get('user_id', '').lower()
     uprn = request.args.get('uprn', '').lower()

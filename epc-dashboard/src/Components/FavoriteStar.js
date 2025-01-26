@@ -1,15 +1,7 @@
 import React, { useState } from 'react';
 
-const FavoriteStar = ({ propertyData, onToggle }) => {
-  const [isFavorited, setIsFavorited] = useState(false);
-
-  const toggleFavorite = () => {
-    setIsFavorited(!isFavorited);
-    if (onToggle) {
-      onToggle(propertyData, !isFavorited); // Pass the property and favorite state
-    }
-  };
-
+const FavoriteStar = ({ isPropertyFavourited, onToggle }) => {
+ 
   return (
     <div
       style={{
@@ -25,11 +17,14 @@ const FavoriteStar = ({ propertyData, onToggle }) => {
           fontSize: '2rem',
           lineHeight: '2rem',
           cursor: 'pointer',
-          color: isFavorited ? 'gold' : 'gray',
+          color: isPropertyFavourited ? 'gold' : 'gray',
           transition: 'color 0.3s ease',
         }}
-        onClick={toggleFavorite}
-        title={isFavorited ? 'Click to unfavorite' : 'Click to favorite'}
+        onClick={() => {
+          if(onToggle)
+          onToggle()
+        }}
+        title={isPropertyFavourited ? 'Click to unfavorite' : 'Click to favorite'}
       >
         ★
       </div>
