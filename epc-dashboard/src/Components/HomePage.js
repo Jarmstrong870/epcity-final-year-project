@@ -4,6 +4,7 @@ import TopRatedPropertyCard from './TopRatedPropertyCard';
 import './HomePage.css';
 import './PropertyCard.css';
 import PropertyFilter from './FilterComponent';
+import translations from '../locales/translations_homepage'; // Import translations
 
 const HomePage = ({ fetchProperties, language }) => {
   const [topRatedProperties, setTopRatedProperties] = useState([]);
@@ -11,32 +12,7 @@ const HomePage = ({ fetchProperties, language }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // Translations
-  const translations = {
-    en: {
-      searchPlaceholder: 'Search by property address or postcode...',
-      searchButton: 'Search',
-      topRatedProperties: 'Top Rated Properties',
-      loading: 'Loading...',
-      noProperties: 'No top-rated properties found.',
-    },
-    fr: {
-      searchPlaceholder: 'Rechercher par adresse ou code postal...',
-      searchButton: 'Rechercher',
-      topRatedProperties: 'Propriétés les Mieux Notées',
-      loading: 'Chargement...',
-      noProperties: 'Aucune propriété parmi les mieux notées trouvée.',
-    },
-    es: {
-      searchPlaceholder: 'Buscar por dirección o código postal...',
-      searchButton: 'Buscar',
-      topRatedProperties: 'Propiedades Mejor Valoradas',
-      loading: 'Cargando...',
-      noProperties: 'No se encontraron propiedades mejor valoradas.',
-    },
-  };
-
-  const t = translations[language] || translations.en;
+  const t = translations[language] || translations.en; // Load translations
 
   useEffect(() => {
     const fetchTopRatedProperties = async () => {

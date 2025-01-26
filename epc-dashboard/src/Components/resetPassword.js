@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./resetPassword.css"; 
+import "./resetPassword.css";
+import translations from "./locales/translations_resetpassword"; // Import translations
 
-function ResetPassword() {
+function ResetPassword({ language }) {
   const location = useLocation();
   const navigate = useNavigate();
   const email = location.state?.email || ""; // Get the email from VerifyOtp navigation state
@@ -12,14 +13,16 @@ function ResetPassword() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const t = translations[language] || translations.en; // Load translations
+
   const handleResetPassword = async () => {
     if (!newPassword || !confirmPassword) {
-      setMessage("All fields are required!");
+      setMessage(t.allFieldsRequired);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setMessage("Passwords do not match!");
+      setMessage(t.passwordsDoNotMatch);
       return;
     }
 
@@ -31,14 +34,14 @@ function ResetPassword() {
       });
 
       if (response.status === 200) {
-        setMessage(response.data.message || "Password reset successfully!");
+        setMessage(response.data.message || t.resetSuccess);
         setTimeout(() => navigate("/login"), 2000); // Redirect to login
       } else {
-        setMessage(response.data.message || "Failed to reset password.");
+        setMessage(response.data.message || t.resetFailure);
       }
     } catch (error) {
       setMessage(
-        error.response?.data?.message || "An error occurred while resetting your password."
+        error.response?.data?.message || t.resetError
       );
     } finally {
       setIsSubmitting(false);
@@ -48,17 +51,17 @@ function ResetPassword() {
   return (
     <div className="reset-password-container">
       <div className="reset-password-card">
-        <h2>Reset Your Password</h2>
-        <p>Enter your new password below.</p>
+        <h2>{t.title}</h2>
+        <p>{t.description}</p>
         <input
           type="password"
-          placeholder="Enter new password"
+          placeholder={t.newPasswordPlaceholder}
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Confirm new password"
+          placeholder={t.confirmPasswordPlaceholder}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
@@ -67,7 +70,7 @@ function ResetPassword() {
           className="reset-password-button"
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Submitting..." : "Reset Password"}
+          {isSubmitting ? t.resetButtonSubmitting : t.resetButton}
         </button>
         {message && <p className="reset-password-message">{message}</p>}
       </div>
