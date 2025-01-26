@@ -9,17 +9,13 @@ from Repository import favouriteRepo as repo
 
 load_dotenv()
 
-def getFavouriteProperties(user_id):
+def getFavouriteProperties(email):
     favourite_properties = pd.DataFrame()
-    favourite_properties = repo.getFavouritePropertiesfromDB(user_id)
+    favourite_properties = repo.getFavouritePropertiesfromDB(email)
     return favourite_properties
 
-def addFavouriteProperty(user_id, uprn):
-    favourite_properties = pd.DataFrame()
-    favourite_properties = repo.addFavouriteToDB(user_id, uprn)
-    return favourite_properties
+def addFavouriteProperty(email, uprn):
+    return repo.addFavouriteToDB(email, uprn)
 
-def removeFavouriteProperty(user_id, uprn):
-    favourite_properties = pd.DataFrame()
-    favourite_properties = repo.removeFavouriteFromDB(user_id, uprn)
-    return favourite_properties
+def removeFavouriteProperty(email, uprn):
+    return repo.removeFavouriteFromDB(email, uprn)
