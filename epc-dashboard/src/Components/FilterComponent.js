@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Filter.css';
 import translations from '../locales/translations_filtercomponent'; // Import translations
 
-const FilterComponent = ({ onFilterChange, language }) => {
+const PropertyFilter = ({ onFilterChange, language }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [epcRatings, setEpcRatings] = useState([]);
@@ -115,4 +115,4 @@ const FilterComponent = ({ onFilterChange, language }) => {
   );
 };
 
-export default FilterComponent;
+export default PropertyFilter;
