@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; 
 import './Login.css';
-import backgroundImage from './assets/house-bk.jpg';
+import backgroundImage from './assets/house-bk.jpg'; 
 import eyeIcon from './assets/eye-icon.jpg'; // Import the eye icon
-import translations from './locales/translations_login'; // Import translations
 
 function Login({ setUser, language }) {
   const [email, setEmail] = useState('');
@@ -13,7 +12,38 @@ function Login({ setUser, language }) {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  const t = translations[language] || translations.en; // Load translations
+  // Translations object
+  const translations = {
+    en: {
+      emailPlaceholder: 'Email',
+      passwordPlaceholder: 'Password',
+      loginButton: 'Login',
+      forgotPassword: 'Forgotten Password?',
+      noAccount: "Don't have an account yet?",
+      registerLink: 'Register',
+      errorMessage: 'An error occurred. Please try again.',
+    },
+    fr: {
+      emailPlaceholder: 'E-mail',
+      passwordPlaceholder: 'Mot de passe',
+      loginButton: 'Connexion',
+      forgotPassword: 'Mot de passe oublié ?',
+      noAccount: "Vous n'avez pas encore de compte ?",
+      registerLink: "S'inscrire",
+      errorMessage: 'Une erreur est survenue. Veuillez réessayer.',
+    },
+    es: {
+      emailPlaceholder: 'Correo electrónico',
+      passwordPlaceholder: 'Contraseña',
+      loginButton: 'Iniciar sesión',
+      forgotPassword: '¿Olvidaste tu contraseña?',
+      noAccount: '¿No tienes una cuenta aún?',
+      registerLink: 'Registrarse',
+      errorMessage: 'Ocurrió un error. Por favor, inténtalo de nuevo.',
+    },
+  };
+
+  const t = translations[language] || translations.en; // Default to English
 
   const handleLogin = async () => {
     try {
@@ -55,7 +85,7 @@ function Login({ setUser, language }) {
         <div className="form-group">
           <div className="password-wrapper">
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               className="form-input"
               placeholder={t.passwordPlaceholder} // Translated placeholder
               value={password}
@@ -77,9 +107,7 @@ function Login({ setUser, language }) {
           <b>{t.loginButton}</b>
         </button>
         <div className="register-redirect">
-          <p>
-            {t.noAccount} <Link to="/register">{t.registerLink}</Link>
-          </p>
+          <p>{t.noAccount} <Link to="/register">{t.registerLink}</Link></p>
         </div>
         {message && <p className="login-message">{message}</p>}
       </form>

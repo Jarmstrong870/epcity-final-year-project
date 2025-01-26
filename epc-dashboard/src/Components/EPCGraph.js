@@ -1,8 +1,38 @@
 import React from 'react';
-import translations from '../locales/translations_epcgraph'; // Import translations
 
 const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language }) => {
-  const t = translations[language] || translations.en; // Load translations
+  // Define translations
+  const translations = {
+    en: {
+      epcRatingGraph: 'EPC Rating Graph',
+      current: 'Current',
+      potential: 'Potential',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+    fr: {
+      epcRatingGraph: 'Graphique des Classements EPC',
+      current: 'Actuel',
+      potential: 'Potentiel',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+    es: {
+      epcRatingGraph: 'Gráfico de Clasificación EPC',
+      current: 'Actual',
+      potential: 'Potencial',
+      ranges: [
+        '(92+) A', '(81-91) B', '(69-80) C', '(55-68) D',
+        '(39-54) E', '(21-38) F', '(1-20) G'
+      ],
+    },
+  };
+
+  const t = translations[language] || translations.en;
 
   // Define color ranges for EPC ratings
   const ratingColors = {
@@ -44,7 +74,7 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
           const isPotentialEfficiency = potentialEfficiencyPosition === index;
 
           return (
-            <div
+            <div 
               key={label}
               style={{
                 display: 'flex',

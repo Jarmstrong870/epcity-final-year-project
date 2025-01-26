@@ -24,7 +24,6 @@ import Checklist from './Components/Checklist';
 import SocialMedia from './Components/SocialMedia';
 import TutorialMenu from './Components/TutorialMenu';
 import Tutorials from './Components/Tutorials';
-import translations from './locales/translations_app'; // Import translations
 
 function App() {
   const [user, setUser] = useState(null);
@@ -38,7 +37,38 @@ function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
   const navigate = useNavigate();
 
-  const t = translations[language] || translations.en; // Load translations
+  // Translation object
+  const translations = {
+    en: {
+      login: 'Login',
+      register: 'Register',
+      logout: 'Logout',
+      accountOverview: 'Account Overview',
+      myProperties: 'My Properties',
+      viewAllProperties: 'View All Properties',
+      faqs: 'Frequently Asked Questions',
+    },
+    fr: {
+      login: 'Connexion',
+      register: "S'inscrire",
+      logout: 'Se déconnecter',
+      accountOverview: 'Vue du Compte',
+      myProperties: 'Mes Propriétés',
+      viewAllProperties: 'Voir Toutes les Propriétés',
+      faqs: 'Questions Fréquemment Posées',
+    },
+    es: {
+      login: 'Iniciar sesión',
+      register: 'Registrarse',
+      logout: 'Cerrar sesión',
+      accountOverview: 'Resumen de la Cuenta',
+      myProperties: 'Mis Propiedades',
+      viewAllProperties: 'Ver Todas las Propiedades',
+      faqs: 'Preguntas Frecuentes',
+    },
+  };
+
+  const t = translations[language] || translations.en;
 
   // Persist language selection in localStorage
   const handleLanguageChange = (newLanguage) => {
@@ -82,6 +112,18 @@ function App() {
       if (!response.ok) throw new Error('Failed to fetch property data');
       const data = await response.json();
       setProperties(data);
+
+      const pageUrl = `http://127.0.0.1:5000/api/property/paginate?pageNumber=${pageNumber}`;
+      const pageResponse = await fetch(pageUrl);
+      if (!pageResponse.ok) throw new Error('Failed to fetch pagination data');
+      const pageData = await pageResponse.json();
+      setProperties(pageData);
+
+      const sortUrl = `http://127.0.0.1:5000/api/property/sort?attribute=${sortValue}`;
+      const sortResponse = await fetch(sortUrl);
+      if (!sortResponse.ok) throw new Error('Failed to fetch sort data');
+      const sortData = await sortResponse.json();
+      setProperties(sortData);
     } catch (error) {
       console.error('There was an error fetching the property data!', error);
     } finally {
@@ -112,9 +154,9 @@ function App() {
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
         <div className="header-right">
-          <div className="language-selector-container">
-            <LanguageSelector setLanguage={handleLanguageChange} language={language} />
-          </div>
+        <div className="language-selector-container">
+          <LanguageSelector setLanguage={handleLanguageChange} language={language} />
+        </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileImage} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -183,29 +225,29 @@ function App() {
         <Route path="/faq/socialmedia" element={<SocialMedia />} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
+        <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
       </Routes>
 
       <footer className="footer-container">
-        <div className="footer-content">
-          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
-          <div className="navigationLinks">
-            <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-            <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
-          </div>
-          <nav className="footer-nav">
-            <Link to="/about-us">About Us</Link>
-            <Link to="/contact">Contact</Link>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
-          </nav>
-          <div className="footer-socials">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-          </div>
+      <div className="footer-content">
+      <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <div className="navigationLinks">
+          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
         </div>
-      </footer>
+        <nav className="footer-nav">
+          <Link to="/about-us">About Us</Link>
+          <Link to="/contact">Contact</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
+        </nav>
+        <div className="footer-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </div>
+    </footer>
     </div>
   );
 }

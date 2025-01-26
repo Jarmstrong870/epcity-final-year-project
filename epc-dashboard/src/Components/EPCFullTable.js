@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './EPCFullTable.css'; // Styles for the layout
-import translations from '../locales/translations_epcfulltable'; // Import translations
 
 const EPCFullTable = ({ properties, loading, language }) => {
   if (loading) {
@@ -13,7 +12,75 @@ const EPCFullTable = ({ properties, loading, language }) => {
   }
 
   const property = properties[0]; // Access the first property in the array
-  const t = translations[language] || translations.en; // Load translations
+
+  // Translations for table headers and section titles
+  const translations = {
+    en: {
+      propertyDetails: 'Property Details',
+      basicInfo: 'Basic Information',
+      address: 'Address',
+      postcode: 'Postcode',
+      propertyType: 'Property Type',
+      energyPerformance: 'Energy Performance',
+      currentEnergyRating: 'Current Energy Rating',
+      currentEnergyEfficiency: 'Current Energy Efficiency',
+      potentialEnergyEfficiency: 'Potential Energy Efficiency',
+      mainHeatEnergyEfficiency: 'Main Heat Energy Efficiency',
+      costInfo: 'Cost Information',
+      heatingCost: 'Heating Cost (Current)',
+      lightingCost: 'Lighting Cost (Current)',
+      hotWaterCost: 'Hot Water Cost (Current)',
+      propertyDetailsSection: 'Property Details',
+      constructionAgeBand: 'Construction Age Band',
+      totalFloorArea: 'Total Floor Area',
+      numberHeatedRooms: 'Number of Heated Rooms',
+      tenure: 'Tenure',
+    },
+    fr: {
+      propertyDetails: 'Détails de la Propriété',
+      basicInfo: 'Informations de Base',
+      address: 'Adresse',
+      postcode: 'Code Postal',
+      propertyType: 'Type de Propriété',
+      energyPerformance: 'Performance Énergétique',
+      currentEnergyRating: 'Classement Énergétique Actuel',
+      currentEnergyEfficiency: 'Efficacité Énergétique Actuelle',
+      potentialEnergyEfficiency: 'Efficacité Énergétique Potentielle',
+      mainHeatEnergyEfficiency: 'Efficacité du Chauffage Principal',
+      costInfo: 'Informations sur les Coûts',
+      heatingCost: 'Coût du Chauffage (Actuel)',
+      lightingCost: 'Coût de l’Éclairage (Actuel)',
+      hotWaterCost: "Coût de l'Eau Chaude (Actuel)",
+      propertyDetailsSection: 'Détails de la Propriété',
+      constructionAgeBand: "Période de Construction",
+      totalFloorArea: 'Superficie Totale',
+      numberHeatedRooms: 'Nombre de Pièces Chauffées',
+      tenure: 'Type de Tenure',
+    },
+    es: {
+      propertyDetails: 'Detalles de la Propiedad',
+      basicInfo: 'Información Básica',
+      address: 'Dirección',
+      postcode: 'Código Postal',
+      propertyType: 'Tipo de Propiedad',
+      energyPerformance: 'Rendimiento Energético',
+      currentEnergyRating: 'Clasificación Energética Actual',
+      currentEnergyEfficiency: 'Eficiencia Energética Actual',
+      potentialEnergyEfficiency: 'Eficiencia Energética Potencial',
+      mainHeatEnergyEfficiency: 'Eficiencia del Calefacción Principal',
+      costInfo: 'Información de Costos',
+      heatingCost: 'Costo de Calefacción (Actual)',
+      lightingCost: 'Costo de Iluminación (Actual)',
+      hotWaterCost: 'Costo de Agua Caliente (Actual)',
+      propertyDetailsSection: 'Detalles de la Propiedad',
+      constructionAgeBand: 'Año de Construcción',
+      totalFloorArea: 'Área Total',
+      numberHeatedRooms: 'Número de Habitaciones Calefaccionadas',
+      tenure: 'Tenencia',
+    },
+  };
+
+  const t = translations[language] || translations.en; // Default to English if no language match
 
   return (
     <div className="epc-container">
@@ -177,3 +244,4 @@ const EPCFullTable = ({ properties, loading, language }) => {
 };
 
 export default EPCFullTable;
+
