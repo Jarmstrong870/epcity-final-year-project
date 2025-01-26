@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './AccountOverview.css';
 import defaultProfileImage from '../assets/profileicon.png'; // default image
+import translations from '../locales/translations_accountoverview'; // Import the translations file
 
 function AccountOverview({ user, setUser, setProfileImage, language }) {
   const [firstName, setFirstName] = useState('');
@@ -17,79 +18,7 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const navigate = useNavigate();
 
-  // Translations object
-  const translations = {
-    en: {
-      welcome: 'Welcome',
-      accountOverview: 'Account Overview',
-      myProperties: 'My Properties',
-      logout: 'Logout',
-      editDetails: 'Edit Your Details',
-      saveChanges: 'Save Changes',
-      firstName: 'First Name:',
-      lastName: 'Last Name:',
-      email: 'Email:',
-      changePassword: 'Change Password',
-      currentPassword: 'Current Password:',
-      newPassword: 'New Password:',
-      deleteAccount: 'Delete Account',
-      deleteConfirm: 'Are you sure you want to delete your account?',
-      deleteYes: 'Yes',
-      deleteNo: 'No',
-      chooseFile: 'Choose File',
-      updatingDetails: 'Updating your details...',
-      updatingPassword: 'Updating your password...',
-      updatingProfileImage: 'Updating your profile image...',
-      profileUpdated: 'Profile updated successfully!',
-    },
-    fr: {
-      welcome: 'Bienvenue',
-      accountOverview: 'Vue d’ensemble du compte',
-      myProperties: 'Mes Propriétés',
-      logout: 'Se déconnecter',
-      editDetails: 'Modifier vos détails',
-      saveChanges: 'Enregistrer les modifications',
-      firstName: 'Prénom :',
-      lastName: 'Nom de famille :',
-      email: 'E-mail :',
-      changePassword: 'Changer le mot de passe',
-      currentPassword: 'Mot de passe actuel :',
-      newPassword: 'Nouveau mot de passe :',
-      deleteAccount: 'Supprimer le compte',
-      deleteConfirm: 'Êtes-vous sûr de vouloir supprimer votre compte ?',
-      deleteYes: 'Oui',
-      deleteNo: 'Non',
-      chooseFile: 'Choisir un fichier',
-      updatingDetails: 'Mise à jour de vos informations...',
-      updatingPassword: 'Mise à jour de votre mot de passe...',
-      updatingProfileImage: 'Mise à jour de votre image de profil...',
-      profileUpdated: 'Profil mis à jour avec succès !',
-    },
-    es: {
-      welcome: 'Bienvenido',
-      accountOverview: 'Resumen de la cuenta',
-      myProperties: 'Mis Propiedades',
-      logout: 'Cerrar sesión',
-      editDetails: 'Editar tus detalles',
-      saveChanges: 'Guardar cambios',
-      firstName: 'Nombre:',
-      lastName: 'Apellido:',
-      email: 'Correo electrónico:',
-      changePassword: 'Cambiar la contraseña',
-      currentPassword: 'Contraseña actual:',
-      newPassword: 'Nueva contraseña:',
-      deleteAccount: 'Eliminar cuenta',
-      deleteConfirm: '¿Estás seguro de que deseas eliminar tu cuenta?',
-      deleteYes: 'Sí',
-      deleteNo: 'No',
-      chooseFile: 'Seleccionar archivo',
-      updatingDetails: 'Actualizando tus detalles...',
-      updatingPassword: 'Actualizando tu contraseña...',
-      updatingProfileImage: 'Actualizando tu imagen de perfil...',
-      profileUpdated: '¡Perfil actualizado con éxito!',
-    },
-  };
-
+  // Load translations based on the selected language
   const t = translations[language] || translations.en;
 
   /// Fetch user details
@@ -223,7 +152,6 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
       setDeleteMessage('An error occurred while deleting your account.');
     }
   };
-
 
   return (
     <div className="account-overview">
