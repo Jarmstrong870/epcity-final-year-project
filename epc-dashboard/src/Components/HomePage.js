@@ -93,14 +93,34 @@ const HomePage = ({ fetchProperties, language }) => {
       </div>
 
       {/* Top Rated Properties Section */}
-      <div className="top-rated-properties">
-        <h2 className="stylingTitle">{t.topRatedProperties}</h2>
+      <div className="top-rated-properties-section">
+        <div className="title-card">
+          <h2 className="title-text">{t.topRatedProperties}</h2>
+          <p className="subtitle-text">Discover the best-rated properties, based on their EPC rating!</p>
+        </div>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
             <TopRatedPropertyCard key={index} property={property} language={language} />
           ))}
         </div>
       </div>
+          <div className="additional-sections-container">
+      {/* FAQ Section */}
+      <div className="section faq-section" onClick={() => alert('Redirecting to FAQs')}>
+        <div className="section-content">
+          <h2>FAQs</h2>
+          <p>Find answers to the most common questions.</p>
+        </div>
+      </div>
+
+      {/* View All Properties Section */}
+      <div className="section properties-section" onClick={() => alert('Redirecting to Properties')}>
+        <div className="section-content">
+          <h2>View All Properties</h2>
+          <p>Explore all available properties in your area.</p>
+        </div>
+      </div>
+    </div>
     </>
   );
 };
