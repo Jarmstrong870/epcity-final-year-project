@@ -11,12 +11,6 @@ import locale
 
 load_dotenv()
 
-# properties for displaying, searching, filtering and sorting
-all_properties = pd.DataFrame()
-altered_properties = pd.DataFrame()
-
-altered = False
-
 # Base url and api key
 base_url = 'https://epc.opendatacommunities.org/api/v1/domestic/search'
 api_key = os.getenv("EPC_API_KEY")
@@ -26,8 +20,6 @@ headers = {
     'Accept': 'application/json',
     'Authorization': api_key
 }
-
-
 
 #Potentially call this method once a month to get the most up to date property data
 def getAllProperties():
@@ -121,37 +113,20 @@ def getAllProperties():
     # save the filtered DataFrame to the hosted database
     repo.updatePropertiesInDB(search_results)
 
-# Call this on backend start up to load properties into all_properties
-def loadAllProperties():
-    global all_properties
-    global altered
-    
-    all_properties = repo.getPropertiesFromDB()
-    
-    altered = False
-    return all_properties.head(30)
-
 # method that sorts the propertied by epc rating and returns the top 6
 def getTopRatedProperties():
-    global all_properties
-    top6 = all_properties.sort_values(by='current_energy_efficiency', ascending=False).head(6)
+    top6 = pd.DataFrame()
+    top6 = repo.getTopRatedFromDB()
     return top6
- 
- 
 
-# Call this to load first 30 properties to backend and when loading a new page of properties
-def getPage(pageNumber):
-    global altered
-    global all_properties
-    global altered_properties
+def returnProperties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
     page_size = 30
-    pageNumber = int(pageNumber) - 1
+    pageNumber = int(page) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size) - 1
-    if altered:
-        thisPage = altered_properties.iloc[firstProperty:lastProperty]
-    else:
-        thisPage = all_properties.iloc[firstProperty:lastProperty]
+    thisPage = pd.DataFrame()
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
+    thisPage = thisPage.iloc[firstProperty:lastProperty]
     return thisPage
 
 # finds info for when a property is selected by user
@@ -220,78 +195,6 @@ def getPropertyInfo(uprn):
     df.loc[df.index[0], 'lighting_cost_current'] = l_currency
 
     return df
-
-# filter properties by property type or epc rating
-def filterProperties(property_types, epc_ratings):
-    global altered_properties
-
-    # Start with the full set of searched_properties
-    filtered_properties = altered_properties
-
-    # Filter by multiple property types if provided
-    if property_types:
-        filtered_properties = filtered_properties[filtered_properties['property_type'].str.lower().isin([pt.lower() for pt in property_types])]
-
-    # Filter by multiple EPC ratings if provided
-    if epc_ratings:
-        filtered_properties = filtered_properties[filtered_properties['current_energy_rating'].str.upper().isin([rating.upper() for rating in epc_ratings])]
-
-    return filtered_properties
-
-# can search by address or postcode
-def searchProperties(userInput):
-    global altered_properties
-    searched_properties = altered_properties
-    # start by checking addresses
-    searched_properties = searched_properties[searched_properties['address'].str.contains(userInput, case=False, na=False)]
-
-    # if dataframe is empty after checking addresses, check postcode
-    if searched_properties.empty:
-        searched_properties = altered_properties
-        searched_properties = searched_properties[searched_properties['postcode'].str.contains(userInput, case=False, na=False)]
-    
-    return searched_properties
-
-# check if any searches or filters have been applied and apply them
-def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
-    global all_properties
-    global altered_properties
-    global altered
-    
-    if searchValue is None and property_types is None and epc_ratings is None:
-        altered = False
-        return all_properties
-        
-
-    altered = True
-    altered_properties = all_properties
-
-    # Apply search filter
-    if searchValue:
-        altered_properties = searchProperties(searchValue)
-
-    # Apply filters
-    if property_types is not None or epc_ratings is not None:
-        altered_properties = filterProperties(property_types, epc_ratings)
-        
-    
-
-    return altered_properties
-
-def sortProperties(attribute, ascending=True):
-    """
-    Sort properties by EPC energy efficiency (current_energy_efficiency).
-    :param ascending: Sort order. True for ascending, False for descending.
-    """
-    global all_properties
-    global altered_properties
-    global altered
-    if altered:
-        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
-        return altered_properties
-    else:
-        all_properties.sort_values(by=attribute, ascending=ascending)
-        return getPage(1)
 
 def calculateInflationAdjustedPrice(start_price, start_date):
     

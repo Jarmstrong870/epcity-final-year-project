@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
+import translations from '../locales/translations_topratedpropertycard'; // Import translations
 
 const TopRatedPropertyCard = ({ property, language }) => {
   const navigate = useNavigate();
@@ -9,29 +10,7 @@ const TopRatedPropertyCard = ({ property, language }) => {
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
-  // Translations
-  const translations = {
-    en: {
-      postcode: 'Postcode',
-      type: 'Type',
-      energyRating: 'Energy Rating',
-      efficiency: 'Efficiency',
-    },
-    fr: {
-      postcode: 'Code Postal',
-      type: 'Type',
-      energyRating: 'Classement Énergétique',
-      efficiency: 'Efficacité',
-    },
-    es: {
-      postcode: 'Código Postal',
-      type: 'Tipo',
-      energyRating: 'Clasificación Energética',
-      efficiency: 'Eficiencia',
-    },
-  };
-
-  const t = translations[language] || translations.en;
+  const t = translations[language] || translations.en; // Load translations
 
   const handleClick = () => {
     navigate(`/property/${property.uprn}`, {
@@ -64,42 +43,40 @@ const TopRatedPropertyCard = ({ property, language }) => {
         <StreetViewComponent address={property.address} postcode={property.postcode} />
       </div>
       <div className="propertyDetails">
-      <div
-  style={{
-    display: 'flex',
-    alignItems: 'center', // Ensures vertical alignment
-    justifyContent: 'space-between', // Pushes the address to the left and the star to the right
-    position: 'relative',
-    width: '100%', // Ensures full width of the container
-  }}
->
-  <h3
-    style={{
-      margin: 0,
-      whiteSpace: 'nowrap', // Prevents address from wrapping
-      overflow: 'hidden', // Hides any overflow text
-      textOverflow: 'ellipsis', // Adds ellipsis for long addresses
-    }}
-  >
-    {property.address}
-  </h3>
-  <span
-    style={{
-      fontSize: '2rem', // Adjust size as needed
-      cursor: 'pointer',
-      color: isFavorited ? 'gold' : 'gray',
-      position: 'relative', // Enables top adjustment
-      top: '-2px', // Moves the star slightly upward
-      marginLeft: '10px', // Adds some space between the address and the star
-    }}
-    onClick={toggleFavorite}
-    title={isFavorited ? 'Unfavorite' : 'Favorite'}
-  >
-    ★
-  </span>
-</div>
-
-
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'relative',
+            width: '100%',
+          }}
+        >
+          <h3
+            style={{
+              margin: 0,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {property.address}
+          </h3>
+          <span
+            style={{
+              fontSize: '2rem',
+              cursor: 'pointer',
+              color: isFavorited ? 'gold' : 'gray',
+              position: 'relative',
+              top: '-2px',
+              marginLeft: '10px',
+            }}
+            onClick={toggleFavorite}
+            title={isFavorited ? 'Unfavorite' : 'Favorite'}
+          >
+            ★
+          </span>
+        </div>
 
         <p>
           <strong>{t.postcode}:</strong> {property.postcode}

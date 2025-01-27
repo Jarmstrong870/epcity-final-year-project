@@ -1,12 +1,4 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './FAQ.css';
-
-const FAQ = ({ language }) => {
-  const navigate = useNavigate();
-
-  // Translations
-  const translations = {
+const translations = {
     en: {
       title: 'Frequently Asked Questions',
       faqList: [
@@ -98,27 +90,6 @@ const FAQ = ({ language }) => {
       ],
     },
   };
-
-  const t = translations[language] || translations.en;
-
-  return (
-    <div>
-      <h2 className="stylingTitle">{t.title}</h2>
-      <div className="homePageGrid">
-        {t.faqList.map((element, index) => (
-          <div
-            key={index}
-            className="propertyCard"
-            onClick={() => navigate(element.path)}
-            style={{ cursor: 'pointer' }}
-          >
-            <h3>{element.title}</h3>
-            <p>{element.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default FAQ;
+  
+  export default translations;
+  

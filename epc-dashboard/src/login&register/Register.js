@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './Register.css';
-import Tooltip from './Components/TooltipComponent';
+import Tooltip from '../FAQ/TooltipComponent';
 import { useNavigate, Link } from 'react-router-dom';
-import backgroundImage from './assets/house_bkc.jpg';
-import eyeIcon from './assets/eye-icon.jpg';
+import backgroundImage from '../assets/house_bkc.jpg';
+import eyeIcon from '../assets/eye-icon.jpg';
 
 function Register({ language }) {
   const [firstName, setFirstName] = useState('');
