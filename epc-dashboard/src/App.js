@@ -233,7 +233,12 @@ function App() {
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
-        <Route path="/favourites" element={<FavouritePage language={language}/>} />
+        <Route path="/favourites" element={user && user.email ? (<FavouritePage email={user.email} language={language} />
+    ) : (
+      <p>Please log in to view your favourites.</p>
+    )
+  }
+/>
 
       </Routes>
 

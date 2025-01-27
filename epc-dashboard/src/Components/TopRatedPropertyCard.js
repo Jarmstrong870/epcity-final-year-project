@@ -1,66 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
-import FavoriteStar from './FavoriteStar';
+import translations from '../locales/translations_topratedpropertycard';
+import FavoriteStar from './FavouriteStar';
 
-const TopRatedPropertyCard = ({ property, isPropertyFavourited, language, onToggle}) => {
+const TopRatedPropertyCard = ({ property, email, language }) => {
   const navigate = useNavigate();
-  const [propertyFavourited, setIsFavorited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
-  // Translations
-  const translations = {
-    en: {
-      postcode: 'Postcode',
-      type: 'Type',
-      energyRating: 'Energy Rating',
-      efficiency: 'Efficiency',
-    },
-    fr: {
-      postcode: 'Code Postal',
-      type: 'Type',
-      energyRating: 'Classement Énergétique',
-      efficiency: 'Efficacité',
-    },
-    es: {
-      postcode: 'Código Postal',
-      type: 'Tipo',
-      energyRating: 'Clasificación Energética',
-      efficiency: 'Eficiencia',
-    },
-  };
+  const t = translations[language] || translations.en; // Load translations
 
-  const t = translations[language] || translations.en;
-
-  useEffect(() => {
-    setIsFavorited(isPropertyFavourited);
-  }, [isPropertyFavourited]);
-
+  // Handle navigation to property details
   const handleClick = () => {
     navigate(`/property/${property.uprn}`, {
       state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
     });
   };
 
-  const toggleFavorite = async (event) => {
-    event.stopPropagation(); // Prevent triggering the card click
-    const x = !propertyFavourited;
-    setIsFavorited(x);
+  // Handle the favorite toggle callback
+  const handleFavoriteToggle = (isFavorited) => {
     setPopupMessage(
-      !propertyFavourited
-        ? `${property.address} has been favourited.`
-        : `${property.address} has been unfavourited.`
+      isFavorited
+        ? `${property.address} has been added to your favourites.`
+        : `${property.address} has been removed from your favourites.`
     );
     setShowPopup(true);
-
-    try {
-        await onToggle(property, x);
-    } catch (e) {
-      console.error("Failed to updated favourite property", e);
-      setIsFavorited(!x);
-    }
 
     // Hide the popup after 5 seconds
     setTimeout(() => {
@@ -68,34 +34,58 @@ const TopRatedPropertyCard = ({ property, isPropertyFavourited, language, onTogg
     }, 5000);
   };
 
+  // Ensure `property` has the required data before rendering
+  if (!property || !property.uprn) {
+    return <p>Property details are unavailable.</p>;
+  }
+
   return (
     <div className="topRatedPropertyCard" onClick={handleClick}>
       {/* Popup */}
       {showPopup && <div className="popup">{popupMessage}</div>}
 
-      <div className="propertyImage">
-        <StreetViewComponent address={property.address} postcode={property.postcode} />
-      </div>
-      <div className="propertyDetails">
-        <div className="propertyDetailsHeading">
-          <h3 className = "propertyAddressHeader">{property.address}</h3>
-          <FavoriteStar
-            isPropertyFavorited={propertyFavourited}
-            onClick={toggleFavorite}/>
+      {/* Property Layout */}
+      <div className="propertyContent">
+        {/* Property Image */}
+        <div className="propertyImage">
+          <StreetViewComponent address={property.address} postcode={property.postcode} />
         </div>
 
-        <p>
-          <strong>{t.postcode}:</strong> {property.postcode}
-        </p>
-        <p>
-          <strong>{t.type}:</strong> {property.property_type}
-        </p>
-        <p>
-          <strong>{t.energyRating}:</strong> {property.current_energy_rating}
-        </p>
-        <p>
-          <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
-        </p>
+        {/* Property Details */}
+        <div className="propertyDetails">
+          <div className="propertyHeader">
+            <h3 className="propertyTitle">{property.address}</h3>
+
+            {/* FavouriteStar Component */}
+            <div
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent bubbling to card click
+              }}
+            >
+              <FavoriteStar
+                property={property} // Pass property object
+                email={email} // Pass user email
+                onToggle={handleFavoriteToggle} // Callback for toggling
+              />
+            </div>
+          </div>
+
+          {/* Property Metadata */}
+          <div className="propertyMetadata">
+            <p>
+              <strong>{t.postcode}:</strong> {property.postcode}
+            </p>
+            <p>
+              <strong>{t.type}:</strong> {property.property_type}
+            </p>
+            <p>
+              <strong>{t.energyRating}:</strong> {property.current_energy_rating}
+            </p>
+            <p>
+              <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

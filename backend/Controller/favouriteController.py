@@ -1,6 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import Flask, Blueprint, jsonify, request
 from flask_cors import CORS
 from Service import favouriteService as favourites
+
+app = Flask(__name__)
 
 # Create a blueprint instance
 favourites_blueprint = Blueprint('favourites', __name__)

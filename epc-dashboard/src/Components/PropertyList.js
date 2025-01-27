@@ -1,58 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from './TopRatedPropertyCard';
-import FavoriteStar from './FavoriteStar';
+import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
+import translations from '../locales/translations_propertylist'; // Import translations
 
 const PropertyList = ({ properties, loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
 
-  // Translations
-  const translations = {
-    en: {
-      propertyList: 'Property List',
-      tableView: 'Table View',
-      cardView: 'Card View',
-      loading: 'Loading...',
-      noProperties: 'No properties found.',
-      address: 'Address',
-      postcode: 'Postcode',
-      propertyType: 'Property Type',
-      currentEnergyRating: 'Current Energy Rating',
-      currentEnergyEfficiency: 'Current Energy Efficiency',
-      favorite: 'Favorite',
-    },
-    fr: {
-      propertyList: 'Liste des propriétés',
-      tableView: 'Vue tableau',
-      cardView: 'Vue carte',
-      loading: 'Chargement...',
-      noProperties: 'Aucune propriété trouvée.',
-      address: 'Adresse',
-      postcode: 'Code Postal',
-      propertyType: 'Type de Propriété',
-      currentEnergyRating: 'Classement Énergétique Actuel',
-      currentEnergyEfficiency: 'Efficacité Énergétique Actuelle',
-      favorite: 'Favori',
-    },
-    es: {
-      propertyList: 'Lista de Propiedades',
-      tableView: 'Vista de Tabla',
-      cardView: 'Vista de Tarjeta',
-      loading: 'Cargando...',
-      noProperties: 'No se encontraron propiedades.',
-      address: 'Dirección',
-      postcode: 'Código Postal',
-      propertyType: 'Tipo de Propiedad',
-      currentEnergyRating: 'Clasificación Energética Actual',
-      currentEnergyEfficiency: 'Eficiencia Energética Actual',
-      favorite: 'Favorito',
-    },
-  };
-
-  const t = translations[language] || translations.en; // Default to English
+  const t = translations[language] || translations.en; // Load translations
 
   // Handle toggle favorite to show popup
   const handleToggleFavorite = (propertyData, isFavorited) => {
@@ -127,7 +85,7 @@ const PropertyList = ({ properties, loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar
+                  <FavouriteStar
                     propertyData={property}
                     onToggle={handleToggleFavorite}
                   />

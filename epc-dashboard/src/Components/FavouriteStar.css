@@ -1,0 +1,22 @@
+.starBase {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: auto;
+}
+
+.starComponent {
+    font-size: 2rem;
+    line-height: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.favouriteStar {
+    color: gold;
+}
+
+.nonfavouriteStar {
+    color: gray;
+}

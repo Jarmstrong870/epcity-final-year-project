@@ -35,41 +35,10 @@
   margin: 5px 0;
   font-size: 1.2em;
   color: #333;
-  margin: 0;
-  white-space: 'nowrap'; /* Prevents address from wrapping */
-  overflow: 'hidden'; /* Hides any overflow text */
-  text-overflow: 'ellipsis'; /* Adds ellipsis for long addresses */
-}
-
-.propertyDetailsHeading {
-  display: 'flex';
-  align-items: 'center'; /* Ensures vertical alignment*/
-  justify-content: 'space-between'; /* Pushes the address to the left and the star to the right */
-  position: 'relative';
-  width: '100%'; /* Ensures full width of the container */
-}
-
-.propertyAddressHeader {
-  margin: 5px 0;
-  font-size: 1.2em;
-  color: #333;
 }
 
 .propertyDetails p {
   margin: 3px 0;
   font-size: 0.9em;
   color: #666;
-}
-
-.favouritedStar {
-    font-size: 2rem; /* Adjust size as needed*/
-    cursor: pointer;
-    color: gray;
-    position: relative; /* Enables top adjustment */
-    top: -2px; /* Moves the star slightly upward */
-    margin-left: 10px; /* Adds some space between the address and the star */
-}
-
-.favouritedStar.favourited {
-    color: gold;
 }
