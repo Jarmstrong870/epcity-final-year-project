@@ -32,47 +32,7 @@ const PropertyList = ({  loading, language }) => {
   const [sortValue, setSortValue] = useState("current_energy_rating");
   const  { properties, changePage, sortProperties} = useContext(PropertyContext);
   
-  const translations = {
-    en: {
-      propertyList: 'Property List',
-      tableView: 'Table View',
-      cardView: 'Card View',
-      loading: 'Loading...',
-      noProperties: 'No properties found.',
-      address: 'Address',
-      postcode: 'Postcode',
-      propertyType: 'Property Type',
-      currentEnergyRating: 'Current Energy Rating',
-      currentEnergyEfficiency: 'Current Energy Efficiency',
-    },
-    fr: {
-      propertyList: 'Liste des propriétés',
-      tableView: 'Vue tableau',
-      cardView: 'Vue carte',
-      loading: 'Chargement...',
-      noProperties: 'Aucune propriété trouvée.',
-      address: 'Adresse',
-      postcode: 'Code Postal',
-      propertyType: 'Type de Propriété',
-      currentEnergyRating: 'Classement Énergétique Actuel',
-      currentEnergyEfficiency: 'Efficacité Énergétique Actuelle',
-    },
-    es: {
-      propertyList: 'Lista de Propiedades',
-      tableView: 'Vista de Tabla',
-      cardView: 'Vista de Tarjeta',
-      loading: 'Cargando...',
-      noProperties: 'No se encontraron propiedades.',
-      address: 'Dirección',
-      postcode: 'Código Postal',
-      propertyType: 'Tipo de Propiedad',
-      currentEnergyRating: 'Clasificación Energética Actual',
-      currentEnergyEfficiency: 'Eficiencia Energética Actual',
-    },
-  };
-
-  const t = translations[language] || translations.en; // Default to English
-
+  
 
   if (loading) {
     return <p>{t.loading}</p>;

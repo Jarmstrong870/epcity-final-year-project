@@ -5,11 +5,11 @@ import './Components/SearchBar.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
 import Login from './login&register/Login';
-import Register from './Register';
+import Register from './login&register/Register';
 import PropertyFilter from './propertySearch/FilterComponent';
 import PropertyList from './propertySearch/PropertyList';
 import PropertyPage from './Components/propertyPage/PropertyPage';
-import EPCTable from './Components/propertyPage/EPCTable';
+import EPCTable from './Components/propertyPage/EPCFullTable';
 import HomePage from './homePage/HomePage';
 import './homePage/HomePage.css';
 import FAQs from './FAQ/FAQs';
@@ -25,6 +25,7 @@ import Checklist from './FAQ/Checklist';
 import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
+import translations from './locales/translations_app';
 import { PropertyProvider } from './Components/utils/propertyContext';
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import translations from '../locales/translations_epcgraph'; // Import translations
+import translations from '../../locales/translations_epcgraph'; // Import translations
 
 const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language }) => {
   const t = translations[language] || translations.en; // Load translations
