@@ -1,5 +1,5 @@
 describe('Dashboard Tests', () => {
-    // Test case: Check if the dashboard loads
+    // Test case: Check if the dashboard loads open with npx cypress open
     it('Should load the dashboard', () => {
       // Visit the base URL (http://localhost:3000/)
       cy.visit('/');
