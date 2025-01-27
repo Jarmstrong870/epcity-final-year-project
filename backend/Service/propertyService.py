@@ -21,7 +21,9 @@ headers = {
     'Authorization': api_key
 }
 
-#Potentially call this method once a month to get the most up to date property data
+"""
+
+"""
 def getAllProperties():
     # Page size (max 5000)
     query_size = 5000
