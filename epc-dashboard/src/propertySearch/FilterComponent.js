@@ -1,7 +1,7 @@
 
-import './Filter.css';
+import './FilterComponent.css';
 import React, { useState, useContext } from 'react';
-import { PropertyContext } from './propertyContext';
+import { PropertyContext } from '../Components/utils/propertyContext';
 
 const PropertyFilter = ({language}) => {
   // State variables for search and filter criteria

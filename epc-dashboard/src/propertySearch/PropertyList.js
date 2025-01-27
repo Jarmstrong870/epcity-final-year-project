@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
+import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import './PropertyList.css';
-import { PropertyContext }  from './propertyContext';
+import { PropertyContext }  from '../Components/utils/propertyContext';
 
 const PropertyList = ({  loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views

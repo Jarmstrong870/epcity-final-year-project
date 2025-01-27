@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'; 
 import './Login.css';
-import backgroundImage from './assets/house-bk.jpg'; 
-import eyeIcon from './assets/eye-icon.jpg'; // Import the eye icon
+import backgroundImage from '../assets/house-bk.jpg'; 
+import eyeIcon from '../assets/eye-icon.jpg'; // Import the eye icon
 
 function Login({ setUser, language }) {
   const [email, setEmail] = useState('');

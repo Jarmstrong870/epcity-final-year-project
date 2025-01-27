@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
-import './HomePage.css';
-import './PropertyCard.css';
-import PropertyFilter from './FilterComponent';
-import { PropertyContext } from './propertyContext';
+import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import '../homePage/HomePage.css';
+import { PropertyContext } from '../Components/utils/propertyContext';
 
 const HomePage = ({  language }) => {
   
@@ -45,6 +43,7 @@ const HomePage = ({  language }) => {
   useEffect(() => {
     const fetchTopProperties = async () => {
       try {
+        fetchProperties();
         fetchTopRatedProperties();
         const data = topRatedProperties;
       } catch (error) {
