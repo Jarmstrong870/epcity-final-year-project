@@ -1,11 +1,33 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+
+import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
+import translations from '../locales/translations_propertylist'; // Import translations
 import { PropertyContext }  from '../Components/utils/propertyContext';
 
 const PropertyList = ({  loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
+  const [popupMessage, setPopupMessage] = useState(''); // State for popup message
+  const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
+
+  const t = translations[language] || translations.en; // Load translations
+
+  // Handle toggle favorite to show popup
+  const handleToggleFavorite = (propertyData, isFavorited) => {
+    setPopupMessage(
+      isFavorited
+        ? `${propertyData?.address || 'This property'} has been favorited.`
+        : `${propertyData?.address || 'This property'} has been unfavorited.`
+    );
+    setShowPopup(true);
+
+    // Hide the popup after 5 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
+  };
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
   const  { properties, changePage, sortProperties} = useContext(PropertyContext);
@@ -98,16 +120,21 @@ const PropertyList = ({  loading, language }) => {
 
 
       
+      <h2>{t.propertyList}</h2>
+
+      {/* Popup for favoriting/unfavoriting */}
+      {showPopup && <div className="popup">{popupMessage}</div>}
+
       {/* View Mode Toggle */}
       <div className="view-toggle">
-        <button 
-          onClick={() => setViewMode('table')} 
+        <button
+          onClick={() => setViewMode('table')}
           className={viewMode === 'table' ? 'active' : ''}
         >
           {t.tableView}
         </button>
-        <button 
-          onClick={() => setViewMode('card')} 
+        <button
+          onClick={() => setViewMode('card')}
           className={viewMode === 'card' ? 'active' : ''}
         >
           {t.cardView}
@@ -124,6 +151,7 @@ const PropertyList = ({  loading, language }) => {
               <th>{t.propertyType}</th>
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
+              <th>{t.favorite}</th>
             </tr>
           </thead>
           <tbody>
@@ -136,6 +164,12 @@ const PropertyList = ({  loading, language }) => {
                 <td>{property.property_type}</td>
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
+                <td>
+                  <FavoriteStar
+                    propertyData={property}
+                    onToggle={handleToggleFavorite}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>

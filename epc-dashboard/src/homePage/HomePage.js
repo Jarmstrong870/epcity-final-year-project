@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
+import translations from '../locales/translations_homepage'; // Import translations
+
 
 const HomePage = ({  language }) => {
   
@@ -11,34 +13,7 @@ const HomePage = ({  language }) => {
   const navigate = useNavigate();
   const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
 
-  // Translations
-  const translations = {
-    en: {
-      searchPlaceholder: 'Search by property address or postcode...',
-      searchButton: 'Search',
-      topRatedProperties: 'Top Rated Properties',
-      loading: 'Loading...',
-      noProperties: 'No top-rated properties found.',
-    },
-    fr: {
-      searchPlaceholder: 'Rechercher par adresse ou code postal...',
-      searchButton: 'Rechercher',
-      topRatedProperties: 'Propriétés les Mieux Notées',
-      loading: 'Chargement...',
-      noProperties: 'Aucune propriété parmi les mieux notées trouvée.',
-    },
-    es: {
-      searchPlaceholder: 'Buscar por dirección o código postal...',
-      searchButton: 'Buscar',
-      topRatedProperties: 'Propiedades Mejor Valoradas',
-      loading: 'Cargando...',
-      noProperties: 'No se encontraron propiedades mejor valoradas.',
-    },
-  };
-
-  const t = translations[language] || translations.en;
-
-  
+  const t = translations[language] || translations.en; // Load translations
 
   useEffect(() => {
     const fetchTopProperties = async () => {

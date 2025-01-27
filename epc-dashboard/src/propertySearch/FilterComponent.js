@@ -1,7 +1,8 @@
-
-import './FilterComponent.css';
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import './Filter.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
+import translations from '../locales/translations_filtercomponent'; // Import translations
+
 
 const PropertyFilter = ({language}) => {
   // State variables for search and filter criteria
@@ -148,12 +149,16 @@ const PropertyFilter = ({language}) => {
             ))}
           </div>
         </div>
+
+        {/* Page Number Input */}
         <div>
           <label>Page Number:</label>
           <input type="number" id="page" name="page" min="1" max="100" defaultValue={1} value={pageNumber} onChange={handlePageChange} />
           
 
         </div>
+
+        {/* Sort Options Dropdown */}
         <div>
           <label>Sort By:</label>
           <select defaultValue={"current_energy_rating"} onChange={handleSortChange}>
@@ -166,6 +171,7 @@ const PropertyFilter = ({language}) => {
           <h3>{sortValue}</h3>
         </div>
 
+        {/* Submit Button */}
         <div>
           <button type="submit">{t.findProperties}</button>
         </div>

@@ -63,18 +63,6 @@ select, input[type="number"] {
 }
 
 button {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    margin-top: 10px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    all: unset;
 }
 
-button:hover {
-    background-color: #45a049;
-}
