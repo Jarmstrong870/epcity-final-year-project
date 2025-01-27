@@ -159,7 +159,7 @@ def getPropertyInfo(uprn):
         if not rows:
             print("No more data to fetch.")
 
-         # Append each property's data to the all_rows list
+        # Append each property's data to the all_rows list
         all_rows.extend(rows)
 
     # Convert the data to a DataFrame
