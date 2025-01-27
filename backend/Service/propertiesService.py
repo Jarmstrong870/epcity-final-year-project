@@ -145,7 +145,7 @@ def getPage(pageNumber):
     global all_properties
     global altered_properties
     page_size = 30
-    pageNumber = int(pageNumber)
+    pageNumber = int(pageNumber) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size) - 1
     if altered:
