@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './EPCFullTable.css'; // Styles for the layout
-import translations from '../locales/translations_epcfulltable'; // Import translations
+import translations from '../../locales/translations_epcfulltable'; // Import translations
 
 const EPCFullTable = ({ properties, loading, language }) => {
   if (loading) {

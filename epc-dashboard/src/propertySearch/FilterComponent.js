@@ -1,18 +1,33 @@
-import React, { useState } from 'react';
-import './Filter.css';
+import React, { useState, useContext } from 'react';
+import './FilterComponent.css';
+import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_filtercomponent'; // Import translations
 
-const PropertyFilter = ({ onFilterChange, language }) => {
+
+const PropertyFilter = ({language}) => {
+  // State variables for search and filter criteria
   const [searchQuery, setSearchQuery] = useState('');
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [epcRatings, setEpcRatings] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState('current_energy_rating');
 
-  const t = translations[language] || translations.en; // Load translations
+  
 
-  const handleSearchChange = (e) => setSearchQuery(e.target.value);
+  const t = translations[language] || translations.en;
 
+  
+
+  const { fetchProperties, changePage, sortProperties, properties } = useContext(PropertyContext);
+
+  
+
+  // Handler for search input change
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handler for property type selection
   const handlePropertyTypeChange = (e) => {
     const { value, checked } = e.target;
     setPropertyTypes(
@@ -29,12 +44,20 @@ const PropertyFilter = ({ onFilterChange, language }) => {
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
-    onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
+    // Call the parent component's method
+    //onFilterChange(searchQuery, propertyTypes, epcRatings, pageNumber, sortValue);
+    fetchProperties(searchQuery, propertyTypes, epcRatings);
+  };
+  const handlePageChange = (e) => {
+    setPageNumber(e.target.value);
+    changePage(e.target.value);
   };
 
-  const handlePageChange = (e) => setPageNumber(e.target.value);
+  const handleSortChange = (e) => {
+    setSortValue(e.target.value);
+    sortProperties(e.target.value);
+  }
 
-  const handleSortChange = (e) => setSortValue(e.target.value);
 
   return (
     <div className="baseStyling">
@@ -79,31 +102,23 @@ const PropertyFilter = ({ onFilterChange, language }) => {
 
         {/* Page Number Input */}
         <div>
-          <label>{t.pageNumber}</label>
-          <input
-            type="number"
-            id="page"
-            name="page"
-            min="1"
-            max="100"
-            defaultValue={1}
-            value={pageNumber}
-            onChange={handlePageChange}
-          />
+          <label>Page Number:</label>
+          <input type="number" id="page" name="page" min="1" max="100" defaultValue={1} value={pageNumber} onChange={handlePageChange} />
+          
+
         </div>
 
         {/* Sort Options Dropdown */}
         <div>
-          <label>{t.sortBy}</label>
-          <select defaultValue="current_energy_rating" onChange={handleSortChange}>
-            {Object.keys(t.sortOptions).map((key) => (
-              <option key={key} value={key}>
-                {t.sortOptions[key]}
-              </option>
-            ))}
+          <label>Sort By:</label>
+          <select defaultValue={"current_energy_rating"} onChange={handleSortChange}>
+            <option value="address">Address</option>
+            <option value="postcode">Postcode</option>
+            <option value="property_type">Property Type</option>
+            <option value="current_energy_rating">Current Energy Rating</option>
+            <option value="current_energy_efficiency">Current Energy Efficiency</option>
           </select>
-          {/* Display the translated sort value */}
-          <h3>{t.sortOptions[sortValue]}</h3>
+          <h3>{sortValue}</h3>
         </div>
 
         {/* Submit Button */}

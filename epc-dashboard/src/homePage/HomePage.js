@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
-import './HomePage.css';
-import './PropertyCard.css';
-import PropertyFilter from './FilterComponent';
+import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import '../homePage/HomePage.css';
+import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage'; // Import translations
 
-const HomePage = ({ fetchProperties, language }) => {
-  const [topRatedProperties, setTopRatedProperties] = useState([]);
+
+const HomePage = ({  language }) => {
+  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
 
   const t = translations[language] || translations.en; // Load translations
 
   useEffect(() => {
-    const fetchTopRatedProperties = async () => {
+    const fetchTopProperties = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/api/property/loadTopRated');
-        const data = await response.json();
-        setTopRatedProperties(data.slice(0, 3)); // Limit to top 3 properties
-        console.log('Top Rated Properties:', data); // Debugging output
+        fetchProperties();
+        fetchTopRatedProperties();
+        const data = topRatedProperties;
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -28,7 +28,7 @@ const HomePage = ({ fetchProperties, language }) => {
       }
     };
 
-    fetchTopRatedProperties();
+    fetchTopProperties();
   }, []);
 
   const handleInputChange = (event) => {
@@ -42,16 +42,12 @@ const HomePage = ({ fetchProperties, language }) => {
     }
   };
 
-  if (loading) {
-    return <p>{t.loading}</p>;
-  }
 
-  if (topRatedProperties.length === 0) {
-    return <p>{t.noProperties}</p>;
-  }
-
+  
+  
   return (
     <>
+      
       {/* Search Bar Section */}
       <div className="backgroundImageStyling">
         <div className="stylingSearchBar">
@@ -79,6 +75,7 @@ const HomePage = ({ fetchProperties, language }) => {
       </div>
     </>
   );
+
 };
 
 export default HomePage;

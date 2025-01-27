@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
+import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+
 import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist'; // Import translations
+import { PropertyContext }  from '../Components/utils/propertyContext';
 
-const PropertyList = ({ properties, loading, language }) => {
+const PropertyList = ({  loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
@@ -26,6 +28,11 @@ const PropertyList = ({ properties, loading, language }) => {
       setShowPopup(false);
     }, 5000);
   };
+  const [pageNumber, setPageNumber] = useState(1);
+  const [sortValue, setSortValue] = useState("current_energy_rating");
+  const  { properties, changePage, sortProperties} = useContext(PropertyContext);
+  
+  
 
   if (loading) {
     return <p>{t.loading}</p>;
@@ -35,11 +42,44 @@ const PropertyList = ({ properties, loading, language }) => {
     return <p>{t.noProperties}</p>;
   }
 
+  const handlePageChange = (newPage) => {
+    if (newPage > 0) {
+      setPageNumber(newPage);
+      changePage(newPage);
+    }
+  }
+
+  const handleSortChange = (event) => {
+    const newSortValue = event.target.value;
+    setSortValue(newSortValue); // Update state
+  
+    // Call the sorting function from PropertyContext if available
+    sortProperties(newSortValue);
+  };
+
   // Limit to first 12 properties for the card view
   const limitedProperties = properties.slice(0, 12);
 
   return (
     <div className="property-list">
+      <div className="property-list-header">
+        <h2>Property List</h2>
+
+        {/* Sort Dropdown */}
+        <div className="sort-container">
+          <label>Sort By:</label>
+          <select value={sortValue} onChange={handleSortChange}>
+            <option value="address">Address</option>
+            <option value="postcode">Postcode</option>
+            <option value="property_type">Property Type</option>
+            <option value="current_energy_rating">Current Energy Rating</option>
+            <option value="current_energy_efficiency">Current Energy Efficiency</option>
+          </select>
+        </div>
+      </div>
+
+
+      
       <h2>{t.propertyList}</h2>
 
       {/* Popup for favoriting/unfavoriting */}
@@ -101,7 +141,13 @@ const PropertyList = ({ properties, loading, language }) => {
           ))}
         </div>
       )}
+      <div className="pagination">
+        <button onClick={() => handlePageChange(pageNumber-1)}>back page</button>
+        <button onClick={() => handlePageChange(pageNumber+1)}>forward page</button>
+      </div>
+        
     </div>
+    
   );
 };
 

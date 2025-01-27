@@ -1,30 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Routes, Route, Link, useNavigate, Router } from 'react-router-dom';
 import './App.css';
 import './Components/SearchBar.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
-import Login from './Login';
-import Register from './Register';
-import PropertyFilter from './Components/FilterComponent';
-import PropertyList from './Components/PropertyList';
-import PropertyPage from './Components/PropertyPage';
-import HomePage from './Components/HomePage';
-import './Components/HomePage.css';
-import FAQs from './Components/FAQs';
-import GlossaryPage from './Components/GlossaryPage';
-import ForgotPassword from './Components/ForgotPassword';
-import AccountOverview from './Components/AccountOverview';
-import LanguageSelector from './Components/LanguageSelector';
-import VerifyOtp from './Components/VerifyOtp';
-import ResetPassword from './Components/resetPassword';
-import PropertyFinder from './Components/PropertyFinder';
-import EICalculator from './Components/EICalculator';
-import Checklist from './Components/Checklist';
-import SocialMedia from './Components/SocialMedia';
-import TutorialMenu from './Components/TutorialMenu';
-import Tutorials from './Components/Tutorials';
-import translations from './locales/translations_app'; // Import translations
+import Login from './login&register/Login';
+import Register from './login&register/Register';
+import PropertyFilter from './propertySearch/FilterComponent';
+import PropertyList from './propertySearch/PropertyList';
+import PropertyPage from './Components/propertyPage/PropertyPage';
+import EPCTable from './Components/propertyPage/EPCFullTable';
+import HomePage from './homePage/HomePage';
+import './homePage/HomePage.css';
+import FAQs from './FAQ/FAQs';
+import GlossaryPage from './FAQ/Glossarypage';
+import ForgotPassword from './login&register/ForgotPassword';
+import AccountOverview from './login&register/AccountOverview';
+import LanguageSelector from './homePage/LanguageSelector';
+import VerifyOtp from './login&register/VerifyOtp';
+import ResetPassword from './login&register/resetPassword';
+import PropertyFinder from './FAQ/PropertyFinder';
+import EICalculator from './FAQ/EICalculator';
+import Checklist from './FAQ/Checklist';
+import SocialMedia from './FAQ/SocialMedia';
+import TutorialMenu from './FAQ/TutorialMenu';
+import Tutorials from './FAQ/Tutorials';
+import translations from './locales/translations_app';
+import { PropertyProvider } from './Components/utils/propertyContext';
+
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -33,6 +37,10 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  
+  
+ 
 
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
@@ -108,6 +116,7 @@ function App() {
   }, [user]);
 
   return (
+    <PropertyProvider>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -138,21 +147,21 @@ function App() {
         </div>
       </div>
 
-      {logoutConfirmVisible && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Are you sure you want to log out?</h3>
-            <div className="modal-buttons">
-              <button onClick={handleLogout} className="confirm-button">
-                Yes
-              </button>
-              <button onClick={cancelLogout} className="cancel-button">
-                No
-              </button>
+          {logoutConfirmVisible && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h3>Are you sure you want to log out?</h3>
+                <div className="modal-buttons">
+                  <button onClick={handleLogout} className="confirm-button">
+                    Yes
+                  </button>
+                  <button onClick={cancelLogout} className="cancel-button">
+                    No
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
       <Routes>
         <Route
@@ -167,7 +176,7 @@ function App() {
             </>
           }
         />
-        <Route path="/" element={<HomePage fetchProperties={fetchProperties} language={language} />} />
+        <Route path="/" element={<HomePage language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
@@ -207,6 +216,7 @@ function App() {
         </div>
       </footer>
     </div>
+    </PropertyProvider>
   );
 }
 
