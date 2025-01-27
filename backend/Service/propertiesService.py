@@ -27,6 +27,8 @@ headers = {
     'Authorization': api_key
 }
 
+
+
 #Potentially call this method once a month to get the most up to date property data
 def getAllProperties():
     # Page size (max 5000)
@@ -134,6 +136,8 @@ def getTopRatedProperties():
     global all_properties
     top6 = all_properties.sort_values(by='current_energy_efficiency', ascending=False).head(6)
     return top6
+ 
+ 
 
 # Call this to load first 30 properties to backend and when loading a new page of properties
 def getPage(pageNumber):
@@ -256,21 +260,23 @@ def alterProperties(searchValue=None, property_types=None, epc_ratings=None):
     
     if searchValue is None and property_types is None and epc_ratings is None:
         altered = False
-        return getPage(1)
+        return all_properties
         
 
     altered = True
     altered_properties = all_properties
 
-    # Apply search
+    # Apply search filter
     if searchValue:
         altered_properties = searchProperties(searchValue)
 
     # Apply filters
     if property_types is not None or epc_ratings is not None:
         altered_properties = filterProperties(property_types, epc_ratings)
+        
+    
 
-    return getPage(1)
+    return altered_properties
 
 def sortProperties(attribute, ascending=True):
     """
@@ -281,8 +287,8 @@ def sortProperties(attribute, ascending=True):
     global altered_properties
     global altered
     if altered:
-        altered_properties.sort_values(by=attribute, ascending=ascending)
-        return getPage(1)
+        altered_properties = altered_properties.sort_values(by=attribute, ascending=ascending)
+        return altered_properties
     else:
         all_properties.sort_values(by=attribute, ascending=ascending)
         return getPage(1)

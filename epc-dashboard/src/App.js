@@ -1,30 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Routes, Route, Link, useNavigate, Router } from 'react-router-dom';
 import './App.css';
 import './Components/SearchBar.css';
 import profileIcon from './assets/profileicon.png';
 import epcLogo from './assets/EPCITY-LOGO-UPDATED.png';
-import Login from './Login';
-import Register from './Register';
-import PropertyFilter from './Components/FilterComponent';
-import PropertyList from './Components/PropertyList';
-import PropertyPage from './Components/PropertyPage';
-import HomePage from './Components/HomePage';
-import './Components/HomePage.css';
-import FAQs from './Components/FAQs';
-import GlossaryPage from './Components/GlossaryPage';
-import ForgotPassword from './Components/ForgotPassword';
-import AccountOverview from './Components/AccountOverview';
-import LanguageSelector from './Components/LanguageSelector';
-import VerifyOtp from './Components/VerifyOtp';
-import ResetPassword from './Components/resetPassword';
-import PropertyFinder from './Components/PropertyFinder';
-import EICalculator from './Components/EICalculator';
-import Checklist from './Components/Checklist';
-import SocialMedia from './Components/SocialMedia';
-import TutorialMenu from './Components/TutorialMenu';
-import Tutorials from './Components/Tutorials';
-import FavouritePage from './Components/FavouritePage';
+import Login from './login&register/Login';
+import Register from './login&register/Register';
+import PropertyFilter from './propertySearch/FilterComponent';
+import PropertyList from './propertySearch/PropertyList';
+import PropertyPage from './Components/propertyPage/PropertyPage';
+import EPCTable from './Components/propertyPage/EPCFullTable';
+import HomePage from './homePage/HomePage';
+import './homePage/HomePage.css';
+import FAQs from './FAQ/FAQs';
+import GlossaryPage from './FAQ/Glossarypage';
+import ForgotPassword from './login&register/ForgotPassword';
+import AccountOverview from './login&register/AccountOverview';
+import LanguageSelector from './homePage/LanguageSelector';
+import VerifyOtp from './login&register/VerifyOtp';
+import ResetPassword from './login&register/resetPassword';
+import PropertyFinder from './FAQ/PropertyFinder';
+import EICalculator from './FAQ/EICalculator';
+import Checklist from './FAQ/Checklist';
+import SocialMedia from './FAQ/SocialMedia';
+import TutorialMenu from './FAQ/TutorialMenu';
+import Tutorials from './FAQ/Tutorials';
+import translations from './locales/translations_app';
+import { PropertyProvider } from './Components/utils/propertyContext';
+
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,43 +38,15 @@ function App() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  
+  
+ 
+
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
   const navigate = useNavigate();
 
-  // Translation object
-  const translations = {
-    en: {
-      login: 'Login',
-      register: 'Register',
-      logout: 'Logout',
-      accountOverview: 'Account Overview',
-      myProperties: 'My Properties',
-      viewAllProperties: 'View All Properties',
-      faqs: 'Frequently Asked Questions',
-      favourites: 'Your Favourite Properties',
-    },
-    fr: {
-      login: 'Connexion',
-      register: "S'inscrire",
-      logout: 'Se déconnecter',
-      accountOverview: 'Vue du Compte',
-      myProperties: 'Mes Propriétés',
-      viewAllProperties: 'Voir Toutes les Propriétés',
-      faqs: 'Questions Fréquemment Posées',
-    },
-    es: {
-      login: 'Iniciar sesión',
-      register: 'Registrarse',
-      logout: 'Cerrar sesión',
-      accountOverview: 'Resumen de la Cuenta',
-      myProperties: 'Mis Propiedades',
-      viewAllProperties: 'Ver Todas las Propiedades',
-      faqs: 'Preguntas Frecuentes',
-    },
-  };
-
-  const t = translations[language] || translations.en;
+  const t = translations[language] || translations.en; // Load translations
 
   // Persist language selection in localStorage
   const handleLanguageChange = (newLanguage) => {
@@ -114,18 +90,6 @@ function App() {
       if (!response.ok) throw new Error('Failed to fetch property data');
       const data = await response.json();
       setProperties(data);
-
-      const pageUrl = `http://127.0.0.1:5000/api/property/paginate?pageNumber=${pageNumber}`;
-      const pageResponse = await fetch(pageUrl);
-      if (!pageResponse.ok) throw new Error('Failed to fetch pagination data');
-      const pageData = await pageResponse.json();
-      setProperties(pageData);
-
-      const sortUrl = `http://127.0.0.1:5000/api/property/sort?attribute=${sortValue}`;
-      const sortResponse = await fetch(sortUrl);
-      if (!sortResponse.ok) throw new Error('Failed to fetch sort data');
-      const sortData = await sortResponse.json();
-      setProperties(sortData);
     } catch (error) {
       console.error('There was an error fetching the property data!', error);
     } finally {
@@ -152,6 +116,7 @@ function App() {
   }, [user]);
 
   return (
+    <PropertyProvider>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -161,9 +126,9 @@ function App() {
           <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
         </div>
         <div className="header-right">
-        <div className="language-selector-container">
-          <LanguageSelector setLanguage={handleLanguageChange} language={language} />
-        </div>
+          <div className="language-selector-container">
+            <LanguageSelector setLanguage={handleLanguageChange} language={language} />
+          </div>
           <div className="profile-icon" onClick={toggleDropdown}>
             <img src={profileImage} alt="Profile" className="profile-img" />
             {dropdownVisible && (
@@ -187,21 +152,21 @@ function App() {
         </div>
       </div>
 
-      {logoutConfirmVisible && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Are you sure you want to log out?</h3>
-            <div className="modal-buttons">
-              <button onClick={handleLogout} className="confirm-button">
-                Yes
-              </button>
-              <button onClick={cancelLogout} className="cancel-button">
-                No
-              </button>
+          {logoutConfirmVisible && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h3>Are you sure you want to log out?</h3>
+                <div className="modal-buttons">
+                  <button onClick={handleLogout} className="confirm-button">
+                    Yes
+                  </button>
+                  <button onClick={cancelLogout} className="cancel-button">
+                    No
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
       <Routes>
         <Route
@@ -216,7 +181,7 @@ function App() {
             </>
           }
         />
-        <Route path="/" element={<HomePage fetchProperties={fetchProperties} language={language} />} />
+        <Route path="/" element={<HomePage language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
         <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
@@ -232,37 +197,31 @@ function App() {
         <Route path="/faq/socialmedia" element={<SocialMedia />} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/faq/tutorials" element={<Tutorials language={language}/>} />
-        <Route path="/favourites" element={user && user.email ? (<FavouritePage email={user.email} language={language} />
-    ) : (
-      <p>Please log in to view your favourites.</p>
-    )
-  }
-/>
-
+        <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
       </Routes>
 
       <footer className="footer-container">
-      <div className="footer-content">
-      <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
-        <div className="navigationLinks">
-          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+        <div className="footer-content">
+          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+          <div className="navigationLinks">
+            <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+            <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+          </div>
+          <nav className="footer-nav">
+            <Link to="/about-us">About Us</Link>
+            <Link to="/contact">Contact</Link>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+          </nav>
+          <div className="footer-socials">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+          </div>
         </div>
-        <nav className="footer-nav">
-          <Link to="/about-us">About Us</Link>
-          <Link to="/contact">Contact</Link>
-          <Link to="/privacy-policy">Privacy Policy</Link>
-          <Link to="/terms">Terms of Service</Link>
-        </nav>
-        <div className="footer-socials">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-        </div>
-      </div>
-    </footer>
+      </footer>
     </div>
+    </PropertyProvider>
   );
 }
 

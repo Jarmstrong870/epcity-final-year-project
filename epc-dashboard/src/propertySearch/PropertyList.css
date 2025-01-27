@@ -148,5 +148,20 @@
     transform: translateY(-20px);
   }
 }
+.property-list-header {
+  display: flex;
+  justify-content: space-between; /* Push items to opposite ends */
+  align-items: center; /* Align heading and dropdown vertically */
+  margin-bottom: 15px;
+}
 
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between label and dropdown */
+}
 
+.sort-container select {
+  padding: 5px;
+  font-size: 14px;
+}
