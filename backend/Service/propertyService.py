@@ -105,12 +105,10 @@ def getAllProperties():
     
     search_results = search_results[required_columns]
     
-    search_results['heating_cost_current'] = pd.to_numeric(search_results['heating_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['heating_cost_current'])
-    search_results['hot_water_cost_current'] = pd.to_numeric(search_results['hot_water_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['hot_water_cost_current'])
-    search_results['lighting_cost_current'] = pd.to_numeric(search_results['lighting_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    numeric_columns = ['heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current']
+    for col in numeric_columns:
+        search_results[col] = pd.to_numeric(search_results[col], errors='coerce')
+        search_results = search_results.dropna(subset=[col])
     
     # save the filtered DataFrame to the hosted database
     repo.updatePropertiesInDB(search_results)

@@ -30,7 +30,7 @@ const PropertyList = ({  loading, language }) => {
   };
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
-  const  { properties, changePage, sortProperties} = useContext(PropertyContext);
+  const  { properties, sortProperties, getNewPage} = useContext(PropertyContext);
   
   
 
@@ -45,7 +45,7 @@ const PropertyList = ({  loading, language }) => {
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       setPageNumber(newPage);
-      changePage(newPage);
+      getNewPage(newPage);
     }
   }
 
@@ -54,7 +54,7 @@ const PropertyList = ({  loading, language }) => {
     setSortValue(newSortValue); // Update state
   
     // Call the sorting function from PropertyContext if available
-    sortProperties(newSortValue);
+    sortProperties(newSortValue, "asc", );
   };
 
   // Limit to first 12 properties for the card view

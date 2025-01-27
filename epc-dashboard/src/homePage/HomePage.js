@@ -18,7 +18,6 @@ const HomePage = ({  language }) => {
   useEffect(() => {
     const fetchTopProperties = async () => {
       try {
-        fetchProperties();
         fetchTopRatedProperties();
         const data = topRatedProperties;
       } catch (error) {
