@@ -1,16 +1,17 @@
 import React from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
+import './MapView.css'; // Import the CSS file.
 
 // A functional component to display a Google Map with a marker.
 const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
   // If the Google Maps API is not yet loaded, display a loading message.
   if (!isLoaded) {
-    return <p>Loading map...</p>;
+    return <p className="map-loading">Loading map...</p>; // Apply the CSS class for the loading message.
   }
 
   // If there's an error message, display it.
   if (errorMessage) {
-    return <p>{errorMessage}</p>;
+    return <p className="map-error">{errorMessage}</p>; // Apply the CSS class for the error message.
   }
 
   // If the API is loaded and there are no errors, render the map.
@@ -18,10 +19,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
     <GoogleMap
       center={locationCoords} // Set the map's center to the provided coordinates.
       zoom={15} // Set the zoom level of the map.
-      mapContainerStyle={{
-        height: '100%', // Make the map container take up the full height of its parent.
-        width: '100%', // Make the map container take up the full width of its parent.
-      }}
+      mapContainerClassName="map-container" // Apply the CSS class for the map container.
     >
       <Marker position={locationCoords} /> {/* Add a marker at the given coordinates. */}
     </GoogleMap>

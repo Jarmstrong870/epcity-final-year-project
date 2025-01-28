@@ -1,4 +1,5 @@
 import React from 'react';
+import './EPCGraph.css'; // Import the CSS file
 import translations from '../../locales/translations_epcgraph'; // Import translations for multiple languages.
 
 const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language }) => {
@@ -35,52 +36,27 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
   const potentialEfficiencyPosition = getEfficiencyPosition(potentialEnergyEfficiency);
 
   return (
-    <div style={{ width: '100%', marginTop: '20px' }}>
+    <div className="epc-graph-container">
       {/* Graph Title */}
-      <h3>{t.epcRatingGraph}</h3>
+      <h3 className="epc-title">{t.epcRatingGraph}</h3>
 
       {/* EPC Rating Bars */}
-      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '10px' }}>
+      <div className="epc-bars-container">
         {ratingLabels.map((label, index) => {
-          const barWidth = '90%'; // Width of each rating bar.
           const isCurrentEfficiency = currentEfficiencyPosition === index; // Check if the current efficiency matches this rating.
           const isPotentialEfficiency = potentialEfficiencyPosition === index; // Check if the potential efficiency matches this rating.
 
           return (
-            <div
-              key={label} // Unique key for each rating bar.
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                marginBottom: '10px',
-                position: 'relative',
-              }}
-            >
+            <div key={label} className="epc-bar-wrapper">
               {/* Rating Bar */}
               <div
+                className="epc-bar"
                 style={{
-                  height: '50px', // Height of the rating bar.
-                  width: barWidth, // Set the width of the bar.
                   backgroundColor: ratingColors[label], // Set the color based on the rating label.
-                  position: 'relative',
-                  borderRadius: '5px', // Add rounded corners.
                 }}
               >
                 {/* Display the rating range and label inside the bar */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '50%', // Center vertically.
-                    left: '10px', // Align text to the left.
-                    transform: 'translateY(-50%)', // Adjust for vertical alignment.
-                    color: 'black', // Text color for the range.
-                    fontWeight: 'bold',
-                    fontSize: '20px',
-                    textAlign: 'left',
-                  }}
-                >
-                  {/* Split the range text into two parts: number and label */}
+                <div className="epc-bar-label">
                   <span style={{ color: 'black' }}>{t.ranges[index].split(' ')[0]}</span>
                   <span style={{ color: 'white' }}>{t.ranges[index].split(' ')[1]}</span>
                 </div>
@@ -88,22 +64,9 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
                 {/* Marker for Current Efficiency */}
                 {isCurrentEfficiency && (
                   <div
+                    className="epc-marker current"
                     style={{
-                      position: 'absolute',
-                      left: '80%', // Position marker towards the right.
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      height: '40px',
-                      width: '60px',
                       backgroundColor: ratingColors[label], // Match color with the bar.
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: '5px',
-                      color: 'white',
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      flexDirection: 'column', // Stack text vertically.
                     }}
                   >
                     <span>{t.current}</span> {/* Label for current rating */}
@@ -114,22 +77,9 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
                 {/* Marker for Potential Efficiency */}
                 {isPotentialEfficiency && (
                   <div
+                    className="epc-marker potential"
                     style={{
-                      position: 'absolute',
-                      left: '20%', // Position marker towards the left.
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      height: '40px',
-                      width: '60px',
                       backgroundColor: ratingColors[label], // Match color with the bar.
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: '5px',
-                      color: 'white',
-                      fontSize: '14px',
-                      fontWeight: 'bold',
-                      flexDirection: 'column', // Stack text vertically.
                     }}
                   >
                     <span>{t.potential}</span> {/* Label for potential rating */}
