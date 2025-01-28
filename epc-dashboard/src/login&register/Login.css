@@ -70,6 +70,23 @@
   text-decoration: none;
 }
 
+.login-message.success {
+  color: #28a745; /* Green color for success */
+  font-size: 1.1rem;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Error message styling */
+.login-message.error {
+  color: #dc3545; /* Red color for error */
+  font-size: 1.1rem;
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
 .forgot-password a:hover {
   color: #183d25;
   text-decoration: underline;

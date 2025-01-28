@@ -133,7 +133,7 @@ function App() {
                     <p>Welcome, {user.firstname}</p>
                     <Link to="/account-overview">{t.accountOverview}</Link>
                     <Link to="/property">{t.myProperties}</Link>
-                    <button onClick={handleLogout}>{t.logout}</button>
+                    <button onClick={showLogoutConfirmation}>{t.logout}</button>
                   </>
                 ) : (
                   <>
@@ -147,21 +147,21 @@ function App() {
         </div>
       </div>
 
-          {logoutConfirmVisible && (
-            <div className="modal-overlay">
-              <div className="modal">
-                <h3>Are you sure you want to log out?</h3>
-                <div className="modal-buttons">
-                  <button onClick={handleLogout} className="confirm-button">
-                    Yes
-                  </button>
-                  <button onClick={cancelLogout} className="cancel-button">
-                    No
-                  </button>
-                </div>
-              </div>
+      {logoutConfirmVisible && (
+        <div className="logoutdispla-overlay">
+          <div className="logoutdispla">
+            <h3>Are you sure you want to log out?</h3>
+            <div className="logoutdispla-buttons">
+              <button onClick={handleLogout} className="confirm-button">
+                Yes
+              </button>
+              <button onClick={cancelLogout} className="cancel-button">
+                No
+              </button>
             </div>
-          )}
+          </div>
+        </div>
+      )}
 
       <Routes>
         <Route
@@ -196,9 +196,11 @@ function App() {
       </Routes>
 
       <footer className="footer-container">
-        <div className="footer-content">
-          <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
-          <div className="navigationLinks">
+      <div className="footer-content">
+        <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="footer-logo" /></Link>
+        
+        <div className="footer-navigation">
+          <div className="navigation-links">
             <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
             <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
           </div>
@@ -208,13 +210,17 @@ function App() {
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms">Terms of Service</Link>
           </nav>
-          <div className="footer-socials">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-          </div>
         </div>
-      </footer>
+        
+        <div className="footer-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+        
+        <a href="mailto:contact@epcity.co.uk" className="footer-email">contact@epcity.co.uk</a>
+      </div>
+    </footer>
     </div>
     </PropertyProvider>
   );

@@ -1,6 +1,9 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
+import random
+import string
+from datetime import datetime
 
 # Database connection parameters
 db_config = {
@@ -107,6 +110,85 @@ class RegisterRepo:
             raise
         finally:
             # Ensure the cursor and connection are closed
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+
+    @staticmethod
+    def save_registration_otp(email, otp, expiry):
+        """
+        Save a One-Time Password (OTP) and its expiry timestamp for user registration.
+
+        :param email: The email address to associate with the OTP.
+        :param otp: The generated OTP to save.
+        :param expiry: The expiry timestamp of the OTP.
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            # Save or update the OTP and its expiry for the email
+            cursor.execute("""
+                INSERT INTO registration_otps (email, otp, expiry)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (email) DO UPDATE
+                SET otp = EXCLUDED.otp, expiry = EXCLUDED.expiry;
+            """, (email, otp, expiry))
+            connection.commit()
+        except Exception as e:
+            print(f"Error saving registration OTP: {e}")
+            raise
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+
+    @staticmethod
+    def get_registration_otp(email):
+        """
+        Retrieve the OTP and its expiry timestamp for a given email.
+
+        :param email: The email address to look up.
+        :return: A tuple of (otp, expiry), or (None, None) if not found.
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            # Query the OTP and its expiry for the email
+            cursor.execute("SELECT otp, expiry FROM registration_otps WHERE email = %s;", (email,))
+            result = cursor.fetchone()
+            return result if result else (None, None)
+        except Exception as e:
+            print(f"Error retrieving registration OTP: {e}")
+            raise
+        finally:
+            if cursor:
+                cursor.close()
+            if connection:
+                connection.close()
+
+    @staticmethod
+    def check_email_exists(email):
+        """
+        Check if an email already exists in the `users` table.
+
+        :param email: The email address to check.
+        :return: True if the email exists, False otherwise.
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT 1 FROM users WHERE email_address = %s LIMIT 1;", (email,))
+            result = cursor.fetchone()
+            return result is not None  # Return True if a result is found, False otherwise
+        except Exception as e:
+            print(f"Error checking email existence: {e}")
+            raise
+        finally:
             if cursor:
                 cursor.close()
             if connection:

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./VerifyOtp.css";
@@ -10,8 +10,16 @@ function VerifyOtp({ language }) {
   const email = location.state?.email || ""; // Get email from navigation state
   const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds
 
   const t = translations[language] || translations.en; // Load translations
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer); // Cleanup on unmount
+    }
+  }, [timeLeft]);
 
   const handleVerifyOtp = async () => {
     try {
@@ -21,6 +29,13 @@ function VerifyOtp({ language }) {
     } catch (error) {
       setMessage(error.response?.data?.message || t.invalidOtp);
     }
+  };
+
+  // Format the timer into MM:SS format
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -33,8 +48,12 @@ function VerifyOtp({ language }) {
           placeholder={t.placeholder}
           value={otp}
           onChange={(e) => setOtp(e.target.value)}
+          className="otp-input"
         />
-        <button onClick={handleVerifyOtp}>{t.button}</button>
+        <button onClick={handleVerifyOtp} disabled={timeLeft === 0}>
+          {timeLeft === 0 ? t.resendOtp : t.button}
+        </button>
+        {timeLeft > 0 && <p className="timer">{formatTime(timeLeft)}</p>}
         {message && <p className="message">{message}</p>}
       </div>
     </div>
@@ -42,3 +61,4 @@ function VerifyOtp({ language }) {
 }
 
 export default VerifyOtp;
+
