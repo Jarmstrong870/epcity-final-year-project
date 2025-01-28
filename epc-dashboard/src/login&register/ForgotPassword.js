@@ -46,6 +46,7 @@ function ForgotPassword({ language }) {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+        <div className="form-group">
         <button
           type="submit"
           className="forgot-password-button"
@@ -53,6 +54,7 @@ function ForgotPassword({ language }) {
         >
           {isSubmitting ? t.buttonSubmitting : t.button}
         </button>
+        </div>
         {message && <p className="forgot-password-message">{message}</p>}
       </form>
     </div>

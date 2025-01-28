@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
-import backgroundImage from '../assets/house-bk.jpg';
+import backgroundImage from '../assets/liverpool_login.jpg';
 import eyeIcon from '../assets/eye-icon.jpg'; // Import the eye icon
 import translations from '../locales/translations_login'; // Import translations
 
@@ -11,6 +11,7 @@ function Login({ setUser, language }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false); // State for success message
   const navigate = useNavigate();
 
   const t = translations[language] || translations.en; // Load translations
@@ -18,17 +19,21 @@ function Login({ setUser, language }) {
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:5000/login', { email, password });
-      setMessage(response.data.message);
 
       if (response.status === 200) {
+        setMessage('Login successful, welcome back!'); // Success message
+        setSuccess(true); // Set success state to true
         setUser({
           firstname: response.data.firstname,
           lastname: response.data.lastname,
           email,
         });
-        navigate('/'); // Redirect to the home page
+        setTimeout(() => {
+          navigate('/'); // Redirect to the home page after 2 seconds
+        }, 2000);
       }
     } catch (error) {
+      setSuccess(false); // Reset success state
       if (error.response) {
         setMessage(error.response.data.message);
       } else {
@@ -81,7 +86,11 @@ function Login({ setUser, language }) {
             {t.noAccount} <Link to="/register">{t.registerLink}</Link>
           </p>
         </div>
-        {message && <p className="login-message">{message}</p>}
+        {message && (
+          <p className={`login-message ${success ? 'success' : 'error'}`}>
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );
