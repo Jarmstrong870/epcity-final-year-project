@@ -1,50 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import TopRatedPropertyCard from './TopRatedPropertyCard';
+import { useNavigate } from 'react-router-dom';
+import StreetViewComponent from '.././homePage/StreetViewComponent';
+import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import './FavouritePage.css';
+import translations from '../locales/translations_favouritepage'; // Import translations
 
-const FavouritesPage = ({ userEmail, language }) => {
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
+/*
+    Favourite Page is called once a property has been favourited, the 
+    property card will appear on this page under a 'My Favourites' and once 
+    unfavourited the property will be removed from this page
+*/ 
 
-  const fetchFavorites = async () => {
-    try {
-      const response = await fetch(`/favourites/getFavourites?email=${userEmail}`);
-      if (response.ok) {
-        const data = await response.json();
-        setFavorites(data);
-      } else {
-        console.error('Failed to fetch favorite properties');
-      }
-    } catch (error) {
-      console.error('Error fetching favorites:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const FavouritePage = ({user, language}) => {
+    const navigate = useNavigate();
+    const [favouritedProperty, setFavouriteProperties] = useState([]);
+    const [loading, setLoading] = useState();
+    
+    const t = translations[language] || translations.en; // Load translations
 
-  useEffect(() => {
-    fetchFavorites();
-  }, [userEmail]);
+    const fetchFavouritedProperties = async () => {
+        try {
+            if(!fetchFavouritedProperties){
+                const fetchedFavourite = await fetch(`http://127.0.0.1:5000/api/favourites/getFavourites?email=${user.email}`);
+                console.log(fetchedFavourite);
+                setFavouriteProperties(fetchedFavourite);
+            } else {
+                console.error("Unable to fetch favourited properties");
+            }
+        } catch (err) {
+            console.error("Error fetching properties")
+        }
+            setLoading(false); 
+        }
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h2>My Favourites</h2>
-      {loading ? (
-        <p>Loading favorites...</p>
-      ) : favorites.length > 0 ? (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-          {favorites.map((property) => (
-            <TopRatedPropertyCard
-              key={property.uprn}
-              property={property}
-              language={language}
-            />
-          ))}
+    useEffect(() => {
+        fetchFavouritedProperties();
+    }, []);
+
+    return (
+        <div className="favouritedPropertyCards" /*onClick={handleClick}*/>
+            <h2 className="stylingTitle">{t.title}</h2>              
+            <div className="propertyDetails">
+                <h3 className = "propertyDetails">
+                    {favouritedProperty.address}
+                </h3>
+                {favouritedProperty.map((favouritedProperty, index) => (
+                <TopRatedPropertyCard user = {user} key={index} property={favouritedProperty} language={language} /> ))}
+            </div>
+
+            
         </div>
-      ) : (
-        <p>No favorite properties yet.</p>
-      )}
-    </div>
-  );
+    );
 };
 
-export default FavouritesPage;
+    export default FavouritePage;

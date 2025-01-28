@@ -1,0 +1,15 @@
+.propertyHeader h3{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.starComponent {
+    display: inline-flex; 
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 6px;
+    vertical-align: middle;
+  }

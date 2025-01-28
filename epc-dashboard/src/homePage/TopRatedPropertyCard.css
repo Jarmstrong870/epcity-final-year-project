@@ -26,19 +26,26 @@
   object-fit: cover;
 }
 
-.propertyDetails {
-  text-align: center;
-  margin-top: 10px;
-}
-
 .propertyDetails h3 {
-  margin: 5px 0;
-  font-size: 1.2em;
+  display: inline;  
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  font-size: 2px;
   color: #333;
+  margin-bottom: 10px;
 }
 
 .propertyDetails p {
   margin: 3px 0;
   font-size: 0.9em;
   color: #666;
+}
+
+.starComponent {
+  display: inline-flex; 
+  justify-content: space-between;
+  width: 100%;
+  margin-left: 6px;
+  vertical-align: middle;
 }

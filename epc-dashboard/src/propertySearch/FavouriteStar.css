@@ -12,11 +12,3 @@
     cursor: pointer;
     transition: color 0.3s ease;
 }
-
-.favouriteStar {
-    color: gold;
-}
-
-.nonfavouriteStar {
-    color: gray;
-}

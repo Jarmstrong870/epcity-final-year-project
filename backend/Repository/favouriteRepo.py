@@ -50,6 +50,7 @@ def addFavouriteToDB(email, uprn):
     """
     Adds a row to the user_properties table.
     """
+
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)

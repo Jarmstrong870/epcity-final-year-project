@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-
-import FavoriteStar from './FavoriteStar';
+import FavoriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist'; // Import translations
 import { PropertyContext }  from '../Components/utils/propertyContext';

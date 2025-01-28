@@ -1,8 +1,6 @@
-from flask import Flask, Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request
 from flask_cors import CORS
 from Service import favouriteService as favourites
-
-app = Flask(__name__)
 
 # Create a blueprint instance
 favourites_blueprint = Blueprint('favourites', __name__)
@@ -13,13 +11,13 @@ def get_favourites():
     email = request.args.get('email', '').lower()
     return jsonify(favourites.getFavouriteProperties(email).to_dict(orient='records'))
 
-@favourites_blueprint.route('favourites/addFavourite', methods=['POST'])
+@favourites_blueprint.route('/favourites/addFavourite', methods=['GET'])
 def add_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
     return jsonify(favourites.addFavouriteProperty(email, uprn))
 
-@favourites_blueprint.route('favourites/removeFavourite', methods=['DELETE'])
+@favourites_blueprint.route('/favourites/removeFavourite', methods=['GET'])
 def remove_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()

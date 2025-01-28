@@ -6,7 +6,7 @@ import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage'; // Import translations
 
 
-const HomePage = ({  language }) => {
+const HomePage = ({ user, language }) => {
   
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,9 +42,6 @@ const HomePage = ({  language }) => {
     }
   };
 
-
-  
-  
   return (
     <>
       
@@ -69,7 +66,7 @@ const HomePage = ({  language }) => {
         <h2 className="stylingTitle">{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} language={language} />
+            <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} />
           ))}
         </div>
       </div>

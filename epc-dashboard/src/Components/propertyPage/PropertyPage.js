@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
-import FavouriteStar from './FavouriteStar';
+import FavouriteStar from '../../propertySearch/FavouriteStar';
 
 const PropertyPage = ({ email, language }) => {
   const { uprn } = useParams();
