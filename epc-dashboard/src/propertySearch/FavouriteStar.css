@@ -1,0 +1,20 @@
+.starBase {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    vertical-align: middle;
+}
+
+.starComponent {
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.starComponent.gold {
+    color: gold;
+}
+
+.starComponent.grey {
+    color: gray;
+}
