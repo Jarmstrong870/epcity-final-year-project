@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
-import translations from '../locales/translations_homepage';
+import translations from '../locales/translations_homepage'; // Import translations
 
-const HomePage = ({ language }) => {
+
+const HomePage = ({ user, language }) => {
+  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -37,6 +39,7 @@ const HomePage = ({ language }) => {
       navigate(`/propertylist?search=${searchTerm}`);
     }
   };
+
 
   return (
     <>
@@ -83,7 +86,7 @@ const HomePage = ({ language }) => {
         <h2>{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} language={language} />
+            <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} />
           ))}
         </div>
       </div>

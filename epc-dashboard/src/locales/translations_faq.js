@@ -13,14 +13,14 @@ const translations = {
           path: '/faq/tutorials',
         },
         {
-          title: "Find my Property's EPC",
-          description: 'Click here to find the EPC for a property!',
-          path: '/faq/property-finder',
+            title: 'Find my Propertys EPC',
+            description: 'Click here to find the EPC for a property!',
+            path: '/faq/property-finder'
         },
         {
-          title: 'Environmental Impact Calculator',
-          description: 'Click here to find your environmental impact calculator!',
-          path: '/faq/budget-calculator',
+            title: 'Environmental Impact Calculator',
+            description: 'Click here to find your enviornmental impact calculator!',
+            path: '/faq/budget-calculator'
         },
         {
           title: 'Property Rent Checklist',

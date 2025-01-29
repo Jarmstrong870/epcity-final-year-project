@@ -1,10 +1,21 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavoriteStar from './FavoriteStar';
+import FavoriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist'; // Import translations
 import { PropertyContext } from '../Components/utils/propertyContext';
+
+/* 
+    Property List (View All Properties) page is used to display all of the data records we have saved in our 
+    database. Property addresses can be viewed in table view or card view and the relevant details will be displayed
+    for users to click into the property page and is navigated to the Property Page with more information 
+
+    The Favourite Star component has been included so users can favourite a property once they have read more 
+    infromation about the property's efficiency
+  
+*/
+
 
 const PropertyList = ({ loading, language }) => {
   const { properties, sortProperties, getNewPage } = useContext(PropertyContext);
