@@ -11,7 +11,7 @@ const HomePage = ({  language }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
+  const { fetchTopRatedProperties, topRatedProperties, applyFilters} = useContext(PropertyContext)
 
   const t = translations[language] || translations.en; // Load translations
 
@@ -36,7 +36,7 @@ const HomePage = ({  language }) => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      fetchProperties(searchTerm);
+      applyFilters(searchTerm, [], []);
       navigate(`/propertylist?search=${searchTerm}`);
     }
   };
