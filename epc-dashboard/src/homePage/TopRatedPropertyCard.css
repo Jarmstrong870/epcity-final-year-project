@@ -31,7 +31,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-align: center;
-  font-size: 2px;
+  font-size: 1.3rem;
   color: #333;
   margin-bottom: 10px;
 }
@@ -42,10 +42,3 @@
   color: #666;
 }
 
-.starComponent {
-  display: inline-flex; 
-  justify-content: space-between;
-  width: 100%;
-  margin-left: 6px;
-  vertical-align: middle;
-}

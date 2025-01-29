@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
+import '../propertySearch/FavouriteStar.css';
 import FavouriteStar from '../propertySearch/FavouriteStar';
 import translations from '../locales/translations_topratedpropertycard'; // Import translations
 
-const TopRatedPropertyCard = ({ user, property, language }) => {
+const TopRatedPropertyCard = ({ user, property, language, favouriteStatus }) => {
   const navigate = useNavigate();
   const [isFavourited, setIsFavourited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
@@ -47,7 +48,7 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
           <h3> {property.address} 
             <div className = "starComponent">
               <div onClick={toggleFavourite}>
-                <FavouriteStar user={user} property = {property}/> 
+                <FavouriteStar user={user} property = {property} favouriteStatus={favouriteStatus}/> 
               </div> 
             </div>   
           </h3>

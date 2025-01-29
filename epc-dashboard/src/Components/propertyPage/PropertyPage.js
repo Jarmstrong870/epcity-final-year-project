@@ -3,16 +3,19 @@ import { useParams } from 'react-router-dom';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable';
+import MapView from './MapView';
+import StreetView from './StreetView';
+import '../../propertySearch/FavouriteStar.css';
 import FavouriteStar from '../../propertySearch/FavouriteStar';
 
-const PropertyPage = ({ email, language }) => {
+const PropertyPage = ({ email, language, favouriteStatus }) => {
   const { uprn } = useParams();
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [isFavourited, setIsFavourited] = useState(false);
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c', // Replace with your API key
@@ -47,7 +50,7 @@ const PropertyPage = ({ email, language }) => {
       if (response.ok) {
         const favourites = await response.json();
         const isFavorite = favourites.some((fav) => fav.uprn === uprn);
-        setIsFavorited(isFavorite);
+        setIsFavourited(isFavorite);
       } else {
         console.error('Failed to fetch favorite status.');
       }
@@ -56,28 +59,20 @@ const PropertyPage = ({ email, language }) => {
     }
   };
 
-  // Toggle favorite status
-  const toggleFavorite = async () => {
-    if (!email) {
-      console.error('Email is required to toggle favorite status.');
-      return;
-    }
+  const toggleFavourite = (event) => {
+    event.stopPropagation(); // Prevent triggering the card click
+    setIsFavourited(!isFavourited);
+    setPopupMessage(
+      !isFavourited
+        ? `${property.address} has been favourited.`
+        : `${property.address} has been unfavourited.`
+    );
+    setShowPopup(true);
 
-    const url = isFavorited
-      ? `http://127.0.0.1:5000/api/favourites/removeFavourite?email=${encodeURIComponent(email)}&uprn=${uprn}`
-      : `http://127.0.0.1:5000/api/favourites/addFavourite?email=${encodeURIComponent(email)}&uprn=${uprn}`;
-    const method = isFavorited ? 'DELETE' : 'POST';
-
-    try {
-      const response = await fetch(url, { method });
-      if (response.ok) {
-        setIsFavorited(!isFavorited);
-      } else {
-        console.error('Failed to update favorite status.');
-      }
-    } catch (error) {
-      console.error('Error toggling favorite status:', error);
-    }
+    // Hide the popup after 5 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -120,69 +115,63 @@ const PropertyPage = ({ email, language }) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', padding: '20px' }}>
-      <div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: '20px',
-        }}
-      >
-        <h2 style={{ margin: 0 }}>Property Details</h2>
-        <FavouriteStar
-          propertyData={propertyData}
-          email={email}
-          isFavorited={isFavorited}
-          onFavouriteChange={() => fetchFavouriteStatus(propertyData?.uprn)}
-        />
+    <div className="property-page">
+      {/* Header section with property title and favorite star */}
+      <div className="property-header">
+        <h2 className="property-title">Property Details</h2>
+        <div className = "starComponent">
+              <div onClick={toggleFavourite}>
+                <FavouriteStar user={user} property = {property} favouriteStatus={favouriteStatus}/> 
+              </div> 
+            </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <div style={{ flex: 1, marginRight: '20px', height: '400px' }}>
+      {/* Section to display street view and map view */}
+      <div className="image-and-map-section">
+        {/* Street View Section */}
+        <div className="street-view">
           <h3>Street View</h3>
-          {streetViewURL ? (
-            <img
-              src={streetViewURL}
-              alt="Street View"
-              style={{ width: '100%', height: '100%', borderRadius: '10px', objectFit: 'cover' }}
-            />
-          ) : (
-            <p>{errorMessage || 'Loading street view...'}</p>
-          )}
+          <StreetView
+            streetViewURL={streetViewURL} // Pass the URL for the Street View image.
+            errorMessage={errorMessage} // Pass any error messages.
+          />
         </div>
-        <div style={{ flex: 1, height: '400px' }}>
+
+        {/* Map View Section */}
+        <div className="map-view">
           <h3>Map View</h3>
-          {isLoaded ? (
-            <GoogleMap
-              center={locationCoords}
-              zoom={15}
-              mapContainerStyle={{ height: '100%', width: '100%' }}
-            >
-              <Marker position={locationCoords} />
-            </GoogleMap>
-          ) : (
-            <p>Loading map...</p>
-          )}
-          {errorMessage && <p>{errorMessage}</p>}
+          <MapView
+            locationCoords={locationCoords} // Pass the map coordinates.
+            isLoaded={isLoaded} // Indicate if the Google Maps API has loaded.
+            errorMessage={errorMessage} // Pass any error messages.
+          />
         </div>
       </div>
 
+      {/* EPC Table Section */}
       {propertyData ? (
-        <>
-          <EPCFullTable properties={[propertyData]} loading={loading} language={language} />
-          <EPCGraph
-            currentEnergyEfficiency={propertyData.current_energy_efficiency}
-            potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
-            language={language}
-          />
-        </>
+        <EPCFullTable
+          properties={[propertyData]} // Pass the property data to the table.
+          loading={loading} // Indicate if the data is still loading.
+          language={language} // Pass the selected language for localization.
+        />
       ) : (
-        <p>{errorMessage || 'Loading property details...'}</p>
+        <p>{errorMessage || 'Loading property details...'}</p> // Show error or loading message.
       )}
+
+      {/* EPC Graph Section */}
+      <div className="epc-graph-section">
+        {propertyData && (
+          <EPCGraph
+            currentEnergyEfficiency={propertyData.current_energy_efficiency} // Current EPC rating.
+            potentialEnergyEfficiency={propertyData.potential_energy_efficiency} // Potential EPC rating.
+            language={language} // Pass the selected language for localization.
+          />
+        )}
+      </div>
     </div>
   );
 };
+
 
 export default PropertyPage;

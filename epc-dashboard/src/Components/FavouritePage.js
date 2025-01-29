@@ -12,43 +12,49 @@ import translations from '../locales/translations_favouritepage'; // Import tran
 */ 
 
 const FavouritePage = ({user, language}) => {
-    const navigate = useNavigate();
-    const [favouritedProperty, setFavouriteProperties] = useState([]);
-    const [loading, setLoading] = useState();
-    
+    const [favouritedProperties, setFavouriteProperties] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const t = translations[language] || translations.en; // Load translations
 
-    const fetchFavouritedProperties = async () => {
-        try {
-            if(!fetchFavouritedProperties){
-                const fetchedFavourite = await fetch(`http://127.0.0.1:5000/api/favourites/getFavourites?email=${user.email}`);
-                console.log(fetchedFavourite);
-                setFavouriteProperties(fetchedFavourite);
-            } else {
-                console.error("Unable to fetch favourited properties");
-            }
-        } catch (err) {
-            console.error("Error fetching properties")
-        }
-            setLoading(false); 
-        }
-
     useEffect(() => {
+    const fetchFavouritedProperties = async () => {
+        try{
+            //console.log("users email = ", user.email);
+            const data = await fetch(`http://127.0.0.1:5000/favourites/getFavourites?email=${user.email}`);
+            if (!data.ok) {
+                throw new Error('Failed to fetch property data');
+            }
+            const favouriteData = await data.json();
+            setFavouriteProperties(favouriteData); 
+            console.log(favouritedProperties);
+        } catch (error) {
+            console.error('Failed to fetch properties:', error);
+        }
+    };
+
         fetchFavouritedProperties();
-    }, []);
+    }, [user.email]);
+
+    const updateFavouritedProperties = (uprn) => {
+        setFavouriteProperties((currentFavourites) => {
+            const updatedFavourites = [];
+            for (let i = 0; i < currentFavourites.length; i++) {
+                if (currentFavourites[i].uprn !== uprn) {
+                    updatedFavourites.push(currentFavourites[i]);
+                }
+            }
+            return updatedFavourites;
+        });
+    };
 
     return (
-        <div className="favouritedPropertyCards" /*onClick={handleClick}*/>
+        <div className="favouritedPropertyCards">
             <h2 className="stylingTitle">{t.title}</h2>              
-            <div className="propertyDetails">
-                <h3 className = "propertyDetails">
-                    {favouritedProperty.address}
-                </h3>
-                {favouritedProperty.map((favouritedProperty, index) => (
-                <TopRatedPropertyCard user = {user} key={index} property={favouritedProperty} language={language} /> ))}
-            </div>
-
-            
+                <div className="property-grid">
+                {favouritedProperties.map((property, index) => (
+                <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} favouriteStatus = {updateFavouritedProperties}/>))}
+                </div>
         </div>
     );
 };

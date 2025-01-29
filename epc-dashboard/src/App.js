@@ -195,7 +195,7 @@ function App() {
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
-        <Route path="/favourites" element={<FavouritePage email = {user} language={language} />} />
+        <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
       </Routes>
 
       <footer className="footer-container">

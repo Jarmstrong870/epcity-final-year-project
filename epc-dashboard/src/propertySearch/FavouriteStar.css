@@ -4,6 +4,7 @@
     align-items: center;
     width: 100%;
     height: auto;
+    vertical-align: middle;
 }
 
 .starComponent {
@@ -11,4 +12,12 @@
     line-height: 2rem;
     cursor: pointer;
     transition: color 0.3s ease;
+}
+
+.starComponent.gold {
+    color: gold;
+}
+
+.starComponent.grey {
+    color: gray;
 }
