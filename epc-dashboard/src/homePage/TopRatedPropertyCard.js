@@ -6,7 +6,13 @@ import '../propertySearch/FavouriteStar.css';
 import FavouriteStar from '../propertySearch/FavouriteStar';
 import translations from '../locales/translations_topratedpropertycard'; // Import translations
 
-const TopRatedPropertyCard = ({ user, property, language, favouriteStatus }) => {
+/*
+  Top Rated Property Card is a card view displaying the specified four keys details: postcode, type, 
+  energyRating and efficiency and once selected it will navigate to the Property Page and has
+  the Favourite Star component to favourite the property and save to the Favourites Page.
+*/ 
+
+const TopRatedPropertyCard = ({ user, property, language}) => {
   const navigate = useNavigate();
   const [isFavourited, setIsFavourited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
@@ -24,9 +30,9 @@ const TopRatedPropertyCard = ({ user, property, language, favouriteStatus }) => 
     event.stopPropagation(); // Prevent triggering the card click
     setIsFavourited(!isFavourited);
     setPopupMessage(
-      !isFavourited
-        ? `${property.address} has been favorited.`
-        : `${property.address} has been unfavorited.`
+      isFavourited
+        ? `${property.address} has been unfavourited.`
+        : `${property.address} has been favourited.`
     );
     setShowPopup(true);
 
@@ -38,6 +44,7 @@ const TopRatedPropertyCard = ({ user, property, language, favouriteStatus }) => 
 
   return (
     <div className="topRatedPropertyCard" onClick={handleClick}>
+
       {/* Popup */}
       {showPopup && <div className="popup">{popupMessage}</div>}
 
@@ -46,15 +53,16 @@ const TopRatedPropertyCard = ({ user, property, language, favouriteStatus }) => 
       </div>
       <div className="propertyDetails">
           <h3> {property.address} 
-            <div className = "starComponent">
+            <div className = "starComponent"> {/*Favourite Star Component */}
               <div onClick={toggleFavourite}>
-                <FavouriteStar user={user} property = {property} favouriteStatus={favouriteStatus}/> 
+                <FavouriteStar user={user} property = {property} 
+                    /> 
               </div> 
             </div>   
           </h3>
       </div>
 
-        <p>
+        <p> {/* Top 4 details presented on card view */}
           <strong>{t.postcode}:</strong> {property.postcode}
         </p>
         <p>

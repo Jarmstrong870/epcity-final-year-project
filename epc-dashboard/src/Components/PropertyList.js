@@ -1,21 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavoriteStar from './FavouriteStar';
+import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist'; // Import translations
 import { PropertyContext }  from '../Components/utils/propertyContext';
-
-/* 
-    Property List (View All Properties) page is used to display all of the data records we have saved in our 
-    database. Property addresses can be viewed in table view or card view and the relevant details will be displayed
-    for users to click into the property page and is navigated to the Property Page with more information 
-
-    The Favourite Star component has been included so users can favourite a property once they have read more 
-    infromation about the property's efficiency
-  
-*/
-
 
 const PropertyList = ({  loading, language }) => {
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
@@ -135,7 +124,7 @@ const PropertyList = ({  loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar     /* Favourite Star Component */
+                  <FavouriteStar
                     propertyData={property}
                     onToggle={handleToggleFavorite}
                   />

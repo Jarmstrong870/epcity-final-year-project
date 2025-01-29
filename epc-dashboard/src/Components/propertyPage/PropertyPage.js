@@ -8,7 +8,18 @@ import StreetView from './StreetView';
 import '../../propertySearch/FavouriteStar.css';
 import FavouriteStar from '../../propertySearch/FavouriteStar';
 
-const PropertyPage = ({ email, language, favouriteStatus }) => {
+/* 
+    Property Page (Individual Property Page) is used to display all of the data associated with an individual property
+    with the map and street view presented at the top followed by the EPC Full Table data  with particular 
+    data fields presented within their own box. The EPC Graph is also shown with the current and potential rating
+    of the property. 
+
+    The Favourite Star component has been included so users can favourite a property once they have read more 
+    infromation about the property's efficiency
+*/
+
+
+const PropertyPage = ({ user, property, email, language }) => {
   const { uprn } = useParams();
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
@@ -16,6 +27,9 @@ const PropertyPage = ({ email, language, favouriteStatus }) => {
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
   const [isFavourited, setIsFavourited] = useState(false);
+  const [popupMessage, setPopupMessage] = useState(''); // Popup message state
+  const [showPopup, setShowPopup] = useState(false); // Popup visibility state
+
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c', // Replace with your API key
@@ -28,7 +42,6 @@ const PropertyPage = ({ email, language, favouriteStatus }) => {
       if (response.ok) {
         const data = await response.json();
         setPropertyData(data[0]);
-        fetchFavouriteStatus(data[0]?.uprn);
       } else {
         setErrorMessage('Failed to fetch property details.');
       }
@@ -40,32 +53,12 @@ const PropertyPage = ({ email, language, favouriteStatus }) => {
     }
   };
 
-  // Fetch favorite status
-  const fetchFavouriteStatus = async (uprn) => {
-    if (!email || !uprn) return;
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:5000/api/favourites/getFavourites?email=${encodeURIComponent(email)}`
-      );
-      if (response.ok) {
-        const favourites = await response.json();
-        const isFavorite = favourites.some((fav) => fav.uprn === uprn);
-        setIsFavourited(isFavorite);
-      } else {
-        console.error('Failed to fetch favorite status.');
-      }
-    } catch (error) {
-      console.error('Error fetching favorite status:', error);
-    }
-  };
-
-  const toggleFavourite = (event) => {
-    event.stopPropagation(); // Prevent triggering the card click
+  const toggleFavorite = () => {
     setIsFavourited(!isFavourited);
     setPopupMessage(
       !isFavourited
-        ? `${property.address} has been favourited.`
-        : `${property.address} has been unfavourited.`
+        ? `${propertyData?.address || 'This property'} has been favorited.`
+        : `${propertyData?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
 
@@ -74,6 +67,7 @@ const PropertyPage = ({ email, language, favouriteStatus }) => {
       setShowPopup(false);
     }, 5000);
   };
+
 
   useEffect(() => {
     if (uprn) {
@@ -120,11 +114,9 @@ const PropertyPage = ({ email, language, favouriteStatus }) => {
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
         <div className = "starComponent">
-              <div onClick={toggleFavourite}>
-                <FavouriteStar user={user} property = {property} favouriteStatus={favouriteStatus}/> 
+              <FavouriteStar user={user} property = {property} />
               </div> 
-            </div>
-      </div>
+        </div>
 
       {/* Section to display street view and map view */}
       <div className="image-and-map-section">

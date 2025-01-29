@@ -1,44 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { FavouriteContext }  from '../Components/utils/favouriteContext';
 
-  /* Favourite Star is a new component that has been newly altered so that the
-  css is now separate from the calling of the toggleFavourite once the star
-  component has been clicked */
+  /* Favourite Star is a new component that appears within the Top Rated Property Card,
+  Property Page and Property List which will allow a user to add/remove the property as a Favourite
+  and can be saved into the user_properties table in the pgAdmin database */
 
-const FavouriteStar = ({ user, property, favouriteStatus}) => {
+const FavouriteStar = ({ user = {}, property = {}}) => {
   
-  const [isFavourited, setIsFavourited] = useState(true); // is default set to true i.e. not favourited
+  const {addFavourite, removeFavourite, isFavourited} = useContext(FavouriteContext);
+  const uprn = String(property.uprn || "");
 
   const toggleFavorite = async () => {
     
-    try {
-      if(isFavourited) {
-        await fetch(`http://127.0.0.1:5000/favourites/removeFavourite?email=${user.email}&uprn=${property.uprn}`);
-        console.log("property removed");
-        console.log("removed:", user.email);
-        console.log("removed:", property.uprn);
-        setIsFavourited(false);
-        favouriteStatus(property.uprn);
+      if(isFavourited(uprn)) {
+        console.log("already a favourite", uprn);
+        removeFavourite(user, property);
       } else {
-        await fetch(`http://127.0.0.1:5000/favourites/addFavourite?email=${user.email}&uprn=${property.uprn}`);
-        console.log("property added");
-        console.log("added:", user.email);
-        console.log("added:", property.uprn);
-        setIsFavourited(true);
-      }
+        console.log("adding as a favourite", uprn);
+        addFavourite(user, property);
 
-    } catch (error) {
-        console.error("Unable to fetch properties", error);
-    }
+      }
   };
 
   // Return statement that has been altered so that the css is now separate from the calling 
   // of the toggleFavourite once the star component has been clicked
 
+  // Return statement that once the star has been clicked i.e. toggleFavourite, 
+  // calls the colour either gold for selected and grey for unselected and will present
+  // a pop up based on user selection
+
   return (
     <div className = "starBase">
-      <span className = {`starComponent ${isFavourited ? 'grey' : 'gold'}`}
+      <span className = {`starComponent ${isFavourited(property.uprn) ? 'gold' : 'grey'}`}
         onClick={toggleFavorite}
-        title={isFavourited ? 'Click to favourite' : 'Click to unfavourite'}
+        title={isFavourited(property.uprn) ? 'Click to unfavourite' : 'Click to favourite'}
       >
         ★
       </span>

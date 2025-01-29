@@ -15,7 +15,13 @@ const FavouritePage = ({user, language}) => {
     const [favouritedProperties, setFavouriteProperties] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
     const t = translations[language] || translations.en; // Load translations
+
+    /*
+        fetchFavouritedProperties uses the fetch the data from the backend API getFavourites method based on the 
+        user's email and will populate the favouritedProperties array with the response data.
+    */
 
     useEffect(() => {
     const fetchFavouritedProperties = async () => {
@@ -36,16 +42,24 @@ const FavouritePage = ({user, language}) => {
         fetchFavouritedProperties();
     }, [user.email]);
 
+    /* 
+        updateFavouriteProperties is called to remove a property based on their specifc uprn. If the property's
+        uprn that has been chosen to be removed does not match one that is already found in the currentFavourites array,
+        that property will be successfully added to the array and the updatedFavourites array is returned with 
+        this change.
+    */ 
+
     const updateFavouritedProperties = (uprn) => {
+        const updatedFavourites = [];
         setFavouriteProperties((currentFavourites) => {
-            const updatedFavourites = [];
             for (let i = 0; i < currentFavourites.length; i++) {
-                if (currentFavourites[i].uprn !== uprn) {
+              if (currentFavourites[i].uprn !== uprn) {
                     updatedFavourites.push(currentFavourites[i]);
                 }
             }
             return updatedFavourites;
         });
+        return updatedFavourites;
     };
 
     return (
@@ -53,7 +67,16 @@ const FavouritePage = ({user, language}) => {
             <h2 className="stylingTitle">{t.title}</h2>              
                 <div className="property-grid">
                 {favouritedProperties.map((property, index) => (
-                <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} favouriteStatus = {updateFavouritedProperties}/>))}
+                <TopRatedPropertyCard   /* calling Top Rated Property Card component */
+                    key={index} 
+                    user = {user} 
+                    property={property}  
+                    language={language} 
+                    favouriteStatus = {(uprn, isFavourited) => {
+                        if(!isFavourited) {
+                            updateFavouritedProperties(uprn);
+                        }
+                    }}/>))}
                 </div>
         </div>
     );

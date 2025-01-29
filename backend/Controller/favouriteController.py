@@ -22,7 +22,7 @@ Email is derived from the request's url and used as a parameter for the Service 
 uprn is derived from the request's url and used as a parameter for the Service layer's method
 Service layer is called and returns a jsonified True or False to indicate if the property has been added
 """
-@favourites_blueprint.route('favourites/addFavourite', methods=['POST'])
+@favourites_blueprint.route('/favourites/addFavourite', methods=['GET'])
 def add_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
@@ -34,7 +34,7 @@ Email is derived from the request's url and used as a parameter for the Service 
 uprn is derived from the request's url and used as a parameter for the Service layer's method
 Service layer is called and returns a jsonified True or False to indicate if the property has been removed
 """
-@favourites_blueprint.route('favourites/removeFavourite', methods=['DELETE'])
+@favourites_blueprint.route('/favourites/removeFavourite', methods=['GET'])
 def remove_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()

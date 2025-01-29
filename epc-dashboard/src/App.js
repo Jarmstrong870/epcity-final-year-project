@@ -28,6 +28,7 @@ import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
 import FavouritePage from './Components/FavouritePage';
 import { PropertyProvider } from './Components/utils/propertyContext';
+import { FavouriteProvider } from './Components/utils/favouriteContext';
 
 
 function App() {
@@ -114,6 +115,7 @@ function App() {
 
   return (
     <PropertyProvider>
+      <FavouriteProvider>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
@@ -181,7 +183,7 @@ function App() {
         <Route path="/" element={<HomePage user={user} language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
-        <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
+        <Route path="/property/:uprn" element={<PropertyPage properties={properties} user = {user} language={language} />} />
         <Route path="/FAQs" element={<FAQs language={language} />} />
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
@@ -226,6 +228,7 @@ function App() {
       </div>
     </footer>
     </div>
+    </FavouriteProvider>
     </PropertyProvider>
   );
 }
