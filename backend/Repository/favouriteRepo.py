@@ -31,7 +31,7 @@ def getFavouritePropertiesfromDB(email):
     
         # Create a cursor to execute the query
         cur = conn.cursor()
-        cur.execute(query, (email))
+        cur.execute(query, (email,))
     
         # Fetch column names from the cursor description
         column_names = [desc[0] for desc in cur.description]
