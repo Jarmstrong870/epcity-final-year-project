@@ -33,7 +33,7 @@ const HomePage = ({ language }) => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      applyFilters(searchTerm, [], []);
+      fetchProperties(searchTerm, [], []);
       navigate(`/propertylist?search=${searchTerm}`);
     }
   };
