@@ -168,10 +168,7 @@ function App() {
           path="/propertylist"
           element={
             <>
-              <div className="search-bar-container">
-                <h3>Search for Properties</h3>
-                <PropertyFilter onFilterChange={fetchProperties} language={language} />
-              </div>
+              <PropertyFilter onFilterChange={fetchProperties} language={language} />
               <PropertyList properties={properties} loading={loading} language={language} />
             </>
           }
