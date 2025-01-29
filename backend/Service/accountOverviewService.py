@@ -1,183 +1,159 @@
-from psycopg2 import connect
+from Repository.accountOverviewRepo import AccountOverviewRepo  # Import repository layer
 from bcrypt import hashpw, checkpw, gensalt
 from supabase import create_client
 import os
 
-# Database configuration
-db_config = {
-    'host': os.getenv('DATABASE_HOST'),
-    'port': os.getenv('DATABASE_PORT'),
-    'database': os.getenv('DATABASE_NAME'),
-    'user': os.getenv('DATABASE_USER'),
-    'password': os.getenv('DATABASE_PASSWORD')
-}
-
+# Initialise Supabase client for file storage
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def change_password_service(data):
-    email = data.get('email')
-    current_password = data.get('current_password')
-    new_password = data.get('new_password')
+class AccountOverviewService:
+    """
+    Service class to handle the business logic for account-related operations.
+    """
 
-    if not all([email, current_password, new_password]):
-        return {"message": "All fields must be entered."}, 400
+    @staticmethod
+    def change_password(data):
+        """
+        Change the user's password.
+        
+        :param data: Dictionary containing 'email', 'current_password', and 'new_password'.
+        :return: JSON response with a success or error message and corresponding HTTP status code.
+        """
+        email = data.get('email')
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
 
-    if len(new_password) < 7:
-        return {"message": "New password must be at least 7 characters long."}, 400
+        # Validate input fields
+        if not all([email, current_password, new_password]):
+            return {"message": "All fields must be entered."}, 400
 
-    try:
-        connection = connect(**db_config)
-        cursor = connection.cursor()
+        # Ensure the new password meets the minimum length requirement
+        if len(new_password) < 7:
+            return {"message": "New password must be at least 7 characters long."}, 400
 
-        # Retrieve the current hashed password
-        cursor.execute("SELECT password_hash FROM users WHERE email_address = %s;", (email,))
-        user = cursor.fetchone()
+        # Retrieve the stored password hash from the repository
+        user = AccountOverviewRepo.get_password_hash(email)
 
         if not user:
-            cursor.close()
-            connection.close()
+            # Return error if no user exists with the given email
             return {"message": "No account found with this email."}, 404
 
-        stored_password_hash = user[0]
+        stored_password_hash = user
 
-        if isinstance(stored_password_hash, memoryview):
-            stored_password_hash = stored_password_hash.tobytes().decode('utf-8')
-
+        # Verify the current password matches the stored password hash
         if not checkpw(current_password.encode('utf-8'), stored_password_hash.encode('utf-8')):
-            cursor.close()
-            connection.close()
             return {"message": "Current password is incorrect."}, 401
 
-        # Hash the new password and update the database
+        # Hash the new password and update it in the database
         new_password_hash = hashpw(new_password.encode('utf-8'), gensalt()).decode('utf-8')
-        cursor.execute(
-            "UPDATE users SET password_hash = %s WHERE email_address = %s;",
-            (new_password_hash, email)
-        )
-        connection.commit()
+        success = AccountOverviewRepo.update_password(email, new_password_hash)
 
-        cursor.close()
-        connection.close()
-
-    except Exception as e:
-        print("Error during password update process:", e)
-        return {"message": "An internal error occurred. Please try again later."}, 500
-
-    return {"message": "Password changed successfully!"}, 200
-
-def delete_account_service(data):
-    email = data.get('email')
-
-    if not email:
-        return {"message": "Email is required to delete account."}, 400
-
-    try:
-        connection = connect(**db_config)
-        cursor = connection.cursor()
-
-        # Delete the user
-        cursor.execute("DELETE FROM users WHERE email_address = %s;", (email,))
-        connection.commit()
-
-        cursor.close()
-        connection.close()
-
-    except Exception as e:
-        print("Error deleting account:", e)
-        return {"message": "An internal error occurred. Please try again later."}, 500
-
-    return {"message": "Account deleted successfully!"}, 200
-
-def edit_details_service(data):
-    email = data.get('email')
-    firstname = data.get('firstname')
-    lastname = data.get('lastname')
-
-    if not email or not firstname or not lastname:
-        return {"message": "All fields must be provided."}, 400
-
-    try:
-        connection = connect(**db_config)
-        cursor = connection.cursor()
-
-        # Update the user's details in the database
-        cursor.execute("""
-            UPDATE users 
-            SET firstname = %s, lastname = %s 
-            WHERE email_address = %s;
-        """, (firstname, lastname, email))
-
-        connection.commit()
-        cursor.close()
-        connection.close()
-
-    except Exception as e:
-        print("Error updating user details:", e)
-        return {"message": "An internal error occurred. Please try again later."}, 500
-
-    return {"message": "User details updated successfully!"}, 200
-
-def upload_profile_image(file, email):
-    file_name = f"profile-images/{email}_{file.filename}"
-    try:
-        bucket = supabase.storage.from_("profile-images")
-
-        prefix = f"{email}_"  # Prefix based on the email and naming convention
-        print(f"Retrieving old images for user: {email} with prefix: {prefix}")
-
-        list_response = bucket.list()
-        if not isinstance(list_response, list):
-            raise Exception("Failed to list files in the bucket or invalid response format.")
-        
-        old_files = [file_info for file_info in list_response if file_info.get("name", "").startswith(prefix)]
-        print(f"Found old files for user {email}: {old_files}")
-
-        if old_files:
-            for old_file in old_files:
-                file_name_to_delete = old_file.get("name")
-                if file_name_to_delete:
-                    print(f"Deleting old image: {file_name_to_delete}")
-                    bucket.remove([file_name_to_delete])
+        # Return appropriate success or failure message
+        if success:
+            return {"message": "Password changed successfully!"}, 200
         else:
-            print(f"No old images found for user {email}.")
+            return {"message": "Failed to update password."}, 500
 
-        print(f"Uploading new file for email: {email} to {file_name}")
+    @staticmethod
+    def delete_account(data):
+        """
+        Delete the user's account.
+        
+        :param data: Dictionary containing 'email'.
+        :return: JSON response with a success or error message and corresponding HTTP status code.
+        """
+        email = data.get('email')
+        
+        # Validate email field
+        if not email:
+            return {"message": "Email is required to delete account."}, 400
+
+        # Call repository to delete the user
+        if AccountOverviewRepo.delete_user(email):
+            return {"message": "Account deleted successfully!"}, 200
+        else:
+            return {"message": "Failed to delete account."}, 500
+
+    @staticmethod
+    def edit_details(data):
+        """
+        Edit the user's firstname and lastname.
+        
+        :param data: Dictionary containing 'email', 'firstname', and 'lastname'.
+        :return: JSON response with a success or error message and corresponding HTTP status code.
+        """
+        email = data.get('email')
+        firstname = data.get('firstname')
+        lastname = data.get('lastname')
+
+        # Validate required fields
+        if not email or not firstname or not lastname:
+            return {"message": "All fields must be provided."}, 400
+
+        # Call repository to update user details
+        if AccountOverviewRepo.update_user_details(email, firstname, lastname):
+            return {"message": "User details updated successfully!"}, 200
+        else:
+            return {"message": "Failed to update user details."}, 500
+
+    @staticmethod
+    def upload_profile_image(file, email):
+        """
+        Upload a new profile image for the user.
+        
+        :param file: The file object containing the user's profile image.
+        :param email: The email address of the user.
+        :return: The public URL of the uploaded file or None if upload fails.
+        """
+        file_name = f"profile-images/{email}_{file.filename}"
+        bucket = supabase.storage.from_("profile-images")
         file_content = file.read()
+
+        # Upload the file to Supabase storage
         upload_response = bucket.upload(file_name, file_content)
-
-        if not upload_response or not hasattr(upload_response, "path"):
-            raise Exception("Failed to upload file to Supabase.")
-
-        # Generate a public URL for the uploaded file
-        public_url = bucket.get_public_url(file_name)
-
-        if not isinstance(public_url, str) or not public_url:
-            raise Exception("Failed to retrieve a valid public URL.")
-
-        print(f"Generated public URL: {public_url}")
-        return public_url
-    except Exception as e:
-        print(f"Error uploading profile image: {e}")
+        if upload_response:
+            # Generate and return the public URL for the uploaded file
+            return bucket.get_public_url(file_name)
         return None
 
-def update_user_profile_image(email, public_url):
-    try:
-        connection = connect(**db_config)
-        cursor = connection.cursor()
+    @staticmethod
+    def update_profile_image(email, public_url):
+        """
+        Update the user's profile image URL in the database.
+        
+        :param email: The email address of the user.
+        :param public_url: The public URL of the new profile image.
+        :return: True if update is successful, otherwise False.
+        """
+        return AccountOverviewRepo.update_profile_image_url(email, public_url)
 
-        # Update the profile image URL
-        print(f"Updating profile image URL in database for user: {email}")
-        cursor.execute(
-            "UPDATE users SET profile_image_url = %s WHERE email_address = %s;",
-            (public_url, email),
-        )
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print(f"Profile image URL updated successfully for user {email}")
-        return True
-    except Exception as e:
-        print(f"Error updating profile image URL in database: {e}")
-        return False
+    @staticmethod
+    def get_user(email):
+        """
+        Retrieve the user's details.
+        
+        :param email: The email address of the user.
+        :return: JSON response with user details or error message and corresponding HTTP status code.
+        """
+        user = AccountOverviewRepo.get_user_details(email)
+        
+        if user:
+            # Return user details if found
+            return {
+                "firstname": user[0],
+                "lastname": user[1],
+                "email": user[2],
+                "profile_image_url": user[3]
+            }, 200
+        else:
+            # Return error if user not found
+            return {"message": "User not found"}, 404
+
+
+
+
+
+    
+

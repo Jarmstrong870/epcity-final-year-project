@@ -22,6 +22,14 @@
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
+
+  .timer {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #333; /* Neutral color for the timer */
+  font-weight: bold;
+  text-align: center;
+}
   
   /* Hover effect for the card */
   .verify-otp-card:hover {
@@ -67,13 +75,16 @@
     background-color: #0a2e15;
     color: #fff;
     font-size: 1rem;
-    padding: 12px 20px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    width: 100%;
     font-weight: bold;
+    width: 100%;
+    max-width: 350px;
+    display: block; /* Block element */
+    margin: 0 auto; /* Center horizontally */
   }
   
   /* Button hover state */

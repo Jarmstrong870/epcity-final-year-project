@@ -5,40 +5,82 @@ body {
   color: #333;
 }
 
+/* Background Image Section with Overlay */
 .backgroundImageStyling {
+  position: relative;
   text-align: center;
   background-image: url('../assets/liverpool.jpeg');
   background-size: cover;
   background-position: center;
   height: 600px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+.backgroundImageStyling::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
+  z-index: 1;
+}
 
+/* Welcome Text Styling */
+.welcomeText {
+  z-index: 2;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
 
+.welcomeText .mainMessage {
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.welcomeText .subMessage {
+  font-size: 1.2rem;
+  font-weight: normal;
+  margin-top: 10px;
+  color: #d4edda; /* Subtle green tone */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.welcomeText span {
+  display: block;
+}
+
+/* Search Bar */
 .stylingSearchBar {
+  z-index: 2;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 90%;
-  max-width: 1200px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 40px;
-  padding: 15px 25px;
+  max-width: 800px;
+  border-radius: 12px; /* Box-like appearance */
+  padding: 15px 20px;
+  background-color: white; /* White background for contrast */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
   gap: 15px;
 }
 
 .stylingSearchInput {
   flex: 1;
-  padding: 15px 20px;
-  font-size: 18px;
+  padding: 12px 15px;
+  font-size: 16px;
   border: 2px solid #ddd;
-  border-radius: 25px;
+  border-radius: 8px;
   outline: none;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -50,13 +92,13 @@ body {
 }
 
 .stylingSearchButton {
-  padding: 15px 30px;
-  font-size: 18px;
+  padding: 12px 20px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
   background-color: #2c5f2d;
   border: none;
-  border-radius: 25px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -71,107 +113,190 @@ body {
   box-shadow: 0 0 10px rgba(44, 95, 45, 0.4);
 }
 
-.stylingTitle {
+/* Top Rated Properties Section */
+.top-rated-properties {
+  margin: 40px auto;
+  padding: 40px 20px;
+  max-width: 1200px;
+  background: linear-gradient(135deg, #f5f5f5, #ffffff); /* Elegant gradient */
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
-  font-size: 36px;
-  font-weight: bold;
-  margin: 30px 0;
-  color: #2c3e3d;
-  text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-  border-bottom: 4px solid #183d25;
-  display: inline-block;
-  padding-bottom: 10px;
 }
 
+.top-rated-properties h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.property-card {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.property-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 3px solid #ddd;
+}
+
+.property-card .property-details {
+  padding: 15px;
+  text-align: left;
+}
+
+.property-card .property-details h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.property-card .property-details p {
+  font-size: 1rem;
+  color: #666;
+  margin: 5px 0;
+}
+
+.property-card .property-details .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c5f2d;
+}
+
+/* About Website Section */
+.about-website {
+  display: flex;
+  gap: 30px;
+  margin: 60px auto;
+  max-width: 1200px;
+  padding: 40px;
+  background: #f5f5f5;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.about-website img {
+  flex: 1;
+  max-width: 40%; /* Limit the image width to 40% of the container */
+  height: auto; /* Maintain the aspect ratio */
+  border-radius: 15px; /* Keep the rounded corners */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  object-fit: cover; /* Ensures proper scaling for the image */
+}
+
+.about-website .content {
+  flex: 2;
+  text-align: center;
+}
+
+.about-website .content h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 20px;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-website .content p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.about-website .content a {
+  display: inline-block;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #2c5f2d;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.about-website .content a:hover {
+  background-color: #1e4020;
+  transform: scale(1.05);
+}
+
+/* Responsive Adjustments */
 @media (max-width: 768px) {
+  .backgroundImageStyling {
+    height: 400px;
+  }
+
+  .welcomeText .mainMessage {
+    font-size: 2.5rem;
+  }
+
+  .welcomeText .subMessage {
+    font-size: 1rem;
+  }
+
   .stylingSearchBar {
     flex-direction: column;
     padding: 10px;
     gap: 10px;
   }
 
-  .stylingSearchInput {
-    width: 100%;
-    font-size: 16px;
+  .about-website {
+    flex-direction: column;
+    text-align: center;
   }
 
-  .stylingSearchButton {
+  .about-website img {
     width: 100%;
-    font-size: 16px;
+    max-height: 300px;
   }
+}
 
+@media (max-width: 480px) {
   .backgroundImageStyling {
     height: 300px;
   }
-}
 
-@media (max-width: 480px) {
-  .stylingTitle {
-    font-size: 28px;
+  .welcomeText .mainMessage {
+    font-size: 2rem;
   }
-}
 
-/* Property Grid Styling */
-.property-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .property-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .welcomeText .subMessage {
+    font-size: 0.9rem;
   }
-}
 
-@media (max-width: 480px) {
+  .stylingSearchBar {
+    padding: 10px;
+  }
+
   .property-grid {
     grid-template-columns: 1fr;
   }
-}
 
-/* Property Card Styling */
-.property-card {
-  background: #fff;
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: all 0.3s ease;
-  text-align: left;
-}
-
-.property-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-}
-
-.property-card img {
-  width: 100%;
-  height: auto;
-  border-bottom: 1px solid #ddd;
-}
-
-.property-card .property-details {
-  padding: 15px;
-}
-
-.property-card .property-details h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
-  color: #333;
-}
-
-.property-card .property-details p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #666;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 480px) {
-  .stylingSearchInput {
-    width: 100%;
+  .property-card img {
+    height: 150px;
   }
 }
+
+

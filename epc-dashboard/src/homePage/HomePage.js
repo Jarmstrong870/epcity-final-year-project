@@ -11,16 +11,15 @@ const HomePage = ({ user, language }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const { fetchTopRatedProperties, topRatedProperties, fetchProperties} = useContext(PropertyContext)
+  const { fetchTopRatedProperties, topRatedProperties, fetchProperties } = useContext(PropertyContext);
 
-  const t = translations[language] || translations.en; // Load translations
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     const fetchTopProperties = async () => {
       try {
         fetchProperties();
         fetchTopRatedProperties();
-        const data = topRatedProperties;
       } catch (error) {
         console.error('Failed to fetch properties:', error);
       } finally {
@@ -42,11 +41,14 @@ const HomePage = ({ user, language }) => {
     }
   };
 
+
   return (
     <>
-      
-      {/* Search Bar Section */}
       <div className="backgroundImageStyling">
+        <div className="welcomeText">
+          <div className="mainMessage">Welcome to Liverpool</div>
+          <div className="subMessage">Now, time to find somewhere you can call home.</div>
+        </div>
         <div className="stylingSearchBar">
           <input
             className="stylingSearchInput"
@@ -61,9 +63,28 @@ const HomePage = ({ user, language }) => {
         </div>
       </div>
 
+      {/* About Website Section */}
+      <div className="about-website">
+        <img 
+          src={require('../assets/liverpool-houses.jpg')} 
+          alt="Liverpool" 
+          className="about-image" 
+        />
+        <div className="content">
+          <h2>A bit about us..          </h2>
+          <p>
+            EPCity is designed to help you find your perfect property in Liverpool. 
+            Whether you're a student, professional, or a landlord, we offer an intuitive 
+            platform to search, compare, and evaluate which property is right for you in Liverpool.
+          </p>
+          <p>Use our search bar above to get started or explore some of Liverpools top-rated properties below!</p>
+        </div>
+      </div>
+
+
       {/* Top Rated Properties Section */}
-      <div className="top-rated-properties">
-        <h2 className="stylingTitle">{t.topRatedProperties}</h2>
+      <div className="top-rated-properties" id="top-rated-properties">
+        <h2>{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
             <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} />
@@ -72,7 +93,9 @@ const HomePage = ({ user, language }) => {
       </div>
     </>
   );
-
 };
 
 export default HomePage;
+
+
+

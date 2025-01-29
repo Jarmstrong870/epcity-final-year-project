@@ -1,68 +1,131 @@
-from psycopg2 import connect
 from bcrypt import hashpw, gensalt
+from Repository.registerRepo import RegisterRepo
+import requests
 import os
+import random
+import string
+from datetime import datetime, timedelta
 
-# Database configuration
-db_config = {
-    'host': os.getenv('DATABASE_HOST'),
-    'port': os.getenv('DATABASE_PORT'),
-    'database': os.getenv('DATABASE_NAME'),
-    'user': os.getenv('DATABASE_USER'),
-    'password': os.getenv('DATABASE_PASSWORD')
-}
+MAILERSEND_API_KEY = os.getenv('MAILERSEND_API_KEY')  # MailerSend API key
+
 def register_user_service(data):
+    """Service to handle user registration."""
     firstname = data.get('firstname')
     lastname = data.get('lastname')
     email = data.get('email')
     password = data.get('password')
-    userType = data.get('userType')
+    user_type = data.get('userType')
 
-    # Presence checks for all fields
-    if not all([firstname, lastname, email, password, userType]):
+    # Validate required fields
+    if not all([firstname, lastname, email, password, user_type]):
         return {"message": "All fields must be entered to create an account."}, 400
 
-    # Password length check
+    # Validate password length
     if len(password) < 7:
         return {"message": "Password must be at least 7 characters long."}, 400
 
     try:
-        # Establish a connection to the database
-        connection = connect(**db_config)
-        cursor = connection.cursor()
-
         # Check if the email already exists
-        cursor.execute("SELECT * FROM users WHERE email_address = %s;", (email,))
-        if cursor.fetchone():
-            cursor.close()
-            connection.close()
+        if RegisterRepo.check_email_exists(email):
             return {"message": "An account with this email already exists. All fields have been cleared."}, 409
 
-        # Fetch the maximum user_id and increment it by 1
-        cursor.execute("SELECT COALESCE(MAX(user_id), 0) + 1 FROM users;")
-        new_user_id = cursor.fetchone()[0]
+        # Get the next available user ID
+        new_user_id = RegisterRepo.get_next_user_id()
 
-        # Hash the password
-        password_hash = hashpw(password.encode('utf-8'), gensalt())
+        # Hash the password securely
+        password_hash = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
 
         # Insert the new user into the database
-        cursor.execute(
-            """
-            INSERT INTO users (user_id, firstname, lastname, email_address, password_hash, "userType")
-            VALUES (%s, %s, %s, %s, %s, %s);
-            """,
-            (new_user_id, firstname, lastname, email, password_hash.decode('utf-8'), userType)
-        )
-        connection.commit()
+        RegisterRepo.insert_new_user(new_user_id, firstname, lastname, email, password_hash, user_type)
 
-        # Close the cursor and connection
-        cursor.close()
-        connection.close()
+        return {"message": "Registration successful!"}, 201
 
     except Exception as e:
-        # Log the error for debugging purposes
         print("Error during registration process:", e)
         return {"message": "An internal error occurred. Please try again later."}, 500
 
-    return {"message": "Registration successful!"}, 201
+def generate_otp():
+    """
+    Generate a secure 6-digit OTP.
+    
+    :return: A 6-digit OTP as a string.
+    """
+    return ''.join(random.choices(string.digits, k=6))
+
+def send_registration_otp_email(email, otp):
+    """
+    Send a registration OTP email to the user.
+
+    :param email: The recipient's email address.
+    :param otp: The OTP to send.
+    """
+    try:
+        url = "https://api.mailersend.com/v1/email"
+        headers = {
+            "Authorization": f"Bearer {MAILERSEND_API_KEY}",
+            "Content-Type": "application/json"
+        }
+
+        payload = {
+            "from": {
+                "email": "support@epcity.co.uk",
+                "name": "EPCity Support"
+            },
+            "to": [{"email": email}],
+            "subject": "Your Registration OTP",
+            "text": f"Your registration OTP is {otp}. It will expire in 10 minutes."
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+
+        if response.status_code != 202:
+            raise Exception(f"Failed to send email: {response.text}")
+    except Exception as e:
+        print(f"Error sending OTP email: {e}")
+        raise
+
+def request_registration_otp_service(email):
+    """
+    Generate and send an OTP for user registration.
+
+    :param email: The recipient's email address.
+    :return: A success message if the process completes.
+    """
+    otp = generate_otp()
+    expiry = datetime.utcnow() + timedelta(minutes=10)
+
+    # Save OTP and send the email
+    RegisterRepo.save_registration_otp(email, otp, expiry)
+    send_registration_otp_email(email, otp)
+
+    return {"message": "If the email exists, an OTP has been sent."}, 200
+
+def verify_registration_otp_service(email, otp):
+    """
+    Verify the OTP for user registration.
+
+    :param email: The user's email address.
+    :param otp: The OTP provided by the user.
+    :return: A success or failure message.
+    """
+    stored_otp, expiry = RegisterRepo.get_registration_otp(email)
+
+    if not stored_otp or stored_otp != otp:
+        return {"message": "Invalid OTP."}, 400
+
+    if datetime.utcnow() > expiry:
+        return {"message": "OTP has expired."}, 400
+
+    return {"message": "OTP verified successfully."}, 200
+
+def check_email_exists_service(email):
+    """
+    Service to check if an email exists in the database.
+
+    :param email: The email address to check.
+    :return: True if the email exists, False otherwise.
+    """
+    return RegisterRepo.check_email_exists(email)
+
 
 
