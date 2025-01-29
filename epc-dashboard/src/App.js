@@ -26,8 +26,9 @@ import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
+import FavouritePage from './Components/FavouritePage';
 import { PropertyProvider } from './Components/utils/propertyContext';
-
+import { FavouriteProvider } from './Components/utils/favouriteContext';
 
 
 function App() {
@@ -38,9 +39,6 @@ function App() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  
-  
- 
 
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
@@ -117,9 +115,15 @@ function App() {
 
   return (
     <PropertyProvider>
+      <FavouriteProvider>
     <div className="App">
       <div className="header-container">
         <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+        <div className="navigationLinks">
+          <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+          <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+          <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+        </div>
         <div className="header-right">
           <div className="language-selector-container">
             <LanguageSelector setLanguage={handleLanguageChange} language={language} />
@@ -173,10 +177,10 @@ function App() {
             </>
           }
         />
-        <Route path="/" element={<HomePage language={language} />} />
+        <Route path="/" element={<HomePage user={user} language={language} />} />
         <Route path="/login" element={<Login setUser={setUser} language={language} />} />
         <Route path="/register" element={<Register language={language} />} />
-        <Route path="/property/:uprn" element={<PropertyPage properties={properties} loading={loading} language={language} />} />
+        <Route path="/property/:uprn" element={<PropertyPage properties={properties} user = {user} language={language} />} />
         <Route path="/FAQs" element={<FAQs language={language} />} />
         <Route path="/glossary" element={<GlossaryPage language={language} />} />
         <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
@@ -190,6 +194,7 @@ function App() {
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
+        <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
       </Routes>
 
       <footer className="footer-container">
@@ -200,6 +205,7 @@ function App() {
           <div className="navigation-links">
             <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
             <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+            <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
           </div>
           <nav className="footer-nav">
             <Link to="/about-us">About Us</Link>
@@ -219,6 +225,7 @@ function App() {
       </div>
     </footer>
     </div>
+    </FavouriteProvider>
     </PropertyProvider>
   );
 }

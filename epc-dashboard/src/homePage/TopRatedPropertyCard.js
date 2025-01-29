@@ -2,11 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
+import '../propertySearch/FavouriteStar.css';
+import FavouriteStar from '../propertySearch/FavouriteStar';
 import translations from '../locales/translations_topratedpropertycard'; // Import translations
 
-const TopRatedPropertyCard = ({ property, language }) => {
+/*
+  Top Rated Property Card is a card view displaying the specified four keys details: postcode, type, 
+  energyRating and efficiency and once selected it will navigate to the Property Page and has
+  the Favourite Star component to favourite the property and save to the Favourites Page.
+*/ 
+
+const TopRatedPropertyCard = ({ user, property, language}) => {
   const navigate = useNavigate();
-  const [isFavorited, setIsFavorited] = useState(false); // State for favorite status
+  const [isFavourited, setIsFavourited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
@@ -18,13 +26,13 @@ const TopRatedPropertyCard = ({ property, language }) => {
     });
   };
 
-  const toggleFavorite = (event) => {
+  const toggleFavourite = (event) => {
     event.stopPropagation(); // Prevent triggering the card click
-    setIsFavorited(!isFavorited);
+    setIsFavourited(!isFavourited);
     setPopupMessage(
-      !isFavorited
-        ? `${property.address} has been favorited.`
-        : `${property.address} has been unfavorited.`
+      isFavourited
+        ? `${property.address} has been unfavourited.`
+        : `${property.address} has been favourited.`
     );
     setShowPopup(true);
 
@@ -36,6 +44,7 @@ const TopRatedPropertyCard = ({ property, language }) => {
 
   return (
     <div className="topRatedPropertyCard" onClick={handleClick}>
+
       {/* Popup */}
       {showPopup && <div className="popup">{popupMessage}</div>}
 
@@ -43,42 +52,17 @@ const TopRatedPropertyCard = ({ property, language }) => {
         <StreetViewComponent address={property.address} postcode={property.postcode} />
       </div>
       <div className="propertyDetails">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            position: 'relative',
-            width: '100%',
-          }}
-        >
-          <h3
-            style={{
-              margin: 0,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            {property.address}
+          <h3> {property.address} 
+            <div className = "starComponent"> {/*Favourite Star Component */}
+              <div onClick={toggleFavourite}>
+                <FavouriteStar user={user} property = {property} 
+                    /> 
+              </div> 
+            </div>   
           </h3>
-          <span
-            style={{
-              fontSize: '2rem',
-              cursor: 'pointer',
-              color: isFavorited ? 'gold' : 'gray',
-              position: 'relative',
-              top: '-2px',
-              marginLeft: '10px',
-            }}
-            onClick={toggleFavorite}
-            title={isFavorited ? 'Unfavorite' : 'Favorite'}
-          >
-            ★
-          </span>
-        </div>
+      </div>
 
-        <p>
+        <p> {/* Top 4 details presented on card view */}
           <strong>{t.postcode}:</strong> {property.postcode}
         </p>
         <p>
@@ -91,7 +75,6 @@ const TopRatedPropertyCard = ({ property, language }) => {
           <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
         </p>
       </div>
-    </div>
   );
 };
 

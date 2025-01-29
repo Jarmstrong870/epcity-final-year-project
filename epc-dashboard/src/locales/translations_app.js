@@ -7,6 +7,7 @@ const translations = {
       myProperties: 'My Properties',
       viewAllProperties: 'View All Properties',
       faqs: 'Frequently Asked Questions',
+      favourites: 'My Favourite Properties',
     },
     fr: {
       login: 'Connexion',
@@ -16,6 +17,7 @@ const translations = {
       myProperties: 'Mes Propriétés',
       viewAllProperties: 'Voir Toutes les Propriétés',
       faqs: 'Questions Fréquemment Posées',
+      favourites: 'Mes propriétés préférées',
     },
     es: {
       login: 'Iniciar sesión',
@@ -25,6 +27,7 @@ const translations = {
       myProperties: 'Mis Propiedades',
       viewAllProperties: 'Ver Todas las Propiedades',
       faqs: 'Preguntas Frecuentes',
+      favourites: 'Mis Propiedades Favoritas',
     },
   };
   
