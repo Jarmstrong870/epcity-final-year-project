@@ -6,34 +6,29 @@ import Service.propertyService as properties
 property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
-# Route to update properties monthly
-@property_blueprint.route('/property/replace', methods=['GET'])
-def property_load():
-    """
-    Handles GET requests to retrieve all properties from API and update database.
-    """
-    return jsonify(properties.getAllProperties().to_dict(orient='records'))
-
-# Route to load top 6 properties from DB for Home Page
+"""
+Route to load top 6 properties from DB for Home Page
+"""
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
-def property_load_toprated():
-    """
-    Handles GET requests to retrieve top rated properties from .
-    """
-    return jsonify(properties.getTopRatedProperties().to_dict(orient='records'))
+def property_load_toprated_route():
+    # returns service method
+    return jsonify(properties.get_top_rated_properties().to_dict(orient='records'))
 
-# Route to get info on a selected property
+"""
+Route to get info on a selected property
+"""
 @property_blueprint.route('/property/getInfo', methods=['GET'])
-def get_property_info():
-    """
-    Returns data for a single property
-    """
+def get_property_info_route():
+    # gets uprn value from url
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
+    # calls service method
+    return jsonify(properties.get_property_info(uprn).to_dict(orient='records'))
 
-# Does everything method
+"""
+Route that handles all searching, filtering, sorting and pagination
+"""
 @property_blueprint.route('/property/getPage', methods=['GET'])
-def get_properties_page():
+def get_properties_page_route():
     try:
         # Validate and parse query parameters
         property_types = (
@@ -48,9 +43,9 @@ def get_properties_page():
         page = int(request.args.get('page', 1))  # Defaults to 1
 
         # Call service layer
-        result = properties.returnProperties(property_types, energy_ratings, search, sort_by, order, page)
+        result = properties.return_properties(property_types, energy_ratings, search, sort_by, order, page)
 
-        # Return paginated results
+        # Return results
         return jsonify(result.to_dict(orient='records')), 200
     except ValueError as ve:
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400

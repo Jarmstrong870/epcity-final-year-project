@@ -14,7 +14,7 @@ Service layer is called and returns a jsonified dataframe of the user's favourit
 @favourites_blueprint.route('/favourites/getFavourites', methods=['GET'])
 def get_favourites():
     email = request.args.get('email', '').lower()
-    return jsonify(favourites.getFavouriteProperties(email).to_dict(orient='records'))
+    return jsonify(favourites.get_favourite_properties(email).to_dict(orient='records'))
 
 """
 Route method that adds a property to a user's favourites
@@ -26,7 +26,7 @@ Service layer is called and returns a jsonified True or False to indicate if the
 def add_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.addFavouriteProperty(email, uprn))
+    return jsonify(favourites.add_favourite_property(email, uprn))
 
 """
 Route method that removes a property from a user's favourites
@@ -38,4 +38,4 @@ Service layer is called and returns a jsonified True or False to indicate if the
 def remove_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.removeFavouriteProperty(email, uprn))
+    return jsonify(favourites.remove_favourite_property(email, uprn))
