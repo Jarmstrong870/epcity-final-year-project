@@ -18,7 +18,6 @@ const HomePage = ({ user, language }) => {
   useEffect(() => {
     const fetchTopProperties = async () => {
       try {
-        fetchProperties();
         fetchTopRatedProperties();
       } catch (error) {
         console.error('Failed to fetch properties:', error);
@@ -36,7 +35,7 @@ const HomePage = ({ user, language }) => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      fetchProperties(searchTerm);
+      fetchProperties(searchTerm, [], []);
       navigate(`/propertylist?search=${searchTerm}`);
     }
   };
