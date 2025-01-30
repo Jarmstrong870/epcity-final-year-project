@@ -5,6 +5,7 @@ import os
 import random
 import string
 from datetime import datetime, timedelta
+from mailersend import emails
 
 MAILERSEND_API_KEY = os.getenv('MAILERSEND_API_KEY')  # MailerSend API key
 
@@ -38,6 +39,12 @@ def register_user_service(data):
         # Insert the new user into the database
         RegisterRepo.insert_new_user(new_user_id, firstname, lastname, email, password_hash, user_type)
 
+        try:
+            send_welcome_email(data['email'], data['firstname'])
+        except Exception as e:
+            print(f"Error sending welcome email: {e}")
+
+
         return {"message": "Registration successful!"}, 201
 
     except Exception as e:
@@ -52,36 +59,69 @@ def generate_otp():
     """
     return ''.join(random.choices(string.digits, k=6))
 
-def send_registration_otp_email(email, otp):
+from mailersend import emails
+
+def send_registration_otp_email(email, otp, user_name="User"):
     """
-    Send a registration OTP email to the user.
+    Send a registration OTP email to the user using a MailerSend template.
 
     :param email: The recipient's email address.
     :param otp: The OTP to send.
+    :param user_name: The name of the user (default: "User").
     """
     try:
-        url = "https://api.mailersend.com/v1/email"
-        headers = {
-            "Authorization": f"Bearer {MAILERSEND_API_KEY}",
-            "Content-Type": "application/json"
+        # Initialize the MailerSend email client
+        mailer = emails.NewEmail()
+        mailer.api_key = os.getenv('MAILERSEND_API_KEY')  # Set the API key
+
+        # Define the mail body object
+        mail_body = {}
+
+        # Sender information
+        mail_from = {
+            "name": "EPCity Support",
+            "email": "support@epcity.co.uk"
         }
 
-        payload = {
-            "from": {
-                "email": "support@epcity.co.uk",
-                "name": "EPCity Support"
-            },
-            "to": [{"email": email}],
-            "subject": "Your Registration OTP",
-            "text": f"Your registration OTP is {otp}. It will expire in 10 minutes."
-        }
+        # Recipient information
+        recipients = [
+            {
+                "name": user_name,  # Dynamically include the user's name
+                "email": email
+            }
+        ]
 
-        response = requests.post(url, json=payload, headers=headers)
+        # Personalization data for the template
+        personalization = [
+            {
+                "email": email,
+                "data": {
+                    "otp": otp,  # Inject the OTP into the template
+                    "name": user_name,  # Dynamically pass the user's name
+                    "support_email": "support@epcity.co.uk",  # Add support email
+                    "closing_note": f"Welcome to EPCity! Kind regards,\nThe EPCity Team"  # Add a closing note
+                }
+            }
+        ]
 
-        if response.status_code != 202:
-            raise Exception(f"Failed to send email: {response.text}")
+        # Set the MailerSend fields
+        mailer.set_mail_from(mail_from, mail_body)  # Set the sender
+        mailer.set_mail_to(recipients, mail_body)  # Set the recipients
+        mailer.set_subject("Your Registration OTP", mail_body)  # Subject for the email
+        mailer.set_template("k68zxl2qzn5lj905", mail_body)  # Use the registration template ID
+        mailer.set_personalization(personalization, mail_body)  # Add personalization data
+
+        # Debug logs for testing
+        print(f"Mail Body: {mail_body}")
+        print(f"Personalization Data: {personalization}")
+
+        # Send the email
+        print("Attempting to send registration email via MailerSend...")
+        response = mailer.send(mail_body)
+        print(f"MailerSend Response: {response}")  # Log the response
+
     except Exception as e:
-        print(f"Error sending OTP email: {e}")
+        print(f"Error sending registration OTP email with MailerSend: {e}")
         raise
 
 def request_registration_otp_service(email):
@@ -127,5 +167,56 @@ def check_email_exists_service(email):
     """
     return RegisterRepo.check_email_exists(email)
 
+def send_welcome_email(email, user_name):
+    """
+    Send a welcome email to the user after successful registration.
+    
+    :param email: The recipient's email address.
+    :param user_name: The name of the recipient to personalise the email.
+    :raises Exception: If the email fails to send.
+    """
+    try:
+        # Initialize the MailerSend email client
+        mailer = emails.NewEmail()
 
+        # Define the mail body object
+        mail_body = {}
 
+        # Sender information
+        mail_from = {
+            "name": "EPCity Team",
+            "email": "support@epcity.co.uk"
+        }
+
+        # Recipient information
+        recipients = [
+            {
+                "name": user_name,
+                "email": email
+            }
+        ]
+
+        # Personalization data for the template
+        personalization = [
+            {
+                "email": email,
+                "data": {
+                    "name": user_name
+                }
+            }
+        ]
+
+        # Set the MailerSend fields
+        mailer.set_mail_from(mail_from, mail_body)
+        mailer.set_mail_to(recipients, mail_body)
+        mailer.set_subject("Your account has been set up, Welcome to EPCity!", mail_body)
+        mailer.set_template("3zxk54v1rdz4jy6v", mail_body)  # Replace with your MailerSend template ID
+        mailer.set_personalization(personalization, mail_body)
+
+        # Send the email
+        print(f"Welcome email trying to be sent {email}.")
+        mailer.send(mail_body)
+        print(f"Welcome email sent successfully to {email}.")
+    except Exception as e:
+        print(f"Error sending welcome email: {e}")
+        raise
