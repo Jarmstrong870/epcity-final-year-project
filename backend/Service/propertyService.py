@@ -22,9 +22,9 @@ headers = {
 }
 
 """
-
+Retrives all valid properties from API and calls the database method to update the property table
 """
-def getAllProperties():
+def get_all_properties():
     # Page size (max 5000)
     query_size = 5000
 
@@ -111,26 +111,34 @@ def getAllProperties():
         search_results = search_results.dropna(subset=[col])
     
     # save the filtered DataFrame to the hosted database
-    repo.updatePropertiesInDB(search_results)
+    repo.update_properties_in_db(search_results)
 
-# method that sorts the propertied by epc rating and returns the top 6
-def getTopRatedProperties():
+"""
+method that sorts the propertied by epc rating and returns the top 6
+"""
+def get_top_rated_properties():
     top6 = pd.DataFrame()
-    top6 = repo.getTopRatedFromDB()
+    top6 = repo.get_top_rated_from_db()
     return top6
 
-def returnProperties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+"""
+Method that gets properties from database and performs pagination on it
+"""
+def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+    # set page size and page values
     page_size = 30
     pageNumber = int(page) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size) - 1
     thisPage = pd.DataFrame()
+    # get property data from database
     thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
+    #paginate properties
     thisPage = thisPage.iloc[firstProperty:lastProperty]
     return thisPage
 
 # finds info for when a property is selected by user
-def getPropertyInfo(uprn):
+def get_property_info(uprn):
 
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -175,54 +183,61 @@ def getPropertyInfo(uprn):
     new_columns = {col: col.replace('-', '_') for col in df.columns}
     # Rename the columns in the dataframe
     df = df.rename(columns=new_columns)
+        
+    start_date = df.loc[df.index[0], 'lodgement_datetime']
+    inflation_rate = get_inflation_rate(start_date)
     
-    adjusted_hot_water_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'hot_water_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
-    adjusted_heating_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'heating_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
-    adjusted_lighting_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'lighting_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
-
+    if inflation_rate is None:
+        return df  # Return original DataFrame if API call fails
+    
+    # adjust costs to inflation
+    def adjust_cost(value):
+        return float(value) * (1 + inflation_rate / 100)
+    
+    adjusted_hot_water_cost = adjust_cost(df.loc[df.index[0], 'hot_water_cost_current'])
+    adjusted_heating_cost = adjust_cost(df.loc[df.index[0], 'heating_cost_current'])
+    adjusted_lighting_cost = adjust_cost(df.loc[df.index[0], 'lighting_cost_current'])
+    
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
     
-    adjusted_hot_water_cost_value = float(adjusted_hot_water_cost)
-    adjusted_heating_cost_value = float(adjusted_heating_cost)
-    adjusted_lighting_cost_value = float(adjusted_lighting_cost)
+    # set values to currency
+    hw_currency = locale.currency(adjusted_hot_water_cost)
+    h_currency = locale.currency(adjusted_heating_cost)
+    l_currency = locale.currency(adjusted_lighting_cost)
     
-    hw_currency = locale.currency(adjusted_hot_water_cost_value)
-    h_currency = locale.currency(adjusted_heating_cost_value)
-    l_currency = locale.currency(adjusted_lighting_cost_value)
-    
+    # put currency values into dataframe
     df.loc[df.index[0], 'hot_water_cost_current'] = hw_currency
     df.loc[df.index[0], 'heating_cost_current'] = h_currency
     df.loc[df.index[0], 'lighting_cost_current'] = l_currency
-
+    
     return df
 
-def calculateInflationAdjustedPrice(start_price, start_date):
+"""
+Fetches the inflation rate for the United Kingdom between the start date and today.
+"""
+def get_inflation_rate(start_date: str) -> float:
     
-    api_url = 'https://www.statbureau.org/calculate-inflation-price-json'
-    
+    api_url = "https://www.statbureau.org/calculate-inflation-rate-json"
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        
-    # Query parameters
+    
+    #set parameter
     params = {
-        'country': 'united-kingdom',
-        'start': start_date,
-        'end': end_date,  # Current date in YYYY-MM-DD format
-        'amount': start_price,
-        'format': False  # Format the result as currency
+        "country": "united-kingdom",
+        "start": start_date,
+        "end": end_date
     }
     
-    # Construct the full URL with encoded parameters
-    full_url = f"{api_url}?{urlencode(params)}"
+    #build url
+    full_url = f"{api_url}?{urllib.parse.urlencode(params)}"
     
     try:
-        # Make the API request
+        # make request
         request = urllib.request.Request(full_url)
         with urllib.request.urlopen(request) as response:
-            # Read and decode the response
             response_body = response.read().decode()
-            # Parse the JSON response (Statbureau API returns a quoted string)
-            adjusted_price = response_body  # Remove quotes and convert to float
-            return adjusted_price
+            # set inflation rate to float and return it
+            inflation_rate = float(response_body.strip('"'))
+            return inflation_rate
     except Exception as e:
-        print(f"Error fetching inflation-adjusted price: {e}")
+        print(f"Error fetching inflation rate: {e}")
         return None
