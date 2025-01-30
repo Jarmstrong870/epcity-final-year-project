@@ -1,7 +1,7 @@
 .property-list {
   text-align: center;
   margin: 20px auto;
-  max-width: 1200px; /* Limit the maximum width for better alignment */
+  max-width: 1200px; /* Keeps it aligned */
 }
 
 /* Toggle View Buttons */
@@ -9,10 +9,10 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
 .view-toggle button {
-  margin: 0 10px;
   padding: 10px 20px;
   border: 2px solid transparent;
   background-color: #f8f9fa;
@@ -35,30 +35,66 @@
   border-color: #003a75;
 }
 
-/* Table View Styling */
-.table-view table {
+/* Compare Button */
+.compare-button {
+  padding: 10px 20px; /* Same padding as .view-toggle button */
+  font-weight: bold;
+  border: 2px solid black;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  width: auto; /* Remove fixed width */
+  min-width: 120px; /* Ensures consistency */
+  text-align: center;
+}
+
+/* Red when fewer than 4 properties selected */
+.compare-button.red {
+  background-color: #dc3545;
+}
+
+/* Green when exactly 4 properties selected */
+.compare-button.green {
+  background-color: #28a745;
+}
+
+/* Disabled state */
+.compare-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Remove hover effect */
+.compare-button:hover {
+  background-color: inherit; /* Keeps the original background color */
+  border-color: black; /* Keeps the black border */
+}
+
+/* Ensure Table Uses Full Width */
+.table-view {
+  width: 100%; /* Ensure full width */
+  max-width: 100%; /* Make sure it doesn't shrink */
   margin: 0 auto;
   border-collapse: collapse;
-  width: 100%;
-  max-width: 90%;
   background-color: #ffffff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .table-view th {
-  background-color: #007bff;
+  background-color: #043927; /* Keep original dark green */
   color: white;
   text-align: left;
-  padding: 12px;
+  padding: 15px; /* Increased padding for better spacing */
 }
 
 .table-view td {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 15px;
 }
 
 .table-view tr:hover {
-  background-color: #f2f2f2; /* Add hover effect for rows */
+  background-color: #f2f2f2; /* Add hover effect */
 }
 
 /* Card View Styling */
@@ -148,17 +184,18 @@
     transform: translateY(-20px);
   }
 }
+
 .property-list-header {
   display: flex;
-  justify-content: space-between; /* Push items to opposite ends */
-  align-items: center; /* Align heading and dropdown vertically */
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .sort-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between label and dropdown */
+  gap: 10px;
 }
 
 .sort-container select {
