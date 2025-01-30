@@ -28,4 +28,3 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
 
 export default MapView;
 // Export the component for use in other parts of the application.
-

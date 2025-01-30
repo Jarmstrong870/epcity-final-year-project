@@ -3,35 +3,24 @@ import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import FavoriteStar from './FavouriteStar';
 import './PropertyList.css';
-import translations from '../locales/translations_propertylist'; // Import translations
+import translations from '../locales/translations_propertylist'; 
 import { PropertyContext } from '../Components/utils/propertyContext';
-
-/* 
-    Property List (View All Properties) page is used to display all of the data records we have saved in our 
-    database. Property addresses can be viewed in table view or card view and the relevant details will be displayed
-    for users to click into the property page and is navigated to the Property Page with more information 
-
-    The Favourite Star component has been included so users can favourite a property once they have read more 
-    infromation about the property's efficiency
-  
-*/
-
 
 const PropertyList = ({ loading, language }) => {
   const { properties, sortProperties, getNewPage } = useContext(PropertyContext);
-  const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
-  const [popupMessage, setPopupMessage] = useState(''); // State for popup message
-  const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
+  const [viewMode, setViewMode] = useState('table'); 
+  const [popupMessage, setPopupMessage] = useState(''); 
+  const [showPopup, setShowPopup] = useState(false); 
   const [page, setPage] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
+  const [selectedProperties, setSelectedProperties] = useState([]);
 
   useEffect(() => {
     getNewPage(page);
   }, [page]);
 
-  const t = translations[language] || translations.en; // Load translations
+  const t = translations[language] || translations.en; 
 
-  // Handle toggle favorite to show popup
   const handleToggleFavorite = (propertyData, isFavorited) => {
     setPopupMessage(
       isFavorited
@@ -39,7 +28,6 @@ const PropertyList = ({ loading, language }) => {
         : `${propertyData?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
-    // Hide the popup after 5 seconds
     setTimeout(() => {
       setShowPopup(false);
     }, 5000);
@@ -55,13 +43,24 @@ const PropertyList = ({ loading, language }) => {
 
   const handleSortChange = (e) => {
     const newSort = e.target.value;
-    setSortValue(newSort)
-    const newOrder = 'asc'; // Toggle order
-    sortProperties(newSort, newOrder); // Sorting keeps current filters and resets page to 1
+    setSortValue(newSort);
+    sortProperties(newSort, 'asc');
   };
 
   const handlePageChange = (direction) => {
-    setPage(page + direction)
+    setPage(page + direction);
+  };
+
+  const handleCheckboxChange = (property) => {
+    setSelectedProperties((prevSelected) => {
+      const isAlreadySelected = prevSelected.includes(property.uprn);
+      if (isAlreadySelected) {
+        return prevSelected.filter((id) => id !== property.uprn);
+      } else if (prevSelected.length < 4) {
+        return [...prevSelected, property.uprn];
+      }
+      return prevSelected;
+    });
   };
 
   // Limit to first 12 properties for the card view
@@ -70,8 +69,7 @@ const PropertyList = ({ loading, language }) => {
   return (
     <div className='property-list'>
       <div className='property-list-header'>
-        {/* Sort Dropdown */}
-        <div className='sort-containor'>
+        <div className='sort-container'>
           <label>Sort By</label>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="address">Address</option>
@@ -84,10 +82,9 @@ const PropertyList = ({ loading, language }) => {
 
         <h2>{t.propertyList}</h2>
 
-        {/* Popup for favoriting/unfavoriting */}
         {showPopup && <div className="popup">{popupMessage}</div>}
 
-        {/* View Mode Toggle */}
+        {/* View Mode Toggle & Compare Button */}
         <div className="view-toggle">
           <button
             onClick={() => setViewMode('table')}
@@ -101,13 +98,21 @@ const PropertyList = ({ loading, language }) => {
           >
             {t.cardView}
           </button>
+
+          {/* Compare Button */}
+          <button
+            className={`compare-button ${selectedProperties.length === 4 ? 'green' : 'red'}`}
+            disabled={selectedProperties.length === 0}
+          >
+            Compare ({selectedProperties.length}/4)
+          </button>
         </div>
       </div>
 
-        {/* Conditional Rendering Based on View Mode */}
+      {/* Conditional Rendering Based on View Mode */}
       <div className="property-list-content">
         {viewMode === 'table' ? (
-          <table>
+          <table className="table-view">
             <thead>
               <tr>
                 <th>{t.address}</th>
@@ -116,6 +121,7 @@ const PropertyList = ({ loading, language }) => {
                 <th>{t.currentEnergyRating}</th>
                 <th>{t.currentEnergyEfficiency}</th>
                 <th>{t.favorite}</th>
+                <th className="compare-header">Compare ({selectedProperties.length}/4)</th>
               </tr>
             </thead>
             <tbody>
@@ -134,6 +140,13 @@ const PropertyList = ({ loading, language }) => {
                       onToggle={handleToggleFavorite}
                     />
                   </td>
+                  <td className="compare-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={selectedProperties.includes(property.uprn)}
+                      onChange={() => handleCheckboxChange(property)}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -146,7 +159,6 @@ const PropertyList = ({ loading, language }) => {
           </div>
         )}
       
-
         {/* Pagination */}
         <div className='pagination'>
           <button onClick={() => handlePageChange(-1)} disabled={page === 1}>

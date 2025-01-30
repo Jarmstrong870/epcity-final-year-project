@@ -1,0 +1,66 @@
+.epc-graph-container {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .epc-title {
+    margin-bottom: 10px;
+  }
+  
+  .epc-bars-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+  }
+  
+  .epc-bar-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  
+  .epc-bar {
+    height: 50px;
+    width: 90%;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .epc-bar-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: left;
+  }
+  
+  .epc-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    flex-direction: column;
+  }
+  
+  .epc-marker.current {
+    left: 80%; /* Position the current efficiency marker on the right */
+  }
+  
+  .epc-marker.potential {
+    left: 20%; /* Position the potential efficiency marker on the left */
+  }
+  
