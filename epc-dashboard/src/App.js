@@ -29,6 +29,7 @@ import translations from './locales/translations_app';
 import FavouritePage from './Components/FavouritePage';
 import { PropertyProvider } from './Components/utils/propertyContext';
 import { FavouriteProvider } from './Components/utils/favouriteContext';
+import ComparePage from './Components/ComparePage';
 
 
 function App() {
@@ -195,6 +196,8 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
         <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
+        <Route path="/compare-results" element={<ComparePage />} />
+
       </Routes>
 
       <footer className="footer-container">
