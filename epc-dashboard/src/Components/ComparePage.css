@@ -1,0 +1,48 @@
+.compare-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .compare-table-container {
+    overflow-x: auto; /* Enables horizontal scrolling */
+    white-space: nowrap;
+    margin-top: 20px;
+  }
+  
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  
+  .compare-table th, .compare-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    min-width: 200px;
+  }
+  
+  .compare-table th {
+    background-color: #004d40;
+    color: white;
+  }
+  
+  .compare-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .back-button:hover {
+    background-color: #0056b3;
+  }
+  

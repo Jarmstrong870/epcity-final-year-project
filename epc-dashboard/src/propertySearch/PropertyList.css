@@ -1,14 +1,21 @@
 .property-list {
   text-align: center;
   margin: 20px auto;
-  max-width: 1200px; /* Keeps it aligned */
+  max-width: 1200px;
+}
+
+/* Toggle View and Compare Button Container */
+.view-toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px; /* Space between buttons */
+  margin-bottom: 20px;
 }
 
 /* Toggle View Buttons */
 .view-toggle {
   display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
   gap: 10px;
 }
 
@@ -37,44 +44,32 @@
 
 /* Compare Button */
 .compare-button {
-  padding: 10px 20px; /* Same padding as .view-toggle button */
+  padding: 10px 20px;
   font-weight: bold;
-  border: 2px solid black;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
   color: white;
-  width: auto; /* Remove fixed width */
-  min-width: 120px; /* Ensures consistency */
+  min-width: 120px;
   text-align: center;
+  border: none;
 }
 
-/* Red when fewer than 4 properties selected */
-.compare-button.red {
-  background-color: #dc3545;
-}
-
-/* Green when exactly 4 properties selected */
-.compare-button.green {
-  background-color: #28a745;
-}
-
-/* Disabled state */
-.compare-button:disabled {
+/* Disabled Compare Button */
+.compare-button.gray {
   background-color: #ccc;
   cursor: not-allowed;
 }
 
-/* Remove hover effect */
-.compare-button:hover {
-  background-color: inherit; /* Keeps the original background color */
-  border-color: black; /* Keeps the black border */
+/* Active Compare Button */
+.compare-button.green {
+  background-color: #28a745;
 }
 
-/* Ensure Table Uses Full Width */
+/* Table Styling */
 .table-view {
-  width: 100%; /* Ensure full width */
-  max-width: 100%; /* Make sure it doesn't shrink */
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   border-collapse: collapse;
   background-color: #ffffff;
@@ -82,10 +77,10 @@
 }
 
 .table-view th {
-  background-color: #043927; /* Keep original dark green */
+  background-color: #043927;
   color: white;
   text-align: left;
-  padding: 15px; /* Increased padding for better spacing */
+  padding: 15px;
 }
 
 .table-view td {
@@ -94,13 +89,18 @@
 }
 
 .table-view tr:hover {
-  background-color: #f2f2f2; /* Add hover effect */
+  background-color: #f2f2f2;
+}
+
+/* Compare Checkbox Column */
+.compare-checkbox {
+  text-align: center;
 }
 
 /* Card View Styling */
 .property-cards-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Three cards per row */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   justify-content: center;
   padding: 20px;
@@ -108,13 +108,13 @@
 
 @media (max-width: 768px) {
   .property-cards-container {
-    grid-template-columns: repeat(2, 1fr); /* Two cards per row for tablets */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
   .property-cards-container {
-    grid-template-columns: 1fr; /* One card per row for small screens */
+    grid-template-columns: 1fr;
   }
 }
 
@@ -128,7 +128,7 @@
 }
 
 .property-cards-container > .topRatedPropertyCard:hover {
-  transform: scale(1.05); /* Slight zoom effect */
+  transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
