@@ -14,7 +14,7 @@ const ComparePage = () => {
   useEffect(() => {
     console.log(" Received properties for comparison:", selectedProperties);
 
-    if (selectedProperties.length === 4) {
+    if (selectedProperties.length >= 2 & selectedProperties.length <= 4) {
       fetchPropertyDetails(selectedProperties);
     }
   }, [selectedProperties]);
@@ -22,7 +22,8 @@ const ComparePage = () => {
   // Function to fetch property details from backend
   const fetchPropertyDetails = async (uprns) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/compare", {
+      
+      const response = await axios.post("http://localhost:5000/api/property/compare?", {
         uprns, // Send selected UPRNs in the request body
       });
 
@@ -34,7 +35,7 @@ const ComparePage = () => {
   };
 
   // Redirect back if no valid data
-  if (!selectedProperties || selectedProperties.length !== 4) {
+  if (!selectedProperties || selectedProperties.length >= 2 ) {
     return (
       <div className="compare-container">
         <h2>Comparison Data Not Found</h2>

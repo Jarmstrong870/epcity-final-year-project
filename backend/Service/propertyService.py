@@ -137,9 +137,10 @@ def return_properties(property_types=None, energy_ratings=None, search=None, sor
     thisPage = thisPage.iloc[firstProperty:lastProperty]
     return thisPage
 
-# finds info for when a property is selected by user
+"""
+Finds info for when a property is selected by the user
+"""
 def get_property_info(uprn):
-
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
 
@@ -149,95 +150,117 @@ def get_property_info(uprn):
     # Append parameters to the base URL
     full_url = f"{base_url}?{encoded_params}"
 
-    all_rows = []
-
     request = urllib.request.Request(full_url, headers=headers)
 
-    with urllib.request.urlopen(request) as response:
-        response_body = response.read().decode()
-    
-    data = json.loads(response_body)
+    try:
+        # Make the API request
+        with urllib.request.urlopen(request) as response:
+            response_body = response.read().decode()
+            data = json.loads(response_body)
+    except Exception as e:
+        print(f"Error fetching property data: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on failure
 
-    if 'rows' in data:
-        rows = data['rows']
-
-        # Break loop if no more records
-        if not rows:
-            print("No more data to fetch.")
-
-        # Append each property's data to the all_rows list
-        all_rows.extend(rows)
+    # Validate response data
+    if 'rows' not in data or not data['rows']:
+        print(f"No data found for UPRN {uprn}")
+        return pd.DataFrame()
 
     # Convert the data to a DataFrame
-    df = pd.DataFrame(all_rows)
+    df = pd.DataFrame(data['rows'])
 
-    #Convert 'lodgement-datetime' to datetime for sorting
-    df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce').dt.date
+    # Convert 'lodgement-datetime' to datetime for sorting
+    if 'lodgement-datetime' in df.columns:
+        df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce').dt.date
 
-    # Sort by 'uprn' and 'lodgement_datetime' in descending order
-    df = df.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
+        # Sort by 'uprn' and 'lodgement_datetime' in descending order
+        df = df.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
 
-    # Keep only the most recent entry for each 'uprn'
-    df = df.drop_duplicates(subset='uprn', keep='first')
+        # Keep only the most recent entry for each 'uprn'
+        df = df.drop_duplicates(subset='uprn', keep='first')
 
-    new_columns = {col: col.replace('-', '_') for col in df.columns}
-    # Rename the columns in the dataframe
-    df = df.rename(columns=new_columns)
-        
+    # Rename the columns in the DataFrame (replace '-' with '_')
+    df = df.rename(columns={col: col.replace('-', '_') for col in df.columns})
+
+    # Ensure DataFrame is not empty before proceeding
+    if df.empty or 'lodgement_datetime' not in df.columns:
+        return df
+
+    # Get the start date for inflation calculation
     start_date = df.loc[df.index[0], 'lodgement_datetime']
-    inflation_rate = get_inflation_rate(start_date)
     
+    # Fetch inflation rate
+    inflation_rate = get_inflation_rate(start_date)
+
     if inflation_rate is None:
         return df  # Return original DataFrame if API call fails
-    
-    # adjust costs to inflation
+
+    # Adjust costs to inflation
     def adjust_cost(value):
-        return float(value) * (1 + inflation_rate / 100)
-    
-    adjusted_hot_water_cost = adjust_cost(df.loc[df.index[0], 'hot_water_cost_current'])
-    adjusted_heating_cost = adjust_cost(df.loc[df.index[0], 'heating_cost_current'])
-    adjusted_lighting_cost = adjust_cost(df.loc[df.index[0], 'lighting_cost_current'])
-    
+        try:
+            return float(value) * (1 + inflation_rate / 100) if pd.notna(value) else None
+        except ValueError:
+            return None
+
+    # Adjust relevant cost columns
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+    for col in cost_columns:
+        if col in df.columns:
+            df.loc[df.index[0], col] = adjust_cost(df.loc[df.index[0], col])
+
+    # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
-    
-    # set values to currency
-    hw_currency = locale.currency(adjusted_hot_water_cost)
-    h_currency = locale.currency(adjusted_heating_cost)
-    l_currency = locale.currency(adjusted_lighting_cost)
-    
-    # put currency values into dataframe
-    df.loc[df.index[0], 'hot_water_cost_current'] = hw_currency
-    df.loc[df.index[0], 'heating_cost_current'] = h_currency
-    df.loc[df.index[0], 'lighting_cost_current'] = l_currency
-    
+
+    # Convert adjusted costs to currency format
+    for col in cost_columns:
+        if col in df.columns and pd.notna(df.loc[df.index[0], col]):
+            df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
+
     return df
 
 """
 Fetches the inflation rate for the United Kingdom between the start date and today.
 """
 def get_inflation_rate(start_date: str) -> float:
-    
     api_url = "https://www.statbureau.org/calculate-inflation-rate-json"
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    
-    #set parameter
+
+    # Set parameters
     params = {
         "country": "united-kingdom",
         "start": start_date,
         "end": end_date
     }
-    
-    #build url
+
+    # Build the URL
     full_url = f"{api_url}?{urllib.parse.urlencode(params)}"
-    
+
     try:
-        # make request
+        # Make request
         request = urllib.request.Request(full_url)
         with urllib.request.urlopen(request) as response:
             response_body = response.read().decode()
-            # set inflation rate to float and return it
-            inflation_rate = float(response_body.strip('"'))
-            return inflation_rate
+            # Set inflation rate to float and return it
+            return float(response_body.strip('"'))
     except Exception as e:
         print(f"Error fetching inflation rate: {e}")
         return None
+
+"""
+Method that returns a list of property data for each UPRN provided in the parameter
+"""    
+def compare_properties(uprns):
+    # Create an empty DataFrame to store results
+    compared_properties = pd.DataFrame()
+
+    # Loop through the list of UPRNs
+    for uprn in uprns:
+        # Call get_property_info method for each UPRN
+        property_info = get_property_info(uprn)
+
+        # Add property to DataFrame if it has data
+        if not property_info.empty:
+            compared_properties = pd.concat([compared_properties, property_info], ignore_index=True)
+
+    # Return the list of properties
+    return compared_properties
