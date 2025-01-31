@@ -51,3 +51,19 @@ def get_properties_page_route():
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@property_blueprint.route('/property/compare', methods=['POST'])
+def compare_properties_route():
+    # Extract request data
+    uprns = (
+        request.args.get('uprns', '').split(',') if request.args.get('pt') else None
+    )
+
+    # Validate that exactly 4 UPRNs are provided
+    if len(uprns) < 4 | len(uprns) < 2:
+        return jsonify({"error": "Exactly 2-4 property UPRNs are required"}), 400
+
+    # Call the service layer to fetch comparison data
+    comparison_data = properties.compare_properties(uprns)
+
+    return jsonify(comparison_data), 200

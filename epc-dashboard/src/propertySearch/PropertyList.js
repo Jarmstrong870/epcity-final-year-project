@@ -53,7 +53,7 @@ const PropertyList = ({ loading, language }) => {
       return;
     }
 
-    console.log("🚀 Navigating with selected properties:", selectedForComparison);
+    console.log(" Navigating with selected properties:", selectedForComparison);
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
 
@@ -88,9 +88,9 @@ const PropertyList = ({ loading, language }) => {
 
         {/* Compare Button with Dynamic Count */}
         <button
-          className={`compare-button ${selectedForComparison.length === 4 ? "green" : "gray"}`}
+          className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
           onClick={handleCompareClick}
-          disabled={selectedForComparison.length !== 4}
+          disabled={selectedForComparison.length < 4}
         >
           Compare ({selectedForComparison.length}/4)
         </button>
