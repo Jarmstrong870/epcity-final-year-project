@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS
+import pandas as pd
 import Service.propertyService as properties
 
 # Create a blueprint instance
@@ -52,18 +53,43 @@ def get_properties_page_route():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+    """
+Route: /property/compare
+Method: POST
+Description: Compares multiple properties based on selected criteria.
+Request Body:
+    - uprns (list of str): List of UPRNs of the properties to compare.
+Response: JSON list containing comparison data for selected properties.
+
+"""
+    
 @property_blueprint.route('/property/compare', methods=['POST'])
 def compare_properties_route():
-    # Extract request data
-    uprns = (
-        request.args.get('uprns', '').split(',') if request.args.get('pt') else None
-    )
+    try:
+        # Extract request data
+        data = request.get_json()
+        print("Received Data:", data)  # Debugging
 
-    # Validate that exactly 4 UPRNs are provided
-    if len(uprns) < 4 | len(uprns) < 2:
-        return jsonify({"error": "Exactly 2-4 property UPRNs are required"}), 400
+        if data is None:
+            return jsonify({"error": "No data received"}), 400
 
-    # Call the service layer to fetch comparison data
-    comparison_data = properties.compare_properties(uprns)
+        uprns = data.get("uprns", [])
 
-    return jsonify(comparison_data), 200
+        # Validate the input
+        if not isinstance(uprns, list) or len(uprns) < 2 or len(uprns) > 4:
+            return jsonify({"error": "You must select between 2 and 4 properties for comparison."}), 400
+
+        print("UPRNs Received:", uprns)  # Debugging
+
+        # Fetch comparison data from the service layer
+        comparison_data = properties.compare_properties(uprns)
+
+        #  Convert DataFrame to JSON format
+        if isinstance(comparison_data, pd.DataFrame):
+            comparison_data = comparison_data.to_dict(orient="records")
+
+        return jsonify(comparison_data), 200
+
+    except Exception as e:
+        print("Error in compare_properties_route:", str(e))  # Debugging
+        return jsonify({"error": str(e)}), 500
