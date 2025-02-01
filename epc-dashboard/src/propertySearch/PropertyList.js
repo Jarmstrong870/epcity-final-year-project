@@ -12,7 +12,7 @@ const PropertyList = ({ loading, language }) => {
 
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
-  const { properties, changePage, sortProperties } = useContext(PropertyContext);
+  const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
 
@@ -22,7 +22,7 @@ const PropertyList = ({ loading, language }) => {
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       setPageNumber(newPage);
-      changePage(newPage);
+      getNewPage(newPage);
     }
   };
 
