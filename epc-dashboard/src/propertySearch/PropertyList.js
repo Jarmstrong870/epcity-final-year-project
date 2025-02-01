@@ -7,8 +7,8 @@ import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
 
 const PropertyList = ({ loading, language }) => {
-  const [viewMode, setViewMode] = useState('table'); // Toggle between 'table' and 'card' views
-  const [selectedForComparison, setSelectedForComparison] = useState([]); // Stores selected properties
+  const [viewMode, setViewMode] = useState('table'); 
+  const [selectedForComparison, setSelectedForComparison] = useState([]); 
 
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
@@ -48,12 +48,11 @@ const PropertyList = ({ loading, language }) => {
 
   // Redirect to Compare Page
   const handleCompareClick = () => {
-    if (selectedForComparison.length !== 4) {
-      alert("You must select exactly 4 properties to compare.");
+    if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
+      alert("You must select between 2 and 4 properties to compare.");
       return;
     }
 
-    console.log(" Navigating with selected properties:", selectedForComparison);
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
 
@@ -90,7 +89,7 @@ const PropertyList = ({ loading, language }) => {
         <button
           className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
           onClick={handleCompareClick}
-          disabled={selectedForComparison.length < 4}
+          disabled={selectedForComparison.length < 2}
         >
           Compare ({selectedForComparison.length}/4)
         </button>
@@ -107,7 +106,7 @@ const PropertyList = ({ loading, language }) => {
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
               <th>{t.favorite}</th>
-              <th>COMPARE</th>  {/* ✅ Fixed the Compare Column Header */}
+              <th>COMPARE</th>
             </tr>
           </thead>
           <tbody>

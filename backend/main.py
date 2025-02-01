@@ -22,7 +22,6 @@ app.register_blueprint(register_controller, url_prefix='/')
 app.register_blueprint(account_overview_controller)
 app.register_blueprint(reset_password_controller)
 app.register_blueprint(favourites_blueprint)
-
 # Run the server
 if __name__ == '__main__':
       app.run(debug=True, host='0.0.0.0', port=5000)
