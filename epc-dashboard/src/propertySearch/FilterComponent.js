@@ -46,57 +46,55 @@ const PropertyFilter = ({ language }) => {
             </div>
 
             {/* Search Input */}
-            <div className="searchAddress">
-                <label htmlFor="searchQuery"><strong>{t.search}</strong></label>
+            <div>
+                <label htmlFor="searchQuery"></label>
                 <input
-                    className="searchInput"
+                    className="searchAddress"
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
                     onChange={handleSearchChange} // Fix for search query
+                    placeholder={t.search}
                 />
+                {/* Submit Button */}
+                <button className='stylingFilterButton' onClick={handleFetchProperties}>{t.findProperties}</button>
             </div>
 
             {/* Property Type Filter (Checkboxes) */}
-            <div className="filterContainer">
+            <div className="propertyTypeFilterTitle">
+                <label><strong>{t.propertyTypes}</strong></label>
                 <div className="propertyTypeFilter">
-                    <label><strong>{t.propertyTypes}</strong></label>
-                    <div>
-                        {t.propertyTypeOptions.map((type, index) => (
-                            <label key={index}>
-                                <input
-                                    type="checkbox"
-                                    value={type}
-                                    onChange={handlePropertyTypeChange} // Fix for property types
-                                />
-                                {type}
-                            </label>
-                        ))}
-                    </div>
+                    {t.propertyTypeOptions.map((type, index) => (
+                        <label key={index}>
+                            <input
+                                type="checkbox"
+                                value={type}
+                                onChange={handlePropertyTypeChange} // Fix for property types
+                            />
+                            {type}
+                        </label>
+                    ))}
                 </div>
+            </div>
 
-                {/* EPC Rating Filter (Checkboxes) */}
+            {/* EPC Rating Filter (Checkboxes) */}
+            <div className="ratingLetterFilterTitle">
+                <label><strong>{t.epcRatings}</strong></label>
                 <div className="ratingLetterFilter">
-                    <label><strong>{t.epcRatings}</strong></label>
-                    <div>
-                        {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
-                            <label key={rating}>
-                                <input
-                                    type="checkbox"
-                                    value={rating}
-                                    onChange={handleEpcRatingChange} // Fix for EPC ratings
-                                />
-                                {rating}
-                            </label>
-                        ))}
-                    </div>
+                    {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
+                        <label key={rating}>
+                            <input
+                                type="checkbox"
+                                value={rating}
+                                onChange={handleEpcRatingChange} // Fix for EPC ratings
+                            />
+                            {rating}
+                        </label>
+                    ))}
                 </div>
             </div>
 
-            {/* Submit Button */}
-            <div>
-                <button type="button" onClick={handleFetchProperties}>{t.findProperties}</button>
-            </div>
+
         </div>
     );
 };

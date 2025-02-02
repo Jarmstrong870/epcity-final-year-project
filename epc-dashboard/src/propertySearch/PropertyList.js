@@ -80,8 +80,6 @@ const PropertyList = ({ loading, language }) => {
   return (
     <div className="property-list">
       <div className="property-list-header">
-        <h2>Property List</h2>
-
         {/* Sort Dropdown */}
         <div className="sort-container">
           <label>Sort By:</label>
@@ -178,10 +176,9 @@ const PropertyList = ({ loading, language }) => {
         </div>
       )
       }
-
-      <div className="pagination">
-        <button onClick={() => handlePageChange(pageNumber - 1)}>back page</button>
-        <button onClick={() => handlePageChange(pageNumber + 1)}>forward page</button>
+      <div>
+        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
       </div>
     </div >
   );
