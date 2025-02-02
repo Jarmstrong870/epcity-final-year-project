@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import FavoriteStar from './FavoriteStar';
@@ -7,14 +7,20 @@ import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
 
 const PropertyList = ({ loading, language }) => {
-  const [viewMode, setViewMode] = useState('table'); 
-  const [selectedForComparison, setSelectedForComparison] = useState([]); 
+  const [viewMode, setViewMode] = useState('table');
+  const [selectedForComparison, setSelectedForComparison] = useState([]);
+  const [popupMessage, setPopupMessage] = useState(''); // State for popup message
+  const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
 
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
-  const { properties, changePage, sortProperties } = useContext(PropertyContext);
+  const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
   const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
+
+  useEffect(() => {
+    getNewPage(1); // Load the first page when the component mounts
+  }, []);
 
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
@@ -22,7 +28,7 @@ const PropertyList = ({ loading, language }) => {
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       setPageNumber(newPage);
-      changePage(newPage);
+      getNewPage(newPage);
     }
   };
 
@@ -44,6 +50,21 @@ const PropertyList = ({ loading, language }) => {
         return prevSelection;
       }
     });
+  };
+
+  // Handle toggle favorite to show popup
+  const handleToggleFavorite = (propertyData, isFavorited) => {
+    setPopupMessage(
+      isFavorited
+        ? `${propertyData?.address || 'This property'} has been favorited.`
+        : `${propertyData?.address || 'This property'} has been unfavorited.`
+    );
+    setShowPopup(true);
+
+    // Hide the popup after 5 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 5000);
   };
 
   // Redirect to Compare Page
@@ -120,7 +141,9 @@ const PropertyList = ({ loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar propertyData={property} />
+                  <FavoriteStar propertyData={property}
+                    onToggle={handleToggleFavorite}
+                  />
                 </td>
                 <td className="compare-checkbox">
                   <input
@@ -136,16 +159,31 @@ const PropertyList = ({ loading, language }) => {
       ) : (
         <div className="property-cards-container">
           {properties.slice(0, 12).map((property, index) => (
-            <TopRatedPropertyCard property={property} key={index} language={language} />
+            <div key={index} className="property-card">
+              <TopRatedPropertyCard property={property} language={language} />
+
+              {/* Comparison Checkbox */}
+              <div className="compare-checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(property.uprn)}
+                    onChange={() => toggleCompareSelection(property.uprn)}
+                  />
+                  Compare
+                </label>
+              </div>
+            </div>
           ))}
         </div>
-      )}
+      )
+      }
 
       <div className="pagination">
         <button onClick={() => handlePageChange(pageNumber - 1)}>back page</button>
         <button onClick={() => handlePageChange(pageNumber + 1)}>forward page</button>
       </div>
-    </div>
+    </div >
   );
 };
 
