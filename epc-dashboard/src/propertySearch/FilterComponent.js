@@ -47,32 +47,33 @@ const PropertyFilter = ({ language }) => {
 
             {/* Search Input */}
             <div className="searchAddress">
-                <label htmlFor="searchQuery"><strong>{t.search}</strong></label>
                 <input
                     className="searchInput"
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
+                    placeholder='Search for a property by Address or Postcode'
                     onChange={handleSearchChange} // Fix for search query
                 />
+                 
+                <button type="button" onClick={handleFetchProperties}>{t.findProperties}</button>
+                
             </div>
 
             {/* Property Type Filter (Checkboxes) */}
             <div className="filterContainer">
                 <div className="propertyTypeFilter">
                     <label><strong>{t.propertyTypes}</strong></label>
-                    <div>
-                        {t.propertyTypeOptions.map((type, index) => (
-                            <label key={index}>
-                                <input
-                                    type="checkbox"
-                                    value={type}
-                                    onChange={handlePropertyTypeChange} // Fix for property types
-                                />
-                                {type}
-                            </label>
-                        ))}
-                    </div>
+                    {t.propertyTypeOptions.map((type, index) => (
+                        <label key={index}>
+                            <input
+                                type="checkbox"
+                                value={type}
+                                onChange={handlePropertyTypeChange} // Fix for property types
+                            />
+                            {type}
+                    </label>
+                    ))}
                 </div>
 
                 {/* EPC Rating Filter (Checkboxes) */}
@@ -94,9 +95,7 @@ const PropertyFilter = ({ language }) => {
             </div>
 
             {/* Submit Button */}
-            <div>
-                <button type="button" onClick={handleFetchProperties}>{t.findProperties}</button>
-            </div>
+           
         </div>
     );
 };
