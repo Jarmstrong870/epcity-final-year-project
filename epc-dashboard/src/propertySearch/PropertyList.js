@@ -36,13 +36,23 @@ const PropertyList = ({ loading, language }) => {
   const handleSortChange = (event) => {
     const newSortValue = event.target.value;
     setSortValue(newSortValue);
-    sortProperties(newSortValue, sortOrder);
+    if (newSortValue == "sort_by" || sortOrder == "order") {
+      sortProperties(null, null)
+    }
+    else {
+      sortProperties(newSortValue, sortOrder);
+    }
   };
 
   const handleOrderChange = (event) => {
     const newSortOrder = event.target.value;
     setSortOrder(newSortOrder);
-    sortProperties(sortValue, newSortOrder);
+    if (newSortOrder == "order" || sortValue == "sort_by") {
+      sortProperties(null, null);
+    }
+    else {
+      sortProperties(sortValue, newSortOrder);
+    }
   }
 
   // Select/Deselect properties for comparison
