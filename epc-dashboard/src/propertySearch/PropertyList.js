@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavoriteStar from './FavouriteStar';
+import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist'; // Import translations
 import { PropertyContext } from '../Components/utils/propertyContext';
@@ -17,13 +17,14 @@ import { PropertyContext } from '../Components/utils/propertyContext';
 */
 
 
-const PropertyList = ({ loading, language }) => {
+const PropertyList = ({ user, loading, language }) => {
   const { properties, sortProperties, getNewPage } = useContext(PropertyContext);
   const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
   const [page, setPage] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
+  const [isFavourited, setIsFavourited] = useState(false);
 
   useEffect(() => {
     getNewPage(page);
@@ -32,11 +33,11 @@ const PropertyList = ({ loading, language }) => {
   const t = translations[language] || translations.en; // Load translations
 
   // Handle toggle favorite to show popup
-  const handleToggleFavorite = (propertyData, isFavorited) => {
+  const handleToggleFavourite = (property) => {
     setPopupMessage(
-      isFavorited
-        ? `${propertyData?.address || 'This property'} has been favorited.`
-        : `${propertyData?.address || 'This property'} has been unfavorited.`
+      isFavourited
+        ? `${property?.address || 'This property'} has been favorited.`
+        : `${property?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
     // Hide the popup after 5 seconds
@@ -129,10 +130,9 @@ const PropertyList = ({ loading, language }) => {
                   <td>{property.current_energy_rating}</td>
                   <td>{property.current_energy_efficiency}</td>
                   <td>
-                    <FavoriteStar
-                      propertyData={property}
-                      onToggle={handleToggleFavorite}
-                    />
+                  <span onClick={() => handleToggleFavourite(property)}>
+                    <FavouriteStar user={user} property = {property} /> 
+                  </span> 
                   </td>
                 </tr>
               ))}

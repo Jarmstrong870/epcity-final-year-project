@@ -27,6 +27,7 @@ import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
 import FavouritePage from './Components/FavouritePage';
+import GroupPage from './Components/GroupsPage';
 import { PropertyProvider } from './Components/utils/propertyContext';
 import { FavouriteProvider } from './Components/utils/favouriteContext';
 
@@ -123,6 +124,7 @@ function App() {
           <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
           <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
           <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+          <Link to="/groups" className="navigation-button">{t.groups}</Link>
         </div>
         <div className="header-right">
           <div className="language-selector-container">
@@ -173,7 +175,7 @@ function App() {
           element={
             <>
               <PropertyFilter onFilterChange={fetchProperties} language={language} />
-              <PropertyList properties={properties} loading={loading} language={language} />
+              <PropertyList user={user} properties={properties} loading={loading} language={language} />
             </>
           }
         />
@@ -195,6 +197,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
         <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
+        <Route path="/groups" element={<GroupPage language={language} />} />
       </Routes>
 
       <footer className="footer-container">
@@ -206,6 +209,7 @@ function App() {
             <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
             <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
             <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+            <Link to="/groups" className="navigation-button">{t.favourites}</Link>
           </div>
           <nav className="footer-nav">
             <Link to="/about-us">About Us</Link>

@@ -44,30 +44,30 @@ const PropertyPage = ({ user, property, email, language }) => {
         setPropertyData(data[0]);
       } else {
         setErrorMessage('Failed to fetch property details.');
+        setPopupMessage(true);
       }
     } catch (error) {
       console.error('Error fetching property details:', error);
       setErrorMessage('Failed to fetch property details.');
+      setPopupMessage(false);
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleFavorite = () => {
-    setIsFavourited(!isFavourited);
+  // Handle toggle favorite to show popup
+  const handleToggleFavourite = (propertyData) => {
     setPopupMessage(
-      !isFavourited
+      isFavourited
         ? `${propertyData?.address || 'This property'} has been favorited.`
         : `${propertyData?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
-
     // Hide the popup after 5 seconds
     setTimeout(() => {
       setShowPopup(false);
     }, 5000);
   };
-
 
   useEffect(() => {
     if (uprn) {
@@ -114,9 +114,11 @@ const PropertyPage = ({ user, property, email, language }) => {
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
         <div className = "starComponent">
-              <FavouriteStar user={user} property = {property} />
+        {/*<div onClick={handleToggleFavourite}>*/}
+                <FavouriteStar user={user} property = {propertyData} onToggle={{handleToggleFavourite}}/> 
               </div> 
         </div>
+    
 
       {/* Section to display street view and map view */}
       <div className="image-and-map-section">

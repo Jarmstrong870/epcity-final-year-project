@@ -8,6 +8,7 @@ const translations = {
       viewAllProperties: 'View All Properties',
       faqs: 'Frequently Asked Questions',
       favourites: 'My Favourite Properties',
+      groups: 'Friends and Groups',
     },
     fr: {
       login: 'Connexion',
