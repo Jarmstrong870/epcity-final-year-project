@@ -7,6 +7,7 @@ const translations = {
       myProperties: 'My Properties',
       viewAllProperties: 'View All Properties',
       faqs: 'Frequently Asked Questions',
+      messages: "Messages",
     },
     fr: {
       login: 'Connexion',
