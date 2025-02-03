@@ -27,7 +27,6 @@ import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
 import FavouritePage from './Components/FavouritePage';
-import GroupPage from './Components/GroupsPage';
 import { PropertyProvider } from './Components/utils/propertyContext';
 import { FavouriteProvider } from './Components/utils/favouriteContext';
 
@@ -197,7 +196,6 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
         <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
-        <Route path="/groups" element={<GroupPage language={language} />} />
       </Routes>
 
       <footer className="footer-container">
