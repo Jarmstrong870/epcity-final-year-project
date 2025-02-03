@@ -1,0 +1,8 @@
+/* ✅ Highlight best values (Lowest Price & Highest Energy Efficiency) */
+.highlight-green {
+    background-color: #d4edda; /* Light green */
+    color: #155724; /* Dark green text */
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 5px;
+}

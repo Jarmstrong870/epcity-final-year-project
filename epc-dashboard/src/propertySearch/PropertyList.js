@@ -1,18 +1,56 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-
 import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
-import translations from '../locales/translations_propertylist'; // Import translations
-import { PropertyContext }  from '../Components/utils/propertyContext';
+import translations from '../locales/translations_propertylist';
+import { PropertyContext } from '../Components/utils/propertyContext';
 
-const PropertyList = ({  loading, language }) => {
-  const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
+const PropertyList = ({ loading, language }) => {
+  const [viewMode, setViewMode] = useState('table');
+  const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
 
-  const t = translations[language] || translations.en; // Load translations
+  const t = translations[language] || translations.en;
+  const navigate = useNavigate();
+  const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [sortValue, setSortValue] = useState("current_energy_rating");
+
+  useEffect(() => {
+    getNewPage(1); // Load the first page when the component mounts
+  }, []);
+
+  if (loading) return <p>{t.loading}</p>;
+  if (properties.length === 0) return <p>{t.noProperties}</p>;
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0) {
+      setPageNumber(newPage);
+      getNewPage(newPage);
+    }
+  };
+
+  const handleSortChange = (event) => {
+    const newSortValue = event.target.value;
+    setSortValue(newSortValue);
+    sortProperties(newSortValue);
+  };
+
+  // Select/Deselect properties for comparison
+  const toggleCompareSelection = (uprn) => {
+    setSelectedForComparison((prevSelection) => {
+      if (prevSelection.includes(uprn)) {
+        return prevSelection.filter((id) => id !== uprn);
+      } else if (prevSelection.length < 4) {
+        return [...prevSelection, uprn];
+      } else {
+        alert("You can only compare up to 4 properties.");
+        return prevSelection;
+      }
+    });
+  };
 
   // Handle toggle favorite to show popup
   const handleToggleFavorite = (propertyData, isFavorited) => {
@@ -28,43 +66,20 @@ const PropertyList = ({  loading, language }) => {
       setShowPopup(false);
     }, 5000);
   };
-  const [pageNumber, setPageNumber] = useState(1);
-  const [sortValue, setSortValue] = useState("current_energy_rating");
-  const  { properties, changePage, sortProperties} = useContext(PropertyContext);
-  
-  
 
-  if (loading) {
-    return <p>{t.loading}</p>;
-  }
-
-  if (properties.length === 0) {
-    return <p>{t.noProperties}</p>;
-  }
-
-  const handlePageChange = (newPage) => {
-    if (newPage > 0) {
-      setPageNumber(newPage);
-      changePage(newPage);
+  // Redirect to Compare Page
+  const handleCompareClick = () => {
+    if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
+      alert("You must select between 2 and 4 properties to compare.");
+      return;
     }
-  }
 
-  const handleSortChange = (event) => {
-    const newSortValue = event.target.value;
-    setSortValue(newSortValue); // Update state
-  
-    // Call the sorting function from PropertyContext if available
-    sortProperties(newSortValue);
+    navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
-
-  // Limit to first 12 properties for the card view
-  const limitedProperties = properties.slice(0, 12);
 
   return (
     <div className="property-list">
       <div className="property-list-header">
-        <h2>Property List</h2>
-
         {/* Sort Dropdown */}
         <div className="sort-container">
           <label>Sort By:</label>
@@ -78,32 +93,30 @@ const PropertyList = ({  loading, language }) => {
         </div>
       </div>
 
+      {/* View Mode Toggle & Compare Button */}
+      <div className="view-toggle-container">
+        <div className="view-toggle">
+          <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
+            {t.tableView}
+          </button>
+          <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
+            {t.cardView}
+          </button>
+        </div>
 
-      
-      <h2>{t.propertyList}</h2>
-
-      {/* Popup for favoriting/unfavoriting */}
-      {showPopup && <div className="popup">{popupMessage}</div>}
-
-      {/* View Mode Toggle */}
-      <div className="view-toggle">
+        {/* Compare Button with Dynamic Count */}
         <button
-          onClick={() => setViewMode('table')}
-          className={viewMode === 'table' ? 'active' : ''}
+          className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
+          onClick={handleCompareClick}
+          disabled={selectedForComparison.length < 2}
         >
-          {t.tableView}
-        </button>
-        <button
-          onClick={() => setViewMode('card')}
-          className={viewMode === 'card' ? 'active' : ''}
-        >
-          {t.cardView}
+          Compare ({selectedForComparison.length}/4)
         </button>
       </div>
 
-      {/* Conditional Rendering Based on View Mode */}
+      {/* Conditional Table View */}
       {viewMode === 'table' ? (
-        <table>
+        <table className="table-view">
           <thead>
             <tr>
               <th>{t.address}</th>
@@ -112,6 +125,7 @@ const PropertyList = ({  loading, language }) => {
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
               <th>{t.favorite}</th>
+              <th>COMPARE</th>
             </tr>
           </thead>
           <tbody>
@@ -125,9 +139,15 @@ const PropertyList = ({  loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar
-                    propertyData={property}
+                  <FavoriteStar propertyData={property}
                     onToggle={handleToggleFavorite}
+                  />
+                </td>
+                <td className="compare-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(property.uprn)}
+                    onChange={() => toggleCompareSelection(property.uprn)}
                   />
                 </td>
               </tr>
@@ -136,18 +156,31 @@ const PropertyList = ({  loading, language }) => {
         </table>
       ) : (
         <div className="property-cards-container">
-          {limitedProperties.map((property, index) => (
-            <TopRatedPropertyCard property={property} key={index} language={language} />
+          {properties.slice(0, 12).map((property, index) => (
+            <div key={index} className="property-card">
+              <TopRatedPropertyCard property={property} language={language} />
+
+              {/* Comparison Checkbox */}
+              <div className="compare-checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(property.uprn)}
+                    onChange={() => toggleCompareSelection(property.uprn)}
+                  />
+                  Compare
+                </label>
+              </div>
+            </div>
           ))}
         </div>
-      )}
-      <div className="pagination">
-        <button onClick={() => handlePageChange(pageNumber-1)}>back page</button>
-        <button onClick={() => handlePageChange(pageNumber+1)}>forward page</button>
+      )
+      }
+      <div>
+        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
       </div>
-        
-    </div>
-    
+    </div >
   );
 };
 

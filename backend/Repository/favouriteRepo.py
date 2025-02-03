@@ -18,7 +18,7 @@ DB_PARAMS = {
 """
 Fetch all properties linked to a user's email from the user_properties table
 """
-def getFavouritePropertiesfromDB(email):
+def get_favourite_properties_from_db(email):
     try: 
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
@@ -31,7 +31,7 @@ def getFavouritePropertiesfromDB(email):
     
         # Create a cursor to execute the query
         cur = conn.cursor()
-        cur.execute(query, (email))
+        cur.execute(query, (email,))
     
         # Fetch column names from the cursor description
         column_names = [desc[0] for desc in cur.description]
@@ -57,7 +57,7 @@ def getFavouritePropertiesfromDB(email):
 """
 Adds a row to the user_properties table using the user's email and uprn
 """
-def addFavouriteToDB(email, uprn):
+def add_favourite_to_db(email, uprn):
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
@@ -90,7 +90,7 @@ def addFavouriteToDB(email, uprn):
 """
 Removes a row from the user_properties table using the user's email and upn
 """          
-def removeFavouriteFromDB(email, uprn):
+def remove_favourite_from_db(email, uprn):
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)

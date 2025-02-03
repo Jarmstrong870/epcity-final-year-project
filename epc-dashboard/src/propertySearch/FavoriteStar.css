@@ -1,0 +1,20 @@
+.favorite-container {
+    display: flex; /* Center the star icon horizontally. */
+    justify-content: center; /* Align the star icon to the center horizontally. */
+    align-items: center; /* Align the star icon to the center vertically. */
+    width: auto; /* Automatically size the width based on content. */
+    height: auto; /* Automatically size the height based on content. */
+  }
+  
+  .favorite-star {
+    font-size: 2rem; /* Set the font size for the star icon. */
+    line-height: 2rem; /* Set the line height to match the font size for alignment. */
+    cursor: pointer; /* Change the cursor to a pointer on hover to indicate it's clickable. */
+    color: gray; /* Default color for the star (not favorited). */
+    transition: color 0.3s ease; /* Smooth transition for the color change. */
+  }
+  
+  .favorite-star.favorited {
+    color: gold; /* Gold color for the star when favorited. */
+  }
+  

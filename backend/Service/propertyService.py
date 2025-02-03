@@ -22,9 +22,9 @@ headers = {
 }
 
 """
-
+Retrives all valid properties from API and calls the database method to update the property table
 """
-def getAllProperties():
+def get_all_properties():
     # Page size (max 5000)
     query_size = 5000
 
@@ -105,35 +105,42 @@ def getAllProperties():
     
     search_results = search_results[required_columns]
     
-    search_results['heating_cost_current'] = pd.to_numeric(search_results['heating_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['heating_cost_current'])
-    search_results['hot_water_cost_current'] = pd.to_numeric(search_results['hot_water_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['hot_water_cost_current'])
-    search_results['lighting_cost_current'] = pd.to_numeric(search_results['lighting_cost_current'], errors='coerce')
-    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    numeric_columns = ['heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current']
+    for col in numeric_columns:
+        search_results[col] = pd.to_numeric(search_results[col], errors='coerce')
+        search_results = search_results.dropna(subset=[col])
     
     # save the filtered DataFrame to the hosted database
-    repo.updatePropertiesInDB(search_results)
+    repo.update_properties_in_db(search_results)
 
-# method that sorts the propertied by epc rating and returns the top 6
-def getTopRatedProperties():
+"""
+method that sorts the propertied by epc rating and returns the top 6
+"""
+def get_top_rated_properties():
     top6 = pd.DataFrame()
-    top6 = repo.getTopRatedFromDB()
+    top6 = repo.get_top_rated_from_db()
     return top6
 
-def returnProperties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+"""
+Method that gets properties from database and performs pagination on it
+"""
+def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+    # set page size and page values
     page_size = 30
     pageNumber = int(page) - 1
     firstProperty = pageNumber * page_size
     lastProperty = (firstProperty + page_size) - 1
     thisPage = pd.DataFrame()
+    # get property data from database
     thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
+    #paginate properties
     thisPage = thisPage.iloc[firstProperty:lastProperty]
     return thisPage
 
-# finds info for when a property is selected by user
-def getPropertyInfo(uprn):
-
+"""
+Finds info for when a property is selected by the user
+"""
+def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
 
@@ -143,88 +150,117 @@ def getPropertyInfo(uprn):
     # Append parameters to the base URL
     full_url = f"{base_url}?{encoded_params}"
 
-    all_rows = []
-
     request = urllib.request.Request(full_url, headers=headers)
 
-    with urllib.request.urlopen(request) as response:
-        response_body = response.read().decode()
-    
-    data = json.loads(response_body)
+    try:
+        # Make the API request
+        with urllib.request.urlopen(request) as response:
+            response_body = response.read().decode()
+            data = json.loads(response_body)
+    except Exception as e:
+        print(f"Error fetching property data: {e}")
+        return pd.DataFrame()  # Return empty DataFrame on failure
 
-    if 'rows' in data:
-        rows = data['rows']
-
-        # Break loop if no more records
-        if not rows:
-            print("No more data to fetch.")
-
-         # Append each property's data to the all_rows list
-        all_rows.extend(rows)
+    # Validate response data
+    if 'rows' not in data or not data['rows']:
+        print(f"No data found for UPRN {uprn}")
+        return pd.DataFrame()
 
     # Convert the data to a DataFrame
-    df = pd.DataFrame(all_rows)
+    df = pd.DataFrame(data['rows'])
 
-    #Convert 'lodgement-datetime' to datetime for sorting
-    df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce').dt.date
+    # Convert 'lodgement-datetime' to datetime for sorting
+    if 'lodgement-datetime' in df.columns:
+        df['lodgement-datetime'] = pd.to_datetime(df['lodgement-datetime'], format='mixed', errors='coerce').dt.date
 
-    # Sort by 'uprn' and 'lodgement_datetime' in descending order
-    df = df.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
+        # Sort by 'uprn' and 'lodgement_datetime' in descending order
+        df = df.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
 
-    # Keep only the most recent entry for each 'uprn'
-    df = df.drop_duplicates(subset='uprn', keep='first')
+        # Keep only the most recent entry for each 'uprn'
+        df = df.drop_duplicates(subset='uprn', keep='first')
 
-    new_columns = {col: col.replace('-', '_') for col in df.columns}
-    # Rename the columns in the dataframe
-    df = df.rename(columns=new_columns)
+    # Rename the columns in the DataFrame (replace '-' with '_')
+    df = df.rename(columns={col: col.replace('-', '_') for col in df.columns})
+
+    # Ensure DataFrame is not empty before proceeding
+    if df.empty or 'lodgement_datetime' not in df.columns:
+        return df
+
+    # Get the start date for inflation calculation
+    start_date = df.loc[df.index[0], 'lodgement_datetime']
     
-    adjusted_hot_water_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'hot_water_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
-    adjusted_heating_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'heating_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
-    adjusted_lighting_cost = calculateInflationAdjustedPrice(df.loc[df.index[0], 'lighting_cost_current'], df.loc[df.index[0], 'lodgement_datetime']).strip('"')
+    # Fetch inflation rate
+    inflation_rate = get_inflation_rate(start_date)
 
+    if inflation_rate is None:
+        return df  # Return original DataFrame if API call fails
+
+    # Adjust costs to inflation
+    def adjust_cost(value):
+        try:
+            return float(value) * (1 + inflation_rate / 100) if pd.notna(value) else None
+        except ValueError:
+            return None
+
+    # Adjust relevant cost columns
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+    for col in cost_columns:
+        if col in df.columns:
+            df.loc[df.index[0], col] = adjust_cost(df.loc[df.index[0], col])
+
+    # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
-    
-    adjusted_hot_water_cost_value = float(adjusted_hot_water_cost)
-    adjusted_heating_cost_value = float(adjusted_heating_cost)
-    adjusted_lighting_cost_value = float(adjusted_lighting_cost)
-    
-    hw_currency = locale.currency(adjusted_hot_water_cost_value)
-    h_currency = locale.currency(adjusted_heating_cost_value)
-    l_currency = locale.currency(adjusted_lighting_cost_value)
-    
-    df.loc[df.index[0], 'hot_water_cost_current'] = hw_currency
-    df.loc[df.index[0], 'heating_cost_current'] = h_currency
-    df.loc[df.index[0], 'lighting_cost_current'] = l_currency
+
+    # Convert adjusted costs to currency format
+    for col in cost_columns:
+        if col in df.columns and pd.notna(df.loc[df.index[0], col]):
+            df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
 
     return df
 
-def calculateInflationAdjustedPrice(start_price, start_date):
-    
-    api_url = 'https://www.statbureau.org/calculate-inflation-price-json'
-    
+"""
+Fetches the inflation rate for the United Kingdom between the start date and today.
+"""
+def get_inflation_rate(start_date: str) -> float:
+    api_url = "https://www.statbureau.org/calculate-inflation-rate-json"
     end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        
-    # Query parameters
+
+    # Set parameters
     params = {
-        'country': 'united-kingdom',
-        'start': start_date,
-        'end': end_date,  # Current date in YYYY-MM-DD format
-        'amount': start_price,
-        'format': False  # Format the result as currency
+        "country": "united-kingdom",
+        "start": start_date,
+        "end": end_date
     }
-    
-    # Construct the full URL with encoded parameters
-    full_url = f"{api_url}?{urlencode(params)}"
-    
+
+    # Build the URL
+    full_url = f"{api_url}?{urllib.parse.urlencode(params)}"
+
     try:
-        # Make the API request
+        # Make request
         request = urllib.request.Request(full_url)
         with urllib.request.urlopen(request) as response:
-            # Read and decode the response
             response_body = response.read().decode()
-            # Parse the JSON response (Statbureau API returns a quoted string)
-            adjusted_price = response_body  # Remove quotes and convert to float
-            return adjusted_price
+            # Set inflation rate to float and return it
+            return float(response_body.strip('"'))
     except Exception as e:
-        print(f"Error fetching inflation-adjusted price: {e}")
+        print(f"Error fetching inflation rate: {e}")
         return None
+
+"""
+Method that returns a list of property data for each UPRN provided in the parameter
+"""    
+def compare_properties(uprns):
+    # Create an empty DataFrame to store results
+    compared_properties = pd.DataFrame()
+
+    # Loop through the list of UPRNs
+    for uprn in uprns:
+        # Call get_property_info method for each UPRN
+        property_info = get_property_info(uprn)
+
+        # Add property to DataFrame if it has data
+        if not property_info.empty:
+            compared_properties = pd.concat([compared_properties, property_info], ignore_index=True)
+
+    # Return the list of properties
+    return compared_properties

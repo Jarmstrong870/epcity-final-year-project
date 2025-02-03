@@ -26,15 +26,14 @@
   object-fit: cover;
 }
 
-.propertyDetails {
-  text-align: center;
-  margin-top: 10px;
-}
-
 .propertyDetails h3 {
-  margin: 5px 0;
-  font-size: 1.2em;
+  display: inline;  
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  font-size: 1.3rem;
   color: #333;
+  margin-bottom: 10px;
 }
 
 .propertyDetails p {
@@ -42,3 +41,4 @@
   font-size: 0.9em;
   color: #666;
 }
+
