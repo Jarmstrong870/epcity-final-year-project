@@ -26,6 +26,7 @@ import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
+import Messages from './login&register/messages'; 
 import FavouritePage from './Components/FavouritePage';
 import { PropertyProvider } from './Components/utils/propertyContext';
 import { FavouriteProvider } from './Components/utils/favouriteContext';
@@ -138,6 +139,7 @@ function App() {
                     <p>Welcome, {user.firstname}</p>
                     <Link to="/account-overview">{t.accountOverview}</Link>
                     <Link to="/property">{t.myProperties}</Link>
+                    <Link to="/messages">{t.messages}</Link> {/* New link to Messages */}
                     <button onClick={showLogoutConfirmation}>{t.logout}</button>
                   </>
                 ) : (
@@ -149,6 +151,7 @@ function App() {
               </div>
             )}
           </div>
+
         </div>
       </div>
 
@@ -190,6 +193,7 @@ function App() {
         <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
         <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
         <Route path="/faq/budget-calculator" element={<EICalculator language={language} />} />
+        <Route path="/messages" element={<Messages />} /> {/* New Messages Route */}
         <Route path="/faq/checklist" element={<Checklist language={language} />} />
         <Route path="/faq/socialmedia" element={<SocialMedia />} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />

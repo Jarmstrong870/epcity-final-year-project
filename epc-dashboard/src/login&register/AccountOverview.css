@@ -289,6 +289,56 @@
     gap: 20px; /* Space between sections */
 }
 
+/* Welcome User Message */
+.welcome-user {
+    font-size: 2.5rem; /* Large text for prominence */
+    font-weight: bold;
+    color: #2c3e50; /* Deep blue for a professional touch */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Soft gradient */
+    padding: 15px 30px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Subtext for Welcome Message */
+.welcome-user-subtext {
+    font-size: 1.2rem;
+    color: #6c757d; /* Muted grey for readability */
+    font-weight: normal;
+    text-align: center;
+    margin-top: 5px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .welcome-user {
+        font-size: 2rem;
+        padding: 10px 20px;
+    }
+
+    .welcome-user-subtext {
+        font-size: 1rem;
+    }
+}
+
+/* Animation for Smooth Fade-in */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Header Section */
 .account-content h1 {
     font-size: 2rem;

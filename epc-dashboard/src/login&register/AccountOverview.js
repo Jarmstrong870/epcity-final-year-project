@@ -164,7 +164,8 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
 
       {/* Main Content */}
       <div className="account-content">
-        <h1>{t.welcome}, {firstName || 'User'}!</h1>
+      <h1 className="welcome-user">Welcome, Matthew</h1>
+      <p className="welcome-user-subtext">Glad to have you back!</p>
 
         {/* Profile Image */}
         <div className="profile-section">
