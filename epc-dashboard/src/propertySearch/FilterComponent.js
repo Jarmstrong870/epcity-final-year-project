@@ -46,24 +46,25 @@ const PropertyFilter = ({ language }) => {
             </div>
 
             {/* Search Input */}
-            <div className="searchAddress">
+            <div>
+                <label htmlFor="searchQuery"></label>
                 <input
-                    className="searchInput"
+                    className="searchAddress"
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
-                    placeholder='Search for a property by Address or Postcode'
+                    
                     onChange={handleSearchChange} // Fix for search query
+                    placeholder={t.search}
                 />
-                 
-                <button type="button" onClick={handleFetchProperties}>{t.findProperties}</button>
-                
+                {/* Submit Button */}
+                <button className='stylingFilterButton' onClick={handleFetchProperties}>{t.findProperties}</button>
             </div>
 
             {/* Property Type Filter (Checkboxes) */}
-            <div className="filterContainer">
+            <div className="propertyTypeFilterTitle">
+                <label><strong>{t.propertyTypes}</strong></label>
                 <div className="propertyTypeFilter">
-                    <label><strong>{t.propertyTypes}</strong></label>
                     {t.propertyTypeOptions.map((type, index) => (
                         <label key={index}>
                             <input
@@ -72,30 +73,28 @@ const PropertyFilter = ({ language }) => {
                                 onChange={handlePropertyTypeChange} // Fix for property types
                             />
                             {type}
-                    </label>
+                        </label>
                     ))}
-                </div>
-
-                {/* EPC Rating Filter (Checkboxes) */}
-                <div className="ratingLetterFilter">
-                    <label><strong>{t.epcRatings}</strong></label>
-                    <div>
-                        {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
-                            <label key={rating}>
-                                <input
-                                    type="checkbox"
-                                    value={rating}
-                                    onChange={handleEpcRatingChange} // Fix for EPC ratings
-                                />
-                                {rating}
-                            </label>
-                        ))}
-                    </div>
                 </div>
             </div>
 
-            {/* Submit Button */}
-           
+            {/* EPC Rating Filter (Checkboxes) */}
+            <div className="ratingLetterFilterTitle">
+                <label><strong>{t.epcRatings}</strong></label>
+                <div className="ratingLetterFilter">
+                    {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
+                        <label key={rating}>
+                            <input
+                                type="checkbox"
+                                value={rating}
+                                onChange={handleEpcRatingChange} // Fix for EPC ratings
+                            />
+                            {rating}
+                        </label>
+                    ))}
+                </div>
+            </div>
+
         </div>
     );
 };

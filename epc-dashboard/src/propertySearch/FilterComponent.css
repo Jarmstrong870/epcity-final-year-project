@@ -1,61 +1,84 @@
 .baseStyling {
     padding: 20px;
-    color: antiquewhite;
-    background-color: #339715;
-    width: 90%;
+    
+}
+
+.searchBarTitle {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 3%;
+    max-width: 800px;
+    border-radius: 12px; /* Box-like appearance */
+    padding: 15px 20px;
+    background-color: white; /* White background for contrast */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    gap: 15px;
+}
+
+.searchBarTitle {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+    border-radius: 12px; /* Box-like appearance */
+    padding: 15px 20px;
+    background-color: white; /* White background for contrast */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    gap: 15px;
 }
 
 .searchAddress {
-    width: 90%;
-    color: #000000;
-    font-size: 50%;
+    justify-content: center;
     align-items: center;
-    margin: 0 auto;
+    flex: 1;
+    padding: 12px 15px;
+    font-size: 16px;
+    width: 800px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-}
-
-.searchInput {
-    width: 75%;
-    
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 10px;
-    box-sizing: border-box;
 }
 
 .propertyTypeFilter,
 .ratingLetterFilter {
-  display: flex;            /* Use flexbox to align items horizontally */
-  flex-wrap: wrap;          /* Allows wrapping if there's not enough space */
-  gap: 10px;                /* Space between items */
-  padding: 15px;
-  align-items: center;      /* Vertically center items */
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 30%;
-  margin: 0 auto;           /* Center the entire block horizontally */
-  text-align: left;         /* Generally better for form elements */
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 15px;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    width: 600px;
+    margin:auto
+}
+
+.propertyTypeFilterTitle,
+.ratingLetterFilterTitle {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 15px;
+    align-items: center;
+    text-align: center;
+    border-radius: 10px;
+    width: 600px;
+    margin:auto
 }
 
 .propertyTypeFilter label,
-.ratingLetterFilter label {
-  display: inline-flex;    /* Keep label + checkbox inline */
-  align-items: center;
-  gap: 5px;                /* Space between checkbox and label text */
-  /* Remove or reduce max-width if it causes wrapping you don't want */
-  max-width: none;
-}
-
-
-.filterContainer{
-    display:flex;
+.ratingLetterFilter label{
+    width: 100%;
+    /* Enforce consistent width */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Space between checkbox and label */
+    text-align: left;
 }
 
 input[type="checkbox"] {
@@ -64,7 +87,8 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-select, input[type="number"] {
+select,
+input[type="number"] {
     width: 100%;
     max-width: 300px;
     padding: 10px;
@@ -90,20 +114,15 @@ select, input[type="number"] {
     display: inline-block;
 }
 
-button {
-    width: 20%;
-    padding: 10px;
-    margin-top: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #339715;
+.stylingFilterButton {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
     color: white;
+    background-color: #2c5f2d;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    display: inline-block;
-    margin-left: 1%;
-}
-button:hover {
-    background-color: #4CAF50;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 5px;
 }

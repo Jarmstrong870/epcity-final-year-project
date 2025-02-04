@@ -25,4 +25,3 @@ const StreetView = ({ streetViewURL, errorMessage }) => {
 
 export default StreetView;
 // Export the component for use in other parts of the application.
-

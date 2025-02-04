@@ -14,11 +14,11 @@ DB_PARAMS = {
     "host": os.getenv('DATABASE_HOST'),
     "port": os.getenv('DATABASE_PORT')
 }
-    
-def updatePropertiesInDB(dataframe):
-    """
-    Connect to the database, wipe the properties table, and populate it with new data.
-    """
+
+"""
+Connect to the database, wipe the properties table, and populate it with new data.
+"""    
+def update_properties_in_db(dataframe):
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
@@ -59,8 +59,11 @@ def updatePropertiesInDB(dataframe):
             cursor.close()
         if conn:
             conn.close()
-            
-def getTopRatedFromDB():
+
+"""
+Returns the top 6 highest rated energy efficient properties from the database
+"""            
+def get_top_rated_from_db():
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)    
@@ -91,11 +94,12 @@ def getTopRatedFromDB():
             conn.rollback()
         print(f"An error occurred: {e}")
 
+"""
+Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
+with optional sorting. Returns the results as a Pandas DataFrame.
+"""
 def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None):
-    """
-    Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
-    with optional sorting and fixed pagination (30 results per page). Returns the results as a Pandas DataFrame.
-    """
+    
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)

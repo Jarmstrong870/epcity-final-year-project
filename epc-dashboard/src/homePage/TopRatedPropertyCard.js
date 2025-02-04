@@ -7,12 +7,12 @@ import FavouriteStar from '../propertySearch/FavouriteStar';
 import translations from '../locales/translations_topratedpropertycard'; // Import translations
 
 /*
-  Top Rated Property Card is a card view displaying the specified four keys details: postcode, type, 
-  energyRating and efficiency and once selected it will navigate to the Property Page and has
-  the Favourite Star component to favourite the property and save to the Favourites Page.
+  Top Rated Property Card is a card view displaying the specified four key details: postcode, type, 
+  energyRating, and efficiency. Once selected, it navigates to the Property Page.
+  The card also includes the Favourite Star component for saving properties to the Favourites Page.
 */ 
 
-const TopRatedPropertyCard = ({ user, property, language}) => {
+const TopRatedPropertyCard = ({ user, property, language }) => {
   const navigate = useNavigate();
   const [isFavourited, setIsFavourited] = useState(false); // State for favorite status
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
@@ -49,32 +49,36 @@ const TopRatedPropertyCard = ({ user, property, language}) => {
       {showPopup && <div className="popup">{popupMessage}</div>}
 
       <div className="propertyImage">
-        <StreetViewComponent address={property.address} postcode={property.postcode} />
+        <StreetViewComponent 
+          address={property.address} 
+          postcode={property.postcode} 
+          propertyType={property.property_type} // Pass property type for placeholder images
+        />
       </div>
+      
       <div className="propertyDetails">
-          <h3> {property.address} 
-            <div className = "starComponent"> {/*Favourite Star Component */}
-              <div onClick={toggleFavourite}>
-                <FavouriteStar user={user} property = {property} 
-                    /> 
-              </div> 
-            </div>   
-          </h3>
+        <h3> {property.address} 
+          <div className="starComponent"> {/* Favourite Star Component */}
+            <div onClick={toggleFavourite}>
+              <FavouriteStar user={user} property={property} />
+            </div> 
+          </div>   
+        </h3>
       </div>
 
-        <p> {/* Top 4 details presented on card view */}
-          <strong>{t.postcode}:</strong> {property.postcode}
-        </p>
-        <p>
-          <strong>{t.type}:</strong> {property.property_type}
-        </p>
-        <p>
-          <strong>{t.energyRating}:</strong> {property.current_energy_rating}
-        </p>
-        <p>
-          <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
-        </p>
-      </div>
+      <p> {/* Top 4 details presented on card view */}
+        <strong>{t.postcode}:</strong> {property.postcode}
+      </p>
+      <p>
+        <strong>{t.type}:</strong> {property.property_type}
+      </p>
+      <p>
+        <strong>{t.energyRating}:</strong> {property.current_energy_rating}
+      </p>
+      <p>
+        <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
+      </p>
+    </div>
   );
 };
 

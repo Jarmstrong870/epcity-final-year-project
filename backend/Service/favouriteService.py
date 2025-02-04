@@ -13,12 +13,12 @@ load_dotenv()
 Service layer method that retieves the user's favourite properties
 Uses the email that was passed through the Controller layer
 """
-def getFavouriteProperties(email):
+def get_favourite_properties(email):
     # Create empty dataframe
     favourite_properties = pd.DataFrame()
     
     # Call the Repository layer and sets the result equal to the dataframe
-    favourite_properties = repo.getFavouritePropertiesfromDB(email)
+    favourite_properties = repo.get_favourite_properties_from_db(email)
     
     #Return the dataframe
     return favourite_properties
@@ -27,14 +27,14 @@ def getFavouriteProperties(email):
 Service layer method that adds a property to the user's favourites
 Uses the email and uprn passed through the Controller layer
 """
-def addFavouriteProperty(email, uprn):
+def add_favourite_property(email, uprn):
     #Calls and returns the Reposititory layer 
-    return repo.addFavouriteToDB(email, uprn)
+    return repo.add_favourite_to_db(email, uprn)
 
 """
 Service layer method that removes a property from the user's favourites
 Uses the email and uprn passed through the Controller layer
 """
-def removeFavouriteProperty(email, uprn):
+def remove_favourite_property(email, uprn):
     # Calls and returns the Repository layer
-    return repo.removeFavouriteFromDB(email, uprn)
+    return repo.remove_favourite_from_db(email, uprn)

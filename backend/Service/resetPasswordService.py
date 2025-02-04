@@ -3,7 +3,7 @@ import string
 from datetime import datetime, timedelta
 from bcrypt import hashpw, gensalt
 from Repository.resetPasswordRepo import ResetPasswordRepo  # Import repository layer
-import requests
+from mailersend import emails
 import os
 
 # Environment variable for MailerSend API key
@@ -26,39 +26,67 @@ class ResetPasswordService:
     @staticmethod
     def send_otp_email(email, otp):
         """
-        Send an OTP email to the user using MailerSend.
+        Send an OTP email to the user using a MailerSend template.
 
         :param email: The recipient's email address.
         :param otp: The generated OTP to include in the email.
         :raises Exception: If the email fails to send.
         """
         try:
-            # MailerSend API endpoint and headers
-            url = "https://api.mailersend.com/v1/email"
-            headers = {
-                "Authorization": f"Bearer {MAILERSEND_API_KEY}",  # Authenticate using the API key
-                "Content-Type": "application/json"
+            # Initialize the MailerSend email client
+            mailer = emails.NewEmail()
+            mailer.api_key = os.getenv('MAILERSEND_API_KEY')  # Set API key
+
+            # Define the mail body object
+            mail_body = {}
+
+            # Sender information
+            mail_from = {
+                "name": "EPCity Support",
+                "email": "support@epcity.co.uk"
             }
 
-            # Email content and recipient information
-            payload = {
-                "from": {
-                    "email": "support@epcity.co.uk",
-                    "name": "EPCity Support"
-                },
-                "to": [{"email": email}],
-                "subject": "Your One-Time Password (OTP)",
-                "text": f"Your OTP is {otp}. Please use this code within 10 minutes to reset your password."
-            }
+            # Recipient information
+            recipients = [
+                {
+                    "name": "User",  # Optional: Replace with the user's name if available
+                    "email": email
+                }
+            ]
 
-            # Make a POST request to send the email
-            response = requests.post(url, json=payload, headers=headers)
+            # Personalization data for the template
+            personalization = [
+                {
+                    "email": email,
+                    "data": {
+                        "otp": otp,  # Inject the OTP into the template
+                        "name": "User",  # Replace with the user's name if available
+                         "account": {
+                           "The EPCity team": ""
+                        },
+                        "support_email": "support@epcity.co.uk"  # Support email
+                    }
+                }
+            ]
 
-            # Check for successful email delivery
-            if response.status_code != 202:  # 202 indicates the email was accepted for delivery
-                raise Exception(f"Failed to send email: {response.text}")
+            # Set the MailerSend fields
+            mailer.set_mail_from(mail_from, mail_body)  # Set the sender
+            mailer.set_mail_to(recipients, mail_body)  # Set the recipients
+            mailer.set_subject("Your OTP for EPCity", mail_body)  # Set the subject
+            mailer.set_template("neqvygm5nvz40p7w", mail_body)  # Replace with your MailerSend template ID
+            mailer.set_personalization(personalization, mail_body)  # Add personalization data
+
+            # Debug logs
+            print(f"Mail Body: {mail_body}")
+            print(f"Personalization Data: {personalization}")
+
+            # Send the email and log the response
+            print("Attempting to send email via MailerSend...")
+            response = mailer.send(mail_body)
+            print(f"MailerSend Response: {response}")  # Log the response
+
         except Exception as e:
-            print(f"Error sending email: {e}")
+            print(f"Error sending email with MailerSend: {e}")
             raise
 
     @staticmethod
@@ -75,7 +103,7 @@ class ResetPasswordService:
         # Save the OTP and its expiry time in the database
         ResetPasswordRepo.save_reset_otp(email, otp, expiry)
 
-        # Send the OTP to the user's email
+        # Send the OTP to the user's email using the updated method
         ResetPasswordService.send_otp_email(email, otp)
 
         # Return a success message (does not confirm email exists for security reasons)
@@ -122,5 +150,3 @@ class ResetPasswordService:
 
         # Return success message
         return {"message": "Password reset successfully."}, 200
-
-

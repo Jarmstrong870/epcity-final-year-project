@@ -1,39 +1,35 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS
+import pandas as pd
 import Service.propertyService as properties
 
 # Create a blueprint instance
 property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
-# Route to update properties monthly
-@property_blueprint.route('/property/replace', methods=['GET'])
-def property_load():
-    """
-    Handles GET requests to retrieve all properties from API and update database.
-    """
-    return jsonify(properties.getAllProperties().to_dict(orient='records'))
-
-# Route to load top 6 properties from DB for Home Page
+"""
+Route to load top 6 properties from DB for Home Page
+"""
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
-def property_load_toprated():
-    """
-    Handles GET requests to retrieve top rated properties from .
-    """
-    return jsonify(properties.getTopRatedProperties().to_dict(orient='records'))
+def property_load_toprated_route():
+    # returns service method
+    return jsonify(properties.get_top_rated_properties().to_dict(orient='records'))
 
-# Route to get info on a selected property
+"""
+Route to get info on a selected property
+"""
 @property_blueprint.route('/property/getInfo', methods=['GET'])
-def get_property_info():
-    """
-    Returns data for a single property
-    """
+def get_property_info_route():
+    # gets uprn value from url
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(properties.getPropertyInfo(uprn).to_dict(orient='records'))
+    # calls service method
+    return jsonify(properties.get_property_info(uprn).to_dict(orient='records'))
 
-# Does everything method
+"""
+Route that handles all searching, filtering, sorting and pagination
+"""
 @property_blueprint.route('/property/getPage', methods=['GET'])
-def get_properties_page():
+def get_properties_page_route():
     try:
         # Validate and parse query parameters
         property_types = (
@@ -48,11 +44,52 @@ def get_properties_page():
         page = int(request.args.get('page', 1))  # Defaults to 1
 
         # Call service layer
-        result = properties.returnProperties(property_types, energy_ratings, search, sort_by, order, page)
+        result = properties.return_properties(property_types, energy_ratings, search, sort_by, order, page)
 
-        # Return paginated results
+        # Return results
         return jsonify(result.to_dict(orient='records')), 200
     except ValueError as ve:
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    """
+Route: /property/compare
+Method: POST
+Description: Compares multiple properties based on selected criteria.
+Request Body:
+    - uprns (list of str): List of UPRNs of the properties to compare.
+Response: JSON list containing comparison data for selected properties.
+
+"""
+    
+@property_blueprint.route('/property/compare', methods=['POST'])
+def compare_properties_route():
+    try:
+        # Extract request data
+        data = request.get_json()
+        print("Received Data:", data)  # Debugging
+
+        if data is None:
+            return jsonify({"error": "No data received"}), 400
+
+        uprns = data.get("uprns", [])
+
+        # Validate the input
+        if not isinstance(uprns, list) or len(uprns) < 2 or len(uprns) > 4:
+            return jsonify({"error": "You must select between 2 and 4 properties for comparison."}), 400
+
+        print("UPRNs Received:", uprns)  # Debugging
+
+        # Fetch comparison data from the service layer
+        comparison_data = properties.compare_properties(uprns)
+
+        #  Convert DataFrame to JSON format
+        if isinstance(comparison_data, pd.DataFrame):
+            comparison_data = comparison_data.to_dict(orient="records")
+
+        return jsonify(comparison_data), 200
+
+    except Exception as e:
+        print("Error in compare_properties_route:", str(e))  # Debugging
         return jsonify({"error": str(e)}), 500
