@@ -7,6 +7,7 @@ const translations = {
       myProperties: 'My Properties',
       viewAllProperties: 'View All Properties',
       faqs: 'Frequently Asked Questions',
+      messages: "Messages",
       favourites: 'My Favourite Properties',
       groups: 'Friends and Groups',
     },

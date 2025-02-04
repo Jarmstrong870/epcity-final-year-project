@@ -1,36 +1,57 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavouriteStar from './FavouriteStar';
+import FavouriteStar from './FavoriteStar';
 import './PropertyList.css';
-import translations from '../locales/translations_propertylist'; // Import translations
+import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
 
-/* 
-    Property List (View All Properties) page is used to display all of the data records we have saved in our 
-    database. Property addresses can be viewed in table view or card view and the relevant details will be displayed
-    for users to click into the property page and is navigated to the Property Page with more information 
-
-    The Favourite Star component has been included so users can favourite a property once they have read more 
-    infromation about the property's efficiency
-  
-*/
-
-
 const PropertyList = ({ user, loading, language }) => {
-  const { properties, sortProperties, getNewPage } = useContext(PropertyContext);
-  const [viewMode, setViewMode] = useState('table'); // State to toggle between 'table' and 'card' views
+  const [viewMode, setViewMode] = useState('table');
+  const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState(''); // State for popup message
   const [showPopup, setShowPopup] = useState(false); // State to show/hide popup
-  const [page, setPage] = useState(1);
+
+  const t = translations[language] || translations.en;
+  const navigate = useNavigate();
+  const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
+  const [pageNumber, setPageNumber] = useState(1);
   const [sortValue, setSortValue] = useState("current_energy_rating");
   const [isFavourited, setIsFavourited] = useState(false);
 
   useEffect(() => {
-    getNewPage(page);
-  }, [page]);
+    getNewPage(1); // Load the first page when the component mounts
+  }, []);
 
-  const t = translations[language] || translations.en; // Load translations
+  if (loading) return <p>{t.loading}</p>;
+  if (properties.length === 0) return <p>{t.noProperties}</p>;
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0) {
+      setPageNumber(newPage);
+      getNewPage(newPage);
+    }
+  };
+
+  const handleSortChange = (event) => {
+    const newSortValue = event.target.value;
+    setSortValue(newSortValue);
+    sortProperties(newSortValue);
+  };
+
+  // Select/Deselect properties for comparison
+  const toggleCompareSelection = (uprn) => {
+    setSelectedForComparison((prevSelection) => {
+      if (prevSelection.includes(uprn)) {
+        return prevSelection.filter((id) => id !== uprn);
+      } else if (prevSelection.length < 4) {
+        return [...prevSelection, uprn];
+      } else {
+        alert("You can only compare up to 4 properties.");
+        return prevSelection;
+      }
+    });
+  };
 
   // Handle toggle favorite to show popup
   const handleToggleFavourite = (property) => {
@@ -40,122 +61,127 @@ const PropertyList = ({ user, loading, language }) => {
         : `${property?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
+
     // Hide the popup after 5 seconds
     setTimeout(() => {
       setShowPopup(false);
     }, 5000);
   };
 
-  if (loading) {
-    return <p>{t.loading}</p>;
-  }
+  // Redirect to Compare Page
+  const handleCompareClick = () => {
+    if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
+      alert("You must select between 2 and 4 properties to compare.");
+      return;
+    }
 
-  if (properties.length === 0) {
-    return <p>{t.noProperties}</p>;
-  }
-
-  const handleSortChange = (e) => {
-    const newSort = e.target.value;
-    setSortValue(newSort)
-    const newOrder = 'asc'; // Toggle order
-    sortProperties(newSort, newOrder); // Sorting keeps current filters and resets page to 1
+    navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
-
-  const handlePageChange = (direction) => {
-    setPage(page + direction)
-  };
-
-  // Limit to first 12 properties for the card view
-  const limitedProperties = properties.slice(0, 12);
 
   return (
-    <div className='property-list'>
-      <div className='property-list-header'>
+    <div className="property-list">
+      <div className="property-list-header">
         {/* Sort Dropdown */}
-        <div className='sort-containor'>
-          <label>Sort By</label>
+        <div className="sort-container">
+          <label>Sort By:</label>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="address">Address</option>
             <option value="postcode">Postcode</option>
             <option value="property_type">Property Type</option>
-            <option value="current_energy_rating">Energy Rating</option>
-            <option value="current_energy_efficiency">Energy Efficiency</option>
+            <option value="current_energy_rating">Current Energy Rating</option>
+            <option value="current_energy_efficiency">Current Energy Efficiency</option>
           </select>
         </div>
+      </div>
 
-        <h2>{t.propertyList}</h2>
-
-        {/* Popup for favoriting/unfavoriting */}
-        {showPopup && <div className="popup">{popupMessage}</div>}
-
-        {/* View Mode Toggle */}
+      {/* View Mode Toggle & Compare Button */}
+      <div className="view-toggle-container">
         <div className="view-toggle">
-          <button
-            onClick={() => setViewMode('table')}
-            className={viewMode === 'table' ? 'active' : ''}
-          >
+          <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
             {t.tableView}
           </button>
-          <button
-            onClick={() => setViewMode('card')}
-            className={viewMode === 'card' ? 'active' : ''}
-          >
+          <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
             {t.cardView}
           </button>
         </div>
+
+        {/* Compare Button with Dynamic Count */}
+        <button
+          className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
+          onClick={handleCompareClick}
+          disabled={selectedForComparison.length < 2}
+        >
+          Compare ({selectedForComparison.length}/4)
+        </button>
       </div>
 
-        {/* Conditional Rendering Based on View Mode */}
-      <div className="property-list-content">
-        {viewMode === 'table' ? (
-          <table>
-            <thead>
-              <tr>
-                <th>{t.address}</th>
-                <th>{t.postcode}</th>
-                <th>{t.propertyType}</th>
-                <th>{t.currentEnergyRating}</th>
-                <th>{t.currentEnergyEfficiency}</th>
-                <th>{t.favorite}</th>
+      {/* Conditional Table View */}
+      {viewMode === 'table' ? (
+        <table className="table-view">
+          <thead>
+            <tr>
+              <th>{t.address}</th>
+              <th>{t.postcode}</th>
+              <th>{t.propertyType}</th>
+              <th>{t.currentEnergyRating}</th>
+              <th>{t.currentEnergyEfficiency}</th>
+              <th>{t.favorite}</th>
+              <th>COMPARE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {properties.map((property, index) => (
+              <tr key={index}>
+                <td>
+                  <Link to={`/property/${property.uprn}`}>{property.address}</Link>
+                </td>
+                <td>{property.postcode}</td>
+                <td>{property.property_type}</td>
+                <td>{property.current_energy_rating}</td>
+                <td>{property.current_energy_efficiency}</td>
+                <td>
+                  <FavoriteStar propertyData={property}
+                    onToggle={handleToggleFavorite}
+                  />
+                </td>
+                <td className="compare-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(property.uprn)}
+                    onChange={() => toggleCompareSelection(property.uprn)}
+                  />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {properties.map((property, index) => (
-                <tr key={index}>
-                  <td>
-                    <Link to={`/property/${property.uprn}`}>{property.address}</Link>
-                  </td>
-                  <td>{property.postcode}</td>
-                  <td>{property.property_type}</td>
-                  <td>{property.current_energy_rating}</td>
-                  <td>{property.current_energy_efficiency}</td>
-                  <td>
-                  <span onClick={() => handleToggleFavourite(property)}>
-                    <FavouriteStar user={user} property = {property} /> 
-                  </span> 
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div className="property-cards-container">
-            {limitedProperties.map((property, index) => (
-              <TopRatedPropertyCard property={property} key={index} language={language} />
             ))}
-          </div>
-        )}
-      
+          </tbody>
+        </table>
+      ) : (
+        <div className="property-cards-container">
+          {properties.slice(0, 12).map((property, index) => (
+            <div key={index} className="property-card">
+              <TopRatedPropertyCard property={property} language={language} />
 
-        {/* Pagination */}
-        <div className='pagination'>
-          <button onClick={() => handlePageChange(-1)} disabled={page === 1}>
-            Previous
-          </button>
-          <button onClick={() => handlePageChange(1)}>Next</button>
+              {/* Comparison Checkbox */}
+              <div className="compare-checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={selectedForComparison.includes(property.uprn)}
+                    onChange={() => toggleCompareSelection(property.uprn)}
+                  />
+                  Compare
+                </label>
+              </div>
+            </div>
+          ))}
         </div>
+      )
+      }
+      <div>
+        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
       </div>
-    </div>
+    </div >
   );
 };
 
