@@ -140,9 +140,9 @@ const PropertyList = ({ user, loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar propertyData={property}
-                    onToggle={handleToggleFavorite}
-                  />
+                <span onClick={() => handleToggleFavourite(property)}>
+                    <FavouriteStar user={user} property = {property} /> 
+                  </span> 
                 </td>
                 <td className="compare-checkbox">
                   <input
