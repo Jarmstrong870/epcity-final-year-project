@@ -1,17 +1,61 @@
+/* ✅ Ensure toggle switches do not affect map layout */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between toggle and text */
+  margin-bottom: 8px;
+}
+
+/* Hide default checkbox */
+.toggle-switch input {
+  display: none;
+}
+
+/* ✅ Toggle background */
+.slider {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* ✅ Toggle switch knob */
+.slider::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
+
+/* ✅ Active toggle styles */
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* ✅ Ensure the map always displays correctly */
 .map-container {
-    height: 100%; /* Make the map container take up the full height of its parent. */
-    width: 100%; /* Make the map container take up the full width of its parent. */
-  }
-  
-  .map-loading {
-    text-align: center; /* Center the loading message text. */
-    font-size: 1rem; /* Adjust font size for readability. */
-    color: #555; /* Optional: Set a subtle color for the loading text. */
-  }
-  
-  .map-error {
-    text-align: center; /* Center-align the error message text. */
-    font-size: 1rem; /* Adjust font size for readability. */
-    color: red; /* Set the error text color to red. */
-  }
-  
+  height: 500px;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.map-loading,
+.map-error {
+  text-align: center;
+  font-size: 1rem;
+  color: red;
+}
