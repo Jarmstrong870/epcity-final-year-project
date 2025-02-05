@@ -91,6 +91,7 @@ def get_all_properties():
 
     # Keep only the most recent entry for each 'uprn'
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
+    print(search_results.columns)
 
     search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
                                                     'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
