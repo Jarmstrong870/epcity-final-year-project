@@ -50,7 +50,7 @@ const PropertyPage = ({ user, property, email, language }) => {
   }, [propertyData]);
 
   //  Handle favoriting of properties
-  const toggleFavorite = () => {
+  const toggleFavourite = () => {
     setIsFavourited(!isFavourited);
     setPopupMessage(
       isFavourited
@@ -114,7 +114,7 @@ const PropertyPage = ({ user, property, email, language }) => {
         <h2 className="property-title">Property Details</h2>
         <div className = "starComponent">
         {/*<div onClick={handleToggleFavourite}>*/}
-                <FavouriteStar user={user} property = {propertyData} onToggle={{handleToggleFavourite}}/> 
+                <FavouriteStar user={user} property = {propertyData} onToggle={{toggleFavourite}}/> 
               </div> 
         </div>
     
