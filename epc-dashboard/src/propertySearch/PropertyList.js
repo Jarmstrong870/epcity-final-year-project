@@ -36,7 +36,7 @@ const PropertyList = ({ loading, language }) => {
   const handleSortChange = (event) => {
     const newSortValue = event.target.value;
     setSortValue(newSortValue);
-    if (newSortValue == "sort_by" || sortOrder == "order") {
+    if (newSortValue === "sort_by" || sortOrder === "order") {
       sortProperties(null, null)
     }
     else {
@@ -47,7 +47,7 @@ const PropertyList = ({ loading, language }) => {
   const handleOrderChange = (event) => {
     const newSortOrder = event.target.value;
     setSortOrder(newSortOrder);
-    if (newSortOrder == "order" || sortValue == "sort_by") {
+    if (newSortOrder === "order" || sortValue === "sort_by") {
       sortProperties(null, null);
     }
     else {
