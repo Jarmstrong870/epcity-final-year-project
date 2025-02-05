@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
-import EPCFullTable from './EPCFullTable';
+import EPCFullTable from './EPCFullTable/EPCFullTable';
 import MapView from './MapView';
 import StreetView from './StreetView';
 import FavouriteStar from '../../propertySearch/FavouriteStar'; //  Use your existing FavouriteStar component.
@@ -77,22 +77,21 @@ const PropertyPage = ({ user, property, email, language }) => {
       {/* Header section with property title and favorite star */}
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
-        <div className="starComponent">
+        <div onClick={toggleFavorite} className="starComponent">
           <FavouriteStar user={user} property={property} />
         </div>
       </div>
 
       {/* Section to display street view and map view */}
+      
       <div className="image-and-map-section">
         <div className="street-view">
           <h3>Street View</h3>
           <StreetView streetViewURL={streetViewURL} errorMessage={errorMessage} />
         </div>
-        <div className="map-view">
-          <h3>Map View</h3>
-          <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} />
-        </div>
+        
       </div>
+      
 
       {/* EPC Table Section */}
       {propertyData ? (
@@ -111,6 +110,11 @@ const PropertyPage = ({ user, property, email, language }) => {
           />
         )}
       </div>
+
+      <div className="map-view">
+          <h3>Map View</h3>
+          <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} />
+        </div>
     </div>
   );
 };

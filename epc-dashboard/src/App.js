@@ -9,7 +9,7 @@ import Register from './login&register/Register';
 import PropertyFilter from './propertySearch/FilterComponent';
 import PropertyList from './propertySearch/PropertyList';
 import PropertyPage from './Components/propertyPage/PropertyPage';
-import EPCTable from './Components/propertyPage/EPCFullTable';
+import EPCTable from './Components/propertyPage/EPCFullTable/EPCFullTable';
 import HomePage from './homePage/HomePage';
 import './homePage/HomePage.css';
 import FAQs from './FAQ/FAQs';
