@@ -2,24 +2,28 @@ import React, { useEffect, useState } from "react";
 import { GoogleMap, Marker, InfoWindow, DirectionsRenderer } from "@react-google-maps/api";
 import CategoryToggle from "./CategoryToggle";
 import DropdownSelector from "./DropdownSelector";
-import translations from "../../locales/translations_mapview"; // Import translations
+import translations from "../../locales/translations_mapview";
 import "./MapView.css";
 
 const locations = {
-  "University of Liverpool": { lat: 53.4065, lng: -2.9665, color: "purple", category: "universities" },
-  "Liverpool John Moores University": { lat: 53.4084, lng: -2.9785, color: "purple", category: "universities" },
-  "Liverpool Hope University": { lat: 53.3876, lng: -2.9158, color: "purple", category: "universities" },
-  "Liverpool Institute for Performing Arts": { lat: 53.3995, lng: -2.9752, color: "purple", category: "universities" },
-  "Liverpool Lime Street Station": { lat: 53.4075, lng: -2.9778, color: "green", category: "trainStations" },
-  "Liverpool Central Station": { lat: 53.4054, lng: -2.9789, color: "green", category: "trainStations" },
-  "Moorfields Station": { lat: 53.4102, lng: -2.9918, color: "green", category: "trainStations" },
-  "Liverpool One Bus Station": { lat: 53.4032, lng: -2.9905, color: "red", category: "busStations" },
-  "Queen Square Bus Station": { lat: 53.4071, lng: -2.9828, color: "red", category: "busStations" },
+  "University of Liverpool": { lat: 53.40989014595241, lng: -2.9803081829132276, color: "purple", category: "universities" },
+  "Liverpool John Moores University": { lat: 53.413038360370216, lng: -2.9791604435096404, color: "purple", category: "universities" },
+  "Liverpool Hope University": { lat: 53.390845459434836, lng: -2.8922237007055838, color: "purple", category: "universities" },
+  "Liverpool Institute for Performing Arts": { lat: 53.39997042752927, lng: -2.9721646313893535, color: "purple", category: "universities" },
+  "Liverpool Lime Street Station": { lat: 53.40765736916895, lng: -2.978670344615339, color: "green", category: "trainStations" },
+  "Liverpool Central Station": { lat: 53.404667510982236, lng: -2.980010111913629, color: "green", category: "trainStations" },
+  "Moorfields Station": { lat: 53.40854949925297, lng: -2.989254277820486, color: "green", category: "trainStations" },
+  "Liverpool One Bus Station": { lat: 53.40191417729117, lng: -2.9874611721455864, color: "red", category: "busStations" },
+  "Queen Square Bus Station": { lat: 53.40756246742054, lng: -2.9826631763883324, color: "red", category: "busStations" },
   "Liverpool City Centre": { lat: 53.4084, lng: -2.9916, color: "blue", category: "pointsOfInterest" },
-  "JD Gym Liverpool": { lat: 53.4088, lng: -2.9782, color: "yellow", category: "gyms" },
-  "PureGym Liverpool": { lat: 53.4092, lng: -2.9921, color: "yellow", category: "gyms" },
-  "Liverpool Central Library": { lat: 53.4098, lng: -2.9812, color: "orange", category: "libraries" },
-  "Toxteth Library": { lat: 53.3889, lng: -2.9613, color: "orange", category: "libraries" },
+  "JD Gym Liverpool": { lat: 53.40733878560883, lng: -2.9900960483534855, color: "yellow", category: "gyms" },
+  "PureGym Liverpool Central": { lat: 53.40509362757359, lng: -2.976785182958734, color: "yellow", category: "gyms" },
+  "PureGym Liverpool Brunswick": { lat: 53.3854490881573, lng: -2.9780240743577995, color: "yellow", category: "gyms" },
+  "PureGym Liverpool Edge Lane": { lat: 53.407884617855586, lng: -2.9249996607282585, color: "yellow", category: "gyms" },
+  "Liverpool Central Library": { lat: 53.40989014595241, lng: -2.9803081829132276, color: "orange", category: "libraries" },
+  "Sydney Jones Library, University of Liverpool": { lat: 53.40275986934178, lng: -2.9638410587206243, color: "orange", category: "libraries" },
+  "Aldham Robarts Library, Liverpool John Moores University": { lat: 53.4030624485487, lng: -2.9718717170172497, color: "orange", category: "libraries" },
+  "Sheppard-Worlock Library, Liverpool Hope University": { lat: 53.3922854133878, lng: -2.890909689060898, color: "orange", category: "libraries" },
 };
 
 const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
@@ -40,7 +44,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
     libraries: false,
   });
 
-  const t = translations[language] || translations.en; // Get translations for selected language
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     if (window.google) {
@@ -62,7 +66,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
 
     const destination = locations[newDestination];
 
-    if (!destination || !activeCategories[destination.category]) {
+    if (!destination || !activeCategories[destination.category] || !showRoute) {
       setDirections(null);
       setTravelTime(null);
       return;
@@ -90,26 +94,49 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
   };
 
   useEffect(() => {
-    if (showRoute) fetchRoute();
-  }, [travelMode, selectedLocation, activeCategories]);
+    if (showRoute && selectedLocation) {
+      fetchRoute();
+    } else {
+      setDirections(null); // Clear route if toggle is off
+      setTravelTime(null);
+    }
+  }, [showRoute, travelMode, selectedLocation, activeCategories]);
 
   const toggleCategory = (category) => {
     setActiveCategories((prev) => {
       const updatedCategories = { ...prev, [category]: !prev[category] };
 
       if (selectedLocation && !updatedCategories[locations[selectedLocation]?.category]) {
-        const newLocation = Object.keys(locations).find(
-          (loc) => updatedCategories[locations[loc]?.category]
-        );
-
-        setSelectedLocation(newLocation || null);
-        fetchRoute(newLocation || null);
-      } else {
-        fetchRoute(selectedLocation);
+        setSelectedLocation(null);
+        setDirections(null);
+        setTravelTime(null);
       }
 
       return updatedCategories;
     });
+  };
+
+  const handleRouteToggle = () => {
+    setShowRoute((prev) => {
+      const newShowRoute = !prev;
+      if (!newShowRoute) {
+        setDirections(null);
+        setTravelTime(null);
+      } else if (selectedLocation) {
+        fetchRoute();
+      }
+      return newShowRoute;
+    });
+  };
+
+  const handleLocationChange = (location) => {
+    setSelectedLocation(location);
+    setDirections(null); // Clear previous route
+    setTravelTime(null);
+
+    if (showRoute) {
+      fetchRoute(location);
+    }
   };
 
   if (!isLoaded) return <p className="map-loading">Loading map...</p>;
@@ -120,18 +147,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
       <CategoryToggle categories={t.categories} activeCategories={activeCategories} toggleCategory={toggleCategory} />
 
       <label className="toggle-switch">
-        <input
-          type="checkbox"
-          checked={showRoute}
-          onChange={() => {
-            setShowRoute((prev) => !prev);
-            if (!showRoute) fetchRoute();
-            else {
-              setDirections(null);
-              setTravelTime(null);
-            }
-          }}
-        />
+        <input type="checkbox" checked={showRoute} onChange={handleRouteToggle} />
         <span className="slider"></span> {t.showRoute}
       </label>
 
@@ -140,7 +156,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
         locations={locations}
         activeCategories={activeCategories}
         selectedLocation={selectedLocation}
-        setSelectedLocation={setSelectedLocation}
+        setSelectedLocation={handleLocationChange}
         fetchRoute={fetchRoute}
         travelMode={travelMode}
         setTravelMode={setTravelMode}
@@ -152,9 +168,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
 
       <div className="map-container">
         <GoogleMap center={locationCoords} zoom={13} mapContainerClassName="map-container">
-          {showMarker && houseIcon && (
-            <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />
-          )}
+          {showMarker && houseIcon && <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />}
 
           {selected && (
             <InfoWindow position={selected} onCloseClick={() => setSelected(null)}>
@@ -165,7 +179,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
             </InfoWindow>
           )}
 
-          {directions && selectedLocation && locations[selectedLocation] && (
+          {directions && (
             <DirectionsRenderer directions={directions} options={{ suppressMarkers: true, polylineOptions: { strokeColor: locations[selectedLocation]?.color || "blue", strokeWeight: 5 } }} />
           )}
         </GoogleMap>
