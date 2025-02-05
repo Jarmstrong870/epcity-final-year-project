@@ -12,7 +12,7 @@ const DropdownSelector = ({
   travelMode,
   setTravelMode,
   showRoute,
-  language, // ✅ Receive language prop
+  language, //  Receive language prop
 }) => {
   const t = translations[language] || translations.en; // Get translations based on language
 
