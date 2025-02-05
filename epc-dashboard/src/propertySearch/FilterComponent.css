@@ -1,5 +1,19 @@
 .baseStyling {
     padding: 20px;
+    
+}
+
+.searchBarTitle {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+    border-radius: 12px; /* Box-like appearance */
+    padding: 15px 20px;
+    background-color: white; /* White background for contrast */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    gap: 15px;
 }
 
 .searchBarTitle {
@@ -83,6 +97,21 @@ input[type="number"] {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.searchButton {
+    width: 10%;
+    max-width: 300px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #339715;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .stylingFilterButton {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
-import EPCFullTable from './EPCFullTable';
+import EPCFullTable from './EPCFullTable/EPCFullTable';
 import SimpleMapView from './SimpleMapView';
 import MapView from './MapView'; // Added back MapView
 import StreetView from './StreetView';
@@ -69,11 +69,13 @@ const PropertyPage = ({ user, property, email, language }) => {
 
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
-        <div className="starComponent">
+        <div onClick={toggleFavorite} className="starComponent">
           <FavouriteStar user={user} property={property} />
         </div>
       </div>
 
+      {/* Section to display street view and map view */}
+      
       <div className="image-and-map-section">
         <div className="street-view">
           <h3>Street View</h3>
@@ -84,6 +86,7 @@ const PropertyPage = ({ user, property, email, language }) => {
           <SimpleMapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} />
         </div>
       </div>
+      
 
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} language={language} />

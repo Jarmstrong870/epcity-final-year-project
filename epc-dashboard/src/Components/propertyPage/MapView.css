@@ -5,6 +5,7 @@
   margin-top: 15px;
   border-radius: 10px;
   overflow: hidden;
+  display: inline-block;
 }
 
 /* ✅ Loading and error messages */
