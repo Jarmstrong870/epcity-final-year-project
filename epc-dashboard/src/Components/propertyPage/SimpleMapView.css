@@ -1,0 +1,17 @@
+/* ✅ Ensure the map always displays correctly */
+.map-container {
+    height: 500px;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  /* ✅ Loading and error messages */
+  .map-loading,
+  .map-error {
+    text-align: center;
+    font-size: 1rem;
+    color: red;
+  }
+  

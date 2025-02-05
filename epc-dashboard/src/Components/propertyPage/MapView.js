@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { GoogleMap, Marker, InfoWindow, DirectionsRenderer } from "@react-google-maps/api";
+import CategoryToggle from "./CategoryToggle";
+import DropdownSelector from "./DropdownSelector";
+import translations from "../../locales/translations_mapview"; // Import translations
 import "./MapView.css";
 
-// Define locations with categories & colors
 const locations = {
- "University of Liverpool": { lat: 53.4065, lng: -2.9665, color: "purple", category: "universities" },
+  "University of Liverpool": { lat: 53.4065, lng: -2.9665, color: "purple", category: "universities" },
   "Liverpool John Moores University": { lat: 53.4084, lng: -2.9785, color: "purple", category: "universities" },
   "Liverpool Hope University": { lat: 53.3876, lng: -2.9158, color: "purple", category: "universities" },
   "Liverpool Institute for Performing Arts": { lat: 53.3995, lng: -2.9752, color: "purple", category: "universities" },
@@ -20,16 +22,7 @@ const locations = {
   "Toxteth Library": { lat: 53.3889, lng: -2.9613, color: "orange", category: "libraries" },
 };
 
-const categories = {
-  universities: "🎓 Universities",
-  trainStations: "🚉 Train Stations",
-  busStations: "🚌 Bus Stations",
-  pointsOfInterest: "🏙️ Points of Interest",
-  gyms: "🏋️ Gyms & Leisure",
-  libraries: "📚 Libraries",
-};
-
-const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
+const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
   const [houseIcon, setHouseIcon] = useState(null);
   const [showMarker, setShowMarker] = useState(false);
   const [selected, setSelected] = useState(null);
@@ -37,13 +30,17 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
   const [directions, setDirections] = useState(null);
   const [travelTime, setTravelTime] = useState(null);
   const [travelMode, setTravelMode] = useState("DRIVING");
-  const [selectedLocation, setSelectedLocation] = useState("Liverpool Lime Street Station");
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [activeCategories, setActiveCategories] = useState({
-    universities: true,
-    trainStations: true,
-    busStations: true,
-    pointsOfInterest: true,
+    universities: false,
+    trainStations: false,
+    busStations: false,
+    pointsOfInterest: false,
+    gyms: false,
+    libraries: false,
   });
+
+  const t = translations[language] || translations.en; // Get translations for selected language
 
   useEffect(() => {
     if (window.google) {
@@ -60,13 +57,12 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
     }
   }, [locationCoords]);
 
-  // ✅ Fetches the Route
   const fetchRoute = (newDestination = selectedLocation) => {
-    if (!window.google || !window.google.maps) return;
+    if (!window.google || !window.google.maps || !newDestination) return;
 
     const destination = locations[newDestination];
 
-    if (!destination || !activeCategories[locations[newDestination].category]) {
+    if (!destination || !activeCategories[destination.category]) {
       setDirections(null);
       setTravelTime(null);
       return;
@@ -97,26 +93,19 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
     if (showRoute) fetchRoute();
   }, [travelMode, selectedLocation, activeCategories]);
 
-  // ✅ Updates Selected Location when a Category is Toggled
   const toggleCategory = (category) => {
     setActiveCategories((prev) => {
       const updatedCategories = { ...prev, [category]: !prev[category] };
 
-      // If the selected location's category is turned off, switch to the next available category
-      if (!updatedCategories[locations[selectedLocation]?.category]) {
+      if (selectedLocation && !updatedCategories[locations[selectedLocation]?.category]) {
         const newLocation = Object.keys(locations).find(
-          (loc) => updatedCategories[locations[loc].category]
+          (loc) => updatedCategories[locations[loc]?.category]
         );
 
-        if (newLocation) {
-          setSelectedLocation(newLocation); // Switch dropdown immediately
-          fetchRoute(newLocation); // 🚀 Fetch the new route immediately
-        } else {
-          setDirections(null);
-          setTravelTime(null);
-        }
+        setSelectedLocation(newLocation || null);
+        fetchRoute(newLocation || null);
       } else {
-        fetchRoute(selectedLocation); // Ensure route updates immediately if category is still active
+        fetchRoute(selectedLocation);
       }
 
       return updatedCategories;
@@ -128,19 +117,8 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
 
   return (
     <div>
-      {/* ✅ Category Toggles (Now Updates Routes Immediately) */}
-      {Object.keys(categories).map((category) => (
-        <label key={category} className="toggle-switch">
-          <input
-            type="checkbox"
-            checked={activeCategories[category]}
-            onChange={() => toggleCategory(category)}
-          />
-          <span className="slider"></span> {categories[category]}
-        </label>
-      ))}
+      <CategoryToggle categories={t.categories} activeCategories={activeCategories} toggleCategory={toggleCategory} />
 
-      {/* ✅ Route Toggle */}
       <label className="toggle-switch">
         <input
           type="checkbox"
@@ -154,74 +132,41 @@ const MapView = ({ locationCoords, isLoaded, errorMessage }) => {
             }
           }}
         />
-        <span className="slider"></span> Show route to selected location
+        <span className="slider"></span> {t.showRoute}
       </label>
 
-      {/* ✅ Destination Selection */}
-      <label>Select Destination:</label>
-      <select
-        onChange={(e) => {
-          setSelectedLocation(e.target.value);
-          fetchRoute(e.target.value); // 🚀 Ensures new route is shown immediately
-        }}
-        value={selectedLocation}
-        disabled={!showRoute}
-      >
-        {Object.keys(categories).map((category) =>
-          activeCategories[category] ? (
-            <optgroup key={category} label={categories[category]}>
-              {Object.keys(locations)
-                .filter((loc) => locations[loc].category === category)
-                .map((loc) => (
-                  <option key={loc} value={loc}>
-                    {loc}
-                  </option>
-                ))}
-            </optgroup>
-          ) : null
-        )}
-      </select>
+      <DropdownSelector
+        categories={t.categories}
+        locations={locations}
+        activeCategories={activeCategories}
+        selectedLocation={selectedLocation}
+        setSelectedLocation={setSelectedLocation}
+        fetchRoute={fetchRoute}
+        travelMode={travelMode}
+        setTravelMode={setTravelMode}
+        showRoute={showRoute}
+        language={language}
+      />
 
-      {/* ✅ Travel Mode Selection */}
-      <label>Travel Mode:</label>
-      <select onChange={(e) => setTravelMode(e.target.value)} value={travelMode}>
-        <option value="DRIVING">Driving 🚗</option>
-        <option value="WALKING">Walking 🚶</option>
-        <option value="BICYCLING">Bicycling 🚲</option>
-        <option value="TRANSIT">Public Transit 🚌</option>
-      </select>
-
-      {/* ✅ Estimated Travel Time */}
-      {travelTime && <p>Estimated {travelMode.toLowerCase()} time: {travelTime}</p>}
+      {travelTime && <p>{t.estimatedTime.replace("{mode}", travelMode.toLowerCase()).replace("{time}", travelTime)}</p>}
 
       <div className="map-container">
         <GoogleMap center={locationCoords} zoom={13} mapContainerClassName="map-container">
-          {/* ✅ House Icon Appears Immediately */}
           {showMarker && houseIcon && (
             <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />
           )}
 
-          {/* ✅ InfoWindow for Property Location */}
           {selected && (
             <InfoWindow position={selected} onCloseClick={() => setSelected(null)}>
               <div>
-                <h3>Property Location</h3>
-                <p>Coordinates: {selected.lat}, {selected.lng}</p>
+                <h3>{t.propertyLocation}</h3>
+                <p>{t.coordinates.replace("{lat}", selected.lat).replace("{lng}", selected.lng)}</p>
               </div>
             </InfoWindow>
           )}
 
-          {/* ✅ Show Selected Destination Marker */}
-          {showRoute && selectedLocation && activeCategories[locations[selectedLocation].category] && (
-            <Marker position={locations[selectedLocation]} title={selectedLocation} />
-          )}
-
-          {/* ✅ Show Route with Color */}
-          {directions && (
-            <DirectionsRenderer
-              directions={directions}
-              options={{ polylineOptions: { strokeColor: locations[selectedLocation].color, strokeWeight: 5 } }}
-            />
+          {directions && selectedLocation && locations[selectedLocation] && (
+            <DirectionsRenderer directions={directions} options={{ suppressMarkers: true, polylineOptions: { strokeColor: locations[selectedLocation]?.color || "blue", strokeWeight: 5 } }} />
           )}
         </GoogleMap>
       </div>

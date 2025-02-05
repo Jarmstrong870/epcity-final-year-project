@@ -46,7 +46,7 @@
 .street-view,
 .map-view {
   flex: 1;
-  height: 400px;
+  height: 500px;
 }
 
 .street-view {
