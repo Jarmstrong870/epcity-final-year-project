@@ -1,4 +1,4 @@
-/* ✅ Ensure the map always displays correctly */
+/*  Ensure the map always displays correctly */
 .map-container {
     height: 500px;
     width: 100%;
@@ -7,7 +7,7 @@
     overflow: hidden;
   }
   
-  /* ✅ Loading and error messages */
+  /*  Loading and error messages */
   .map-loading,
   .map-error {
     text-align: center;

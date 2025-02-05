@@ -1,4 +1,4 @@
-/* ✅ Ensure toggle switches are well spaced */
+/*  Ensure toggle switches are well spaced */
 .category-toggle {
     display: flex;
     flex-direction: column;
@@ -6,19 +6,19 @@
     margin-bottom: 16px;
   }
   
-  /* ✅ Style for each toggle switch */
+  /*  Style for each toggle switch */
   .toggle-switch {
     display: flex;
     align-items: center;
     gap: 10px;
   }
   
-  /* ✅ Hide default checkbox */
+  /*  Hide default checkbox */
   .toggle-switch input {
     display: none;
   }
   
-  /* ✅ Toggle background */
+  /*  Toggle background */
   .slider {
     width: 40px;
     height: 20px;
@@ -29,7 +29,7 @@
     transition: background-color 0.3s ease;
   }
   
-  /* ✅ Toggle switch knob */
+  /*  Toggle switch knob */
   .slider::before {
     content: "";
     width: 16px;
@@ -42,7 +42,7 @@
     transition: 0.3s ease;
   }
   
-  /* ✅ Active toggle styles */
+  /*  Active toggle styles */
   input:checked + .slider {
     background-color: #4caf50;
   }
