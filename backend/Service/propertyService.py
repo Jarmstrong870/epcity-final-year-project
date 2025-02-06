@@ -31,7 +31,7 @@ def get_all_properties():
     #Query Parameters
     query_params = {
         'size': query_size,
-        'local-authority': 'E08000012',        
+        'constituency': 'E14000795',        
     }
 
     # Initialize a list to store all rows
@@ -44,6 +44,7 @@ def get_all_properties():
 
     # Loop over entries in query blocks of up to 5000 to write all the data into a file
     # Perform at least one request; if there's no search_after, there are no further results
+    print("Start API request")
     while search_after != None or first_request:
         # Only set search-after if this isn't the first request
         if not first_request:
@@ -76,45 +77,87 @@ def get_all_properties():
             break
 
         first_request = False
+    
+    print('Finish API Request')
 
     # Convert the data to a DataFrame
     search_results = pd.DataFrame(all_rows)
     
+    # Convert 'uprn' to numeric and drop rows where it's missing
     search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
     search_results = search_results.dropna(subset=['uprn'])
 
-    #Convert 'lodgement-datetime' to datetime for sorting
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce').dt.date    
+    # Convert 'lodgement-datetime' to datetime safely
+    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
+
+    # Drop rows where 'lodgement-datetime' is NaT (missing)
+    search_results = search_results.dropna(subset=['lodgement-datetime'])
+
+    # Convert datetime to date (important for SQL storage)
+    search_results['lodgement-datetime'] = search_results['lodgement-datetime'].dt.date
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
 
     # Keep only the most recent entry for each 'uprn'
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
-
-    search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
-                                                    'heating-cost-current': 'heating_cost_current', 'hot-water-cost-current': 'hot_water_cost_current',
-                                                    'lighting-cost-current': 'lighting_cost_current', 'total-floor-area': 'total_floor_area'})
     
+    # Rename columns for consistency
+    search_results = search_results.rename(columns={
+        'property-type': 'property_type',
+        'current-energy-efficiency': 'current_energy_efficiency',
+        'current-energy-rating': 'current_energy_rating',
+        'lodgement-datetime': 'lodgement_datetime',
+        'heating-cost-current': 'heating_cost_current',
+        'hot-water-cost-current': 'hot_water_cost_current',
+        'lighting-cost-current': 'lighting_cost_current',
+        'total-floor-area': 'total_floor_area',
+        'number-habitable-rooms': 'number_bedrooms'
+    })
+    
+    # Define the required columns to keep
     required_columns = [
         'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
         'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
-        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area'
+        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area',
+        'number_bedrooms'
     ]
-    
+
+    # Ensure only these columns are retained
     search_results = search_results[required_columns]
     
-    numeric_columns = ['heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current']
+    # Define numeric columns
+    numeric_columns = [
+        'heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current', 
+        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area'
+    ]
+
+    # Convert columns to numeric, coercing errors to NaN
     for col in numeric_columns:
         search_results[col] = pd.to_numeric(search_results[col], errors='coerce')
-        search_results = search_results.dropna(subset=[col])
+        
+    # Drop rows where column values are missing
+    search_results = search_results.dropna(subset=['number_bedrooms'])
+    search_results = search_results.dropna(subset=['property_type'])
+    search_results = search_results.dropna(subset=['current_energy_efficiency'])
+    search_results = search_results.dropna(subset=['heating_cost_current'])
+    search_results = search_results.dropna(subset=['hot_water_cost_current'])
+    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    search_results = search_results.dropna(subset=['total_floor_area'])
+    search_results = search_results.dropna(subset=['address'])
+    search_results = search_results.dropna(subset=['postcode'])
+    search_results = search_results.dropna(subset=['current_energy_rating'])
+        
+    search_results = search_results[search_results['total_floor_area'] > 0]
+    
+    # Adjust 'number_bedrooms' by subtracting 1, but only if the value is >= 2
+    search_results['number_bedrooms'] = search_results['number_bedrooms'].apply(lambda x: x - 1 if x >= 2 else x)
     
     # save the filtered DataFrame to the hosted database
     repo.update_properties_in_db(search_results)
 
 """
-method that sorts the propertied by epc rating and returns the top 6
+Method that sorts the propertied by epc rating and returns the top 6
 """
 def get_top_rated_properties():
     top6 = pd.DataFrame()
@@ -232,7 +275,6 @@ def get_property_info(uprn):
             except Exception as e:
                 print(f"Currency formatting error: {e}")
 
-            
     cost_per_kwh = 0.2542  # Define the cost per kWh
 
     # Add cost_per_kwh column
