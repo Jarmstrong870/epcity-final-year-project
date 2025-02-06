@@ -215,7 +215,19 @@ def get_property_info(uprn):
     for col in cost_columns:
         if col in df.columns and pd.notna(df.loc[df.index[0], col]):
             df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
-
+            
+    num_habitable_rooms = int(df['number_habitable_rooms'])
+    
+    df['number_bedrooms'] = num_habitable_rooms - 1
+    
+    cost_per_kwh = 0.2542
+    
+    df['cost_per_kwh'] = cost_per_kwh
+        
+    cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
+    
+    df['energy_consumption_cost'] = locale.currency(cost_per_year)    
+    
     return df
 
 """

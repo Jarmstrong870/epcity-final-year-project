@@ -1,17 +1,17 @@
+/*  Ensure the map always displays correctly */
 .map-container {
-    height: 100%; /* Make the map container take up the full height of its parent. */
-    width: 100%; /* Make the map container take up the full width of its parent. */
-  }
-  
-  .map-loading {
-    text-align: center; /* Center the loading message text. */
-    font-size: 1rem; /* Adjust font size for readability. */
-    color: #555; /* Optional: Set a subtle color for the loading text. */
-  }
-  
-  .map-error {
-    text-align: center; /* Center-align the error message text. */
-    font-size: 1rem; /* Adjust font size for readability. */
-    color: red; /* Set the error text color to red. */
-  }
-  
+  height: 500px;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/*  Loading and error messages */
+.map-loading,
+.map-error {
+  text-align: center;
+  font-size: 1rem;
+  color: red;
+}
