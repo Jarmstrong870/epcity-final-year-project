@@ -216,18 +216,41 @@ def get_property_info(uprn):
         if col in df.columns and pd.notna(df.loc[df.index[0], col]):
             df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
             
-    num_habitable_rooms = int(df['number_habitable_rooms'])
-    
-    df['number_bedrooms'] = num_habitable_rooms - 1
-    
-    cost_per_kwh = 0.2542
-    
+    # Define the cost columns to process
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+
+    # Ensure cost columns exist and compute monthly & weekly values
+    for col in cost_columns:
+        if col in df.columns:
+            df[f"{col}_monthly"] = df[col] / 12  # Divide annual cost by 12
+            df[f"{col}_weekly"] = df[col] / 52  # Divide annual cost by 52
+
+            # Format as currency if locale settings are applied
+            try:
+                df[f"{col}_monthly"] = df[f"{col}_monthly"].apply(lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None)
+                df[f"{col}_weekly"] = df[f"{col}_weekly"].apply(lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None)
+            except Exception as e:
+                print(f"Currency formatting error: {e}")
+
+            
+    cost_per_kwh = 0.2542  # Define the cost per kWh
+
+    # Add cost_per_kwh column
     df['cost_per_kwh'] = cost_per_kwh
-        
-    cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
-    
-    df['energy_consumption_cost'] = locale.currency(cost_per_year)    
-    
+
+    # Add number_bedrooms column based on number_habitable_rooms
+    if 'number_habitable_rooms' in df.columns and not df['number_habitable_rooms'].isna().all():
+        df['number_bedrooms'] = df['number_habitable_rooms'] - 1
+    else:
+        df['number_bedrooms'] = None  # Fallback for missing data
+
+    # Add energy_consumption_cost column
+    if 'energy_consumption_current' in df.columns and pd.notna(df.loc[df.index[0], 'energy_consumption_current']):
+        cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
+        df['energy_consumption_cost'] = locale.currency(cost_per_year, grouping=True)
+    else:
+        df['energy_consumption_cost'] = None  # Handle missing values
+
     return df
 
 """
