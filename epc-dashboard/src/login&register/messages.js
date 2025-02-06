@@ -1,30 +1,38 @@
 import React, { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import axios from "axios";
 import "./messages.css";
 
-const Messages = ({ user }) => {
-  const [groups, setGroups] = useState([]); // List of user groups
-  const [selectedGroup, setSelectedGroup] = useState(null); // Current active group
-  const [messages, setMessages] = useState([]); // Messages in the selected group
-  const [newGroupName, setNewGroupName] = useState(""); // Name for new group
-  const [groupMembers, setGroupMembers] = useState(""); // Comma-separated emails for group
-  const [messageContent, setMessageContent] = useState(""); // Message input
+const socket = io("http://localhost:5000");
 
+const Messages = ({ user }) => {
+  const [groups, setGroups] = useState([]);      // List of user's groups
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [messages, setMessages] = useState([]);  // Messages in the selected group
+  const [newGroupName, setNewGroupName] = useState(""); 
+  const [groupMembers, setGroupMembers] = useState(""); 
+  const [messageContent, setMessageContent] = useState(""); 
+
+  // Fetch groups on mount and listen for socket messages
   useEffect(() => {
-    fetchGroups(); // Load user groups on component mount
+    fetchGroups();
+    socket.on("receive_message", (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
   }, []);
 
+  // Join a group room and fetch its messages
   useEffect(() => {
     if (selectedGroup) {
-      fetchMessages(selectedGroup.id);
+      fetchMessages(selectedGroup.group_id);
+      socket.emit("join_room", { group_id: selectedGroup.group_id });
     }
   }, [selectedGroup]);
 
-  // Fetch user's group chats
   const fetchGroups = async () => {
     try {
       const response = await axios.get("http://localhost:5000/get-groups", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: { "User-Email": user.email },
       });
       setGroups(response.data);
     } catch (error) {
@@ -32,30 +40,37 @@ const Messages = ({ user }) => {
     }
   };
 
-  // Fetch messages for the selected group
   const fetchMessages = async (groupId) => {
+    if (!groupId) return;
+
     try {
-      const response = await axios.get(`http://localhost:5000/get-group-messages/${groupId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        `http://localhost:5000/get-group-messages/${groupId}`,
+        {
+          headers: { "User-Email": user.email },
+        }
+      );
       setMessages(response.data);
     } catch (error) {
       console.error("Error fetching messages:", error);
     }
   };
 
-  // Create a new group
   const createGroup = async () => {
     if (!newGroupName || !groupMembers) return;
 
     try {
       const response = await axios.post(
         "http://localhost:5000/create-group",
-        { name: newGroupName, members: groupMembers.split(",").map(email => email.trim()) },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        {
+          name: newGroupName,
+          members: groupMembers.split(",").map((email) => email.trim()),
+        },
+        {
+          headers: { "User-Email": user.email },
+        }
       );
-
-      setGroups([...groups, response.data]); // Add new group to the list
+      setGroups([...groups, response.data]);
       setNewGroupName("");
       setGroupMembers("");
     } catch (error) {
@@ -63,35 +78,52 @@ const Messages = ({ user }) => {
     }
   };
 
-  // Send a message to the selected group
   const sendMessage = async () => {
     if (!selectedGroup || !messageContent) return;
 
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:5000/send-group-message",
-        { group_id: selectedGroup.id, content: messageContent },
-        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+        {
+          group_id: selectedGroup.group_id,
+          content: messageContent,
+        },
+        {
+          headers: { "User-Email": user.email },
+        }
       );
 
-      setMessageContent("");
-      fetchMessages(selectedGroup.id);
+      if (response.status === 201) {
+        setMessages([...messages, response.data]);
+        setMessageContent("");
+      } else {
+        console.error("Error sending message:", response.data);
+      }
     } catch (error) {
       console.error("Error sending message:", error);
     }
   };
 
   return (
-    <div className="messages-container">
+    <div className="messaging-container">
+      {/* === Left Sidebar === */}
       <div className="sidebar">
-        <h3>Your Groups</h3>
-        <ul>
+        <h2 className="logo">Group Chats</h2>
+        <div className="groups-list">
           {groups.map((group) => (
-            <li key={group.id} onClick={() => setSelectedGroup(group)} className={selectedGroup?.id === group.id ? "active" : ""}>
-              {group.name}
-            </li>
+            <div
+              key={group.group_id}
+              onClick={() => setSelectedGroup(group)}
+              className={`group-item ${
+                selectedGroup?.group_id === group.group_id ? "active" : ""
+              }`}
+            >
+              <span className="group-name">{group.name}</span>
+            </div>
           ))}
-        </ul>
+        </div>
+
+        {/* === Create Group Form === */}
         <div className="create-group">
           <h4>Create New Group</h4>
           <input
@@ -110,27 +142,59 @@ const Messages = ({ user }) => {
         </div>
       </div>
 
-      <div className="chat-box">
+      {/* === Main Chat Area === */}
+      <div className="chat-area">
         {selectedGroup ? (
           <>
-            <h2>{selectedGroup.name}</h2>
-            <div className="messages-list">
-              {messages.map((msg, index) => (
-                <div key={index} className={`message ${msg.sender_id === user.id ? "sent" : "received"}`}>
-                  <p>{msg.content}</p>
-                  <span>{new Date(msg.timestamp).toLocaleString()}</span>
-                </div>
-              ))}
+            {/* Header with group name */}
+            <div className="chat-header">
+              <h3 className="chat-title">{selectedGroup.name}</h3>
             </div>
-            <textarea
-              placeholder="Type your message..."
-              value={messageContent}
-              onChange={(e) => setMessageContent(e.target.value)}
-            />
-            <button onClick={sendMessage}>Send</button>
+
+            {/* Messages */}
+            <div className="messages-list">
+              {messages.map((msg, index) => {
+                const isSentByUser = msg.sender_id === user.id;
+                return (
+                  <div
+                    key={index}
+                    className={`message-bubble ${
+                      isSentByUser ? "sent" : "received"
+                    }`}
+                  >
+                    <p className="message-content">{msg.content}</p>
+                    <span className="message-timestamp">
+                      {new Date(msg.sent_at).toLocaleString()}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Input Box */}
+            <div className="chat-input">
+              <textarea
+                className="input-field"
+                placeholder="Type your message..."
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+                onKeyDown={(e) => {
+                  // Optional: Send on Enter
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+              />
+              <button className="send-button" onClick={sendMessage}>
+                Send
+              </button>
+            </div>
           </>
         ) : (
-          <p>Select a group to start chatting</p>
+          <div className="no-chat-selected">
+            <p>Select a group to start chatting</p>
+          </div>
         )}
       </div>
     </div>
@@ -138,4 +202,6 @@ const Messages = ({ user }) => {
 };
 
 export default Messages;
+
+
 

@@ -16,8 +16,8 @@ const PropertyList = ({ user, loading, language }) => {
   const navigate = useNavigate();
   const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
   const [pageNumber, setPageNumber] = useState(1);
-  const [sortValue, setSortValue] = useState("current_energy_rating");
-  const [isFavourited, setIsFavourited] = useState(false);
+  const [sortValue, setSortValue] = useState("sort_by");
+  const [sortOrder, setSortOrder] = useState("order");
 
   useEffect(() => {
     getNewPage(1); // Load the first page when the component mounts
@@ -36,8 +36,24 @@ const PropertyList = ({ user, loading, language }) => {
   const handleSortChange = (event) => {
     const newSortValue = event.target.value;
     setSortValue(newSortValue);
-    sortProperties(newSortValue);
+    if (newSortValue === "sort_by" || sortOrder === "order") {
+      sortProperties(null, null)
+    }
+    else {
+      sortProperties(newSortValue, sortOrder);
+    }
   };
+
+  const handleOrderChange = (event) => {
+    const newSortOrder = event.target.value;
+    setSortOrder(newSortOrder);
+    if (newSortOrder === "order" || sortValue === "sort_by") {
+      sortProperties(null, null);
+    }
+    else {
+      sortProperties(sortValue, newSortOrder);
+    }
+  }
 
   // Select/Deselect properties for comparison
   const toggleCompareSelection = (uprn) => {
@@ -85,11 +101,18 @@ const PropertyList = ({ user, loading, language }) => {
         <div className="sort-container">
           <label>Sort By:</label>
           <select value={sortValue} onChange={handleSortChange}>
+            <option value="sort_by">Sort By</option>
             <option value="address">Address</option>
             <option value="postcode">Postcode</option>
             <option value="property_type">Property Type</option>
             <option value="current_energy_rating">Current Energy Rating</option>
             <option value="current_energy_efficiency">Current Energy Efficiency</option>
+          </select>
+          <label>Order</label>
+          <select value={sortOrder} onChange={handleOrderChange}>
+            <option value="order">Order</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
           </select>
         </div>
       </div>

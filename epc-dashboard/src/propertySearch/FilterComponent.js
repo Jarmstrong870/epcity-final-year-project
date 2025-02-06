@@ -53,6 +53,7 @@ const PropertyFilter = ({ language }) => {
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
+                    
                     onChange={handleSearchChange} // Fix for search query
                     placeholder={t.search}
                 />
@@ -93,7 +94,6 @@ const PropertyFilter = ({ language }) => {
                     ))}
                 </div>
             </div>
-
 
         </div>
     );

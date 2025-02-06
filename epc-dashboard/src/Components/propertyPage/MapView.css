@@ -1,58 +1,14 @@
-/* ✅ Ensure toggle switches do not affect map layout */
-.toggle-switch {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Space between toggle and text */
-  margin-bottom: 8px;
-}
-
-/* Hide default checkbox */
-.toggle-switch input {
-  display: none;
-}
-
-/* ✅ Toggle background */
-.slider {
-  width: 40px;
-  height: 20px;
-  background-color: #ccc;
-  border-radius: 20px;
-  position: relative;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-/* ✅ Toggle switch knob */
-.slider::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: 0.3s;
-}
-
-/* ✅ Active toggle styles */
-input:checked + .slider {
-  background-color: #4caf50;
-}
-
-input:checked + .slider::before {
-  transform: translateX(20px);
-}
-
-/* ✅ Ensure the map always displays correctly */
+/*  Ensure the map always displays correctly */
 .map-container {
   height: 500px;
   width: 100%;
   margin-top: 15px;
   border-radius: 10px;
   overflow: hidden;
+  display: inline-block;
 }
 
+/*  Loading and error messages */
 .map-loading,
 .map-error {
   text-align: center;
