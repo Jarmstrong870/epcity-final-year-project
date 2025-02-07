@@ -165,19 +165,11 @@ def get_top_rated_properties():
     return top6
 
 """
-Method that gets properties from database and performs pagination on it
+Method that gets a page of 30 properties from database
 """
 def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
-    # set page size and page values
-    page_size = 30
-    pageNumber = int(page) - 1
-    firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size) - 1
-    thisPage = pd.DataFrame()
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
-    #paginate properties
-    thisPage = thisPage.iloc[firstProperty:lastProperty]
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page)
     return thisPage
 
 """

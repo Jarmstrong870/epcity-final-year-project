@@ -120,7 +120,7 @@ def get_top_rated_from_db():
 Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
 with optional sorting. Returns the results as a Pandas DataFrame.
 """
-def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None):
+def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page = 1):
     
     try:
         # Connect to the PostgreSQL database
@@ -153,6 +153,12 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
                 raise ValueError(f"Invalid sort order: {order}")
 
             query += f" ORDER BY {sort_by} {order.lower()}"
+            
+        # Add pagination using LIMIT and OFFSET
+        per_page = 30  # Fixed number of results per page
+        offset = (page - 1) * per_page
+        query += " LIMIT %s OFFSET %s"
+        params.extend([per_page, offset])
 
         # Execute the query
         cursor.execute(query, params)
