@@ -19,6 +19,10 @@ DB_PARAMS = {
 Connect to the database, wipe the properties table, and populate it with new data.
 """    
 def update_properties_in_db(dataframe):
+    
+    conn = None  # Ensure conn is defined before try block
+    cursor = None  # Ensure cursor is also pre-defined
+    
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
@@ -27,14 +31,19 @@ def update_properties_in_db(dataframe):
         # Begin a transaction
         conn.autocommit = False
 
-        # Wipe the existing data
-        cursor.execute("DELETE FROM properties")
+        # Step 1: Backup user_properties before deletion
+        cursor.execute("SELECT * FROM user_properties")
+        user_properties_data = cursor.fetchall()
         
-        # Prepare data for insertion
-        #records = dataframe.to_records(index=False)
-        insert_data = [list(row) for row in dataframe.itertuples(index=False)]
+        up_columns = ['user_id', 'uprn']
+        
+        user_properties_dataframe = pd.DataFrame(user_properties_data, columns=up_columns)
 
-        # Bulk insert into the properties table
+        # Step 2: Wipe the properties table
+        cursor.execute("DELETE FROM properties")
+
+        # Step 3: Insert updated property data
+        insert_data = [tuple(row) for row in dataframe.itertuples(index=False, name=None)]
         insert_query = """
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
                                     current_energy_efficiency, current_energy_rating, heating_cost_current, 
@@ -44,23 +53,34 @@ def update_properties_in_db(dataframe):
         """
         execute_values(cursor, insert_query, insert_data)
 
-        # Commit the transaction
-        conn.commit()
+        # Step 4: Restore user_properties with valid uprns
+        
+        up_data = [tuple(row) for row in user_properties_dataframe.itertuples(index=False, name=None)]
+        if up_data:
+            insert_user_properties_query = """
+                INSERT INTO user_properties (user_id, uprn)
+                VALUES %s
+                ON CONFLICT (user_id, uprn) DO NOTHING
+            """
+            execute_values(cursor, insert_user_properties_query, up_data)
 
+        # Step 5: Commit the transaction
+        conn.commit()
         print("Database updated successfully with the latest property data.")
 
     except Exception as e:
-        # Rollback in case of an error
         if conn:
             conn.rollback()
         print(f"An error occurred: {e}")
+        return False
 
     finally:
-        # Close the connection
         if cursor:
             cursor.close()
         if conn:
             conn.close()
+    
+    return True
 
 """
 Returns the top 6 highest rated energy efficient properties from the database

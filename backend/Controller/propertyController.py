@@ -8,6 +8,13 @@ property_blueprint = Blueprint('property', __name__)
 CORS(property_blueprint)
 
 """
+Route to update properties in the database
+"""
+@property_blueprint.route('property/updateDB', methods=['GET'])
+def update_properties():
+    return jsonify(properties.update_properties())
+
+"""
 Route to load top 6 properties from DB for Home Page
 """
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
@@ -53,7 +60,7 @@ def get_properties_page_route():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-    """
+"""
 Route: /property/compare
 Method: POST
 Description: Compares multiple properties based on selected criteria.
@@ -62,7 +69,6 @@ Request Body:
 Response: JSON list containing comparison data for selected properties.
 
 """
-    
 @property_blueprint.route('/property/compare', methods=['POST'])
 def compare_properties_route():
     try:
