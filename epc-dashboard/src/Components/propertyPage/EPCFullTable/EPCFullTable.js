@@ -21,6 +21,7 @@ const EPCFullTable = ({ properties, loading, language }) => {
   }
 
   const property = properties[0]; // Use the first property in the array.
+  console.log(property[0]);
   
 
   return (

@@ -175,6 +175,12 @@ def return_properties(property_types=None, energy_ratings=None, search=None, sor
 """
 Finds info for when a property is selected by the user
 """
+import urllib.request
+import json
+import pandas as pd
+import locale
+from urllib.parse import urlencode
+
 def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -313,6 +319,7 @@ def get_property_info(uprn):
     )
         
     return df
+
 
 """
 Fetches the inflation rate for the United Kingdom between the start date and today.

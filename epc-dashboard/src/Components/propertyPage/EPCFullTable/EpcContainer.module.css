@@ -1,0 +1,28 @@
+.epcContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9; /* Light grey for a fresh look */
+    padding: 15px 20px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    border: 1px solid #ddd; /* Light border for structure */
+    font-family: 'Arial', sans-serif; /* Clean font */
+    margin-top: 1%;
+    width: 90%;
+}
+
+.box {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.box p {
+    margin: 5px 0;
+    font-size: 16px;
+  }
+  
+  .boldText {
+    font-weight: bold;
+  }

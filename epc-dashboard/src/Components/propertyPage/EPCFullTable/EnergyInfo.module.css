@@ -1,0 +1,38 @@
+.energyInfoContainer {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Heating takes more space */
+    grid-template-rows: auto auto; /* Two rows for right-hand boxes */
+    gap: 3%;
+    padding: 20px;
+    background-color: #f9f9f9; /* Light grey background */
+    border-radius: 10px;
+  }
+  
+  .energyHeader {
+    grid-column: span 2; /* Makes the header span across both columns */
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+  }
+  
+  .energyBox {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .heating {
+    grid-row: span 2; /* Makes heating section take full height */
+  }
+  
+  .lighting, .hotWater {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
