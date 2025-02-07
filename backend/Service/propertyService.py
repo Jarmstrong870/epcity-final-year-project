@@ -247,19 +247,9 @@ def get_property_info(uprn):
         return df  # Return original DataFrame if API call fails
 
     # Adjust costs to inflation
-    def adjust_cost(value):
-        try:
-            if pd.notna(value):  # Check if value is not NaN
-                adjusted_cost = float(value) * (1 + inflation_rate / 100)
-                return round(adjusted_cost, 2)
-            return None
-        except (ValueError, TypeError):  # Handle non-numeric values safely
-            return None
-
-    # Adjust costs to inflation
     for col in cost_columns:
         if col in df.columns:
-            df[col] = df[col].apply(lambda x: float(adjust_cost(x)) if pd.notna(adjust_cost(x)) else None)
+            df[col] = df[col].apply(lambda x: float(adjust_cost(x, inflation_rate)) if pd.notna(adjust_cost(x, inflation_rate)) else None)
 
 
     # Set locale for currency formatting
@@ -301,12 +291,15 @@ def get_property_info(uprn):
 
     # Add energy_consumption_cost column
     df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
+    df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
+    total_floor_area = df['total_floor_area']
 
     # Compute annual energy cost
     df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
-        lambda x: cost_per_kwh * x if pd.notna(x) else None
+        lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
     )
 
+    print(df['energy_consumption_cost'])
     # Format as currency
     df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
         lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
@@ -360,3 +353,45 @@ def compare_properties(uprns):
 
     # Return the list of properties
     return compared_properties
+
+"""
+Method that adjusts property costs to inflation
+"""
+def adjust_cost(value, inflation_rate):
+    try:
+        if pd.notna(value):  # Check if value is not NaN
+            adjusted_cost = float(value) * (1 + inflation_rate / 100)
+            return round(adjusted_cost, 2)
+        return None
+    except (ValueError, TypeError):  # Handle non-numeric values safely
+        return None
+
+"""
+Adjusts results from repo method by adjusting costs for inflation
+"""
+def get_properties_from_area(postcode, number_bedrooms):
+    properties = repo.get_area_data_from_db(postcode, number_bedrooms)
+
+    # Define the cost columns to process
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+
+    # Convert cost columns to numeric
+    properties[cost_columns] = properties[cost_columns].apply(pd.to_numeric, errors='coerce')
+
+    # Ensure there are no missing values before proceeding
+    if not properties.isnull().values.any():
+        for index, row in properties.iterrows():  # Corrected row iteration
+            properties.at[index, 'lodgement_datetime'] = pd.to_datetime(
+                row['lodgement_datetime'], format='mixed', errors='coerce'
+            ).date()
+            
+            start_date = properties.at[index, 'lodgement_datetime']
+            inflation_rate = get_inflation_rate(start_date)
+
+            for col in cost_columns:
+                properties.at[index, col] = adjust_cost(row[col], inflation_rate)
+
+    # Save to CSV for debugging
+    properties.to_csv('area_data.csv', index=False)
+
+    return properties

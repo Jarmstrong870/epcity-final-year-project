@@ -187,3 +187,39 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
     except Exception as e:
         print(f"Unexpected error: {e}")
         return f"An unexpected error occurred: {e}"
+
+"""
+Retrieves all property data in a given postcode with a certain number of bedrooms
+"""   
+def get_area_data_from_db(postcode, number_bedrooms):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)    
+        # Define the SQL query
+        query_sql = """SELECT * FROM properties WHERE postcode = %s AND number_bedrooms = %s;"""
+        
+        params = [postcode, number_bedrooms]
+    
+        # Create a cursor to execute the query
+        cur = conn.cursor()
+        cur.execute(query_sql, params)
+    
+        # Fetch column names from the cursor description
+        column_names = [desc[0] for desc in cur.description]
+    
+        # Fetch all rows from the query
+        rows = cur.fetchall()
+    
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+    
+        # Convert rows to a Pandas DataFrame
+        df = pd.DataFrame(rows, columns=column_names)
+        
+        return df
+    except Exception as e:
+        # Rollback in case of an error
+        if conn:
+            conn.rollback()
+        print(f"An error occurred: {e}")
