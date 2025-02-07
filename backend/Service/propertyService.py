@@ -175,6 +175,12 @@ def return_properties(property_types=None, energy_ratings=None, search=None, sor
 """
 Finds info for when a property is selected by the user
 """
+import urllib.request
+import json
+import pandas as pd
+import locale
+from urllib.parse import urlencode
+
 def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -230,71 +236,38 @@ def get_property_info(uprn):
     if inflation_rate is None:
         return df  # Return original DataFrame if API call fails
 
-    # Adjust costs to inflation
-    def adjust_cost(value):
-        try:
-            return float(value) * (1 + inflation_rate / 100) if pd.notna(value) else None
-        except ValueError:
-            return None
-
-    # Adjust relevant cost columns
-    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
-    for col in cost_columns:
-        if col in df.columns:
-            df.loc[df.index[0], col] = adjust_cost(df.loc[df.index[0], col])
-
-    # Set locale for currency formatting
-    locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
-
-    # Convert adjusted costs to currency format
-    for col in cost_columns:
-        if col in df.columns and pd.notna(df.loc[df.index[0], col]):
-            df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
-            
-    # Define the cost columns to process
-    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
-
-    # Ensure cost columns are numeric before calculations
-    for col in cost_columns:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors='coerce')  # Convert strings to float, set errors as NaN
-
-    # Compute monthly & weekly costs
-    for col in cost_columns:
-        if col in df.columns:
-            df[f"{col}_monthly"] = df[col] / 12  # Divide annual cost by 12
-            df[f"{col}_weekly"] = df[col] / 52  # Divide annual cost by 52
-
-            # Format as currency if locale settings are applied
-            try:
-                df[f"{col}_monthly"] = df[f"{col}_monthly"].apply(
-                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-                )
-                df[f"{col}_weekly"] = df[f"{col}_weekly"].apply(
-                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-                )
-            except Exception as e:
-                print(f"Currency formatting error: {e}")
-
-    cost_per_kwh = 0.2542  # Define the cost per kWh
-
-    # Add cost_per_kwh column
+    # Define the cost per kWh
+    cost_per_kwh = 0.2542  
     df['cost_per_kwh'] = cost_per_kwh
 
     # Add number_bedrooms column based on number_habitable_rooms
-    if 'number_habitable_rooms' in df.columns and not df['number_habitable_rooms'].isna().all():
-        df['number_bedrooms'] = int(df['number_habitable_rooms']) - 1
+    if 'number_habitable_rooms' in df.columns and pd.notna(df['number_habitable_rooms'].iloc[0]):
+        try:
+            df['number_bedrooms'] = int(df['number_habitable_rooms'].iloc[0]) - 1
+        except (ValueError, TypeError):
+            df['number_bedrooms'] = None
     else:
         df['number_bedrooms'] = None  # Fallback for missing data
 
     # Add energy_consumption_cost column
     if 'energy_consumption_current' in df.columns and pd.notna(df.loc[df.index[0], 'energy_consumption_current']):
-        cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
-        df['energy_consumption_cost'] = locale.currency(cost_per_year, grouping=True)
+        try:
+            cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
+            df['energy_consumption_cost'] = locale.currency(cost_per_year, grouping=True)
+        except (ValueError, TypeError) as e:
+            print(f"Error calculating energy consumption cost: {e}")
+            df['energy_consumption_cost'] = None
     else:
         df['energy_consumption_cost'] = None  # Handle missing values
 
+    # Convert NaN values to None for JSON compatibility
+    df = df.where(pd.notna(df), None)
+
+    print("Cleaned DataFrame Preview:")
+    print(df.head())
+
     return df
+
 
 """
 Fetches the inflation rate for the United Kingdom between the start date and today.
