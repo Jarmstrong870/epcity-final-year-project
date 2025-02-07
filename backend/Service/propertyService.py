@@ -203,6 +203,8 @@ def get_property_info(uprn):
 
     # Convert the data to a DataFrame
     df = pd.DataFrame(data['rows'])
+    
+    df['uprn'] = pd.to_numeric(df['uprn'], errors='coerce')
 
     # Convert 'lodgement-datetime' to datetime for sorting
     if 'lodgement-datetime' in df.columns:
@@ -221,6 +223,20 @@ def get_property_info(uprn):
     if df.empty or 'lodgement_datetime' not in df.columns:
         return df
 
+    # Define the cost columns to process
+    cost_columns = [
+        'hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current',
+        'hot_water_cost_potential', 'heating_cost_potential', 'lighting_cost_potential'
+    ]
+
+    # Ensure cost columns exist in DataFrame
+    for col in cost_columns:
+        if col not in df.columns:
+            df[col] = None  # Add missing columns with NaN values
+
+    # Convert cost columns to numeric format
+    df[cost_columns] = df[cost_columns].apply(pd.to_numeric, errors='coerce')
+    
     # Get the start date for inflation calculation
     start_date = df.loc[df.index[0], 'lodgement_datetime']
     
@@ -233,67 +249,69 @@ def get_property_info(uprn):
     # Adjust costs to inflation
     def adjust_cost(value):
         try:
-            return float(value) * (1 + inflation_rate / 100) if pd.notna(value) else None
-        except ValueError:
+            if pd.notna(value):  # Check if value is not NaN
+                adjusted_cost = float(value) * (1 + inflation_rate / 100)
+                return round(adjusted_cost, 2)
+            return None
+        except (ValueError, TypeError):  # Handle non-numeric values safely
             return None
 
-    # Adjust relevant cost columns
-    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+    # Adjust costs to inflation
     for col in cost_columns:
         if col in df.columns:
-            df.loc[df.index[0], col] = adjust_cost(df.loc[df.index[0], col])
+            df[col] = df[col].apply(lambda x: float(adjust_cost(x)) if pd.notna(adjust_cost(x)) else None)
+
 
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
-    # Convert adjusted costs to currency format
-    for col in cost_columns:
-        if col in df.columns and pd.notna(df.loc[df.index[0], col]):
-            df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
-            
-    # Define the cost columns to process
-    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
-
-    # Ensure cost columns are numeric before calculations
+    # Convert adjusted costs to currency format in a separate column
     for col in cost_columns:
         if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors='coerce')  # Convert strings to float, set errors as NaN
+            df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
+            df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
+
 
     # Compute monthly & weekly costs
     for col in cost_columns:
         if col in df.columns:
-            df[f"{col}_monthly"] = df[col] / 12  # Divide annual cost by 12
-            df[f"{col}_weekly"] = df[col] / 52  # Divide annual cost by 52
+            df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
+            df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
 
-            # Format as currency if locale settings are applied
-            try:
-                df[f"{col}_monthly"] = df[f"{col}_monthly"].apply(
-                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-                )
-                df[f"{col}_weekly"] = df[f"{col}_weekly"].apply(
-                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-                )
-            except Exception as e:
-                print(f"Currency formatting error: {e}")
+            # Store formatted currency versions separately
+            df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
+                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+            )
+            df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
+                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+            )
 
     cost_per_kwh = 0.2542  # Define the cost per kWh
 
     # Add cost_per_kwh column
     df['cost_per_kwh'] = cost_per_kwh
 
-    # Add number_bedrooms column based on number_habitable_rooms
-    if 'number_habitable_rooms' in df.columns and not df['number_habitable_rooms'].isna().all():
-        df['number_bedrooms'] = int(df['number_habitable_rooms']) - 1
-    else:
-        df['number_bedrooms'] = None  # Fallback for missing data
+    # Convert to numeric and fill missing values with NaN
+    df['number_habitable_rooms'] = pd.to_numeric(df['number_habitable_rooms'], errors='coerce')
+
+    # Compute number of bedrooms, ensuring a minimum of 1
+    df['number_bedrooms'] = df['number_habitable_rooms'].apply(
+        lambda x: x - 1 if pd.notna(x) and x >= 2 else 1
+    )
 
     # Add energy_consumption_cost column
-    if 'energy_consumption_current' in df.columns and pd.notna(df.loc[df.index[0], 'energy_consumption_current']):
-        cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
-        df['energy_consumption_cost'] = locale.currency(cost_per_year, grouping=True)
-    else:
-        df['energy_consumption_cost'] = None  # Handle missing values
+    df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
 
+    # Compute annual energy cost
+    df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
+        lambda x: cost_per_kwh * x if pd.notna(x) else None
+    )
+
+    # Format as currency
+    df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
+        lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    )
+        
     return df
 
 """
