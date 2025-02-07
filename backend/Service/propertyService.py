@@ -24,7 +24,7 @@ headers = {
 """
 Retrives all valid properties from API and calls the database method to update the property table
 """
-def get_all_properties():
+def update_properties():
     # Page size (max 5000)
     query_size = 5000
 
@@ -154,7 +154,7 @@ def get_all_properties():
     search_results['number_bedrooms'] = search_results['number_bedrooms'].apply(lambda x: x - 1 if x >= 2 else x)
     
     # save the filtered DataFrame to the hosted database
-    repo.update_properties_in_db(search_results)
+    return repo.update_properties_in_db(search_results)
 
 """
 Method that sorts the propertied by epc rating and returns the top 6
@@ -165,19 +165,11 @@ def get_top_rated_properties():
     return top6
 
 """
-Method that gets properties from database and performs pagination on it
+Method that gets a page of 30 properties from database
 """
 def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
-    # set page size and page values
-    page_size = 30
-    pageNumber = int(page) - 1
-    firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size) - 1
-    thisPage = pd.DataFrame()
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
-    #paginate properties
-    thisPage = thisPage.iloc[firstProperty:lastProperty]
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page)
     return thisPage
 
 """
@@ -262,7 +254,12 @@ def get_property_info(uprn):
     # Define the cost columns to process
     cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
 
-    # Ensure cost columns exist and compute monthly & weekly values
+    # Ensure cost columns are numeric before calculations
+    for col in cost_columns:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')  # Convert strings to float, set errors as NaN
+
+    # Compute monthly & weekly costs
     for col in cost_columns:
         if col in df.columns:
             df[f"{col}_monthly"] = df[col] / 12  # Divide annual cost by 12
@@ -270,8 +267,12 @@ def get_property_info(uprn):
 
             # Format as currency if locale settings are applied
             try:
-                df[f"{col}_monthly"] = df[f"{col}_monthly"].apply(lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None)
-                df[f"{col}_weekly"] = df[f"{col}_weekly"].apply(lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None)
+                df[f"{col}_monthly"] = df[f"{col}_monthly"].apply(
+                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+                )
+                df[f"{col}_weekly"] = df[f"{col}_weekly"].apply(
+                    lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+                )
             except Exception as e:
                 print(f"Currency formatting error: {e}")
 
@@ -282,7 +283,7 @@ def get_property_info(uprn):
 
     # Add number_bedrooms column based on number_habitable_rooms
     if 'number_habitable_rooms' in df.columns and not df['number_habitable_rooms'].isna().all():
-        df['number_bedrooms'] = df['number_habitable_rooms'] - 1
+        df['number_bedrooms'] = int(df['number_habitable_rooms']) - 1
     else:
         df['number_bedrooms'] = None  # Fallback for missing data
 
