@@ -37,7 +37,9 @@ def update_properties_in_db(dataframe):
         # Bulk insert into the properties table
         insert_query = """
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
-                                    current_energy_efficiency, current_energy_rating, heating_cost_current, hot_water_cost_current, lighting_cost_current, total_floor_area)
+                                    current_energy_efficiency, current_energy_rating, heating_cost_current, 
+                                    hot_water_cost_current, lighting_cost_current, total_floor_area, 
+                                    number_bedrooms)
             VALUES %s
         """
         execute_values(cursor, insert_query, insert_data)

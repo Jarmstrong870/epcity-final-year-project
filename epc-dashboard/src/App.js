@@ -193,7 +193,6 @@ function App() {
         <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
         <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
         <Route path="/faq/budget-calculator" element={<EICalculator language={language} />} />
-        <Route path="/messages" element={<Messages />} /> {/* New Messages Route */}
         <Route path="/faq/checklist" element={<Checklist language={language} />} />
         <Route path="/faq/socialmedia" element={<SocialMedia />} />
         <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
@@ -201,7 +200,7 @@ function App() {
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
         <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
         <Route path="/compare-results" element={<ComparePage />} />
-
+        <Route path="/messages" element={<Messages user={user} />} />
       </Routes>
 
       <footer className="footer-container">

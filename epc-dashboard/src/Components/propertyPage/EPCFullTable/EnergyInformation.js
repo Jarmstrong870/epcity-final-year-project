@@ -1,43 +1,43 @@
+import React from "react";
+import styles from "./EnergyInfo.module.css"; 
+
 
 const EnergyInformation = ({ properties}) => {
-    return(
-        <div className="epc-container">
-        <h2>Energy Information</h2>
-        <table className="epc-table">
-            <tbody>
-            <tr>
-                <td className="epc-table-header">Energy Efficiency Rating</td>
-                <td>{properties.current_energy_efficiency}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">Environmental Impact Rating</td>
-                <td>{properties.current_environmental_impact}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">Energy Usage</td>
-                <td>{properties.energy_usage}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">CO2 Emissions</td>
-                <td>{properties.co2_emissions}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">Heating Costs</td>
-                <td>{properties.heating_costs}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">Hot Water Costs</td>
-                <td>{properties.hot_water_costs}</td>
-            </tr>
-            <tr>
-                <td className="epc-table-header">Lighting Costs</td>
-                <td>{properties.lighting_costs}</td>
-            </tr>
-            </tbody>
-        </table>
+    return (
+        <div className={styles.energyInfoContainer}>
+          <div className={styles.energyHeader}>Energy Information</div>
+          
+          <div className={`${styles.energyBox} ${styles.heating}`}>
+            <h2>Heating</h2>
+            <p>Cost(annual) Current/potential</p>
+            <p>Cost(real world example)</p>
+            <p>Main Fuel</p>
+            <p>Main Heating Controls</p>
+            <p>Mainheat Description</p>
+            <p>Mainheat Energy Efficiency (⭐)</p>
+            <p>Mainheat Controller Description</p>
+            <p>Mainheat Controller Energy Efficiency (⭐)</p>
+          </div>
+    
+          <div className={`${styles.energyBox} ${styles.lighting}`}>
+            <h2>Lighting</h2>
+            <p>Cost(annual) Current/potential</p>
+            <p>Cost(real world example)</p>
+            <p>Low Energy Lighting (% bar)</p>
+            <p>Lighting Description</p>
+            <p>Lighting Energy Efficiency (⭐)</p>
+          </div>
+    
+          <div className={`${styles.energyBox} ${styles.hotWater}`}>
+            <h2>Hot Water Costs</h2>
+            <p>Hot water</p>
+            <p>Cost(annual) Current/potential</p>
+            <p>Cost(real world example)</p>
+            <p>Hot Water Description</p>
+            <p>Hot Water Energy Efficiency (stars)</p>
+          </div>
         </div>
-    )
-
+      );
 };
 
 export default EnergyInformation;
