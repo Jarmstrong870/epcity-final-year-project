@@ -112,7 +112,8 @@ def update_properties():
         'hot-water-cost-current': 'hot_water_cost_current',
         'lighting-cost-current': 'lighting_cost_current',
         'total-floor-area': 'total_floor_area',
-        'number-habitable-rooms': 'number_bedrooms'
+        'number-habitable-rooms': 'number_bedrooms',
+        'energy-consumption-current': 'energy_consumption_current'
     })
     
     # Define the required columns to keep
@@ -120,7 +121,7 @@ def update_properties():
         'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
         'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
         'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area',
-        'number_bedrooms'
+        'number_bedrooms', 'energy_consumption_current'
     ]
 
     # Ensure only these columns are retained
@@ -129,7 +130,7 @@ def update_properties():
     # Define numeric columns
     numeric_columns = [
         'heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current', 
-        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area'
+        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area', 'energy_consumption_current'
     ]
 
     # Convert columns to numeric, coercing errors to NaN
@@ -147,6 +148,7 @@ def update_properties():
     search_results = search_results.dropna(subset=['address'])
     search_results = search_results.dropna(subset=['postcode'])
     search_results = search_results.dropna(subset=['current_energy_rating'])
+    search_results = search_results.dropna(subset=['energy_consumption_current'])
         
     search_results = search_results[search_results['total_floor_area'] > 0]
     
