@@ -1,0 +1,39 @@
+.propertyInfoContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);  /* Two equal columns for uniform sizing */
+    grid-auto-rows: 1fr;  /* Make all rows equal in height */
+    gap: 20px;  /* Even spacing between boxes */
+    padding: 20px;
+    background-color: #f9f9f9; 
+    border-radius: 10px;
+  }
+  
+  /* Match the style of the energy boxes */
+  .infoBox {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px; /* Fixed height to ensure all boxes are the same size */
+  }
+  
+  /* Heading style for each section */
+  .infoBox h3 {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Paragraph style for details */
+  .infoBox p {
+    font-size: 16px;
+    color: #555;
+    margin: 5px 0;
+  }
+  

@@ -9,7 +9,7 @@ const GeneralInformation = ({properties}) => {
             </div>
             <div className= {styles.box}>
                 <p><span className={styles.boldText}>Property Type: </span>{properties.property_type}</p>
-                <p><span className={styles.boldText}>Number of Bedrooms: </span>{properties.Number_of_bedrooms}</p>
+                <p><span className={styles.boldText}>Number of Bedrooms: </span>{properties.number_bedrooms}</p>
             </div>
            
         </div>
