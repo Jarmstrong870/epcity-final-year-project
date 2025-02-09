@@ -158,14 +158,10 @@ function App() {
       {logoutConfirmVisible && (
         <div className="logoutdispla-overlay">
           <div className="logoutdispla">
-            <h3>Are you sure you want to log out?</h3>
+            <h3>{t.logoutConfirmation}</h3>
             <div className="logoutdispla-buttons">
-              <button onClick={handleLogout} className="confirm-button">
-                Yes
-              </button>
-              <button onClick={cancelLogout} className="cancel-button">
-                No
-              </button>
+            <button onClick={handleLogout} className="confirm-button">{t.yes}</button>
+            <button onClick={cancelLogout} className="cancel-button">{t.no}</button>
             </div>
           </div>
         </div>
@@ -199,7 +195,7 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
         <Route path="/favourites" element={<FavouritePage user = {user} language={language} />} />
-        <Route path="/compare-results" element={<ComparePage />} />
+        <Route path="/compare-results" element={<ComparePage language={language} />} />
         <Route path="/messages" element={<Messages user={user} />} />
       </Routes>
 
@@ -214,20 +210,20 @@ function App() {
             <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
           </div>
           <nav className="footer-nav">
-            <Link to="/about-us">About Us</Link>
-            <Link to="/contact">Contact</Link>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
+          <Link to="/about-us">{t.footerAboutUs}</Link>
+            <Link to="/contact">{t.footerContact}</Link>
+            <Link to="/privacy-policy">{t.footerPrivacyPolicy}</Link>
+            <Link to="/terms">{t.footerTerms}</Link>
           </nav>
         </div>
         
         <div className="footer-socials">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">{t.socialFacebook}</a>
+        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">{t.socialTwitter}</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">{t.socialInstagram}</a>
         </div>
         
-        <a href="mailto:contact@epcity.co.uk" className="footer-email">contact@epcity.co.uk</a>
+        <a href="mailto:contact@epcity.co.uk" className="footer-email">{t.footerEmail}</a>
       </div>
     </footer>
     </div>

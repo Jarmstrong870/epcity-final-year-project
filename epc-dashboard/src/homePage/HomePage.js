@@ -5,9 +5,7 @@ import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage'; // Import translations
 
-
 const HomePage = ({ user, language }) => {
-  
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -40,13 +38,12 @@ const HomePage = ({ user, language }) => {
     }
   };
 
-
   return (
     <>
       <div className="backgroundImageStyling">
         <div className="welcomeText">
-          <div className="mainMessage">Welcome to Liverpool</div>
-          <div className="subMessage">Now, time to find somewhere you can call home.</div>
+          <div className="mainMessage">{t.welcomeMessage}</div>
+          <div className="subMessage">{t.subMessage}</div>
         </div>
         <div className="stylingSearchBar">
           <input
@@ -70,23 +67,18 @@ const HomePage = ({ user, language }) => {
           className="about-image" 
         />
         <div className="content">
-          <h2>A bit about us..          </h2>
-          <p>
-            EPCity is designed to help you find your perfect property in Liverpool. 
-            Whether you're a student, professional, or a landlord, we offer an intuitive 
-            platform to search, compare, and evaluate which property is right for you in Liverpool.
-          </p>
-          <p>Use our search bar above to get started or explore some of Liverpools top-rated properties below!</p>
+          <h2>{t.aboutUsTitle}</h2>
+          <p>{t.aboutUsDescription1}</p>
+          <p>{t.aboutUsDescription2}</p>
         </div>
       </div>
-
 
       {/* Top Rated Properties Section */}
       <div className="top-rated-properties" id="top-rated-properties">
         <h2>{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} user = {user} property={property}  language={language} />
+            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
           ))}
         </div>
       </div>
@@ -95,6 +87,3 @@ const HomePage = ({ user, language }) => {
 };
 
 export default HomePage;
-
-
-

@@ -1,36 +1,70 @@
 const translations = {
-    en: {
-      login: 'Login',
-      register: 'Register',
-      logout: 'Logout',
-      accountOverview: 'Account Overview',
-      myProperties: 'My Properties',
-      viewAllProperties: 'View All Properties',
-      faqs: 'Frequently Asked Questions',
-      messages: "Messages",
-      favourites: 'My Favourite Properties',
-    },
-    fr: {
-      login: 'Connexion',
-      register: "S'inscrire",
-      logout: 'Se déconnecter',
-      accountOverview: 'Vue du Compte',
-      myProperties: 'Mes Propriétés',
-      viewAllProperties: 'Voir Toutes les Propriétés',
-      faqs: 'Questions Fréquemment Posées',
-      favourites: 'Mes propriétés préférées',
-    },
-    es: {
-      login: 'Iniciar sesión',
-      register: 'Registrarse',
-      logout: 'Cerrar sesión',
-      accountOverview: 'Resumen de la Cuenta',
-      myProperties: 'Mis Propiedades',
-      viewAllProperties: 'Ver Todas las Propiedades',
-      faqs: 'Preguntas Frecuentes',
-      favourites: 'Mis Propiedades Favoritas',
-    },
-  };
-  
-  export default translations;
-  
+  en: {
+    login: 'Login',
+    register: 'Register',
+    logout: 'Logout',
+    accountOverview: 'Account Overview',
+    myProperties: 'My Properties',
+    viewAllProperties: 'View All Properties',
+    faqs: 'Frequently Asked Questions',
+    messages: "Messages",  // Already exists in English
+    favourites: 'My Favourite Properties',
+    logoutConfirmation: 'Are you sure you want to log out?',
+    yes: 'Yes',
+    no: 'No',
+    footerAboutUs: 'About Us',
+    footerContact: 'Contact',
+    footerPrivacyPolicy: 'Privacy Policy',
+    footerTerms: 'Terms of Service',
+    footerEmail: 'Contact Us',
+    socialFacebook: 'Facebook',
+    socialTwitter: 'Twitter',
+    socialInstagram: 'Instagram'
+  },
+  fr: {
+    login: 'Connexion',
+    register: "S'inscrire",
+    logout: 'Se déconnecter',
+    accountOverview: 'Vue du Compte',
+    myProperties: 'Mes Propriétés',
+    viewAllProperties: 'Voir Toutes les Propriétés',
+    faqs: 'Questions Fréquemment Posées',
+    messages: 'Messages',  // Added for French
+    favourites: 'Mes propriétés préférées',
+    logoutConfirmation: 'Êtes-vous sûr de vouloir vous déconnecter?',
+    yes: 'Oui',
+    no: 'Non',
+    footerAboutUs: 'À propos de nous',
+    footerContact: 'Contact',
+    footerPrivacyPolicy: 'Politique de confidentialité',
+    footerTerms: 'Conditions d\'utilisation',
+    footerEmail: 'Nous contacter',
+    socialFacebook: 'Facebook',
+    socialTwitter: 'Twitter',
+    socialInstagram: 'Instagram'
+  },
+  es: {
+    login: 'Iniciar sesión',
+    register: 'Registrarse',
+    logout: 'Cerrar sesión',
+    accountOverview: 'Resumen de la Cuenta',
+    myProperties: 'Mis Propiedades',
+    viewAllProperties: 'Ver Todas las Propiedades',
+    faqs: 'Preguntas Frecuentes',
+    messages: 'Mensajes',  // Added for Spanish
+    favourites: 'Mis Propiedades Favoritas',
+    logoutConfirmation: '¿Estás seguro de que quieres cerrar sesión?',
+    yes: 'Sí',
+    no: 'No',
+    footerAboutUs: 'Sobre Nosotros',
+    footerContact: 'Contacto',
+    footerPrivacyPolicy: 'Política de Privacidad',
+    footerTerms: 'Términos del Servicio',
+    footerEmail: 'Contáctanos',
+    socialFacebook: 'Facebook',
+    socialTwitter: 'Twitter',
+    socialInstagram: 'Instagram'
+  },
+};
+
+export default translations;
