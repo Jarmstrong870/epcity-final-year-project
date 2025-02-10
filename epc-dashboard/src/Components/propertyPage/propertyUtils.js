@@ -6,13 +6,18 @@ export const fetchPropertyDetails = async (uprn, setPropertyData, setErrorMessag
     );
 
     const data = await response.json();
+    console.log("Property Data:", data[0]);
 
     if (data && data.length > 0) {
+      console.log("Property Data:", data[0]);
       setPropertyData(data[0]);
+      console.log("Available Property Data:", Object.keys(data[0]));
     } else {
+      console.log("Property Data:", data[0]);
       setErrorMessage('No property data available.');
     }
   } catch (error) {
+    
     console.error('Error fetching property data:', error);
     setErrorMessage('Failed to fetch property details.');
   } finally {
