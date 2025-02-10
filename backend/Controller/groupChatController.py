@@ -72,3 +72,63 @@ def send_group_message():
         print(f"Error sending message: {e}")
         return jsonify({"message": "Internal server error"}), 500
 
+@group_chat_blueprint.route("/delete-group", methods=["DELETE"])
+def delete_group():
+    """ Delete group and all data """
+    user_email = request.headers.get("User-Email")
+    data = request.json
+    group_id = data.get("group_id")
+
+    if not user_email:
+        return jsonify({"message": "Unauthorized. User email not provided."}), 401
+
+    if not group_id:
+        return jsonify({"message": "Group ID is required."}), 400
+
+    try:
+        deleted_group = GroupChatService.delete_group_data(group_id, user_email)
+        return jsonify(deleted_group), 200
+    except Exception as e:
+        print(f"Error creating group: {e}")
+        return jsonify({"message": "Internal server error"}), 500
+
+@group_chat_blueprint.route("/edit-group-name", methods=["PUT"])
+def edit_group_name():
+    """ Edit existing group name """
+    user_email = request.headers.get("User-Email")
+    data = request.json
+    group_id = data.get("group_id")
+    update_name = data.get("update_name")
+
+    if not user_email:
+        return jsonify({"message": "Unauthorized. User email not provided."}), 401
+
+    if not group_id or not update_name:
+        return jsonify({"message": "Group ID is required."}), 400
+
+    try:
+        updated_group_name = GroupChatService.edit_group_name(group_id, update_name, user_email)
+        return jsonify(updated_group_name), 200
+    except Exception as e:
+        print(f"Error creating group: {e}")
+        return jsonify({"message": "Internal server error"}), 500
+    
+@group_chat_blueprint.route("/exit-group", methods=["POST"])
+def exit_group():
+    """ Exit existing group """
+    user_email = request.headers.get("User-Email")
+    data = request.json
+    group_id = data.get("group_id")
+
+    if not user_email:
+        return jsonify({"message": "Unauthorized. User email not provided."}), 401
+
+    if not group_id:
+        return jsonify({"message": "Group ID is required."}), 400
+
+    try:
+        exit_group = GroupChatService.exit_group(group_id, user_email)
+        return jsonify(exit_group), 200
+    except Exception as e:
+        print(f"Error creating group: {e}")
+        return jsonify({"message": "Internal server error"}), 500

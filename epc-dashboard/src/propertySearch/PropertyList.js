@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavouriteStar from './FavoriteStar';
+import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
@@ -70,7 +70,7 @@ const PropertyList = ({ user, loading, language }) => {
   };
 
   // Handle toggle favorite to show popup
-  const handleToggleFavourite = (property) => {
+  const handleToggleFavourite = (property, isFavourited) => {
     setPopupMessage(
       isFavourited
         ? `${property?.address || 'This property'} has been favorited.`

@@ -25,4 +25,20 @@ class GroupChatService:
         """ Send a message in a group. """
         return GroupChatRepo.insert_message(group_id, content, sender_email)
 
+    @staticmethod
+    def delete_group_data(group_id, user_email):
+        """ Deletes existing group and all relevant data """
+        return GroupChatRepo.delete_group_data(group_id, user_email)
+    
+    @staticmethod
+    def edit_group_name(group_id, updated_name, user_email):
+        """ Editing group name of an existing group """
+        return GroupChatRepo.edit_group_name(group_id, updated_name, user_email)
+
+    @staticmethod
+    def exit_group(group_id, user_email):
+        """ Current group memeber can exit from group """
+        return GroupChatRepo.exit_group(group_id, user_email)
+
+
 

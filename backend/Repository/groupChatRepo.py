@@ -159,4 +159,69 @@ class GroupChatRepo:
             connection.close()
 
 
+    @staticmethod
+    def delete_group_data(group_id, user_email):
+        """
+        Deleting an existing group and all messages.
 
+        :param group_id: ID of the group
+        :param user_email: Email of user deleting group
+        :return: Success/ Failure group deletion details
+        """
+
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            
+            connection.commit()
+            return {"message": "The group and the data has all been deleted successfully"}
+        
+        finally:
+            cursor.close()
+            connection.close()
+
+        
+    @staticmethod
+    def edit_group_name(group_id, updated_name, user_email):
+        """
+        Editting the existing group name.
+
+        :param group_id: Name of the new group
+        :param updated_name: Update name of the group
+        :param user_email: List of user emails
+        :return: New group name
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            
+            connection.commit()
+            return {"message": "The group and the data has all been deleted successfully"}
+        
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def exit_group(group_id, user_email):
+        """
+        Existing team member removes themselves from a group.
+
+        :param group_id: Name of the new group
+        :param user_email: List of user emails
+        :return: Success/Failure team member removal details
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            
+
+            connection.commit()
+            return {"message": "Successful exited from the group"}
+        
+        finally:
+            cursor.close()
+            connection.close()
