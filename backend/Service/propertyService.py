@@ -406,9 +406,6 @@ def get_properties_from_area(postcode, number_bedrooms):
             for col in cost_columns:
                 properties.at[index, col] = adjust_cost(row[col], inflation_rate)
 
-    # Save to CSV for debugging
-    properties.to_csv('area_data.csv', index=False)
-
     return properties
 
 """
