@@ -19,6 +19,10 @@ DB_PARAMS = {
 Connect to the database, wipe the properties table, and populate it with new data.
 """    
 def update_properties_in_db(dataframe):
+    
+    conn = None  # Ensure conn is defined before try block
+    cursor = None  # Ensure cursor is also pre-defined
+    
     try:
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
@@ -27,38 +31,56 @@ def update_properties_in_db(dataframe):
         # Begin a transaction
         conn.autocommit = False
 
-        # Wipe the existing data
-        cursor.execute("DELETE FROM properties")
+        # Step 1: Backup user_properties before deletion
+        cursor.execute("SELECT * FROM user_properties")
+        user_properties_data = cursor.fetchall()
         
-        # Prepare data for insertion
-        #records = dataframe.to_records(index=False)
-        insert_data = [list(row) for row in dataframe.itertuples(index=False)]
+        up_columns = ['user_id', 'uprn']
+        
+        user_properties_dataframe = pd.DataFrame(user_properties_data, columns=up_columns)
 
-        # Bulk insert into the properties table
+        # Step 2: Wipe the properties table
+        cursor.execute("DELETE FROM properties")
+
+        # Step 3: Insert updated property data
+        insert_data = [tuple(row) for row in dataframe.itertuples(index=False, name=None)]
         insert_query = """
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
-                                    current_energy_efficiency, current_energy_rating, heating_cost_current, hot_water_cost_current, lighting_cost_current, total_floor_area)
+                                    current_energy_efficiency, current_energy_rating, heating_cost_current, 
+                                    hot_water_cost_current, lighting_cost_current, total_floor_area, 
+                                    number_bedrooms, energy_consumption_current)
             VALUES %s
         """
         execute_values(cursor, insert_query, insert_data)
 
-        # Commit the transaction
-        conn.commit()
+        # Step 4: Restore user_properties with valid uprns
+        
+        up_data = [tuple(row) for row in user_properties_dataframe.itertuples(index=False, name=None)]
+        if up_data:
+            insert_user_properties_query = """
+                INSERT INTO user_properties (user_id, uprn)
+                VALUES %s
+                ON CONFLICT (user_id, uprn) DO NOTHING
+            """
+            execute_values(cursor, insert_user_properties_query, up_data)
 
+        # Step 5: Commit the transaction
+        conn.commit()
         print("Database updated successfully with the latest property data.")
 
     except Exception as e:
-        # Rollback in case of an error
         if conn:
             conn.rollback()
         print(f"An error occurred: {e}")
+        return False
 
     finally:
-        # Close the connection
         if cursor:
             cursor.close()
         if conn:
             conn.close()
+    
+    return True
 
 """
 Returns the top 6 highest rated energy efficient properties from the database
@@ -98,7 +120,7 @@ def get_top_rated_from_db():
 Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
 with optional sorting. Returns the results as a Pandas DataFrame.
 """
-def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None):
+def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page = 1):
     
     try:
         # Connect to the PostgreSQL database
@@ -131,6 +153,12 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
                 raise ValueError(f"Invalid sort order: {order}")
 
             query += f" ORDER BY {sort_by} {order.lower()}"
+            
+        # Add pagination using LIMIT and OFFSET
+        per_page = 30  # Fixed number of results per page
+        offset = (page - 1) * per_page
+        query += " LIMIT %s OFFSET %s"
+        params.extend([per_page, offset])
 
         # Execute the query
         cursor.execute(query, params)
@@ -159,3 +187,39 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
     except Exception as e:
         print(f"Unexpected error: {e}")
         return f"An unexpected error occurred: {e}"
+
+"""
+Retrieves all property data in a given postcode with a certain number of bedrooms
+"""   
+def get_area_data_from_db(postcode, number_bedrooms):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)    
+        # Define the SQL query
+        query_sql = """SELECT * FROM properties WHERE postcode = %s AND number_bedrooms = %s;"""
+        
+        params = [postcode, number_bedrooms]
+    
+        # Create a cursor to execute the query
+        cur = conn.cursor()
+        cur.execute(query_sql, params)
+    
+        # Fetch column names from the cursor description
+        column_names = [desc[0] for desc in cur.description]
+    
+        # Fetch all rows from the query
+        rows = cur.fetchall()
+    
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+    
+        # Convert rows to a Pandas DataFrame
+        df = pd.DataFrame(rows, columns=column_names)
+        
+        return df
+    except Exception as e:
+        # Rollback in case of an error
+        if conn:
+            conn.rollback()
+        print(f"An error occurred: {e}")

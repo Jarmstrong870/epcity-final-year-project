@@ -62,6 +62,8 @@ const PropertyPage = ({ user, property, email, language }) => {
   if (loading) {
     return <p>Loading property details...</p>;
   }
+  console.log("Property Data:", Object.keys(propertyData));
+  console.log("property floor level",propertyData["glazed_type"])
 
   return (
     <div className="property-page">
