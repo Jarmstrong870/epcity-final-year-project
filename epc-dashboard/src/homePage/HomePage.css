@@ -242,6 +242,149 @@ body {
   transform: scale(1.05);
 }
 
+
+/* UK Cities Section */
+.uk-cities-section {
+  margin: 60px auto;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 30px;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 3x3 Grid Layout */
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Individual City Card */
+.city-card {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.city-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* City Background Image */
+.city-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Default Overlay (light grey) */
+.city-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Light overlay by default */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+/* Darken overlay on hover */
+.city-card:hover .city-overlay {
+  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
+}
+
+/* City Name - Hidden by Default */
+.city-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show City Name on Hover */
+.city-card:hover .city-name {
+  opacity: 1;
+}
+
+/* Title Styling for the UK Cities Section */
+.uk-cities-title {
+  font-size: 2.8rem; /* Large and eye-catching */
+  font-weight: bold;
+  color: #2c3e3d; /* Darker shade for contrast */
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+  letter-spacing: 1px; /* Slight spacing for readability */
+  padding-bottom: 10px;
+  border-bottom: 3px solid #2c5f2d; /* Underline effect */
+  display: inline-block; /* Makes border only as wide as text */
+}
+
+.uk-cities-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+  margin-bottom: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .cities-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
+    gap: 15px;
+  }
+
+  .city-card {
+    height: 200px;
+  }
+
+  .city-name {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cities-grid {
+    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
+  }
+
+  .city-card {
+    height: 180px;
+  }
+
+  .city-name {
+    font-size: 1.3rem;
+  }
+}
+
+
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .backgroundImageStyling {
