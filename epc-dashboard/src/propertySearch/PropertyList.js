@@ -5,6 +5,7 @@ import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
+import TextToSpeech from '../Components/utils/TextToSpeech';  // Import TTS component
 
 const PropertyList = ({ loading, language }) => {
   const [viewMode, setViewMode] = useState('table');
@@ -78,9 +79,15 @@ const PropertyList = ({ loading, language }) => {
   return (
     <div className="property-list">
       <div className="property-list-header">
-        {/* Sort Dropdown */}
+        {/* Sort Dropdown with Single TTS Icon */}
         <div className="sort-container">
-          <label>{t.sortBy}</label>
+          <div className="dropdown-with-tts">
+            <label>{t.sortBy}</label>
+            <TextToSpeech 
+              text={`${t.sortBy}. ${t.address}, ${t.postcode}, ${t.propertyType}, ${t.currentEnergyRating}, ${t.currentEnergyEfficiency}`} 
+              language={language} 
+            />
+          </div>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
             <option value="address">{t.address}</option>
@@ -90,7 +97,14 @@ const PropertyList = ({ loading, language }) => {
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
           </select>
 
-          <label>{t.order}</label>
+          {/* Order Dropdown with Single TTS Icon */}
+          <div className="dropdown-with-tts">
+            <label>{t.order}</label>
+            <TextToSpeech 
+              text={`${t.order}. ${t.ascending}, ${t.descending}`} 
+              language={language} 
+            />
+          </div>
           <select value={sortOrder} onChange={handleOrderChange}>
             <option value="order">{t.order}</option>
             <option value="asc">{t.ascending}</option>

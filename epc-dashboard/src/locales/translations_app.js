@@ -7,7 +7,7 @@ const translations = {
     myProperties: 'My Properties',
     viewAllProperties: 'View All Properties',
     faqs: 'Frequently Asked Questions',
-    messages: "Messages",  // Already exists in English
+    messages: "Messages",  
     favourites: 'My Favourite Properties',
     logoutConfirmation: 'Are you sure you want to log out?',
     yes: 'Yes',
@@ -29,7 +29,7 @@ const translations = {
     myProperties: 'Mes Propriétés',
     viewAllProperties: 'Voir Toutes les Propriétés',
     faqs: 'Questions Fréquemment Posées',
-    messages: 'Messages',  // Added for French
+    messages: 'Messages',  
     favourites: 'Mes propriétés préférées',
     logoutConfirmation: 'Êtes-vous sûr de vouloir vous déconnecter?',
     yes: 'Oui',
@@ -51,7 +51,7 @@ const translations = {
     myProperties: 'Mis Propiedades',
     viewAllProperties: 'Ver Todas las Propiedades',
     faqs: 'Preguntas Frecuentes',
-    messages: 'Mensajes',  // Added for Spanish
+    messages: 'Mensajes',  
     favourites: 'Mis Propiedades Favoritas',
     logoutConfirmation: '¿Estás seguro de que quieres cerrar sesión?',
     yes: 'Sí',
@@ -65,6 +65,50 @@ const translations = {
     socialTwitter: 'Twitter',
     socialInstagram: 'Instagram'
   },
+  pl: {
+    login: 'Zaloguj się',
+    register: 'Zarejestruj się',
+    logout: 'Wyloguj się',
+    accountOverview: 'Przegląd Konta',
+    myProperties: 'Moje Nieruchomości',
+    viewAllProperties: 'Zobacz Wszystkie Nieruchomości',
+    faqs: 'Często Zadawane Pytania',
+    messages: 'Wiadomości',  
+    favourites: 'Moje Ulubione Nieruchomości',
+    logoutConfirmation: 'Czy na pewno chcesz się wylogować?',
+    yes: 'Tak',
+    no: 'Nie',
+    footerAboutUs: 'O Nas',
+    footerContact: 'Kontakt',
+    footerPrivacyPolicy: 'Polityka Prywatności',
+    footerTerms: 'Regulamin',
+    footerEmail: 'Skontaktuj się z nami',
+    socialFacebook: 'Facebook',
+    socialTwitter: 'Twitter',
+    socialInstagram: 'Instagram'
+  },
+  zh: {
+    login: '登录',
+    register: '注册',
+    logout: '退出登录',
+    accountOverview: '账户概览',
+    myProperties: '我的房产',
+    viewAllProperties: '查看所有房产',
+    faqs: '常见问题',
+    messages: '消息',  
+    favourites: '我喜欢的房产',
+    logoutConfirmation: '您确定要退出登录吗？',
+    yes: '是',
+    no: '否',
+    footerAboutUs: '关于我们',
+    footerContact: '联系我们',
+    footerPrivacyPolicy: '隐私政策',
+    footerTerms: '服务条款',
+    footerEmail: '发送邮件',
+    socialFacebook: '脸书',
+    socialTwitter: '推特',
+    socialInstagram: 'Instagram'
+  }
 };
 
 export default translations;
