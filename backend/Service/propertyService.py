@@ -1,3 +1,4 @@
+from io import StringIO
 import urllib.request
 from urllib.parse import urlencode
 import json
@@ -112,7 +113,8 @@ def update_properties():
         'hot-water-cost-current': 'hot_water_cost_current',
         'lighting-cost-current': 'lighting_cost_current',
         'total-floor-area': 'total_floor_area',
-        'number-habitable-rooms': 'number_bedrooms'
+        'number-habitable-rooms': 'number_bedrooms',
+        'energy-consumption-current': 'energy_consumption_current'
     })
     
     # Define the required columns to keep
@@ -120,7 +122,7 @@ def update_properties():
         'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
         'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
         'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area',
-        'number_bedrooms'
+        'number_bedrooms', 'energy_consumption_current'
     ]
 
     # Ensure only these columns are retained
@@ -129,7 +131,7 @@ def update_properties():
     # Define numeric columns
     numeric_columns = [
         'heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current', 
-        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area'
+        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area', 'energy_consumption_current'
     ]
 
     # Convert columns to numeric, coercing errors to NaN
@@ -147,6 +149,7 @@ def update_properties():
     search_results = search_results.dropna(subset=['address'])
     search_results = search_results.dropna(subset=['postcode'])
     search_results = search_results.dropna(subset=['current_energy_rating'])
+    search_results = search_results.dropna(subset=['energy_consumption_current'])
         
     search_results = search_results[search_results['total_floor_area'] > 0]
     
@@ -175,12 +178,6 @@ def return_properties(property_types=None, energy_ratings=None, search=None, sor
 """
 Finds info for when a property is selected by the user
 """
-import urllib.request
-import json
-import pandas as pd
-import locale
-from urllib.parse import urlencode
-
 def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -247,27 +244,17 @@ def get_property_info(uprn):
     start_date = df.loc[df.index[0], 'lodgement_datetime']
     
     # Fetch inflation rate
-    inflation_rate = get_inflation_rate(start_date)
+    inflation_rate = calculate_inflation_rate(start_date)
 
     if inflation_rate is None:
         return df  # Return original DataFrame if API call fails
 
     # Adjust costs to inflation
-    def adjust_cost(value):
-        try:
-            if pd.notna(value):  # Check if value is not NaN
-                adjusted_cost = float(value) * (1 + inflation_rate / 100)
-                return round(adjusted_cost, 2)
-            return None
-        except (ValueError, TypeError):  # Handle non-numeric values safely
-            return None
-
-    # Adjust costs to inflation
     for col in cost_columns:
         if col in df.columns:
-            df[col] = df[col].apply(lambda x: float(adjust_cost(x)) if pd.notna(adjust_cost(x)) else None)
+            df[col] = df[col].apply(lambda x: adjust_cost(float(x), inflation_rate) if pd.notna(x) else None)
 
-
+            
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
@@ -307,10 +294,12 @@ def get_property_info(uprn):
 
     # Add energy_consumption_cost column
     df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
+    df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
+    total_floor_area = df['total_floor_area']
 
     # Compute annual energy cost
     df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
-        lambda x: cost_per_kwh * x if pd.notna(x) else None
+        lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
     )
 
     # Format as currency
@@ -322,32 +311,36 @@ def get_property_info(uprn):
 
 
 """
-Fetches the inflation rate for the United Kingdom between the start date and today.
+Fetches CPI data for Actual Rentals for housing from the Office of National Statistics
 """
-def get_inflation_rate(start_date: str) -> float:
-    api_url = "https://www.statbureau.org/calculate-inflation-rate-json"
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    # Set parameters
-    params = {
-        "country": "united-kingdom",
-        "start": start_date,
-        "end": end_date
+def fetch_cpih_data():
+    csv_url = "https://download.beta.ons.gov.uk/downloads/datasets/cpih01/editions/time-series/versions/54.csv"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
-
-    # Build the URL
-    full_url = f"{api_url}?{urllib.parse.urlencode(params)}"
-
+    
+    req = urllib.request.Request(csv_url, headers=headers)
     try:
-        # Make request
-        request = urllib.request.Request(full_url)
-        with urllib.request.urlopen(request) as response:
-            response_body = response.read().decode()
-            # Set inflation rate to float and return it
-            return float(response_body.strip('"'))
+        with urllib.request.urlopen(req) as response:
+            csv_data = response.read().decode("utf-8")
+        
+        data = StringIO(csv_data)
+        df = pd.read_csv(data)
+        
+        # Filter for '04.1 Actual rentals for housing'
+        df_filtered = df[df["Aggregate"] == "04.1 Actual rentals for housing"]
+        df_filtered = df_filtered.rename(columns={"Time": "date", "v4_0": "cpih_value"})
+        df_filtered["date"] = pd.to_datetime(df_filtered["date"], format='%b-%y')
+        df_filtered = df_filtered.sort_values(by='date', ascending=False)
+        
+        # Keep only relevant columns
+        df_filtered = df_filtered[["date", "cpih_value"]]
+        
+        return repo.update_inflation_data_in_db(df_filtered)
+    
     except Exception as e:
-        print(f"Error fetching inflation rate: {e}")
-        return None
+        print(f"Error fetching CPIH data: {e}")
+        return False
 
 """
 Method that returns a list of property data for each UPRN provided in the parameter
@@ -367,3 +360,66 @@ def compare_properties(uprns):
 
     # Return the list of properties
     return compared_properties
+
+"""
+Retrieves CPIH data and calculates the inflation rate for the property.
+"""
+def calculate_inflation_rate(lodgement_date):
+    df = repo.get_latest_and_lodgement_cpih(lodgement_date)
+    
+    if df.empty or len(df) < 2:
+        print("Insufficient CPIH data to calculate inflation rate.")
+        return None
+    
+    latest_cpih = df.iloc[0]['cpih_value']
+    lodgement_cpih = df.iloc[1]['cpih_value']
+    
+    if pd.isna(latest_cpih) or pd.isna(lodgement_cpih) or lodgement_cpih == 0:
+        print("Invalid CPIH values for inflation calculation.")
+        return None
+    
+    inflation_rate = ((latest_cpih - lodgement_cpih) / lodgement_cpih) * 100
+    return round(inflation_rate, 2)
+
+"""
+Adjusts results from repo method by adjusting costs for inflation
+"""
+def get_properties_from_area(postcode, number_bedrooms):
+    properties = repo.get_area_data_from_db(postcode, number_bedrooms)
+
+    # Define the cost columns to process
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+
+    # Convert cost columns to numeric
+    properties[cost_columns] = properties[cost_columns].apply(pd.to_numeric, errors='coerce')
+
+    # Ensure there are no missing values before proceeding
+    if not properties.isnull().values.any():
+        for index, row in properties.iterrows():  # Corrected row iteration
+            properties.at[index, 'lodgement_datetime'] = pd.to_datetime(
+                row['lodgement_datetime'], format='mixed', errors='coerce'
+            ).date()
+            
+            start_date = properties.at[index, 'lodgement_datetime']
+            inflation_rate = calculate_inflation_rate(start_date)
+
+            for col in cost_columns:
+                properties.at[index, col] = adjust_cost(row[col], inflation_rate)
+
+    return properties
+
+"""
+Adjusts heating, lighting, and hot water costs based on the inflation rate.
+"""
+def adjust_cost(cost, inflation_rate):
+    """Adjusts a given cost by the inflation rate."""
+    if inflation_rate is None:
+        print("Inflation rate is not available. Returning original costs.")
+        return cost  # Return original value if inflation data is missing
+    
+    try:
+        adjusted_cost = round(float(cost) * (1 + float(inflation_rate) / 100), 2)
+        return adjusted_cost
+    except (TypeError, ValueError) as e:
+        print(f"Error adjusting cost: {e}")
+        return cost  # Fallback to original cost if adjustment fails

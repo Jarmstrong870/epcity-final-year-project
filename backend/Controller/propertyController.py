@@ -15,6 +15,13 @@ def update_properties():
     return jsonify(properties.update_properties())
 
 """
+Route to update properties in the database
+"""
+@property_blueprint.route('property/inflationDB', methods=['GET'])
+def update_inflation_data():
+    return jsonify(properties.fetch_cpih_data())
+
+"""
 Route to load top 6 properties from DB for Home Page
 """
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])
@@ -98,4 +105,24 @@ def compare_properties_route():
 
     except Exception as e:
         print("Error in compare_properties_route:", str(e))  # Debugging
+        return jsonify({"error": str(e)}), 500
+
+"""
+Route method that returns property data for properties within the same postcode and have the same number of bedrooms as a given property
+"""
+@property_blueprint.route('/property/graph', methods=['GET'])
+def get_graph_data_route():
+    try:
+        # Get params from argument
+        postcode = request.args.get('postcode', '').strip()
+        nubher_bedrooms = request.args.get('num_bedrooms')
+
+        # Call service layer
+        result = properties.get_properties_from_area(postcode, nubher_bedrooms)
+
+        # Return results
+        return jsonify(result.to_dict(orient='records')), 200
+    except ValueError as ve:
+        return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
+    except Exception as e:
         return jsonify({"error": str(e)}), 500

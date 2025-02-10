@@ -48,7 +48,7 @@ def update_properties_in_db(dataframe):
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
                                     current_energy_efficiency, current_energy_rating, heating_cost_current, 
                                     hot_water_cost_current, lighting_cost_current, total_floor_area, 
-                                    number_bedrooms)
+                                    number_bedrooms, energy_consumption_current)
             VALUES %s
         """
         execute_values(cursor, insert_query, insert_data)
@@ -67,6 +67,50 @@ def update_properties_in_db(dataframe):
         # Step 5: Commit the transaction
         conn.commit()
         print("Database updated successfully with the latest property data.")
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"An error occurred: {e}")
+        return False
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+    return True
+
+"""
+Updates the Inflation table in database to get the most up to date data
+"""
+def update_inflation_data_in_db(dataframe):
+    conn = None  # Ensure conn is defined before try block
+    cursor = None  # Ensure cursor is also pre-defined
+    
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # Begin a transaction
+        conn.autocommit = False
+
+        # Step 1: Wipe the inflation table
+        cursor.execute("DELETE FROM inflation")
+
+        # Step 2: Insert updated inflatio  data
+        insert_data = [tuple(row) for row in dataframe.itertuples(index=False, name=None)]
+        insert_query = """
+            INSERT INTO inflation (date, cpih_value)
+            VALUES %s
+        """
+        execute_values(cursor, insert_query, insert_data)
+
+        # Step 3: Commit the transaction
+        conn.commit()
+        print("Database updated successfully with the latest inflation data.")
 
     except Exception as e:
         if conn:
@@ -187,3 +231,69 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
     except Exception as e:
         print(f"Unexpected error: {e}")
         return f"An unexpected error occurred: {e}"
+
+"""
+Retrieves all property data in a given postcode with a certain number of bedrooms
+"""   
+def get_area_data_from_db(postcode, number_bedrooms):
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)    
+        # Define the SQL query
+        query_sql = """SELECT * FROM properties WHERE postcode = %s AND number_bedrooms = %s;"""
+        
+        params = [postcode, number_bedrooms]
+    
+        # Create a cursor to execute the query
+        cur = conn.cursor()
+        cur.execute(query_sql, params)
+    
+        # Fetch column names from the cursor description
+        column_names = [desc[0] for desc in cur.description]
+    
+        # Fetch all rows from the query
+        rows = cur.fetchall()
+    
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+    
+        # Convert rows to a Pandas DataFrame
+        df = pd.DataFrame(rows, columns=column_names)
+        
+        return df
+    except Exception as e:
+        # Rollback in case of an error
+        if conn:
+            conn.rollback()
+        print(f"An error occurred: {e}")
+
+"""
+Retrieves a DataFrame with two rows:
+1. The row with the latest CPIH value.
+2. The row that matches the month and year of the given lodgement date.
+"""     
+def get_latest_and_lodgement_cpih(lodgement_date):
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        
+        query = """
+            (SELECT date, cpih_value FROM inflation ORDER BY date DESC LIMIT 1)
+            UNION ALL
+            (SELECT date, cpih_value FROM inflation WHERE date <= %s ORDER BY date DESC LIMIT 1);
+        """
+        
+        cur = conn.cursor()
+        cur.execute(query, (lodgement_date,))
+        
+        column_names = [desc[0] for desc in cur.description]
+        
+        rows = cur.fetchall()
+        
+        df = pd.DataFrame(rows, columns=column_names)
+        
+        conn.close()
+        return df
+    except Exception as e:
+        print(f"Error retrieving CPIH data: {e}")
+        return pd.DataFrame()
