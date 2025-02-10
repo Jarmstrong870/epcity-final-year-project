@@ -83,6 +83,50 @@ def update_properties_in_db(dataframe):
     return True
 
 """
+Updates the Inflation table in database to get the most up to date data
+"""
+def update_inflation_data_in_db(dataframe):
+    conn = None  # Ensure conn is defined before try block
+    cursor = None  # Ensure cursor is also pre-defined
+    
+    try:
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # Begin a transaction
+        conn.autocommit = False
+
+        # Step 1: Wipe the inflation table
+        cursor.execute("DELETE FROM inflation")
+
+        # Step 2: Insert updated inflatio  data
+        insert_data = [tuple(row) for row in dataframe.itertuples(index=False, name=None)]
+        insert_query = """
+            INSERT INTO inflation (date, cpih_value)
+            VALUES %s
+        """
+        execute_values(cursor, insert_query, insert_data)
+
+        # Step 3: Commit the transaction
+        conn.commit()
+        print("Database updated successfully with the latest inflation data.")
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"An error occurred: {e}")
+        return False
+
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+    
+    return True
+
+"""
 Returns the top 6 highest rated energy efficient properties from the database
 """            
 def get_top_rated_from_db():
@@ -223,3 +267,33 @@ def get_area_data_from_db(postcode, number_bedrooms):
         if conn:
             conn.rollback()
         print(f"An error occurred: {e}")
+
+"""
+Retrieves a DataFrame with two rows:
+1. The row with the latest CPIH value.
+2. The row that matches the month and year of the given lodgement date.
+"""     
+def get_latest_and_lodgement_cpih(lodgement_date):
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        
+        query = """
+            (SELECT date, cpih_value FROM inflation ORDER BY date DESC LIMIT 1)
+            UNION ALL
+            (SELECT date, cpih_value FROM inflation WHERE date <= %s ORDER BY date DESC LIMIT 1);
+        """
+        
+        cur = conn.cursor()
+        cur.execute(query, (lodgement_date,))
+        
+        column_names = [desc[0] for desc in cur.description]
+        
+        rows = cur.fetchall()
+        
+        df = pd.DataFrame(rows, columns=column_names)
+        
+        conn.close()
+        return df
+    except Exception as e:
+        print(f"Error retrieving CPIH data: {e}")
+        return pd.DataFrame()
