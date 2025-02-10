@@ -24,14 +24,14 @@ headers = {
 """
 Retrives all valid properties from API and calls the database method to update the property table
 """
-def get_all_properties():
+def update_properties():
     # Page size (max 5000)
     query_size = 5000
 
     #Query Parameters
     query_params = {
         'size': query_size,
-        'local-authority': 'E08000012',        
+        'constituency': 'E14000795',        
     }
 
     # Initialize a list to store all rows
@@ -44,6 +44,7 @@ def get_all_properties():
 
     # Loop over entries in query blocks of up to 5000 to write all the data into a file
     # Perform at least one request; if there's no search_after, there are no further results
+    print("Start API request")
     while search_after != None or first_request:
         # Only set search-after if this isn't the first request
         if not first_request:
@@ -76,45 +77,89 @@ def get_all_properties():
             break
 
         first_request = False
+    
+    print('Finish API Request')
 
     # Convert the data to a DataFrame
     search_results = pd.DataFrame(all_rows)
     
+    # Convert 'uprn' to numeric and drop rows where it's missing
     search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
     search_results = search_results.dropna(subset=['uprn'])
 
-    #Convert 'lodgement-datetime' to datetime for sorting
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce').dt.date    
+    # Convert 'lodgement-datetime' to datetime safely
+    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
+
+    # Drop rows where 'lodgement-datetime' is NaT (missing)
+    search_results = search_results.dropna(subset=['lodgement-datetime'])
+
+    # Convert datetime to date (important for SQL storage)
+    search_results['lodgement-datetime'] = search_results['lodgement-datetime'].dt.date
 
     # Sort by 'uprn' and 'lodgement_datetime' in descending order
     search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
 
     # Keep only the most recent entry for each 'uprn'
     search_results = search_results.drop_duplicates(subset='uprn', keep='first')
-
-    search_results = search_results.rename(columns={'property-type': 'property_type', 'current-energy-efficiency': 'current_energy_efficiency', 
-                                                    'current-energy-rating': 'current_energy_rating', 'lodgement-datetime': 'lodgement_datetime', 
-                                                    'heating-cost-current': 'heating_cost_current', 'hot-water-cost-current': 'hot_water_cost_current',
-                                                    'lighting-cost-current': 'lighting_cost_current', 'total-floor-area': 'total_floor_area'})
     
+    # Rename columns for consistency
+    search_results = search_results.rename(columns={
+        'property-type': 'property_type',
+        'current-energy-efficiency': 'current_energy_efficiency',
+        'current-energy-rating': 'current_energy_rating',
+        'lodgement-datetime': 'lodgement_datetime',
+        'heating-cost-current': 'heating_cost_current',
+        'hot-water-cost-current': 'hot_water_cost_current',
+        'lighting-cost-current': 'lighting_cost_current',
+        'total-floor-area': 'total_floor_area',
+        'number-habitable-rooms': 'number_bedrooms',
+        'energy-consumption-current': 'energy_consumption_current'
+    })
+    
+    # Define the required columns to keep
     required_columns = [
         'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
         'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
-        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area'
+        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area',
+        'number_bedrooms', 'energy_consumption_current'
     ]
-    
+
+    # Ensure only these columns are retained
     search_results = search_results[required_columns]
     
-    numeric_columns = ['heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current']
+    # Define numeric columns
+    numeric_columns = [
+        'heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current', 
+        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area', 'energy_consumption_current'
+    ]
+
+    # Convert columns to numeric, coercing errors to NaN
     for col in numeric_columns:
         search_results[col] = pd.to_numeric(search_results[col], errors='coerce')
-        search_results = search_results.dropna(subset=[col])
+        
+    # Drop rows where column values are missing
+    search_results = search_results.dropna(subset=['number_bedrooms'])
+    search_results = search_results.dropna(subset=['property_type'])
+    search_results = search_results.dropna(subset=['current_energy_efficiency'])
+    search_results = search_results.dropna(subset=['heating_cost_current'])
+    search_results = search_results.dropna(subset=['hot_water_cost_current'])
+    search_results = search_results.dropna(subset=['lighting_cost_current'])
+    search_results = search_results.dropna(subset=['total_floor_area'])
+    search_results = search_results.dropna(subset=['address'])
+    search_results = search_results.dropna(subset=['postcode'])
+    search_results = search_results.dropna(subset=['current_energy_rating'])
+    search_results = search_results.dropna(subset=['energy_consumption_current'])
+        
+    search_results = search_results[search_results['total_floor_area'] > 0]
+    
+    # Adjust 'number_bedrooms' by subtracting 1, but only if the value is >= 2
+    search_results['number_bedrooms'] = search_results['number_bedrooms'].apply(lambda x: x - 1 if x >= 2 else x)
     
     # save the filtered DataFrame to the hosted database
-    repo.update_properties_in_db(search_results)
+    return repo.update_properties_in_db(search_results)
 
 """
-method that sorts the propertied by epc rating and returns the top 6
+Method that sorts the propertied by epc rating and returns the top 6
 """
 def get_top_rated_properties():
     top6 = pd.DataFrame()
@@ -122,24 +167,22 @@ def get_top_rated_properties():
     return top6
 
 """
-Method that gets properties from database and performs pagination on it
+Method that gets a page of 30 properties from database
 """
 def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
-    # set page size and page values
-    page_size = 30
-    pageNumber = int(page) - 1
-    firstProperty = pageNumber * page_size
-    lastProperty = (firstProperty + page_size) - 1
-    thisPage = pd.DataFrame()
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order)
-    #paginate properties
-    thisPage = thisPage.iloc[firstProperty:lastProperty]
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page)
     return thisPage
 
 """
 Finds info for when a property is selected by the user
 """
+import urllib.request
+import json
+import pandas as pd
+import locale
+from urllib.parse import urlencode
+
 def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -168,6 +211,8 @@ def get_property_info(uprn):
 
     # Convert the data to a DataFrame
     df = pd.DataFrame(data['rows'])
+    
+    df['uprn'] = pd.to_numeric(df['uprn'], errors='coerce')
 
     # Convert 'lodgement-datetime' to datetime for sorting
     if 'lodgement-datetime' in df.columns:
@@ -186,6 +231,20 @@ def get_property_info(uprn):
     if df.empty or 'lodgement_datetime' not in df.columns:
         return df
 
+    # Define the cost columns to process
+    cost_columns = [
+        'hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current',
+        'hot_water_cost_potential', 'heating_cost_potential', 'lighting_cost_potential'
+    ]
+
+    # Ensure cost columns exist in DataFrame
+    for col in cost_columns:
+        if col not in df.columns:
+            df[col] = None  # Add missing columns with NaN values
+
+    # Convert cost columns to numeric format
+    df[cost_columns] = df[cost_columns].apply(pd.to_numeric, errors='coerce')
+    
     # Get the start date for inflation calculation
     start_date = df.loc[df.index[0], 'lodgement_datetime']
     
@@ -196,39 +255,66 @@ def get_property_info(uprn):
         return df  # Return original DataFrame if API call fails
 
     # Adjust costs to inflation
-    def adjust_cost(value):
-        try:
-            return float(value) * (1 + inflation_rate / 100) if pd.notna(value) else None
-        except ValueError:
-            return None
-
-    # Adjust relevant cost columns
-    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
     for col in cost_columns:
         if col in df.columns:
-            df.loc[df.index[0], col] = adjust_cost(df.loc[df.index[0], col])
+            df[col] = df[col].apply(lambda x: float(adjust_cost(x, inflation_rate)) if pd.notna(adjust_cost(x, inflation_rate)) else None)
+
 
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
-    # Convert adjusted costs to currency format
+    # Convert adjusted costs to currency format in a separate column
     for col in cost_columns:
-        if col in df.columns and pd.notna(df.loc[df.index[0], col]):
-            df.loc[df.index[0], col] = locale.currency(df.loc[df.index[0], col])
-            
-    num_habitable_rooms = int(df['number_habitable_rooms'])
-    
-    df['number_bedrooms'] = num_habitable_rooms - 1
-    
-    cost_per_kwh = 0.2542
-    
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
+            df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
+
+
+    # Compute monthly & weekly costs
+    for col in cost_columns:
+        if col in df.columns:
+            df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
+            df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
+
+            # Store formatted currency versions separately
+            df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
+                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+            )
+            df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
+                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+            )
+
+    cost_per_kwh = 0.2542  # Define the cost per kWh
+
+    # Add cost_per_kwh column
     df['cost_per_kwh'] = cost_per_kwh
+
+    # Convert to numeric and fill missing values with NaN
+    df['number_habitable_rooms'] = pd.to_numeric(df['number_habitable_rooms'], errors='coerce')
+
+    # Compute number of bedrooms, ensuring a minimum of 1
+    df['number_bedrooms'] = df['number_habitable_rooms'].apply(
+        lambda x: x - 1 if pd.notna(x) and x >= 2 else 1
+    )
+
+    # Add energy_consumption_cost column
+    df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
+    df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
+    total_floor_area = df['total_floor_area']
+
+    # Compute annual energy cost
+    df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
+        lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
+    )
+
+    print(df['energy_consumption_cost'])
+    # Format as currency
+    df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
+        lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    )
         
-    cost_per_year = cost_per_kwh * float(df.loc[df.index[0], 'energy_consumption_current'])
-    
-    df['energy_consumption_cost'] = locale.currency(cost_per_year)    
-    
     return df
+
 
 """
 Fetches the inflation rate for the United Kingdom between the start date and today.
@@ -276,3 +362,45 @@ def compare_properties(uprns):
 
     # Return the list of properties
     return compared_properties
+
+"""
+Method that adjusts property costs to inflation
+"""
+def adjust_cost(value, inflation_rate):
+    try:
+        if pd.notna(value):  # Check if value is not NaN
+            adjusted_cost = float(value) * (1 + inflation_rate / 100)
+            return round(adjusted_cost, 2)
+        return None
+    except (ValueError, TypeError):  # Handle non-numeric values safely
+        return None
+
+"""
+Adjusts results from repo method by adjusting costs for inflation
+"""
+def get_properties_from_area(postcode, number_bedrooms):
+    properties = repo.get_area_data_from_db(postcode, number_bedrooms)
+
+    # Define the cost columns to process
+    cost_columns = ['hot_water_cost_current', 'heating_cost_current', 'lighting_cost_current']
+
+    # Convert cost columns to numeric
+    properties[cost_columns] = properties[cost_columns].apply(pd.to_numeric, errors='coerce')
+
+    # Ensure there are no missing values before proceeding
+    if not properties.isnull().values.any():
+        for index, row in properties.iterrows():  # Corrected row iteration
+            properties.at[index, 'lodgement_datetime'] = pd.to_datetime(
+                row['lodgement_datetime'], format='mixed', errors='coerce'
+            ).date()
+            
+            start_date = properties.at[index, 'lodgement_datetime']
+            inflation_rate = get_inflation_rate(start_date)
+
+            for col in cost_columns:
+                properties.at[index, col] = adjust_cost(row[col], inflation_rate)
+
+    # Save to CSV for debugging
+    properties.to_csv('area_data.csv', index=False)
+
+    return properties
