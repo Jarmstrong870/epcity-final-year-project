@@ -62,3 +62,22 @@ export const fetchLocationCoords = async (
     setErrorMessage('Failed to fetch location data.');
   }
 };
+
+export const fetchGraphData = async (numberOfBedrooms, postcode, setGraphData, setErrorMessage) => {
+  try{
+    const response = await fetch(`http://127.0.0.1:5000/api/property/graph?num_bedrooms=${numberOfBedrooms}&postcode=${postcode}`);
+  
+    const data = await response.json();
+    console.log("Graph Data:", data);
+
+    if(data && data.length > 0){
+      setGraphData(data);
+    } else {
+      setErrorMessage('No graph data available.');
+    }
+
+  } catch (error) {
+    console.error('Failed to fetch graph data:', error);
+    setErrorMessage('Failed to fetch graph data.');
+  }
+};
