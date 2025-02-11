@@ -12,46 +12,36 @@ const PropertyList = ({ loading, language }) => {
   const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
-  const { properties, getNewPage, sortProperties } = useContext(PropertyContext);
-  const [pageNumber, setPageNumber] = useState(1);
+  const { properties, getNewPage, sortProperties, page } = useContext(PropertyContext);
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
+  const expectedPageSize = 30; // Number of properties per page
+
 
   useEffect(() => {
-    getNewPage(1);  // Load the first page when component mounts
-  }, []);
+    getNewPage(page);  // Load the first page when component mounts
+  }, [page]);
 
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0) {
-      setPageNumber(newPage);
-      getNewPage(newPage);
-    }
+    if (newPage < 1) return; // Prevent invalid fetch
+    getNewPage(newPage);
   };
 
   const handleSortChange = (event) => {
     const newSortValue = event.target.value;
     setSortValue(newSortValue);
-    if (newSortValue === "sort_by" || sortOrder === "order") {
-      sortProperties(null, null);
-    } else {
-      sortProperties(newSortValue, sortOrder);
-    }
+    sortProperties(newSortValue, sortOrder);
   };
 
   const handleOrderChange = (event) => {
     const newSortOrder = event.target.value;
     setSortOrder(newSortOrder);
-    if (newSortOrder === "order" || sortValue === "sort_by") {
-      sortProperties(null, null);
-    } else {
-      sortProperties(sortValue, newSortOrder);
-    }
+    sortProperties(sortValue, newSortOrder);
   };
 
   const toggleCompareSelection = (uprn) => {
@@ -88,7 +78,7 @@ const PropertyList = ({ loading, language }) => {
 
   return (
     <div className="property-list">
-      
+
       {/* Show Popup for Favorites */}
       {showPopup && (
         <div className="popup-message">
@@ -101,9 +91,9 @@ const PropertyList = ({ loading, language }) => {
         <div className="sort-container">
           <div className="dropdown-with-tts">
             <label>{t.sortBy}</label>
-            <TextToSpeech 
-              text={`${t.sortBy}. ${t.address}, ${t.postcode}, ${t.propertyType}, ${t.currentEnergyRating}, ${t.currentEnergyEfficiency}`} 
-              language={language} 
+            <TextToSpeech
+              text={`${t.sortBy}. ${t.address}, ${t.postcode}, ${t.propertyType}, ${t.currentEnergyRating}, ${t.currentEnergyEfficiency}`}
+              language={language}
             />
           </div>
           <select value={sortValue} onChange={handleSortChange}>
@@ -118,9 +108,9 @@ const PropertyList = ({ loading, language }) => {
           {/* Order Dropdown with TTS */}
           <div className="dropdown-with-tts">
             <label>{t.order}</label>
-            <TextToSpeech 
-              text={`${t.order}. ${t.ascending}, ${t.descending}`} 
-              language={language} 
+            <TextToSpeech
+              text={`${t.order}. ${t.ascending}, ${t.descending}`}
+              language={language}
             />
           </div>
           <select value={sortOrder} onChange={handleOrderChange}>
@@ -176,9 +166,9 @@ const PropertyList = ({ loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar 
-                    propertyData={property} 
-                    onToggle={handleToggleFavorite} 
+                  <FavoriteStar
+                    propertyData={property}
+                    onToggle={handleToggleFavorite}
                   />
                 </td>
                 <td className="compare-checkbox">
@@ -214,8 +204,20 @@ const PropertyList = ({ loading, language }) => {
 
       {/* Pagination */}
       <div>
-        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
-        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
+        <button
+          className="paginationPrevious"
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <button
+          className="paginationNext"
+          onClick={() => handlePageChange(page + 1)}
+          disabled={properties.length < expectedPageSize}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
