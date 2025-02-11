@@ -21,7 +21,7 @@ const PropertyList = ({ loading, language }) => {
   const [sortOrder, setSortOrder] = useState("order");
 
   useEffect(() => {
-    getNewPage(1);
+    getNewPage(1);  // Load the first page when component mounts
   }, []);
 
   if (loading) return <p>{t.loading}</p>;
@@ -72,14 +72,32 @@ const PropertyList = ({ loading, language }) => {
       alert("You must select between 2 and 4 properties to compare.");
       return;
     }
-
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
+  };
+
+  // Popup message for favoriting/unfavoriting
+  const handleToggleFavorite = (propertyData, isFavorited) => {
+    setPopupMessage(
+      isFavorited
+        ? `${propertyData?.address || 'This property'} has been favorited.`
+        : `${propertyData?.address || 'This property'} has been unfavorited.`
+    );
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 5000);  // Hide popup after 5 seconds
   };
 
   return (
     <div className="property-list">
+      
+      {/* Show Popup for Favorites */}
+      {showPopup && (
+        <div className="popup-message">
+          {popupMessage}
+        </div>
+      )}
+
       <div className="property-list-header">
-        {/* Sort Dropdown with Single TTS Icon */}
+        {/* Sort Dropdown with TTS */}
         <div className="sort-container">
           <div className="dropdown-with-tts">
             <label>{t.sortBy}</label>
@@ -97,7 +115,7 @@ const PropertyList = ({ loading, language }) => {
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
           </select>
 
-          {/* Order Dropdown with Single TTS Icon */}
+          {/* Order Dropdown with TTS */}
           <div className="dropdown-with-tts">
             <label>{t.order}</label>
             <TextToSpeech 
@@ -124,7 +142,6 @@ const PropertyList = ({ loading, language }) => {
           </button>
         </div>
 
-        {/* Compare Button with Dynamic Count */}
         <button
           className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
           onClick={handleCompareClick}
@@ -159,7 +176,10 @@ const PropertyList = ({ loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar propertyData={property} />
+                  <FavoriteStar 
+                    propertyData={property} 
+                    onToggle={handleToggleFavorite} 
+                  />
                 </td>
                 <td className="compare-checkbox">
                   <input
@@ -194,12 +214,8 @@ const PropertyList = ({ loading, language }) => {
 
       {/* Pagination */}
       <div>
-        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>
-          Previous
-        </button>
-        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>
-          Next
-        </button>
+        <button className="paginationPrevious" onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <button className="paginationNext" onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
       </div>
     </div>
   );
