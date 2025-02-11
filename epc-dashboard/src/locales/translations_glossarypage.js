@@ -80,6 +80,63 @@ const translations = {
         },
       },
     },
+
+    pl: {
+      title: 'Słownik Terminów',
+      glossary: {
+        'Podstawowe Informacje': {
+          address: { label: 'ADRES', description: 'Lokalizacja nieruchomości' },
+          postcode: { label: 'KOD POCZTOWY', description: 'Kod pocztowy nieruchomości' },
+          'property-type': { label: 'RODZAJ NIERUCHOMOŚCI', description: 'Opisuje typ nieruchomości, np. Dom, Mieszkanie, Kamienica itp.' },
+        },
+        'Wydajność Energetyczna': {
+          'current-energy-rating': { label: 'AKTUALNA OCENA ENERGETYCZNA', description: 'Ocena energetyczna w skali od A do G.' },
+          'current-energy-efficiency': { label: 'AKTUALNA EFEKTYWNOŚĆ ENERGETYCZNA', description: 'Efektywność energetyczna oparta na kosztach energii.' },
+          'potential-energy-efficiency': { label: 'POTENCJALNA EFEKTYWNOŚĆ ENERGETYCZNA', description: 'Potencjalna ocena efektywności energetycznej nieruchomości.' },
+          'main-heat-energy-efficiency': { label: 'EFEKTYWNOŚĆ ENERGETYCZNA OGRZEWANIA', description: 'Ocena efektywności energetycznej: od bardzo dobrej do bardzo słabej.' },
+        },
+        'Informacje o Kosztach': {
+          'heating-cost': { label: 'KOSZT OGRZEWANIA', description: 'GBP. Szacunkowe roczne koszty ogrzewania nieruchomości.' },
+          'lighting-cost': { label: 'KOSZT OŚWIETLENIA', description: 'GBP. Szacunkowe roczne koszty oświetlenia nieruchomości.' },
+          'hot-water-cost': { label: 'KOSZT CIEPŁEJ WODY', description: 'GBP. Szacunkowe roczne koszty ciepłej wody.' },
+        },
+        'Szczegóły Nieruchomości': {
+          'construction-age-band': { label: 'OKRES BUDOWY', description: 'Okres, w którym część budynku została zbudowana.' },
+          'total-floor-area': { label: 'CAŁKOWITA POWIERZCHNIA', description: 'Całkowita użytkowa powierzchnia wszystkich zamkniętych pomieszczeń (m²).' },
+          'number-heated-rooms': { label: 'LICZBA OGRZEWANYCH POMIESZCZEŃ', description: 'Liczba ogrzewanych pomieszczeń, jeśli więcej niż połowa pokoi mieszkalnych nie jest ogrzewana.' },
+          tenure: { label: 'FORMA WŁASNOŚCI', description: 'Opis formy własności: Własność; Wynajem (społeczny); Wynajem (prywatny).' },
+        },
+      },
+    },
+    zh: {
+      title: '术语表',
+      glossary: {
+        '基本信息': {
+          address: { label: '地址', description: '房产的位置' },
+          postcode: { label: '邮政编码', description: '房产的邮政编码' },
+          'property-type': { label: '房产类型', description: '描述房产类型，例如房屋、公寓、联排别墅等。' },
+        },
+        '能源性能': {
+          'current-energy-rating': { label: '当前能源评级', description: '能源评级，范围从A到G。' },
+          'current-energy-efficiency': { label: '当前能源效率', description: '基于能源成本的能源效率。' },
+          'potential-energy-efficiency': { label: '潜在能源效率', description: '房产的潜在能源效率评级。' },
+          'main-heat-energy-efficiency': { label: '主要供暖能源效率', description: '能源效率评级：非常好到非常差。' },
+        },
+        '费用信息': {
+          'heating-cost': { label: '供暖费用', description: '英镑。房产供暖的年度预估能源费用。' },
+          'lighting-cost': { label: '照明费用', description: '英镑。房产照明的年度预估能源费用。' },
+          'hot-water-cost': { label: '热水费用', description: '英镑。热水的年度预估能源费用。' },
+        },
+        '房产详情': {
+          'construction-age-band': { label: '建筑年代段', description: '建筑部分建造的年代段。' },
+          'total-floor-area': { label: '总建筑面积', description: '所有封闭空间的总有效使用面积（平方米）。' },
+          'number-heated-rooms': { label: '供暖房间数量', description: '如果超过一半的居住房间未供暖，显示供暖房间的数量。' },
+          tenure: { label: '产权形式', description: '描述产权类型：自住；出租（社会）；出租（私人）。' },
+        },
+      },
+    },
+  
+
   };
   
   export default translations;

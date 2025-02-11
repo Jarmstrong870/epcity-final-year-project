@@ -43,9 +43,10 @@ const HomePage = ({ user, language }) => {
     <>
       <div className="backgroundImageStyling">
         <div className="welcomeText">
-          <div className="mainMessage">Welcome to Liverpool</div>
-          <div className="subMessage">Now, time to find somewhere you can call home.</div>
+          <div className="mainMessage">{t.welcomeMessage}</div>
+          <div className="subMessage">{t.subMessage}</div>
         </div>
+
         <div className="stylingSearchBar">
           <input
             className="stylingSearchInput"
@@ -82,11 +83,12 @@ const HomePage = ({ user, language }) => {
       <CitySection />
 
       {/* Top Rated Properties Section */}
-      <div className="top-rated-properties" id="top-rated-properties">
+      <div className="top-rated-properties">
         <h2>{t.topRatedProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
             <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
+            
           ))}
         </div>
       </div>
