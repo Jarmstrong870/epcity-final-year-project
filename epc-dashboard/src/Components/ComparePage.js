@@ -75,7 +75,7 @@ const ComparePage = ({ language }) => {
     }
   };
 
-  // ✅ Get max/min values for highlighting
+  //  Get max/min values for highlighting
   const maxValues = findMaxValues(propertyDetails);
 
   return (
@@ -93,7 +93,7 @@ const ComparePage = ({ language }) => {
         <div className="compare-table-container">
           <table className="compare-table">
             <tbody>
-              {/* ✅ Display Street View + Address */}
+              {/*  Display Street View + Address */}
               <tr>
                 {propertyDetails.map((property, index) => (
                   <td key={index} className="street-view-container">
@@ -103,7 +103,7 @@ const ComparePage = ({ language }) => {
                 ))}
               </tr>
 
-              {/* ✅ Display Comparison Headers & Values */}
+              {/*  Display Comparison Headers & Values */}
               {Object.keys(t.headers).map((headerKey, idx) => (
                 <React.Fragment key={idx}>
                   <tr className="feature-header">
