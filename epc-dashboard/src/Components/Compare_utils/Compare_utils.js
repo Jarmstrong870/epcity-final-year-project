@@ -85,13 +85,13 @@ export const energyRatingToNumber = (rating) => {
       minHeatingCostPotential,
       minHotWaterCostCurrent,
       minHotWaterCostPotential,
-      maxHotWaterEfficiency, // ✅ NEW: Best hot water energy efficiency ranking
-      maxFloorEfficiency,    // ✅ Best floor energy efficiency ranking
-      maxWindowsEfficiency,  // ✅ Best windows energy efficiency ranking
-      maxWallsEfficiency,    // ✅ Best walls energy efficiency ranking
-      maxMainHeatEfficiency, // ✅ Best mainheat energy efficiency ranking
-      maxMainHeatcEfficiency, // ✅ Best mainheatc energy efficiency ranking
-      maxLightingEfficiency, // ✅ Best lighting energy efficiency ranking
+      maxHotWaterEfficiency, //   Best hot water energy efficiency ranking
+      maxFloorEfficiency,    //  Best floor energy efficiency ranking
+      maxWindowsEfficiency,  //  Best windows energy efficiency ranking
+      maxWallsEfficiency,    //  Best walls energy efficiency ranking
+      maxMainHeatEfficiency, //  Best mainheat energy efficiency ranking
+      maxMainHeatcEfficiency, //  Best mainheatc energy efficiency ranking
+      maxLightingEfficiency, //  Best lighting energy efficiency ranking
     };
   };
   
