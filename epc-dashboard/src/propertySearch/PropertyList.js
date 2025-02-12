@@ -221,7 +221,8 @@ const PropertyList = ({ user, loading, language }) => {
         </button>
       </div>
     </div>
-  );
-};
+    );
+  };
+}
 
 export default PropertyList;
