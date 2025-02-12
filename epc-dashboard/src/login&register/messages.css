@@ -25,6 +25,7 @@
   font-size: 1.4rem;
   margin-bottom: 20px;
   text-align: center;
+  text-decoration: underline;
 }
 
 /* List of Groups */
@@ -110,13 +111,16 @@
 }
 
 /* Header Section for Chat */
-.chat-header {
-  padding: 16px 20px;
+.message-chat-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
   background: #f7f7f7;
   border-bottom: 1px solid #e2e2e2;
+  position: relative;
 }
 
-.chat-title {
+.message-chat-title {
   margin: 0;
   font-size: 1.3rem;
   color: #333;
@@ -186,7 +190,7 @@
   flex: 1;
   resize: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 26px;
   border: 1px solid #ccc;
   margin-right: 10px;
   font-size: 1rem;
@@ -197,7 +201,7 @@
   padding: 12px 16px;
   background: #4e6ef2;
   border: none;
-  border-radius: 6px;
+  border-radius: 26px;
   color: #ffffff;
   font-weight: bold;
   cursor: pointer;
@@ -206,6 +210,10 @@
 
 .send-button:hover {
   background: #3f5bd5;
+}
+
+.send-button-icon{
+  font-size: 20px;
 }
 
 /* ====== If No Group Selected ====== */
@@ -220,33 +228,53 @@
   color: #666;
 }
 
-.action-buttons {
+.message-dropdown-menu {
+  align-items: right;
+  padding: 20px;
   display: flex;
+  gap: 14px;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 1000;
+  background-color: #ffffff;
+  border-radius: 25px;
 }
 
-.action-buttons button{
-  background-color: #dbdbdb;
-  color: #878787;
-  border: 1px solid;
-  border-radius: 20px;
-  padding: 10px 15px;
-  font-size: 14px;
+.message-dropdown-icon {
   cursor: pointer;
-  margin-bottom: 10px;
+  margin: 0;
+  font-size: 1.3rem;
 }
 
-
-.action-buttons button:hover {
-  background-color: #252525;
+.icon-button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: solid 1px #ffffff;
+  border-radius: 15px;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  color: #333;
+  gap: 10px;
 }
 
-.action-buttons button:disabled{
-  background-color: #cccccc;
-  cursor: not-allowed;
-  color: #878686;
+.icon-button:hover {
+  background-color:#a2a2a2;
+}
+
+.icon-border {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  margin-right: 7px;
+  font-size: 20px;
+  cursor: pointer;
 }
 
 .popup-base {
@@ -276,5 +304,3 @@
   border-radius: 5px;
   cursor: pointer;
 }
-  
-  

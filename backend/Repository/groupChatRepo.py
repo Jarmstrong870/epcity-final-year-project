@@ -173,9 +173,48 @@ class GroupChatRepo:
             connection = psycopg2.connect(**db_config)
             cursor = connection.cursor()
 
+            # Selecting membership ID in group members table based on group and user ID
+            cursor.execute(
+                """
+                SELECT user_id FROM users WHERE email_address = %s;
+                """, 
+                (user_email, ),
+            )
+
+            user_id = cursor.fetchone()
+
+            if not user_id:
+                return {"error": "Email not able to be found"}
+            
+            # Selecting membership ID in group members table based on group and user ID
+            cursor.execute(
+                """
+                SELECT user_id FROM group_members
+                WHERE group_id = %s
+                ORDER BY membership_id ASC
+                LIMIT 1;
+                """,
+                (group_id,),
+            )
+
+            admin_number = cursor.fetchone()
+
+            if not admin_number:
+                return {"error": "No group is found/ group is empty with 0 members"}
+            
+            if admin_number[0] != user_id[0]:
+                return {"error": "Only the admin is able to delete this group"}, 403
+
+            # Deleting membership ID in group members table based on group and user ID
+            cursor.execute("DELETE FROM groups_messages WHERE group_id = %s;", (group_id,))
+
+            cursor.execute("DELETE FROM groups_members WHERE group_id = %s;", (group_id,))
+
+            cursor.execute("DELETE FROM groups_ WHERE group_id = %s;", (group_id,))
             
             connection.commit()
             return {"message": "The group and the data has all been deleted successfully"}
+        
         
         finally:
             cursor.close()
@@ -183,7 +222,7 @@ class GroupChatRepo:
 
         
     @staticmethod
-    def edit_group_name(group_id, updated_name, user_email):
+    def edit_group_name(group_id, updated_group_name, user_email):
         """
         Editting the existing group name.
 
@@ -196,9 +235,45 @@ class GroupChatRepo:
             connection = psycopg2.connect(**db_config)
             cursor = connection.cursor()
 
+            # Selecting user ID in users table based on email address
+            cursor.execute(
+                """
+                SELECT user_id FROM users WHERE email_address = %s;
+                """, 
+                (user_email, ),
+            )
+
+            user_id = cursor.fetchone()
+
+            if not user_id:
+                return {"error": "email not able to be found"}
             
+            # Selecting membership ID in group members table based on group and user ID
+            cursor.execute(
+                """
+                SELECT membership_id FROM group_members
+                WHERE group_id = %s
+                AND user_id = %s;
+                """,
+                (group_id, user_id[0]),
+            )
+
+            group_member_id = cursor.fetchone()
+
+            if not group_member_id:
+                return {"error": "you need to be a member of this group to edit the name"}
+            
+            # Updating group name within the groups table
+            cursor.execute(
+                """
+                UPDATE groups SET name = %s
+                WHERE group_id = %s;
+                """,
+                (updated_group_name, group_id),
+            )
+
             connection.commit()
-            return {"message": "The group and the data has all been deleted successfully"}
+            return {"message": "This group and the data has all been deleted successfully"}
         
         finally:
             cursor.close()
@@ -207,7 +282,7 @@ class GroupChatRepo:
     @staticmethod
     def exit_group(group_id, user_email):
         """
-        Existing team member removes themselves from a group.
+        Existing team member will remove themselves from a group.
 
         :param group_id: Name of the new group
         :param user_email: List of user emails
@@ -217,10 +292,46 @@ class GroupChatRepo:
             connection = psycopg2.connect(**db_config)
             cursor = connection.cursor()
 
+            # Selecting user ID matching an email address in users table
+            cursor.execute(
+                """
+                SELECT user_id FROM users WHERE email_address = %s;
+                """, 
+                (user_email, ),
+            )
+
+            user_id = cursor.fetchone()
+
+            if not user_id:
+                return {"error": "user is not saved in the database"}
             
+            # Selecting membership ID in group members table based on group and user ID
+            cursor.execute(
+                """
+                SELECT membership_id FROM group_members
+                WHERE group_id = %s
+                AND user_id = %s;
+                """,
+                (group_id, user_id[0]),
+            )
+
+            group_member_status = cursor.fetchone()
+
+            if not group_member_status:
+                return {"error", "member can't be found in this group"}
+            
+            # Deleting user in group members table by matching the group and user ID
+            cursor.execute(
+                """
+                DELETE FROM group_members
+                WHERE group_id = %s
+                AND user_id = %s;
+                """,
+                (group_id, user_id[0]),
+            )
 
             connection.commit()
-            return {"message": "Successful exited from the group"}
+            return {"message": "Successfully left from the group"}
         
         finally:
             cursor.close()

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 import "./messages.css";
+import { FaPencilAlt, FaTrash, FaDoorOpen } from "react-icons/fa";
 
 const socket = io("http://localhost:5000");
 
@@ -15,6 +16,7 @@ const Messages = ({ user }) => {
   const [popUp, setPopUp] = useState(false);
   const [popUpFunction, setPopUpFunction] = useState(null);
   const [popupMessage, setPopupMessage] = useState("");
+  const [dropdownMenu, setDropdownMenu] = useState(false);
 
   // Fetch groups on mount and listen for socket messages
   useEffect(() => {
@@ -235,8 +237,11 @@ const Messages = ({ user }) => {
   setPopupMessage(popupMessage);
   setPopUp(true);
 
-};
-  
+  };
+
+  const toggleDropdown = () => {
+    setDropdownMenu(!dropdownMenu);
+  };
 
   return (
     <div className="messaging-container">
@@ -254,28 +259,7 @@ const Messages = ({ user }) => {
           ))}
         </div>
 
-        <div className = "action-buttons">
-          <button 
-              onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}
-              disabled={!selectedGroup} >
-                Edit Group Name
-              </button>
-
-            <button 
-              onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}
-              disabled={!selectedGroup} >
-                Delete Group and Data
-              </button>   
-
-            <button 
-              onClick = {() => exitGroup(selectedGroup?.group_id)}
-              disabled={!selectedGroup} >
-                Leave Group?
-              </button>   
-
-        </div>
-
-        {/* === Create Group Form === */}
+       {/* === Create Group Form === */}
         <div className="create-group">
           <h4>Create New Group</h4>
           <input
@@ -299,9 +283,38 @@ const Messages = ({ user }) => {
         {selectedGroup ? (
           <>
             {/* Header with group name */}
-            <div className="chat-header">
-              <h3 className="chat-title">{selectedGroup.name}</h3>
-            </div>
+            <div className="message-chat-header">
+              <h3 className="message-chat-title">{selectedGroup.name}</h3>
+
+              <div className="message-profile-icon" onClick={toggleDropdown}>
+                <h2 className="message-dropdown-icon">...</h2>
+
+                {dropdownMenu && selectedGroup &&(
+                <div className="message-dropdown-menu">
+                    <button className="icon-button"
+                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}
+                        disabled={!selectedGroup} >
+                        <span className="icon-border"> {"\u270D"} </span> 
+                          Edit Group Name
+                        </button>
+
+                      <button className="icon-button"
+                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}
+                        disabled={!selectedGroup} >
+                        <span className="icon-border"> {"\uD83D\uDDD1"} </span>
+                          Delete Group and Data
+                        </button>   
+
+                      <button className="icon-button"
+                        onClick = {() => exitGroup(selectedGroup?.group_id)}
+                        disabled={!selectedGroup} >
+                        <span className="icon-border"> {"\uD83D\uDEAA"} </span>
+                          Leave Group?
+                        </button>   
+                    </div>
+                    )}
+                  </div>
+              </div>
 
             {/* Messages */}
             <div className="messages-list">
@@ -321,7 +334,8 @@ const Messages = ({ user }) => {
                   </div>
                 );
               })}
-            </div>
+
+           </div>
 
             {/* Input Box */}
             <div className="chat-input">
@@ -339,7 +353,7 @@ const Messages = ({ user }) => {
                 }}
               />
               <button className="send-button" onClick={sendMessage}>
-                Send
+              <span className="send-button-icon"> {"\u279C"} </span> 
               </button>
             </div>
           </>
@@ -370,6 +384,3 @@ const Messages = ({ user }) => {
 };
 
 export default Messages;
-
-
-

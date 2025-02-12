@@ -125,7 +125,6 @@ function App() {
           <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
           <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
           <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
-          <Link to="/groups" className="navigation-button">{t.groups}</Link>
         </div>
         <div className="header-right">
           <div className="language-selector-container">
@@ -213,7 +212,6 @@ function App() {
             <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
             <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
             <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
-            <Link to="/groups" className="navigation-button">{t.favourites}</Link>
           </div>
           <nav className="footer-nav">
             <Link to="/about-us">About Us</Link>
