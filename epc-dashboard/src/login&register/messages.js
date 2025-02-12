@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import axios from "axios";
 import "./messages.css";
+import profileIcon from "../assets/profileicon.png";
+
 
 const socket = io("http://localhost:5000");
 
@@ -11,7 +13,8 @@ const Messages = ({ user }) => {
   const [messages, setMessages] = useState([]);  // Messages in the selected group
   const [newGroupName, setNewGroupName] = useState(""); 
   const [groupMembers, setGroupMembers] = useState(""); 
-  const [messageContent, setMessageContent] = useState(""); 
+  const [messageContent, setMessageContent] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Error for profanity filter 
 
   // Fetch groups on mount and listen for socket messages
   useEffect(() => {
@@ -79,30 +82,38 @@ const Messages = ({ user }) => {
   };
 
   const sendMessage = async () => {
-    if (!selectedGroup || !messageContent) return;
+    if (!selectedGroup || !messageContent.trim()) {
+        setErrorMessage("Message cannot be empty."); // Prevent empty messages
+        return;
+    }
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/send-group-message",
-        {
-          group_id: selectedGroup.group_id,
-          content: messageContent,
-        },
-        {
-          headers: { "User-Email": user.email },
-        }
-      );
+        const response = await axios.post(
+            "http://localhost:5000/send-group-message",
+            {
+                group_id: selectedGroup.group_id,
+                content: messageContent,
+            },
+            {
+                headers: { "User-Email": user.email },
+            }
+        );
 
-      if (response.status === 201) {
-        setMessages([...messages, response.data]);
-        setMessageContent("");
-      } else {
-        console.error("Error sending message:", response.data);
-      }
+        if (response.status === 201) {
+            const newMessage = response.data;
+            setMessages((prevMessages) => [...prevMessages, newMessage]);
+            setMessageContent(""); // Clear message input
+            setErrorMessage(""); // Clear any error messages
+        }
     } catch (error) {
-      console.error("Error sending message:", error);
+        if (error.response && error.response.status === 400) {
+            setErrorMessage(error.response.data.error || "Your message contains inappropriate language.");
+        } else {
+            setErrorMessage("Failed to send message. Please try again.");
+        }
     }
-  };
+};
+
 
   return (
     <div className="messaging-container">
@@ -161,7 +172,24 @@ const Messages = ({ user }) => {
                     className={`message-bubble ${
                       isSentByUser ? "sent" : "received"
                     }`}
-                  >
+                  >         
+
+                    <div className="message-info">
+                      {console.log("Profile Image URL:", msg.profile_image_url)}
+
+                      <img
+                        src={
+                          !msg.profile_image_url || msg.profile_image_url === "null" || msg.profile_image_url.trim() === "" || msg.profile_image_url === undefined
+                            ? profileIcon // Use default image if profile_image_url is missing or empty
+                            : msg.profile_image_url
+                        }
+                        alt="Profile"
+                        className="profile-image"
+                        onError={(e) => { e.target.onerror = null; e.target.src = profileIcon; }} // Fallback for broken image links
+                      />
+
+                      <span className="sender-name">{msg.sender_name}</span>
+                    </div>
                     <p className="message-content">{msg.content}</p>
                     <span className="message-timestamp">
                       {new Date(msg.sent_at).toLocaleString()}
@@ -171,6 +199,8 @@ const Messages = ({ user }) => {
               })}
             </div>
 
+            {/* Display error message if there's an error */}
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             {/* Input Box */}
             <div className="chat-input">
               <textarea
@@ -179,7 +209,6 @@ const Messages = ({ user }) => {
                 value={messageContent}
                 onChange={(e) => setMessageContent(e.target.value)}
                 onKeyDown={(e) => {
-                  // Optional: Send on Enter
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
@@ -202,6 +231,3 @@ const Messages = ({ user }) => {
 };
 
 export default Messages;
-
-
-
