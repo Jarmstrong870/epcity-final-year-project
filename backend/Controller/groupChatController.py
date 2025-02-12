@@ -66,8 +66,8 @@ def send_group_message():
         return jsonify({"message": "Group ID and content are required."}), 400
 
     try:
-        new_message = GroupChatService.send_group_message(group_id, content, sender_email)
-        return jsonify(new_message), 201
+        new_message, status_code = GroupChatService.send_group_message(group_id, content, sender_email)
+        return jsonify(new_message), status_code
     except Exception as e:
         print(f"Error sending message: {e}")
         return jsonify({"message": "Internal server error"}), 500

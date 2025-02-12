@@ -15,6 +15,13 @@ def update_properties():
     return jsonify(properties.update_properties())
 
 """
+Route to update properties in the database
+"""
+@property_blueprint.route('property/inflationDB', methods=['GET'])
+def update_inflation_data():
+    return jsonify(properties.fetch_cpih_data())
+
+"""
 Route to load top 6 properties from DB for Home Page
 """
 @property_blueprint.route('/property/loadTopRated', methods=['GET'])

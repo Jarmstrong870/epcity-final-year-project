@@ -1,4 +1,5 @@
 from Repository.groupChatRepo import GroupChatRepo
+from better_profanity import profanity
 
 class GroupChatService:
     """
@@ -22,8 +23,13 @@ class GroupChatService:
 
     @staticmethod
     def send_group_message(group_id, content, sender_email):
-        """ Send a message in a group. """
-        return GroupChatRepo.insert_message(group_id, content, sender_email)
+        # If message contains profanity, reject it
+        if profanity.contains_profanity(content):
+            return {"error": "Your message contains inappropriate content and cannot be sent."}, 400
+        
+
+        new_message = GroupChatRepo.insert_message(group_id, content, sender_email)
+        return new_message, 201  # Only valid messages get 201
 
     @staticmethod
     def delete_group_data(group_id, user_email):

@@ -10,23 +10,26 @@ export function PropertyProvider({ children }) {
     const [search, setSearch] = useState(null)
     const [propertyTypesList, setPropertyTypesList] = useState([])
     const [epcRatingsList, setEpcRatingsList] = useState([])
-    const [sort, setSort] = useState(null)
-    const [sortOrder, setSortOrder] = useState(null)
+    const [sort, setSort] = useState('sort_by')
+    const [sortOrder, setSortOrder] = useState('order')
+    const [page, setPage] = useState(1);
 
-    const fetchProperties = async (query = null, propertyTypes = [], epcRatings = [], sortOption = null, order = null, pageNumber = 1) => {
+    const fetchProperties = async (query = null, propertyTypes = [], epcRatings = [], sortOption = 'sort_by', order = 'order', pageNumber = 1) => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            sortOption = sort
-            order = sortOrder
+            sortOption = sort;
+            order = sortOrder;
 
             if (query) url += `search=${query}&`;
             if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
             if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-            if (sortOption) url += `sort_by=${sortOption}&`;
-            if (order) url += `order=${order}&`;
+            if (sortOption !== 'sort_by' && order !== 'order') {
+                url += `sort_by=${sortOption}&`;
+                url += `order=${order}&`;
+            }
             url += `page=${pageNumber}`;
 
             // Fetch property search results
@@ -37,6 +40,7 @@ export function PropertyProvider({ children }) {
             setSearch(query);
             setPropertyTypesList(propertyTypes);
             setEpcRatingsList(epcRatings);
+            setPage(pageNumber);
         } catch (error) {
             console.error('There was an error fetching the property data!', error);
         } finally {
@@ -44,30 +48,33 @@ export function PropertyProvider({ children }) {
         }
     };
 
-    const sortProperties = async (sortOption = null, order = null, pageNumber = 1, query = null, propertyTypes = [], epcRatings = [] ) => {
+    const sortProperties = async (sortOption = 'sort_by', order = 'order', pageNumber = 1, query = null, propertyTypes = [], epcRatings = [] ) => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            query = search
-            propertyTypes = propertyTypesList
-            epcRatings = epcRatingsList
+            query = search;
+            propertyTypes = propertyTypesList;
+            epcRatings = epcRatingsList;
 
-            if (query) url += `search=${query}&`;
-            if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
-            if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-            if (sortOption) url += `sort_by=${sortOption}&`;
-            if (order) url += `order=${order}&`;
-            url += `page=${pageNumber}`;
+            if (sortOption !== "sort_by" && order !== "order") {
+                if (query) url += `search=${query}&`;
+                if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
+                if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
+                url += `sort_by=${sortOption}&`;
+                url += `order=${order}&`;
+                url += `page=${pageNumber}`;
 
-            // Fetch property search results
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to fetch property data');
-            const data = await response.json();
-            setProperties(data);
+                // Fetch property search results
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch property data');
+                const data = await response.json();
+                setProperties(data);
+            }
             setSort(sortOption);
             setSortOrder(order);
+            setPage(pageNumber);
         } catch (error) {
             console.error('There was an error fetching the property data!', error);
         } finally {
@@ -75,23 +82,25 @@ export function PropertyProvider({ children }) {
         }
     };
 
-    const getNewPage = async (pageNumber = 1, query = null, propertyTypes = [], epcRatings = [], sortOption = null, order = null) => {
+    const getNewPage = async (pageNumber = 1, query = null, propertyTypes = [], epcRatings = [], sortOption = 'sort_by', order = 'order') => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            query = search
-            propertyTypes = propertyTypesList
-            epcRatings = epcRatingsList
-            sortOption = sort
-            order = sortOrder
+            query = search;
+            propertyTypes = propertyTypesList;
+            epcRatings = epcRatingsList;
+            sortOption = sort;
+            order = sortOrder;
 
             if (query) url += `search=${query}&`;
             if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
             if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-            if (sortOption) url += `sort_by=${sortOption}&`;
-            if (order) url += `order=${order}&`;
+            if (sortOption !== 'sort_by' && order !== 'order') {
+                url += `sort_by=${sortOption}&`;
+                url += `order=${order}&`;
+            }
             url += `page=${pageNumber}`;
 
             // Fetch property search results
@@ -99,6 +108,7 @@ export function PropertyProvider({ children }) {
             if (!response.ok) throw new Error('Failed to fetch property data');
             const data = await response.json();
             setProperties(data);
+            setPage(pageNumber);
         } catch (error) {
             console.error('There was an error fetching the property data!', error);
         } finally {
@@ -125,6 +135,7 @@ export function PropertyProvider({ children }) {
                 loading,
                 topRatedProperties,
                 error,
+                page,
                 fetchProperties,
                 fetchTopRatedProperties,
                 sortProperties,
@@ -134,6 +145,5 @@ export function PropertyProvider({ children }) {
             {children}
         </PropertyContext.Provider>
     )
-
 }
 

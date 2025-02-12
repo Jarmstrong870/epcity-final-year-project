@@ -1,3 +1,4 @@
+from io import StringIO
 import urllib.request
 from urllib.parse import urlencode
 import json
@@ -177,12 +178,6 @@ def return_properties(property_types=None, energy_ratings=None, search=None, sor
 """
 Finds info for when a property is selected by the user
 """
-import urllib.request
-import json
-import pandas as pd
-import locale
-from urllib.parse import urlencode
-
 def get_property_info(uprn):
     # Define query parameters
     query_params = {'local-authority': 'E08000012', 'uprn': uprn}
@@ -249,7 +244,7 @@ def get_property_info(uprn):
     start_date = df.loc[df.index[0], 'lodgement_datetime']
     
     # Fetch inflation rate
-    inflation_rate = get_inflation_rate(start_date)
+    inflation_rate = calculate_inflation_rate(start_date)
 
     if inflation_rate is None:
         return df  # Return original DataFrame if API call fails
@@ -257,9 +252,9 @@ def get_property_info(uprn):
     # Adjust costs to inflation
     for col in cost_columns:
         if col in df.columns:
-            df[col] = df[col].apply(lambda x: float(adjust_cost(x, inflation_rate)) if pd.notna(adjust_cost(x, inflation_rate)) else None)
+            df[col] = df[col].apply(lambda x: adjust_cost(float(x), inflation_rate) if pd.notna(x) else None)
 
-
+            
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
@@ -307,7 +302,6 @@ def get_property_info(uprn):
         lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
     )
 
-    print(df['energy_consumption_cost'])
     # Format as currency
     df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
         lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
@@ -317,32 +311,36 @@ def get_property_info(uprn):
 
 
 """
-Fetches the inflation rate for the United Kingdom between the start date and today.
+Fetches CPI data for Actual Rentals for housing from the Office of National Statistics
 """
-def get_inflation_rate(start_date: str) -> float:
-    api_url = "https://www.statbureau.org/calculate-inflation-rate-json"
-    end_date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    # Set parameters
-    params = {
-        "country": "united-kingdom",
-        "start": start_date,
-        "end": end_date
+def fetch_cpih_data():
+    csv_url = "https://download.beta.ons.gov.uk/downloads/datasets/cpih01/editions/time-series/versions/54.csv"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     }
-
-    # Build the URL
-    full_url = f"{api_url}?{urllib.parse.urlencode(params)}"
-
+    
+    req = urllib.request.Request(csv_url, headers=headers)
     try:
-        # Make request
-        request = urllib.request.Request(full_url)
-        with urllib.request.urlopen(request) as response:
-            response_body = response.read().decode()
-            # Set inflation rate to float and return it
-            return float(response_body.strip('"'))
+        with urllib.request.urlopen(req) as response:
+            csv_data = response.read().decode("utf-8")
+        
+        data = StringIO(csv_data)
+        df = pd.read_csv(data)
+        
+        # Filter for '04.1 Actual rentals for housing'
+        df_filtered = df[df["Aggregate"] == "04.1 Actual rentals for housing"]
+        df_filtered = df_filtered.rename(columns={"Time": "date", "v4_0": "cpih_value"})
+        df_filtered["date"] = pd.to_datetime(df_filtered["date"], format='%b-%y')
+        df_filtered = df_filtered.sort_values(by='date', ascending=False)
+        
+        # Keep only relevant columns
+        df_filtered = df_filtered[["date", "cpih_value"]]
+        
+        return repo.update_inflation_data_in_db(df_filtered)
+    
     except Exception as e:
-        print(f"Error fetching inflation rate: {e}")
-        return None
+        print(f"Error fetching CPIH data: {e}")
+        return False
 
 """
 Method that returns a list of property data for each UPRN provided in the parameter
@@ -364,16 +362,24 @@ def compare_properties(uprns):
     return compared_properties
 
 """
-Method that adjusts property costs to inflation
+Retrieves CPIH data and calculates the inflation rate for the property.
 """
-def adjust_cost(value, inflation_rate):
-    try:
-        if pd.notna(value):  # Check if value is not NaN
-            adjusted_cost = float(value) * (1 + inflation_rate / 100)
-            return round(adjusted_cost, 2)
+def calculate_inflation_rate(lodgement_date):
+    df = repo.get_latest_and_lodgement_cpih(lodgement_date)
+    
+    if df.empty or len(df) < 2:
+        print("Insufficient CPIH data to calculate inflation rate.")
         return None
-    except (ValueError, TypeError):  # Handle non-numeric values safely
+    
+    latest_cpih = df.iloc[0]['cpih_value']
+    lodgement_cpih = df.iloc[1]['cpih_value']
+    
+    if pd.isna(latest_cpih) or pd.isna(lodgement_cpih) or lodgement_cpih == 0:
+        print("Invalid CPIH values for inflation calculation.")
         return None
+    
+    inflation_rate = ((latest_cpih - lodgement_cpih) / lodgement_cpih) * 100
+    return round(inflation_rate, 2)
 
 """
 Adjusts results from repo method by adjusting costs for inflation
@@ -395,12 +401,25 @@ def get_properties_from_area(postcode, number_bedrooms):
             ).date()
             
             start_date = properties.at[index, 'lodgement_datetime']
-            inflation_rate = get_inflation_rate(start_date)
+            inflation_rate = calculate_inflation_rate(start_date)
 
             for col in cost_columns:
                 properties.at[index, col] = adjust_cost(row[col], inflation_rate)
 
-    # Save to CSV for debugging
-    properties.to_csv('area_data.csv', index=False)
-
     return properties
+
+"""
+Adjusts heating, lighting, and hot water costs based on the inflation rate.
+"""
+def adjust_cost(cost, inflation_rate):
+    """Adjusts a given cost by the inflation rate."""
+    if inflation_rate is None:
+        print("Inflation rate is not available. Returning original costs.")
+        return cost  # Return original value if inflation data is missing
+    
+    try:
+        adjusted_cost = round(float(cost) * (1 + float(inflation_rate) / 100), 2)
+        return adjusted_cost
+    except (TypeError, ValueError) as e:
+        print(f"Error adjusting cost: {e}")
+        return cost  # Fallback to original cost if adjustment fails
