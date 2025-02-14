@@ -1,5 +1,5 @@
 import React from "react";
-import "../homePage/HomePage.css"; 
+import "../homePage/CitySection.css"; 
 
 const cities = [
   { name: "Liverpool", image: require("../assets/cities/liverpool.jpg") },
@@ -16,10 +16,7 @@ const cities = [
 const CitySection = () => {
   return (
     <div className="uk-cities-section">
-      <h2 className="uk-cities-title">Find Your Next Dream Property</h2>
-      <p className="uk-cities-subtitle">
-        Explore properties in top UK cities and find the perfect home that suits your lifestyle.
-      </p>
+      <h2 className="uk-cities-title">Find Your Next Dream Property in the UK</h2>
       <div className="cities-grid">
         {cities.map((city, index) => (
           <div key={index} className="city-card">
