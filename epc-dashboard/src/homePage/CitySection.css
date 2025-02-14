@@ -1,0 +1,50 @@
+/* 🌆 City Section Title */
+.uk-cities-title {
+    font-size: 2.8rem; /* Large and eye-catching */
+    font-weight: bold;
+    color: #2c5f2d; /* Darker shade for contrast */
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+    letter-spacing: 1px; /* Slight spacing for readability */
+    padding-bottom: 10px;
+    border-bottom: 3px solid #2c5f2d; /* Underline effect */
+    display: inline-block; /* Makes border only as wide as text */
+  }
+  
+  /* ✨ Subtle Subtitle */
+  .uk-cities-subtitle {
+    font-size: 1.2rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+  
+  /* 📱 Responsive Adjustments */
+  @media (max-width: 768px) {
+    .uk-cities-title {
+      font-size: 2.2rem;
+    }
+  
+    .uk-cities-subtitle {
+      font-size: 1rem;
+      max-width: 500px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .uk-cities-title {
+      font-size: 1.8rem;
+    }
+  
+    .uk-cities-subtitle {
+      font-size: 0.9rem;
+      max-width: 400px;
+    }
+  }
+  

@@ -32,6 +32,8 @@ import { PropertyProvider } from './Components/utils/propertyContext';
 import { FavouriteProvider } from './Components/utils/favouriteContext';
 import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
+import AdminDashboard from './login&register/AdminDashboard'; 
+import { useLocation } from "react-router-dom"; // Import to detect current page
 
 function App() {
   const [user, setUser] = useState(null);
@@ -44,6 +46,9 @@ function App() {
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation(); // Get current page path
+  const isHomePage = location.pathname === "/"; // Check if on home page
 
   const t = translations[language] || translations.en; // Load translations
 
@@ -96,6 +101,7 @@ function App() {
   };
 
   useEffect(() => {
+    
     if (user) {
       const fetchProfileImage = async () => {
         try {
@@ -113,21 +119,35 @@ function App() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (isHomePage) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50); // If scrolled more than 50px, change header
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    } else {
+      setIsScrolled(true); // Keep the header dark on all other pages
+    }
+  }, [isHomePage]);
+
   return (
     <PropertyProvider>
       <FavouriteProvider>
         <div className="App">
-          <div className="header-container">
-            <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
-            <div className="navigationLinks">
-              <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-              <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
-              <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+          <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
+            <div className="logo-container">
+              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
             </div>
+
             <div className="header-right">
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
+
               <div className="profile-icon" onClick={toggleDropdown}>
                 <img src={profileImage} alt="Profile" className="profile-img" />
                 {dropdownVisible && (
@@ -194,6 +214,7 @@ function App() {
             <Route path="/compare-results" element={<ComparePage language={language} />} />
             <Route path="/messages" element={<Messages user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
           </Routes>
 
           <footer className="footer-container">
