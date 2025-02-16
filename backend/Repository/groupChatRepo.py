@@ -343,3 +343,70 @@ class GroupChatRepo:
         finally:
             cursor.close()
             connection.close()
+
+    @staticmethod
+    def get_all_group_members(group_id):
+        """
+        Retrieve all members and their details found within a group.
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+            cursor.execute(
+                """
+                SELECT u.user_id, u.firstname, u.email_address 
+                FROM users u
+                JOIN group_members gm ON u.user_id = gm.user_id
+                WHERE gm.group_id = %s;
+                """,
+                (group_id,)
+            )
+            groups = cursor.fetchall()
+            return [{"user_id": group[0], "firstname": group[1], "email_address": group[2]} for group in groups]
+        finally:
+            cursor.close()
+            connection.close()
+
+    @staticmethod
+    def search_group_message(group_id, search_message):
+        """
+        Retrieve all messages from a group chat along with sender details after a search is carried out
+        """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+            cursor.execute(
+                """
+                SELECT gm.message_id,
+                    gm.content,
+                    gm.sent_at,
+                    u.user_id AS sender_id,
+                    u.firstname AS sender_name,
+                    u.profile_image_url
+                FROM group_messages gm
+                JOIN users u ON gm.sender_id = u.user_id
+                WHERE gm.group_id = %s
+                AND gm.content ILIKE %s
+                ORDER BY gm.sent_at ASC;
+                """,
+                (group_id, search_message),
+            )
+            
+            searched_messages = cursor.fetchall()
+
+            return [
+                {
+                    "message_id": search_msg[0], 
+                    "content": search_msg[1],
+                    "sent_at": search_msg[2].isoformat(),
+                    "sender_id": search_msg[3],
+                    "sender_name": search_msg[4],  # Fetching sender name
+                    "profile_image_url": search_msg[5] if search_msg[5] else "/default-profile.png",  # Fallback if no image
+                }
+                for search_msg in searched_messages
+            ]
+        finally:
+            cursor.close()
+            connection.close()
+
+    

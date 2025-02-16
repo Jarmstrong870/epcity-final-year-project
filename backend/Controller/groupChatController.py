@@ -132,3 +132,31 @@ def exit_group():
     except Exception as e:
         print(f"Error creating group: {e}")
         return jsonify({"message": "Internal server error"}), 500
+    
+@group_chat_blueprint.route("/get-all-group-members/<int:group_id>", methods=["GET"])
+def get_all_group_members(group_id):
+    """ Retrieve all team members from a specified group. """
+    try:
+        messages = GroupChatService.get_all_group_members(group_id)
+        return jsonify(messages), 200
+    except Exception as e:
+        print(f"Error fetching messages: {e}")
+        return jsonify({"message": "Internal server error"}), 500
+    
+@group_chat_blueprint.route("/search-group-message", methods=["GET"])
+def search_group_message():
+    """ Retrieve messages based on a specific searched term. """
+    data = request.json
+    user_email = request.headers.get("User-Email")
+    group_id = data.get("group_id")
+    content = data.get("content")
+
+    if not group_id or not content:
+        return jsonify({"message": "Group ID and content are required."}), 400
+
+    try:
+        searched_message = GroupChatService.search_group_message(group_id, content)
+        return jsonify(searched_message), 200
+    except Exception as e:
+        print(f"Error sending message: {e}")
+        return jsonify({"message": "Internal server error"}), 500

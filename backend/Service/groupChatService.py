@@ -45,6 +45,16 @@ class GroupChatService:
     def exit_group(group_id, user_email):
         """ Current group memeber can exit from group """
         return GroupChatRepo.exit_group(group_id, user_email)
+    
+    @staticmethod
+    def get_all_group_members(group_id):
+        """ Returning all members within a specified group """
+        return GroupChatRepo.get_all_group_members(group_id)
+    
+    @staticmethod
+    def search_group_message(group_id, searched_message):
+        """ Searching for a term within group chat messages """
+        return GroupChatRepo.search_group_message(group_id, searched_message)
 
 
 
