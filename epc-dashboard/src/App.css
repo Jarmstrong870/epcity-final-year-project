@@ -29,15 +29,16 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 
+/* 🏙️ Updated Logo Styling */
 .logo-img {
-  height: 60px; 
+  height: 100px;  /* Increased size (was 50px) */
   width: auto;
   transition: transform 0.3s ease;
   cursor: pointer;
 }
 
 .logo-img:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 
 /* Navbar */
@@ -71,12 +72,15 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Header Right Section */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 25px; /* Space between language selector and profile icon */
+  gap: 20px;
+  position: absolute;
+  right: 40px; /* Keeps elements to the right */
+  top: 20px;
 }
+
 
 /* Profile Icon */
 .profile-icon {
@@ -102,49 +106,72 @@
 /* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 10px); /* Position below the profile icon with spacing */
+  top: calc(100% + 10px);
   right: 0;
-  background-color: #2b3f3e; /* Sleek dark green background */
-  border: 1px solid #1f2b2a;
-  border-radius: 10px;
-  padding: 20px;
+  background-color: #1a2e2b; /* Darker green for a more premium look */
+  border: 2px solid #0f1f1d; /* Stronger border contrast */
+  border-radius: 12px; /* Softer rounded edges */
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Prominent shadow */
-  width: 220px;
+  gap: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.35); /* More prominent shadow */
+  width: 240px;
   z-index: 1100;
   animation: fadeIn 0.3s ease;
 }
 
-
 /* Welcome Message */
 .dropdown-menu p {
   color: #ffffff;
-  font-size: 1.1rem; /* Slightly larger font for emphasis */
-  font-weight: 600;
+  font-size: 1.2rem; /* Slightly bigger for emphasis */
+  font-weight: 700; /* Bolder */
   margin: 0;
   text-align: center;
-  border-bottom: 1px solid #1f2b2a; /* Separator line for structure */
-  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* Subtle separator */
+  padding-bottom: 12px;
+  letter-spacing: 0.5px; /* Small spacing for clarity */
 }
 
 /* Links */
 .dropdown-menu a {
-  color: #a8dadc; /* Soft green for text */
-  font-size: 1rem; /* Increased font size for readability */
-  font-weight: 500;
+  color: #ffffff; /* Full white for better contrast */
+  font-size: 1.05rem;
+  font-weight: 600;
   text-decoration: none;
-  padding: 10px 15px;
-  border-radius: 6px;
-  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+  padding: 12px 18px;
+  border-radius: 8px;
+  transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+  text-align: center;
 }
 
 .dropdown-menu a:hover {
-  background-color: #1d4d3d; /* Rich green on hover */
+  background-color: rgba(255, 255, 255, 0.15); /* Subtle hover effect */
   color: #ffffff;
-  transform: translateX(5px); /* Subtle sliding effect on hover */
+  transform: translateX(5px);
+  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 }
+
+/* Logout Button */
+.dropdown-menu button {
+  background-color: #e63946;
+  color: #ffffff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 700; /* Make it bold */
+  transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+  text-align: center;
+}
+
+.dropdown-menu button:hover {
+  background-color: #b71d2b; /* Darker red on hover */
+  transform: scale(1.08);
+  box-shadow: 0 3px 8px rgba(255, 0, 0, 0.2);
+}
+
 
 /* Logout Button */
 .dropdown-menu button {
@@ -242,6 +269,106 @@ td a:hover {
   width: auto;
   cursor: pointer;
   transition: transform 0.3s ease;
+}
+
+/* 🏗️ Header Base Styles */
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  z-index: 1000;
+  transition: background-color 0.4s ease, box-shadow 0.3s ease;
+  background-color: transparent; /* 🚀 Initially Transparent */
+  box-shadow: none;
+}
+
+/* 🚀 When User Scrolls Down */
+.header-container.scrolled {
+  background-color: #1f2e2d; /* Dark Green when scrolling */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100px; /* Ensures it's high enough when scrolling */
+  padding: 20px 30px;
+}
+
+/* Logo Moves Inside the Header When Scrolling */
+.header-container.scrolled .logo-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  background: none; /* Remove background when sticky */
+  padding: 10px 20px; /* Add padding inside header */
+  border-radius: 0;
+  transform: translateY(0);
+}
+
+/* 🏙️ Logo Styling */
+.logo-link {
+  display: flex;
+  align-items: center;
+}
+.logo-img {
+  width: 140px; /* Increased size */
+  height: auto;
+  transition: all 0.3s ease-in-out;
+}
+.logo-img:hover {
+  transform: scale(1.1);
+}
+
+.logo-container {
+  background-color: #1f2e2d; /* Green background */
+  padding: 20px 40px; /* Adjust padding if needed */
+  border-radius: 0 0 20px 20px; /* Curved bottom */
+  
+  position: fixed; /* Ensures it stays at the top */
+  top: 0;
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
+  width: fit-content; /* Ensure background wraps around logo only */
+  
+  z-index: 1100;
+}
+
+/* 🏡 Navbar Links */
+.navigationLinks {
+  display: flex;
+  gap: 20px;
+}
+
+.navigation-button {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px;
+  transition: color 0.3s ease;
+}
+.navigation-button:hover {
+  color: #a8dadc;
+}
+
+/* 👤 Profile Icon */
+.profile-icon {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+.profile-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: transform 0.3s ease;
+}
+.profile-img:hover {
+  transform: scale(1.1);
 }
 
 .footer-content img:hover {
