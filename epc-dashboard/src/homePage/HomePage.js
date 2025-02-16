@@ -5,6 +5,9 @@ import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
 import CitySection from "../homePage/CitySection"; // ✅ Import CitySection
+import liverpoolVideo from '../assets/liverpool.mp4'; // 🎥 Import the Liverpool Video
+import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; // 🏙️ Import the EPCity Logo
+
 
 const HomePage = ({ user, language }) => {
   const [loading, setLoading] = useState(true);
@@ -41,23 +44,50 @@ const HomePage = ({ user, language }) => {
 
   return (
     <>
-      <div className="backgroundImageStyling">
-        <div className="welcomeText">
-          <div className="mainMessage">{t.welcomeMessage}</div>
-          <div className="subMessage">{t.subMessage}</div>
-        </div>
+      {/* 🎥 Video Background Section */}
+      <div className="hero-section">
+        <video autoPlay loop muted playsInline className="hero-video">
+          <source src={liverpoolVideo} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
-        <div className="stylingSearchBar">
-          <input
-            className="stylingSearchInput"
-            type="text"
-            value={searchTerm}
-            onChange={handleInputChange}
-            placeholder={t.searchPlaceholder}
-          />
-          <button className="stylingSearchButton" onClick={handleSearch}>
-            {t.searchButton}
-          </button>
+        {/* 🔹 Dark Overlay */}
+        <div className="hero-overlay">
+          {/* 🔹 Logo & Header Overlay */}
+
+          {/* 🔹 Welcome Text */}
+          <div className="welcomeText">
+            <h1 className="mainMessage">{t.welcomeMessage}</h1>
+            <p className="subMessage">{t.subMessage}</p>
+          </div>
+
+          {/* 🔍 Search Bar */}
+          <div className="stylingSearchBar">
+            <input
+              className="stylingSearchInput"
+              type="text"
+              value={searchTerm}
+              onChange={handleInputChange}
+              placeholder={t.searchPlaceholder}
+            />
+            <button className="stylingSearchButton" onClick={handleSearch}>
+              {t.searchButton}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* City Section */}
+      <CitySection />
+
+      {/* Top Rated Properties Section */}
+      <div className="top-rated-properties">
+        <h2>{t.topRatedProperties}</h2>
+        <div className="property-grid">
+          {topRatedProperties.map((property, index) => (
+            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
+            
+          ))}
         </div>
       </div>
 
@@ -76,20 +106,6 @@ const HomePage = ({ user, language }) => {
             platform to search, compare, and evaluate which property is right for you in Liverpool.
           </p>
           <p>Use our search bar above to get started or explore some of Liverpool's top-rated properties below!</p>
-        </div>
-      </div>
-
-      {/* City Section */}
-      <CitySection />
-
-      {/* Top Rated Properties Section */}
-      <div className="top-rated-properties">
-        <h2>{t.topRatedProperties}</h2>
-        <div className="property-grid">
-          {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
-            
-          ))}
         </div>
       </div>
     </>

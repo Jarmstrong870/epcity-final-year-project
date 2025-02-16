@@ -18,29 +18,41 @@ function Login({ setUser, language }) {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
+        const response = await axios.post('http://localhost:5000/login', { email, password });
 
-      if (response.status === 200) {
-        setMessage('Login successful, welcome back!'); // Success message
-        setSuccess(true); // Set success state to true
-        setUser({
-          firstname: response.data.firstname,
-          lastname: response.data.lastname,
-          email,
-        });
-        setTimeout(() => {
-          navigate('/'); // Redirect to the home page after 2 seconds
-        }, 2000);
-      }
+        if (response.status === 200) {
+            const { firstname, lastname, is_admin } = response.data;
+
+            setUser({
+                firstname,
+                lastname,
+                email,
+                is_admin,  // Store admin status
+            });
+
+            // Set different messages based on user type
+            if (is_admin) {
+                setMessage('Login successful, welcome back, Admin!');
+            } else {
+                setMessage('Login successful, welcome back!');
+            }
+
+            setSuccess(true); // Set success state to true
+
+            setTimeout(() => {
+                // Redirect based on user type
+                navigate(is_admin ? '/admin-dashboard' : '/');
+            }, 1000);
+        }
     } catch (error) {
-      setSuccess(false); // Reset success state
-      if (error.response) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage(t.errorMessage); // Use translated error message
-      }
+        setSuccess(false); // Reset success state
+        if (error.response) {
+            setMessage(error.response.data.message);
+        } else {
+            setMessage(t.errorMessage); // Use translated error message
+        }
     }
-  };
+};
 
   return (
     <div

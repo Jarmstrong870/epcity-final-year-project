@@ -83,20 +83,20 @@ class GroupChatRepo:
     @staticmethod
     def insert_message(group_id, content, sender_email):
         """
-        Insert a new message into the group chat.
+        Insert a new message into the group chat and return sender details.
         """
         try:
             connection = psycopg2.connect(**db_config)
             cursor = connection.cursor()
 
             # ✅ Fetch the sender's user_id from email
-            cursor.execute("SELECT user_id FROM users WHERE email_address = %s;", (sender_email,))
-            sender_id = cursor.fetchone()
+            cursor.execute("SELECT user_id, firstname, profile_image_url FROM users WHERE email_address = %s;", (sender_email,))
+            sender_data = cursor.fetchone()
 
-            if not sender_id:
+            if not sender_data:
                 return {"error": "Sender email not found in database"}, 400
 
-            sender_id = sender_id[0]  # Extract user_id
+            sender_id, sender_name, profile_image_url = sender_data
 
             # ✅ Insert message into `group_messages`
             cursor.execute(
@@ -114,8 +114,9 @@ class GroupChatRepo:
                 "message_id": message[0],
                 "content": message[1],
                 "sent_at": message[2].isoformat(),
-                "sender_id": sender_id
-                
+                "sender_id": sender_id,
+                "sender_name": sender_name,  # ✅ Include sender's name
+                "profile_image_url": profile_image_url if profile_image_url else "/default-profile.png"  # ✅ Include profile picture
             }
         except Exception as e:
             print(f"❌ Database Insert Error: {e}")
@@ -124,39 +125,42 @@ class GroupChatRepo:
             cursor.close()
             connection.close()
 
+
     @staticmethod
     def get_group_messages(group_id):
         """
-        Retrieve all messages from a group chat.
-
-        :param group_id: ID of the group chat
-        :return: List of messages
+        Retrieve all messages from a group chat along with sender details.
         """
         try:
             connection = psycopg2.connect(**db_config)
             cursor = connection.cursor()
             cursor.execute(
                 """
-               SELECT gm.message_id,
-                      gm.content,
-                      gm.sent_at,
-                      u.user_id AS sender_id,
-                      u.email_address AS sender_email
-               FROM group_messages gm
-               JOIN users u ON gm.sender_id = u.user_id
-               WHERE gm.group_id = %s
-               ORDER BY gm.sent_at ASC;
-           """,
+                SELECT gm.message_id,
+                    gm.content,
+                    gm.sent_at,
+                    u.user_id AS sender_id,
+                    u.firstname AS sender_name,
+                    u.profile_image_url
+                FROM group_messages gm
+                JOIN users u ON gm.sender_id = u.user_id
+                WHERE gm.group_id = %s
+                ORDER BY gm.sent_at ASC;
+                """,
                 (group_id,),
             )
             messages = cursor.fetchall()
             return [
-                {"message_id": msg[0], "content": msg[1], "sent_at": msg[2].isoformat(), "sender_email": msg[3]}
+                {
+                    "message_id": msg[0],
+                    "content": msg[1],
+                    "sent_at": msg[2].isoformat(),
+                    "sender_id": msg[3],
+                    "sender_name": msg[4],  # Fetching sender name
+                    "profile_image_url": msg[5] if msg[5] else "/default-profile.png",  # Fallback if no image
+                }
                 for msg in messages
             ]
         finally:
             cursor.close()
             connection.close()
-
-
-

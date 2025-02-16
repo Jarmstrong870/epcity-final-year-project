@@ -19,16 +19,14 @@ def find_user_by_email(email):
     :return: A dictionary with user details or None if no user is found
     """
     try:
-        # Establish a connection to the database
         with connect(**db_config) as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                # SQL query to find the user
+                # Fetch user details including admin status
                 cursor.execute(
-                    "SELECT firstname, lastname, password_hash FROM users WHERE email_address = %s;",
+                    "SELECT firstname, lastname, password_hash, is_admin FROM users WHERE email_address = %s;",
                     (email,)
                 )
-                # Fetch and return the user record
-                return cursor.fetchone()  # None if no user is found
+                return cursor.fetchone()  # Returns None if no user is found
     except Exception as e:
         print(f"Error finding user by email: {e}")
         return None
