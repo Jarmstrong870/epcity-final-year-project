@@ -42,8 +42,7 @@ const PropertyFilter = ({ language }) => {
     return (
         <div className="baseStyling">
             <div>
-                <h2><h2>{t.findYourProperty}</h2>
-</h2>
+                <h2>{t.findYourProperty}</h2>
             </div>
 
             {/* Search Input */}
