@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavouriteStar from './FavouriteStar';
+import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import TextToSpeech from '../Components/utils/TextToSpeech';  // Import TTS component
 
-const PropertyList = ({ user, loading, language }) => {
+const PropertyList = ({ loading, language }) => {
   const [viewMode, setViewMode] = useState('table');
   const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState('');
@@ -57,8 +57,6 @@ const PropertyList = ({ user, loading, language }) => {
     });
   };
 
-  // Handle toggle favorite to show popup
-  const handleToggleFavourite = (property, isFavourited) => {
   const handleCompareClick = () => {
     if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
       alert("You must select between 2 and 4 properties to compare.");
@@ -70,9 +68,9 @@ const PropertyList = ({ user, loading, language }) => {
   // Popup message for favoriting/unfavoriting
   const handleToggleFavorite = (propertyData, isFavorited) => {
     setPopupMessage(
-      isFavourited
-        ? `${property?.address || 'This property'} has been favorited.`
-        : `${property?.address || 'This property'} has been unfavorited.`
+      isFavorited
+        ? `${propertyData?.address || 'This property'} has been favorited.`
+        : `${propertyData?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 5000);  // Hide popup after 5 seconds
@@ -168,9 +166,10 @@ const PropertyList = ({ user, loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                <span onClick={() => handleToggleFavourite(property)}>
-                    <FavouriteStar user={user} property = {property} /> 
-                  </span> 
+                  <FavoriteStar
+                    propertyData={property}
+                    onToggle={handleToggleFavorite}
+                  />
                 </td>
                 <td className="compare-checkbox">
                   <input
@@ -221,8 +220,7 @@ const PropertyList = ({ user, loading, language }) => {
         </button>
       </div>
     </div>
-    );
-  };
-}
+  );
+};
 
 export default PropertyList;
