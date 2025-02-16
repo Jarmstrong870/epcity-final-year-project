@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { FavouriteContext }  from '../Components/utils/favouriteContext';
-import './FavouriteStar.css';
 
   /* Favourite Star is a new component that appears within the Top Rated Property Card,
   Property Page and Property List which will allow a user to add/remove the property as a Favourite
