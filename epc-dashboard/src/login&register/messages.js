@@ -4,7 +4,6 @@ import axios from "axios";
 import "./messages.css";
 import profileIcon from "../assets/profileicon.png";
 
-import { FaPencilAlt, FaTrash, FaDoorOpen } from "react-icons/fa";
 
 const socket = io("http://localhost:5000");
 
@@ -13,18 +12,9 @@ const Messages = ({ user }) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [messages, setMessages] = useState([]);  // Messages in the selected group
   const [newGroupName, setNewGroupName] = useState(""); 
-  const [groupMembers, setNewGroupMembers] = useState(""); 
+  const [groupMembers, setGroupMembers] = useState(""); 
   const [messageContent, setMessageContent] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error for profanity filter 
-  const [dropdownActionsPopUp, setDropdownActionsPopUp] = useState(false);
-  const [createGroupPopUp, setCreateGroupPopUp] = useState(false);
-  const [popUpFunction, setPopUpFunction] = useState(null);
-  const [popupMessage, setPopupMessage] = useState("");
-  const [dropdownMenu, setDropdownMenu] = useState(false);
-  const [searchedMessage, setSearchedMessage] = useState("");
-  const [messagesFound, setMessagesFound] = useState([]);
-  const [allGroupMembers, setAllGroupMembers] = useState([]);
-  const [action, setAction] = useState("");
 
   // Fetch groups on mount and listen for socket messages
   useEffect(() => {
@@ -69,20 +59,6 @@ const Messages = ({ user }) => {
     }
   };
 
-  const fetchAllGroupMembers = async (groupId) => {
-    if (!groupId) 
-      return;
-
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/get-all-group-members/${groupId}`,
-      );
-      setAllGroupMembers(response.data);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    }
-  };
-
   const createGroup = async () => {
     if (!newGroupName || !groupMembers) return;
 
@@ -99,7 +75,7 @@ const Messages = ({ user }) => {
       );
       setGroups([...groups, response.data]);
       setNewGroupName("");
-      setNewGroupMembers("");
+      setGroupMembers("");
     } catch (error) {
       console.error("Error creating group:", error);
     }
@@ -361,89 +337,15 @@ const searchMessage = async () => {
           </div>
         </div>
       </div>
-      )}
-
-        <div className="groups-list">
-          {groups.map((group) => (
-            <div
-              key={group.group_id}
-              onClick={() => setSelectedGroup(group)}
-              className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}>
-              <span className="group-name">{group.name}</span>
-            </div>
-          ))}
-        </div>
-
-      </div>
 
       {/* === Main Chat Area === */}
       <div className="chat-area">
-        {/* === Search Bar === */}
-        <div className = "search-message-bar">
-        <textarea
-                className="search-input-field"
-                placeholder="Search for messages...."
-                value={searchedMessage}
-                onChange={(e) => setSearchedMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    searchMessage();
-                  }
-                }}
-              />
-              <button className="search-button" onClick={searchMessage}>
-                <span className="search-button-icon"> {"\uD83D\uDD0E"} </span> 
-              </button>
-
-              <button className="clear-search-button"
-                onClick = {() => {
-                  setSearchedMessage("");
-                  setMessagesFound([]); 
-                }}>
-                <span> {"\u2717"} </span>
-                  Clear
-              </button>   
-        </div>
-
         {selectedGroup ? (
           <>
             {/* Header with group name */}
-            <div className="message-chat-header">
-              <h3 className="message-chat-title">{selectedGroup.name}</h3>
-
-              <div className="message-profile-icon" onClick={toggleDropdown}>
-                <h2 className="message-dropdown-icon">...</h2>
-
-                {dropdownMenu && selectedGroup &&(
-                <div className="message-dropdown-menu">
-                    <button className="icon-button"
-                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\u270D"} </span> 
-                          Edit Group Name
-                        </button>
-
-                      <button className="icon-button"
-                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\uD83D\uDDD1"} </span>
-                          Delete Group and Data
-                        </button>   
-
-                      <button className="icon-button"
-                        onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\uD83D\uDEAA"} </span>
-                          Leave Group?
-                        </button>   
-
-                      <button className="icon-button"
-                        onClick = {() => confirmationPopUp("details", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\uD83D\uDD12"} </span>
-                          Group Settings
-                        </button>   
-
-                    </div>
-                    )}
-                  </div>
-              </div>
+            <div className="chat-header">
+              <h3 className="chat-title">{selectedGroup.name}</h3>
+            </div>
 
             {/* Messages */}
             <div className="messages-list">
@@ -480,8 +382,7 @@ const searchMessage = async () => {
                   </div>
                 );
               })}
-
-           </div>
+            </div>
 
             {/* Display error message if there's an error */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -500,7 +401,7 @@ const searchMessage = async () => {
                 }}
               />
               <button className="send-button" onClick={sendMessage}>
-              <span className="send-button-icon"> {"\u279C"} </span> 
+                Send
               </button>
             </div>
           </>
@@ -510,30 +411,8 @@ const searchMessage = async () => {
           </div>
         )}
       </div>
-
-      {dropdownActionsPopUp && (
-        <div className = "dropdown-popup-base">
-          <div className = "dropdown-popup-message">
-            <p>{popupMessage}</p>
-              <div className = "dropdown-popup-action">
-                <button onClick={() => {
-                  if(popUpFunction) {
-                    popUpFunction();
-                    setDropdownActionsPopUp(false);
-                  } else {
-                    setErrorMessage("Unable to show pop up");
-                  }
-                }}>Yes</button>
-
-                <button onClick={() => setDropdownActionsPopUp(false)}>No</button>
-              </div>
-          </div>
-          </div>
-        )}
     </div>
   );
 };
 
 export default Messages;
-
-
