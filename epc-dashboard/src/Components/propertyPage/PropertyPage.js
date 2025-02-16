@@ -45,18 +45,55 @@ const PropertyPage = ({ user, property, email, language }) => {
     }
   }, [propertyData]);
 
-  const toggleFavorite = () => {
+  //  Handle favoriting of properties
+  const toggleFavourite = () => {
     setIsFavourited(!isFavourited);
     setPopupMessage(
-      !isFavourited
+      isFavourited
         ? `${propertyData?.address || 'This property'} has been favorited.`
         : `${propertyData?.address || 'This property'} has been unfavorited.`
     );
     setShowPopup(true);
-
+    // Hide the popup after 5 seconds
     setTimeout(() => {
       setShowPopup(false);
     }, 5000);
+  };
+
+
+  useEffect(() => {
+    if (uprn) {
+      fetchPropertyDetails();
+    }
+  }, [uprn]);
+
+  useEffect(() => {
+    if (propertyData && propertyData.address && propertyData.postcode) {
+      fetchLocationCoords(propertyData.address, propertyData.postcode);
+    }
+  }, [propertyData]);
+
+  const fetchLocationCoords = (fullAddress, postcode) => {
+    const API_KEY = 'AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c'; // Replace with your API key
+    const sanitizedAddress = `${fullAddress}, ${postcode}`.replace(/,+/g, ',').trim();
+
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(sanitizedAddress)}&key=${API_KEY}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.results && data.results.length > 0) {
+          const { lat, lng } = data.results[0].geometry.location;
+          setLocationCoords({ lat, lng });
+          setStreetViewURL(
+            `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${API_KEY}`
+          );
+        } else {
+          setErrorMessage('Postcode not found. Unable to display map or street view.');
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to fetch location data:', error);
+        setErrorMessage('Failed to fetch location data.');
+      });
   };
 
   if (loading) {
@@ -71,10 +108,12 @@ const PropertyPage = ({ user, property, email, language }) => {
 
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
-        <div onClick={toggleFavorite} className="starComponent">
-          <FavouriteStar user={user} property={property} />
+        <div className = "starComponent">
+        {/*<div onClick={handleToggleFavourite}>*/}
+                <FavouriteStar user={user} property = {propertyData} onToggle={{toggleFavourite}}/> 
+              </div> 
         </div>
-      </div>
+    
 
       {/* Section to display street view and map view */}
       
