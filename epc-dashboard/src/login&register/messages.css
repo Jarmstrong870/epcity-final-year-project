@@ -65,30 +65,6 @@
   font-size: 1rem;
 }
 
-/* ====== Create Group Form ====== */
-.create-group {
-  width: 100%;
-  background: #1d3835;
-  border-radius: 6px;
-  padding: 10px;
-}
-
-.create-group h4 {
-  color: #ffffff;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-.create-group input {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-}
-
 .message-info {
   display: flex;
   align-items: center;
@@ -270,34 +246,102 @@
   font-size: 1.3rem;
 }
 
-.create-group-base {
-  padding: 6px;
-  width: 30px;
-  height: 30px;
-  font-weight: bold;
-  color: #1f2e2d;
-  background-color: #f7f7f7;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.create-group-button:hover {
-  background-color: #d6d6d6;
-}
-
-.create-group-button{
+.create-group-button-plus{
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
   width: 15px;
   height: 15px;
+  border: none;
   border-radius: 50%;
   margin-right: 7px;
   font-size: 30px;
   cursor: pointer;
   margin-left: 5px;
+}
+
+.create-group-button-plus:hover {
+  background-color: #d6d6d6;
+}
+
+.create-group-button-cancel{
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  width: 15px;
+  border: none;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 7px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 5px;
+  color: #33514e;
+}
+
+.create-group-button-cancel:hover {
+  background-color: #d6d6d6;
+}
+
+.create-group-popup-base {
+  width: 100%;
+  border-radius: 6px;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-group-popup-message {
+  width: 40%;
+  height: 30%;
+  margin-bottom: 8px;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  background-color: #33514e;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.create-group-popup-message h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.group-input{
+  margin-top: 10px;
+}
+
+.email-input{
+  margin-top: 20px;
+}
+
+.create-group-popup button{
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  background: #1b2e2c;
+  color: #fff;
+  font-style: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.create-group-popup button:hover {
+  background: #27413f;
 }
 
 .icon-button {
@@ -355,51 +399,6 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.create-group-popup-base {
-  width: 100%;
-  border-radius: 6px;
-  padding: 10px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.create-group-popup-message {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 200px;
-  text-align: center;
-}
-
-.create-group-popup button{
-  width: 100%;
-  padding: 10px;
-  background: #33514e;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.create-group-popup button:hover {
-  background: #526c6a;
 }
 
 .search-message-bar {

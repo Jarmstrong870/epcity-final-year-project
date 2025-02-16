@@ -42,8 +42,7 @@ const PropertyFilter = ({ language }) => {
     return (
         <div className="baseStyling">
             <div>
-                <h2><h2>{t.findYourProperty}</h2>
-</h2>
+                <h2>{t.findYourProperty}</h2>
             </div>
 
             {/* Search Input */}
@@ -64,7 +63,7 @@ const PropertyFilter = ({ language }) => {
 
             {/* Property Type Filter (Checkboxes) */}
             <div className="propertyTypeFilterTitle">
-                <label><strong>{t.propertyTypes}</strong></label>
+                <h3>{t.propertyTypes}</h3>
                 <div className="propertyTypeFilter">
                     {t.propertyTypeOptions.map((type, index) => (
                         <label key={index}>
@@ -81,7 +80,7 @@ const PropertyFilter = ({ language }) => {
 
             {/* EPC Rating Filter (Checkboxes) */}
             <div className="ratingLetterFilterTitle">
-                <label><strong>{t.epcRatings}</strong></label>
+                <h3>{t.epcRatings}</h3>
                 <div className="ratingLetterFilter">
                     {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
                         <label key={rating}>

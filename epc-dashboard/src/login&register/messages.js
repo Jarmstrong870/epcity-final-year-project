@@ -292,6 +292,7 @@ const searchMessage = async () => {
 
     setPopUpFunction(() => () => {
       if(action === "create")
+        setCreateGroupPopUp(true);
         createGroup();
       
       if(action === "delete")
@@ -310,7 +311,7 @@ const searchMessage = async () => {
   setPopupMessage(popupMessage);
   setAction(action);
   setDropdownActionsPopUp(true);
-  setCreateGroupPopUp(true);
+  setCreateGroupPopUp(false);
 
   };
 
@@ -324,25 +325,29 @@ const searchMessage = async () => {
       <div className="sidebar">
         <h2 className="logo">Group Chats
 
-        <button className="create-group-button"
+        <button className="create-group-button-plus"
             onClick = {() => confirmationPopUp("create")} >
-            <span className="create-group-border"> {"\u002B"} </span>
-        </button> 
+            <span> {"\u002B"} </span>
+        </button>
         </h2>
  
-      {/* === Create Group Form === */}
       {createGroupPopUp && (
         <div className="create-group-popup-base">
           <div className="create-group-popup-message">
-          <h4>Create New Group</h4>
+          <h4>Create New Group
+          <button className="create-group-button-cancel"
+            onClick = {() => confirmationPopUp("create")} >
+            <span> {"\u0078"} </span>
+        </button> 
+          </h4>
 
-            <input
+            <input className="group-input"
               type="text"
               placeholder="Group Name"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
             />
-            <input
+            <input className="email-input"
               type="text"
               placeholder="Members' Emails (comma separated)"
               value={groupMembers}

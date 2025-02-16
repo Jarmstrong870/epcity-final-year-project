@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
@@ -60,13 +60,6 @@ const PropertyPage = ({ user, property, email, language }) => {
     }, 5000);
   };
 
-
-  useEffect(() => {
-    if (uprn) {
-      fetchPropertyDetails();
-    }
-  }, [uprn]);
-
   useEffect(() => {
     if (propertyData && propertyData.address && propertyData.postcode) {
       fetchLocationCoords(propertyData.address, propertyData.postcode);
@@ -110,7 +103,7 @@ const PropertyPage = ({ user, property, email, language }) => {
         <h2 className="property-title">Property Details</h2>
         <div className = "starComponent">
         {/*<div onClick={handleToggleFavourite}>*/}
-                <FavouriteStar user={user} property = {propertyData} onToggle={{toggleFavourite}}/> 
+                <FavouriteStar user={user} property = {propertyData} onToggle={toggleFavourite}/> 
               </div> 
         </div>
     
