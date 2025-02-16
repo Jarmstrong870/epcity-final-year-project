@@ -213,11 +213,11 @@ class GroupChatRepo:
                 return {"error": "Only the admin is able to delete this group"}, 403
 
             # Deleting membership ID in group members table based on group and user ID
-            cursor.execute("DELETE FROM groups_messages WHERE group_id = %s;", (group_id,))
+            cursor.execute("DELETE FROM group_messages WHERE group_id = %s;", (group_id,))
 
-            cursor.execute("DELETE FROM groups_members WHERE group_id = %s;", (group_id,))
+            cursor.execute("DELETE FROM group_members WHERE group_id = %s;", (group_id,))
 
-            cursor.execute("DELETE FROM groups_ WHERE group_id = %s;", (group_id,))
+            cursor.execute("DELETE FROM groups WHERE group_id = %s;", (group_id,))
             
             connection.commit()
             return {"message": "The group and the data has all been deleted successfully"}

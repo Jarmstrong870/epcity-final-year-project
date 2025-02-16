@@ -16,13 +16,15 @@ const Messages = ({ user }) => {
   const [groupMembers, setNewGroupMembers] = useState(""); 
   const [messageContent, setMessageContent] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error for profanity filter 
-  const [popUp, setPopUp] = useState(false);
+  const [dropdownActionsPopUp, setDropdownActionsPopUp] = useState(false);
+  const [createGroupPopUp, setCreateGroupPopUp] = useState(false);
   const [popUpFunction, setPopUpFunction] = useState(null);
   const [popupMessage, setPopupMessage] = useState("");
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const [searchedMessage, setSearchedMessage] = useState("");
   const [messagesFound, setMessagesFound] = useState([]);
   const [allGroupMembers, setAllGroupMembers] = useState([]);
+  const [action, setAction] = useState("");
 
   // Fetch groups on mount and listen for socket messages
   useEffect(() => {
@@ -263,6 +265,10 @@ const searchMessage = async () => {
     let popupMessage = "";
 
     switch(action) {
+      case "create":
+        popupMessage = "Do you want to create a new group?"
+        break; 
+
       case "delete":
         popupMessage = "Are you sure you want to delete the group?";
         break;
@@ -285,6 +291,9 @@ const searchMessage = async () => {
     }
 
     setPopUpFunction(() => () => {
+      if(action === "create")
+        createGroup();
+      
       if(action === "delete")
         deleteGroup(groupId);
 
@@ -299,7 +308,9 @@ const searchMessage = async () => {
   });
 
   setPopupMessage(popupMessage);
-  setPopUp(true);
+  setAction(action);
+  setDropdownActionsPopUp(true);
+  setCreateGroupPopUp(true);
 
   };
 
@@ -311,7 +322,42 @@ const searchMessage = async () => {
     <div className="messaging-container">
       {/* === Left Sidebar === */}
       <div className="sidebar">
-        <h2 className="logo">Group Chats</h2>
+        <h2 className="logo">Group Chats
+
+        <button className="create-group-button"
+            onClick = {() => confirmationPopUp("create")} >
+            <span className="create-group-border"> {"\u002B"} </span>
+        </button> 
+        </h2>
+ 
+      {/* === Create Group Form === */}
+      {createGroupPopUp && (
+        <div className="create-group-popup-base">
+          <div className="create-group-popup-message">
+          <h4>Create New Group</h4>
+
+            <input
+              type="text"
+              placeholder="Group Name"
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Members' Emails (comma separated)"
+              value={groupMembers}
+              onChange={(e) => setNewGroupMembers(e.target.value)}
+            />
+            <div className="create-group-popup">
+              <button onClick={() => {
+                createGroup();
+                setDropdownActionsPopUp(false);
+              }}> Create Group </button>
+          </div>
+        </div>
+      </div>
+      )}
+
         <div className="groups-list">
           {groups.map((group) => (
             <div
@@ -323,23 +369,6 @@ const searchMessage = async () => {
           ))}
         </div>
 
-       {/* === Create Group Form === */}
-        <div className="create-group">
-          <h4>Create New Group</h4>
-          <input
-            type="text"
-            placeholder="Group Name"
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Members' Emails (comma separated)"
-            value={groupMembers}
-            onChange={(e) => setNewGroupMembers(e.target.value)}
-          />
-          <button onClick={createGroup}>Create Group</button>
-        </div>
       </div>
 
       {/* === Main Chat Area === */}
@@ -383,29 +412,25 @@ const searchMessage = async () => {
                 {dropdownMenu && selectedGroup &&(
                 <div className="message-dropdown-menu">
                     <button className="icon-button"
-                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}
-                        disabled={!selectedGroup} >
+                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}>
                         <span className="icon-border"> {"\u270D"} </span> 
                           Edit Group Name
                         </button>
 
                       <button className="icon-button"
-                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}
-                        disabled={!selectedGroup} >
+                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}>
                         <span className="icon-border"> {"\uD83D\uDDD1"} </span>
                           Delete Group and Data
                         </button>   
 
                       <button className="icon-button"
-                        onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}
-                        disabled={!selectedGroup} >
+                        onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}>
                         <span className="icon-border"> {"\uD83D\uDEAA"} </span>
                           Leave Group?
                         </button>   
 
                       <button className="icon-button"
-                        onClick = {() => confirmationPopUp("details", selectedGroup?.group_id)}
-                        disabled={!selectedGroup} >
+                        onClick = {() => confirmationPopUp("details", selectedGroup?.group_id)}>
                         <span className="icon-border"> {"\uD83D\uDD12"} </span>
                           Group Settings
                         </button>   
@@ -481,17 +506,21 @@ const searchMessage = async () => {
         )}
       </div>
 
-      {popUp && (
-        <div className = "popup-base">
-          <div className = "popup-message">
+      {dropdownActionsPopUp && (
+        <div className = "dropdown-popup-base">
+          <div className = "dropdown-popup-message">
             <p>{popupMessage}</p>
-              <div className = "popup-action">
+              <div className = "dropdown-popup-action">
                 <button onClick={() => {
-                  popUpFunction();
-                  setPopUp(false);
+                  if(popUpFunction) {
+                    popUpFunction();
+                    setDropdownActionsPopUp(false);
+                  } else {
+                    setErrorMessage("Unable to show pop up");
+                  }
                 }}>Yes</button>
 
-                <button onClick={() => setPopUp(false)}>No</button>
+                <button onClick={() => setDropdownActionsPopUp(false)}>No</button>
               </div>
           </div>
           </div>
@@ -501,3 +530,5 @@ const searchMessage = async () => {
 };
 
 export default Messages;
+
+
