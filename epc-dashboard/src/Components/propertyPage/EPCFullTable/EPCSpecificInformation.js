@@ -1,37 +1,61 @@
 import styles from "./EpcSpecificInfo.module.css";
+import { energyRatingToNumber, parseNumericValue } from "../../Compare_utils/Compare_utils";
+import "../../Compare_utils/HighlightedValue.css"; // Ensure correct CSS import
 
-const EPCSpecificInformation = ({ properties }) => {
-    
+const EPCSpecificInformation = ({ properties, maxValues }) => {
+  if (!maxValues) return null; // Prevent crash if maxValues is undefined
 
-    return(
-        <div className= {styles.energyInfoContainer}>
-            <div className={styles.energyHeader}>EPC Information</div>
-                <div className = {styles.energyBox}>
-                    <h2>EPC Rating</h2>
-                    <p>Current EPC Grade: {properties.current_energy_rating}</p>
-                    <p>Current EPC Rating: {properties.current_energy_efficiency}</p>
-                    <p>Current Energy Consumption: {properties.energy_consumption_current} KwH/m^2</p>
-                    <p>Total Energy Usage: {properties.energy_consumption_current* properties.total_floor_area}</p>
-                    <p> Total Energy Cost: £{(properties.energy_consumption_current* properties.total_floor_area * properties.cost_per_kwh)} </p>
-                    
-                </div>
-                <div className = {styles.energyBox}>
-                <h2>Yearly Costs</h2>
-                <p>Yearly Cost: {properties.energy_consumption_cost_formatted}</p>
-                </div>
-                <div className = {styles.energyBox}>
-                <h2>Property Information</h2>
-                <p>Built From: {properties.built_form}</p>
-                <p>Extension Count: {properties.extension_count}</p>
-                <p>Lodgement Date: {properties.logdement_date}</p>
-                <p>Tenure: {properties.tenure}</p>
-                <p>Gas Flag: {properties.tenure}</p>
-                <p>Energy Tariff: {properties.energy_tariff}</p>
-                </div>
-        
-        </div>
-    )
+  // Determine highest and lowest values
+  const isHighestEPCGrade = energyRatingToNumber(properties.current_energy_rating) === maxValues.maxEnergyRating;
+  const isHighestEPCRating = parseNumericValue(properties.current_energy_efficiency) === maxValues.maxEnergyEfficiency;
+  const isLowestConsumption = parseNumericValue(properties.energy_consumption_current) === maxValues.minEnergyConsumptionCurrent;
+  const isLowestEnergyUsage = parseNumericValue(properties.energy_consumption_current * properties.total_floor_area) === maxValues.minTotalEnergyUsage;
+  const isLowestEnergyCost = parseNumericValue(properties.energy_consumption_current * properties.total_floor_area * properties.cost_per_kwh) === maxValues.minTotalEnergyCost;
 
-}
+  return (
+    <div className={styles.energyInfoContainer}>
+      <div className={styles.energyHeader}>EPC Information</div>
+
+      {/* EPC Rating Box */}
+      <div className={styles.energyBox}>
+        <h2>EPC Rating</h2>
+        <p className={isHighestEPCGrade ? "highlight-green" : ""}>
+          <strong>Current EPC Grade:</strong> {properties.current_energy_rating}
+        </p>
+        <p className={isHighestEPCRating ? "highlight-green" : ""}>
+          <strong>Current EPC Rating:</strong> {properties.current_energy_efficiency}
+        </p>
+        <p className={isLowestConsumption ? "highlight-green" : ""}>
+          <strong>Current Energy Consumption:</strong> {properties.energy_consumption_current} KWh/m²
+        </p>
+        <p className={isLowestEnergyUsage ? "highlight-green" : ""}>
+          <strong>Total Energy Usage:</strong> {properties.energy_consumption_current * properties.total_floor_area}
+        </p>
+        <p className={isLowestEnergyCost ? "highlight-green" : ""}>
+          <strong>Total Energy Cost:</strong> £{(properties.energy_consumption_current * properties.total_floor_area * properties.cost_per_kwh).toFixed(2)}
+        </p>
+      </div>
+
+      {/* Yearly Costs Box */}
+      <div className={styles.energyBox}>
+        <h2>Yearly Costs</h2>
+        <p>
+          <strong>Yearly Cost:</strong> {properties.energy_consumption_cost_formatted}
+        </p>
+      </div>
+
+      {/* Property Information Box */}
+      <div className={styles.energyBox}>
+        <h2>Property Information</h2>
+        <p><strong>Built From:</strong> {properties.built_form}</p>
+        <p><strong>Extension Count:</strong> {properties.extension_count}</p>
+        <p><strong>Lodgement Date:</strong> {properties.logdement_date}</p>
+        <p><strong>Tenure:</strong> {properties.tenure}</p>
+        <p><strong>Gas Flag:</strong> {properties.tenure}</p>
+        <p><strong>Energy Tariff:</strong> {properties.energy_tariff}</p>
+      </div>
+    </div>
+  );
+};
 
 export default EPCSpecificInformation;

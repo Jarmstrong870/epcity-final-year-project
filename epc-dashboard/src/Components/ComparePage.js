@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StreetView from "./propertyPage/StreetView";
 import { fetchLocationCoords } from "./propertyPage/propertyUtils";
-import HighlightedValue from "./Compare_utils/HighlightedValue";
-import { 
-  energyRatingToNumber, 
-  efficiencyRatingToNumber, 
-  findMaxValues, 
-  parseNumericValue 
-} from "./Compare_utils/Compare_utils";
-import translations from "../locales/translations_comparepage"; 
+import EPCFullTable from "./propertyPage/EPCFullTable/EPCFullTable";
+import translations from "../locales/translations_comparepage";
+import { findMaxValues } from "./Compare_utils/Compare_utils";
 import "./ComparePage.css";
 
 const ComparePage = ({ language }) => {
@@ -20,11 +15,12 @@ const ComparePage = ({ language }) => {
   const [propertyDetails, setPropertyDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollRef = useRef(null);
   const [streetViewURLs, setStreetViewURLs] = useState({});
 
   const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-
-  const t = translations[language] || translations.en; // Use selected language or default to English
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     if (selectedProperties.length < 2 || selectedProperties.length > 4) {
@@ -75,8 +71,48 @@ const ComparePage = ({ language }) => {
     }
   };
 
-  //  Get max/min values for highlighting
-  const maxValues = findMaxValues(propertyDetails);
+  const maxValues = propertyDetails.length > 0 ? findMaxValues(propertyDetails) : {};
+
+  const gridClass =
+    propertyDetails.length === 2
+      ? "two-properties"
+      : propertyDetails.length === 3
+      ? "three-properties"
+      : "four-properties";
+
+  // ✅ Auto-focus scroll container on load
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.focus();
+    }
+  }, []);
+
+  // ✅ Handle arrow key scrolling
+  const handleKeyDown = (event) => {
+    if (!scrollRef.current) return;
+    const scrollAmount = 200; // Adjust scroll speed
+
+    if (event.key === "ArrowRight") {
+      scrollRef.current.scrollLeft += scrollAmount;
+    } else if (event.key === "ArrowLeft") {
+      scrollRef.current.scrollLeft -= scrollAmount;
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // ✅ Track Horizontal Scroll Progress
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollWidth = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+      const scrollLeft = scrollRef.current.scrollLeft;
+      const progress = (scrollLeft / scrollWidth) * 100;
+      setScrollProgress(progress);
+    }
+  };
 
   return (
     <div className="compare-container">
@@ -85,67 +121,51 @@ const ComparePage = ({ language }) => {
       </button>
       <h2>{t.compareProperties}</h2>
 
+      {/* ✅ Stylish Scroll Indicator */}
+      <div className="scroll-indicator-container">
+        <span className="scroll-indicator-text">
+          <i className="fas fa-arrow-left"></i> Use the <strong>right and left arrow keys</strong> or the <strong>scroll bar at the top</strong> to move across.{" "}
+          <i className="fas fa-arrow-right"></i>
+        </span>
+      </div>
+
+      {/* ✅ Scroll Bar */}
+      <div className="scroll-indicator-bar">
+        <div
+          className="scroll-indicator-progress"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
+
       {loading ? (
         <p>{t.loading}</p>
       ) : error ? (
         <p className="error-message">{error}</p>
       ) : (
-        <div className="compare-table-container">
-          <table className="compare-table">
-            <tbody>
-              {/*  Display Street View + Address */}
-              <tr>
-                {propertyDetails.map((property, index) => (
-                  <td key={index} className="street-view-container">
+        <div
+          className="compare-table-container"
+          ref={scrollRef}
+          onScroll={handleScroll}
+          tabIndex="0" // Makes the scroll container focusable
+        >
+          <div className={`compare-grid ${gridClass}`}>
+            {propertyDetails.map((property, index) => (
+              <div key={index} className="compare-column">
+                <div className="property-image-container">
+                  {streetViewURLs[property.uprn] ? (
                     <StreetView streetViewURL={streetViewURLs[property.uprn]} errorMessage="" />
-                    <div className="property-address">{property.address}</div>
-                  </td>
-                ))}
-              </tr>
+                  ) : (
+                    <img
+                      src={property.image_url || "/default-image.jpg"}
+                      alt={`Property at ${property.address}`}
+                    />
+                  )}
+                </div>
 
-              {/*  Display Comparison Headers & Values */}
-              {Object.keys(t.headers).map((headerKey, idx) => (
-                <React.Fragment key={idx}>
-                  <tr className="feature-header">
-                    {propertyDetails.map((_, index) => (
-                      <td key={index}>{t.headers[headerKey]}</td>
-                    ))}
-                  </tr>
-                  <tr>
-                    {propertyDetails.map((property, index) => {
-                      const fieldKey = headerKey;
-                      const fieldValue = property[fieldKey] || "N/A";
-
-                      const isBest =
-                        fieldValue !== "N/A" && fieldValue !== "" && fieldValue !== null && (
-                          (fieldKey === "hot_water_cost_current" && parseNumericValue(fieldValue) === maxValues.minHotWaterCostCurrent) ||
-                          (fieldKey === "hot_water_cost_potential" && parseNumericValue(fieldValue) === maxValues.minHotWaterCostPotential) ||
-                          (fieldKey === "current_energy_rating" && energyRatingToNumber(fieldValue) === maxValues.maxEnergyRating) ||
-                          (fieldKey === "current_energy_efficiency" && parseNumericValue(fieldValue) === maxValues.maxEnergyEfficiency) ||
-                          (fieldKey === "potential_energy_rating" && energyRatingToNumber(fieldValue) === maxValues.maxPotentialEnergyRating) ||
-                          (fieldKey === "potential_energy_efficiency" && parseNumericValue(fieldValue) === maxValues.maxPotentialEnergyEfficiency) ||
-                          (fieldKey === "energy_consumption_current" && parseNumericValue(fieldValue) === maxValues.minEnergyConsumptionCurrent) ||
-                          (fieldKey === "energy_consumption_potential" && parseNumericValue(fieldValue) === maxValues.minEnergyConsumptionPotential) ||
-                          (fieldKey === "lighting_cost_current" && parseNumericValue(fieldValue) === maxValues.minLightingCostCurrent) ||
-                          (fieldKey === "lighting_cost_potential" && parseNumericValue(fieldValue) === maxValues.minLightingCostPotential) ||
-                          (fieldKey === "heating_cost_current" && parseNumericValue(fieldValue) === maxValues.minHeatingCostCurrent) ||
-                          (fieldKey === "heating_cost_potential" && parseNumericValue(fieldValue) === maxValues.minHeatingCostPotential) ||
-                          (fieldKey === "hot_water_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxHotWaterEfficiency) ||
-                          (fieldKey === "floor_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxFloorEfficiency) ||
-                          (fieldKey === "windows_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxWindowsEfficiency) ||
-                          (fieldKey === "walls_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxWallsEfficiency) ||
-                          (fieldKey === "mainheat_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxMainHeatEfficiency) ||
-                          (fieldKey === "mainheatc_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxMainHeatcEfficiency) ||
-                          (fieldKey === "lighting_energy_eff" && efficiencyRatingToNumber(fieldValue) === maxValues.maxLightingEfficiency)
-                        );
-
-                      return <HighlightedValue key={index} value={fieldValue} isBest={isBest} />;
-                    })}
-                  </tr>
-                </React.Fragment>
-              ))}
-            </tbody>
-          </table>
+                <EPCFullTable properties={[property]} maxValues={maxValues} loading={false} language={language} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
