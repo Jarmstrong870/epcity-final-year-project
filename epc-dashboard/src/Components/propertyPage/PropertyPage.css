@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  background-color: #f9f9f9;
 }
 
 /* Header Styling */
@@ -28,7 +29,7 @@
 
 /* Favorite Star Component */
 .starComponent {
-  display: inline-flex; 
+  display: inline-flex;
   justify-content: space-between;
   width: 100%;
   margin-left: 6px;
@@ -39,7 +40,7 @@
 .image-and-map-section {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: -450px;
 }
 
 /* Street View and Map View */
@@ -51,6 +52,7 @@
 
 .street-view {
   margin-right: 20px;
+  height: 485px;
 }
 
 .street-view img {
@@ -64,4 +66,14 @@
 .epc-graph-section {
   margin-top: 40px;
   text-align: center;
+}
+
+.title-street-view {
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.title-map-view {
+  margin-top: 30px;
+  margin-bottom: -10px;
 }
