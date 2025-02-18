@@ -37,8 +37,6 @@ const HomePage = ({ user, language }) => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      fetchProperties(searchTerm, [], []);
-      console.log(searchTerm)
       navigate(`/propertylist?search=${encodeURIComponent(searchTerm)}`);
     }
   };
