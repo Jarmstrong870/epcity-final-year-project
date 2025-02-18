@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import FavoriteStar from './FavoriteStar';
 import './PropertyList.css';
@@ -19,6 +19,12 @@ const PropertyList = ({ loading, language }) => {
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30; // Number of properties per page
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get("search");
+
+  useEffect(() => {
+  }, [searchTerm]);
 
   useEffect(() => {
     getNewPage(page);  // Load the first page when component mounts

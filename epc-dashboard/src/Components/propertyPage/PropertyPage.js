@@ -80,11 +80,12 @@ const PropertyPage = ({ user, property, email, language }) => {
       
       <div className="image-and-map-section">
         <div className="street-view">
-          <h3>Street View</h3>
+          <h3 className='title-street-view'>Street View</h3>
           <StreetView streetViewURL={streetViewURL} errorMessage={errorMessage} />
         </div>
         <div className="map-view">
-          <h3>Map View</h3>
+          <h3></h3>
+          <h3 className='title-map-view'>Map View</h3>
           <SimpleMapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} />
         </div>
       </div>

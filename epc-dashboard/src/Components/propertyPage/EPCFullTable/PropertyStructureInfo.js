@@ -19,15 +19,15 @@ const PropertyStructureInfo = ({ properties }) => {
     const rating = efficiency.toLowerCase();
     switch (rating) {
       case 'very good':
-        return 'Very Good ⭐⭐⭐⭐';
+        return 'Very Good ⭐⭐⭐⭐⭐';
       case 'good':
-        return 'Good ⭐⭐⭐';
+        return 'Good ⭐⭐⭐⭐';
       case 'average':
-        return 'Average ⭐⭐';
+        return 'Average ⭐⭐⭐';
       case 'poor':
-        return 'Poor ⭐';
+        return 'Poor ⭐⭐';
       case 'very poor':
-        return 'Very Poor ☆';
+        return 'Very Poor ⭐';
       default:
         return `${efficiency} ☆`;
     }
@@ -38,7 +38,11 @@ const PropertyStructureInfo = ({ properties }) => {
       {/* Windows Information */}
       <div className="infoBox">
         <h3>Windows Information</h3>
-        <p>{formatValue(properties.multi_glaze_proportion + '%', 'Multi Glaze Proportion')}</p>
+        <div className="progressContainer">
+        <p>Multi Glaze Proportion: </p>
+          <progress value={properties.multi_glaze_proportion} max={100} />
+          <span>     {properties.multi_glaze_proportion}%</span>
+        </div>
         <p>{formatValue(properties.glazed_type, 'Glazed Type')}</p>
         <p>{formatValue(properties.glazed_area, 'Glazed Area')}</p>
         <p>{formatValue(properties.windows_description, 'Windows Description')}</p>

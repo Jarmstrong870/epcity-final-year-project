@@ -253,8 +253,20 @@ def get_property_info(uprn):
     for col in cost_columns:
         if col in df.columns:
             df[col] = df[col].apply(lambda x: adjust_cost(float(x), inflation_rate) if pd.notna(x) else None)
-
             
+    # Convert annual costs to daily costs
+    df['heating_daily'] = df['heating_cost_current'] / 365
+    df['lighting_daily'] = df['lighting_cost_current'] / 365
+    df['hot_water_daily'] = df['hot_water_cost_current'] / 365
+
+    # Calculate real-world examples
+    df['heating_example'] = df['heating_daily'] * 2  # 2 full days (weekend)
+    df['hot_water_example'] = df['hot_water_daily'] / 48  # Half-hour shower (assuming 24 hours per day)
+    df['lighting_example'] = df['lighting_daily'] / 3  # 8 hours overnight (assuming 24-hour reference)
+
+    # Drop intermediate daily cost columns if not needed
+    df.drop(columns=['heating_daily', 'lighting_daily', 'hot_water_daily'], inplace=True)
+
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
@@ -263,26 +275,32 @@ def get_property_info(uprn):
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
             df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
-
-
-    # Compute monthly & weekly costs
-    for col in cost_columns:
+            
+    examples = ['heating_example', 'hot_water_example', 'lighting_example']
+    
+    for col in examples:
         if col in df.columns:
-            df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
-            df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
+            df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
+            df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
 
-            # Store formatted currency versions separately
-            df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
-                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-            )
-            df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
-                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-            )
+    # # Compute monthly & weekly costs
+    # for col in cost_columns:
+    #     if col in df.columns:
+    #         df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
+    #         df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
 
-    cost_per_kwh = 0.2542  # Define the cost per kWh
+    #         # Store formatted currency versions separately
+    #         df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
+    #             lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    #         )
+    #         df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
+    #             lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    #         )
 
-    # Add cost_per_kwh column
-    df['cost_per_kwh'] = cost_per_kwh
+    # cost_per_kwh = 0.2542  # Define the cost per kWh
+
+    # # Add cost_per_kwh column
+    # df['cost_per_kwh'] = cost_per_kwh
 
     # Convert to numeric and fill missing values with NaN
     df['number_habitable_rooms'] = pd.to_numeric(df['number_habitable_rooms'], errors='coerce')
@@ -293,19 +311,19 @@ def get_property_info(uprn):
     )
 
     # Add energy_consumption_cost column
-    df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
-    df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
-    total_floor_area = df['total_floor_area']
+    # df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
+    # df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
+    # total_floor_area = df['total_floor_area']
 
-    # Compute annual energy cost
-    df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
-        lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
-    )
+    # # Compute annual energy cost
+    # df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
+    #     lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
+    # )
 
-    # Format as currency
-    df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
-        lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-    )
+    # # Format as currency
+    # df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
+    #     lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    # )
         
     return df
 

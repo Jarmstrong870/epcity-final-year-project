@@ -1,9 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './FilterComponent.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_filtercomponent'; // Import translations
 
 const PropertyFilter = ({ language }) => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const searchTerm = searchParams.get("search") || '';
     const [searchQuery, setSearchQuery] = useState('');
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [epcRatings, setEpcRatings] = useState([]);
@@ -12,6 +16,11 @@ const PropertyFilter = ({ language }) => {
 
     const { fetchProperties } = useContext(PropertyContext); // Use `fetchProperties` from context
 
+    useEffect(() => {
+        setSearchQuery(searchTerm);
+        fetchProperties(searchTerm)
+    }, [searchTerm]);
+    
     // Handle search query change
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -42,8 +51,7 @@ const PropertyFilter = ({ language }) => {
     return (
         <div className="baseStyling">
             <div>
-                <h2><h2>{t.findYourProperty}</h2>
-</h2>
+                <h2>{t.findYourProperty}</h2>
             </div>
 
             {/* Search Input */}
