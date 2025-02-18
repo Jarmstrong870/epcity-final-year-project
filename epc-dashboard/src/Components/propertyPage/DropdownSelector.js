@@ -11,10 +11,12 @@ const DropdownSelector = ({
   fetchRoute,
   travelMode,
   setTravelMode,
-  showRoute,
-  language, //  Receive language prop
+  language, // Receive language prop
 }) => {
   const t = translations[language] || translations.en; // Get translations based on language
+
+  //  Ensure at least one category is active before enabling the dropdown
+  const isDropdownEnabled = Object.values(activeCategories).some((isActive) => isActive);
 
   return (
     <div className="dropdown-selector">
@@ -28,7 +30,7 @@ const DropdownSelector = ({
             fetchRoute(e.target.value);
           }}
           value={selectedLocation || ""}
-          disabled={!showRoute}
+          disabled={!isDropdownEnabled} //  Dropdown is enabled when categories are active
         >
           <option value="" disabled>{t.selectLocation}</option>
           {Object.keys(categories).map((category) =>

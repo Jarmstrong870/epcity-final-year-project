@@ -80,14 +80,14 @@ const ComparePage = ({ language }) => {
       ? "three-properties"
       : "four-properties";
 
-  // ✅ Auto-focus scroll container on load
+  // Auto-focus scroll container on load
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.focus();
     }
   }, []);
 
-  // ✅ Handle arrow key scrolling
+  //  Handle arrow key scrolling
   const handleKeyDown = (event) => {
     if (!scrollRef.current) return;
     const scrollAmount = 200; // Adjust scroll speed
@@ -104,7 +104,7 @@ const ComparePage = ({ language }) => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // ✅ Track Horizontal Scroll Progress
+  //  Track Horizontal Scroll Progress
   const handleScroll = () => {
     if (scrollRef.current) {
       const scrollWidth = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
@@ -121,15 +121,15 @@ const ComparePage = ({ language }) => {
       </button>
       <h2>{t.compareProperties}</h2>
 
-      {/* ✅ Stylish Scroll Indicator */}
+      {/*  Stylish Scroll Indicator */}
       <div className="scroll-indicator-container">
         <span className="scroll-indicator-text">
-          <i className="fas fa-arrow-left"></i> Use the <strong>right and left arrow keys</strong> or the <strong>scroll bar at the top</strong> to move across.{" "}
+          <i className="fas fa-arrow-left"></i> Use the <strong>right and left arrow keys</strong> or the <strong>scroll bar at the bottom</strong> to move across.{" "}
           <i className="fas fa-arrow-right"></i>
         </span>
       </div>
 
-      {/* ✅ Scroll Bar */}
+      {/*  Scroll Bar */}
       <div className="scroll-indicator-bar">
         <div
           className="scroll-indicator-progress"

@@ -48,9 +48,15 @@ export const parseNumericValue = (value) => {
 export const findMaxValues = (properties) => {
   if (!properties.length) return {}; // Prevent errors if properties array is empty
 
+  // Max values
   const maxEnergyRating = Math.max(...properties.map((p) => energyRatingToNumber(p.current_energy_rating)));
   const maxEnergyEfficiency = Math.max(...properties.map((p) => parseNumericValue(p.current_energy_efficiency)));
+  
+  // New: Max values for potential EPC
+  const maxPotentialEnergyRating = Math.max(...properties.map((p) => energyRatingToNumber(p.potential_energy_rating)));
+  const maxPotentialEnergyEfficiency = Math.max(...properties.map((p) => parseNumericValue(p.potential_energy_efficiency)));
 
+  // Min values
   const minEnergyConsumptionCurrent = Math.min(...properties.map((p) => parseNumericValue(p.energy_consumption_current)));
   const minTotalEnergyUsage = Math.min(...properties.map((p) => parseNumericValue(p.energy_consumption_current * p.total_floor_area)));
   const minTotalEnergyCost = Math.min(...properties.map((p) => parseNumericValue(p.energy_consumption_current * p.total_floor_area * p.cost_per_kwh)));
@@ -58,6 +64,8 @@ export const findMaxValues = (properties) => {
   return {
     maxEnergyRating,
     maxEnergyEfficiency,
+    maxPotentialEnergyRating, 
+    maxPotentialEnergyEfficiency, 
     minEnergyConsumptionCurrent,
     minTotalEnergyUsage,
     minTotalEnergyCost
