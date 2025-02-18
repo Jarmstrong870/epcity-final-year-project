@@ -84,12 +84,12 @@
     overflow: visible;
 }
 
-/* ✅ FIX: REMOVE BOTTOM SCROLLBAR */
+
 body {
     overflow-x: hidden;
 }
 
-/* ✅ Ensure Images Fit Correctly */
+/*  Ensure Images Fit Correctly */
 .property-image-container img {
     width: 450px;
     height: 220px;
@@ -99,7 +99,7 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* ✅ Responsive Adjustments for Medium Screens */
+/*  Responsive Adjustments for Medium Screens */
 @media (max-width: 1200px) {
     .compare-grid {
         flex-wrap: wrap;
@@ -110,7 +110,7 @@ body {
     }
 }
 
-/* ✅ Stack Cards for Small Screens */
+/*  Stack Cards for Small Screens */
 @media (max-width: 600px) {
     .compare-grid {
         flex-direction: column;
