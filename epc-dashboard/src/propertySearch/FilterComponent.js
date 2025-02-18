@@ -18,6 +18,7 @@ const PropertyFilter = ({ language }) => {
 
     useEffect(() => {
         setSearchQuery(searchTerm);
+        fetchProperties(searchTerm)
     }, [searchTerm]);
     
     // Handle search query change
