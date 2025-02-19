@@ -1,9 +1,12 @@
 import styles from "./EpcSpecificInfo.module.css";
 import { energyRatingToNumber, parseNumericValue } from "../../Compare_utils/Compare_utils";
-import "../../Compare_utils/HighlightedValue.css"; // Ensure correct CSS import
+import "../../Compare_utils/HighlightedValue.css";
+import translations from "./locales/translations_epcspecificinfo"; 
 
-const EPCSpecificInformation = ({ properties, maxValues }) => {
-  if (!maxValues) return null; // Prevent crash if maxValues is undefined
+const EPCSpecificInformation = ({ properties, maxValues, language }) => {
+  if (!maxValues) return null;
+
+  const t = translations[language] || translations.en;
 
   // Determine highest and lowest values
   const isHighestEPCGrade = energyRatingToNumber(properties.current_energy_rating) === maxValues.maxEnergyRating;
@@ -12,54 +15,53 @@ const EPCSpecificInformation = ({ properties, maxValues }) => {
   const isLowestEnergyUsage = parseNumericValue(properties.energy_consumption_current * properties.total_floor_area) === maxValues.minTotalEnergyUsage;
   const isLowestEnergyCost = parseNumericValue(properties.energy_consumption_current * properties.total_floor_area * properties.cost_per_kwh) === maxValues.minTotalEnergyCost;
   
-  // New Highlighting for Potential EPC
   const isHighestPotentialEPCGrade = energyRatingToNumber(properties.potential_energy_rating) === maxValues.maxPotentialEnergyRating;
   const isHighestPotentialEPCRating = parseNumericValue(properties.potential_energy_efficiency) === maxValues.maxPotentialEnergyEfficiency;
 
   return (
     <div className={styles.energyInfoContainer}>
-      <div className={styles.energyHeader}>EPC Information</div>
+      <div className={styles.energyHeader}>{t.headers.epcInformation}</div>
 
       {/* EPC Rating Box */}
       <div className={styles.energyBox}>
-        <h2>EPC Rating</h2>
+        <h2>{t.headers.epcRating}</h2>
         <p className={isHighestEPCGrade ? "highlight-green" : ""}>
-          <strong>Current EPC Grade:</strong> {properties.current_energy_rating}
+          <strong>{t.headers.currentEPCGrade}:</strong> {properties.current_energy_rating}
         </p>
         <p className={isHighestEPCRating ? "highlight-green" : ""}>
-          <strong>Current EPC Rating:</strong> {properties.current_energy_efficiency}
+          <strong>{t.headers.currentEPCRating}:</strong> {properties.current_energy_efficiency}
         </p>
         <p className={isHighestPotentialEPCGrade ? "highlight-green" : ""}>
-          <strong>Potential EPC Grade:</strong> {properties.potential_energy_rating}
+          <strong>{t.headers.potentialEPCGrade}:</strong> {properties.potential_energy_rating}
         </p>
         <p className={isHighestPotentialEPCRating ? "highlight-green" : ""}>
-          <strong>Potential EPC Rating:</strong> {properties.potential_energy_efficiency}
+          <strong>{t.headers.potentialEPCRating}:</strong> {properties.potential_energy_efficiency}
         </p>
         <p className={isLowestConsumption ? "highlight-green" : ""}>
-          <strong>Current Energy Consumption:</strong> {properties.energy_consumption_current} KwH/m²
+          <strong>{t.headers.currentEnergyConsumption}:</strong> {properties.energy_consumption_current} KwH/m²
         </p>
         <p className={isLowestEnergyUsage ? "highlight-green" : ""}>
-          <strong>Total Energy Usage:</strong> {properties.energy_consumption_current * properties.total_floor_area} KwH
+          <strong>{t.headers.totalEnergyUsage}:</strong> {properties.energy_consumption_current * properties.total_floor_area} KwH
         </p>
       </div>
 
       {/* "In This Property..." Box */}
       <div className={styles.energyBox}>
-        <h2>In This Property...</h2>
-        <p>If you left the heating on accidentally over the weekend it would roughly cost: {properties.heating_example_formatted}</p>
-        <p>Taking a half-hour long hot shower would roughly cost: {properties.hot_water_example_formatted}</p>
-        <p>Leaving the lighting on overnight would roughly cost: {properties.lighting_example_formatted}</p>
+        <h2>{t.headers.inThisProperty}</h2>
+        <p>{t.headers.heatingExample}: {properties.heating_example_formatted}</p>
+        <p>{t.headers.showerExample}: {properties.hot_water_example_formatted}</p>
+        <p>{t.headers.lightingExample}: {properties.lighting_example_formatted}</p>
       </div>
 
       {/* Property Information Box */}
       <div className={styles.energyBox}>
-        <h2>Property Information</h2>
-        <p><strong>Built From:</strong> {properties.built_form}</p>
-        <p><strong>Extension Count:</strong> {properties.extension_count}</p>
-        <p><strong>Lodgement Date:</strong> {properties.lodgement_date}</p>
-        <p><strong>Tenure:</strong> {properties.tenure}</p>
-        <p><strong>Gas Flag:</strong> {properties.mains_gas_flag}</p>
-        <p><strong>Energy Tariff:</strong> {properties.energy_tariff}</p>
+        <h2>{t.headers.propertyInformation}</h2>
+        <p><strong>{t.headers.builtForm}:</strong> {properties.built_form}</p>
+        <p><strong>{t.headers.extensionCount}:</strong> {properties.extension_count}</p>
+        <p><strong>{t.headers.lodgementDate}:</strong> {properties.lodgement_date}</p>
+        <p><strong>{t.headers.tenure}:</strong> {properties.tenure}</p>
+        <p><strong>{t.headers.gasFlag}:</strong> {properties.mains_gas_flag}</p>
+        <p><strong>{t.headers.energyTariff}:</strong> {properties.energy_tariff}</p>
       </div>
     </div>
   );

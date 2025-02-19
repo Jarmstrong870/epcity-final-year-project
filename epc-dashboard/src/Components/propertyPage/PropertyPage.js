@@ -4,7 +4,7 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable/EPCFullTable';
 import SimpleMapView from './SimpleMapView';
-import MapView from './MapView'; // Added back MapView
+import MapView from './MapView'; 
 import StreetView from './StreetView';
 import FavouriteStar from '../../propertySearch/FavouriteStar';
 import { fetchPropertyDetails, fetchLocationCoords } from './propertyUtils';

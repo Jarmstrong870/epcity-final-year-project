@@ -4,9 +4,9 @@ import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
-import CitySection from "../homePage/CitySection"; // ✅ Import CitySection
-import liverpoolVideo from '../assets/liverpool.mp4'; // 🎥 Import the Liverpool Video
-import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; // 🏙️ Import the EPCity Logo
+import CitySection from "../homePage/CitySection"; 
+import liverpoolVideo from '../assets/liverpool.mp4'; 
+import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
 
 
 const HomePage = ({ user, language }) => {

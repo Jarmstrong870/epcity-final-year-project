@@ -124,7 +124,7 @@ const ComparePage = ({ language }) => {
       {/*  Stylish Scroll Indicator */}
       <div className="scroll-indicator-container">
         <span className="scroll-indicator-text">
-          <i className="fas fa-arrow-left"></i> Use the <strong>right and left arrow keys</strong> or the <strong>scroll bar at the bottom</strong> to move across.{" "}
+          <i className="fas fa-arrow-left"></i> {t.useArrowKeys}{" "}
           <i className="fas fa-arrow-right"></i>
         </span>
       </div>
@@ -157,7 +157,7 @@ const ComparePage = ({ language }) => {
                   ) : (
                     <img
                       src={property.image_url || "/default-image.jpg"}
-                      alt={`Property at ${property.address}`}
+                      alt={`${t.propertyAt} ${property.address}`}
                     />
                   )}
                 </div>
