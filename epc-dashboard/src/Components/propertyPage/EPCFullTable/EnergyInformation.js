@@ -33,7 +33,6 @@ const EnergyInformation = ({ properties }) => {
         <p>Current Annual Cost: £{properties["heating_cost_current"]}</p>
         <p>Potential Annual Cost: £{properties["heating_cost_potential"]}</p>
         <p>Main Fuel: {properties["main_fuel"]}</p>
-        <p>Main Heating Controls: {properties["main_heating_controls"]} </p>
         <p>Mainheat Description: {properties["mainheat_description"]}</p>
         <p>Mainheat Energy Efficiency: {renderStarRating(properties["mainheat_energy_eff"])}</p>
         <p>Mainheat Controller Description: {properties["mainheatcont_description"]}</p>
