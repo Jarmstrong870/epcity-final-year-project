@@ -151,6 +151,8 @@ def update_properties():
 
         # Ensure valid values
         search_results = search_results[search_results["total_floor_area"] > 0]
+        
+        search_results = search_results[search_results["number_bedrooms"] > 0]
 
         # Adjust 'number_bedrooms' (subtract 1 if >= 2)
         search_results["number_bedrooms"] = search_results["number_bedrooms"].apply(
