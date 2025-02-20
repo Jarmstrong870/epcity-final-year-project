@@ -3,6 +3,9 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 from psycopg2.extras import execute_values
+import googlemaps
+import time
+import math
 
 load_dotenv()
 
@@ -14,6 +17,48 @@ DB_PARAMS = {
     "host": os.getenv('DATABASE_HOST'),
     "port": os.getenv('DATABASE_PORT')
 }
+
+def get_all_properties():
+    """
+    Retrieves all property records from the 'properties' table in the database.
+
+    Returns:
+        A list of dictionaries, where each dictionary represents a property record.
+        Returns an empty list if an error occurs.
+    """
+    conn = None
+    cursor = None
+    try:
+        # Connect to the PostgreSQL database using your DB parameters.
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # Execute the query to select all records from the properties table.
+        query = "SELECT * FROM properties"
+        cursor.execute(query)
+        data = cursor.fetchall()
+
+        # Retrieve column names from the cursor description.
+        columns = [desc[0] for desc in cursor.description]
+
+        # Create a list of dictionaries, one for each record.
+        properties_list = [dict(zip(columns, row)) for row in data]
+
+        return properties_list
+
+    except Exception as e:
+        # Rollback in case of error and print the error message.
+        if conn:
+            conn.rollback()
+        print("Error retrieving properties:", e)
+        return []
+
+    finally:
+        # Ensure that the cursor and connection are closed properly.
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
 
 """
 Connect to the database, wipe the properties table, and populate it with new data.
@@ -297,3 +342,169 @@ def get_latest_and_lodgement_cpih(lodgement_date):
     except Exception as e:
         print(f"Error retrieving CPIH data: {e}")
         return pd.DataFrame()
+
+
+def update_properties_lat_long(google_maps_api_key):
+    """
+    Fetches each property's address and postcode from the 'properties' table,
+    constructs a more complete address (including city and country),
+    uses the Google Maps Geocoding API to find latitude and longitude,
+    and then inserts/updates these coordinates in the 'property_spatial_data' table.
+    """
+    conn = None
+    cursor = None
+    gmaps = googlemaps.Client(key=google_maps_api_key)
+
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # 1. Retrieve UPRN, address, and postcode from the 'properties' table.
+        cursor.execute("SELECT uprn, address, postcode FROM properties")
+        properties = cursor.fetchall()
+
+        rows_to_insert = []
+        for uprn, address, postcode in properties:
+            if not address:
+                continue
+
+            # Construct a more detailed address string
+            # e.g., "123 Example Street, L13 3DT, Liverpool, UK"
+            full_address = f"{address}, {postcode}, Liverpool, UK"
+
+            # Use the Google Maps Geocoding API
+            try:
+                geocode_result = gmaps.geocode(full_address)
+                if geocode_result:
+                    location = geocode_result[0]['geometry']['location']
+                    lat = location['lat']
+                    lng = location['lng']
+                else:
+                    print(f"Could not geocode address: {full_address}")
+                    continue
+            except Exception as e:
+                print(f"Geocoding error for {full_address}: {e}")
+                continue
+
+            rows_to_insert.append((uprn, lat, lng))
+            # Optional sleep to respect API rate limits
+            
+
+        # 2. Insert or update the lat/long values in 'property_spatial_data'
+        #    ON CONFLICT will update existing rows if uprn already exists
+        insert_query = """
+            INSERT INTO property_spatial_data (uprn, latitude, longitude)
+            VALUES %s
+            ON CONFLICT (uprn) DO UPDATE
+            SET latitude = EXCLUDED.latitude,
+                longitude = EXCLUDED.longitude
+        """
+
+        if rows_to_insert:
+            execute_values(cursor, insert_query, rows_to_insert)
+            conn.commit()
+            print("Latitude/Longitude data updated successfully in property_spatial_data.")
+        else:
+            print("No rows to insert/update for latitude/longitude.")
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("Error in update_properties_lat_long:", e)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+def haversine(lat1, lon1, lat2, lon2):
+    """
+    Calculate the great-circle distance between two points (lat/long) on Earth
+    using the Haversine formula. Returns distance in kilometers.
+    """
+    # Convert decimal degrees to radians
+    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+    c = 2 * math.asin(math.sqrt(a))
+    r = 6371  # Radius of Earth in kilometers
+    return c * r
+
+def update_properties_uni_distances(liverpool_coords, hope_coords, john_moores_coords):
+    """
+    For each row in 'property_spatial_data' (which must have lat/long),
+    calculates distances to the three given university coordinates and updates
+    the distance_uni_liverpool, distance_uni_hope, and distance_uni_john_moores columns.
+
+    Args:
+        liverpool_coords: (lat, lon) for University of Liverpool
+        hope_coords: (lat, lon) for Liverpool Hope University
+        john_moores_coords: (lat, lon) for Liverpool John Moores
+    """
+    conn = None
+    cursor = None
+
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+
+        # 1. Retrieve all rows that have lat/long from property_spatial_data
+        cursor.execute("SELECT uprn, latitude, longitude FROM property_spatial_data")
+        rows = cursor.fetchall()
+
+        update_data = []
+        for uprn, lat, lon in rows:
+            # Skip if lat or lon is missing
+            if lat is None or lon is None:
+                continue
+
+            # Calculate distances
+            dist_liv = haversine(lat, lon, liverpool_coords[0], liverpool_coords[1])
+            dist_hope = haversine(lat, lon, hope_coords[0], hope_coords[1])
+            dist_jm = haversine(lat, lon, john_moores_coords[0], john_moores_coords[1])
+
+            update_data.append((dist_liv, dist_hope, dist_jm, uprn))
+
+        # 2. Update the table with the calculated distances
+        update_query = """
+            UPDATE property_spatial_data
+            SET distance_uni_liverpool = %s,
+                distance_uni_hope = %s,
+                distance_uni_john_moores = %s
+            WHERE uprn = %s
+        """
+
+        if update_data:
+            cursor.executemany(update_query, update_data)
+            conn.commit()
+            print("University distances updated successfully.")
+        else:
+            print("No valid lat/long found for distance calculation.")
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("Error in update_properties_uni_distances:", e)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+            
+
+if __name__ == "__main__":
+    # Example usage
+
+    # 1. Populate lat/long for each property using the Google Maps API
+    google_maps_api_key = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c"
+    #update_properties_lat_long(google_maps_api_key)
+
+    # 2. Populate distances to each university
+    #    Coordinates: (latitude, longitude)
+    uni_liverpool = (53.40466001031567, -2.96515092329804)
+    uni_hope = (53.39077022255688, -2.89245139754843)
+    uni_john_moores = (53.40638638325872, -2.975167791764491)
+
+    update_properties_uni_distances(uni_liverpool, uni_hope, uni_john_moores)

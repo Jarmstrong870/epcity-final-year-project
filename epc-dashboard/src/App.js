@@ -34,6 +34,7 @@ import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import AdminDashboard from './login&register/AdminDashboard'; 
 import { useLocation } from "react-router-dom"; // Import to detect current page
+import ExampleKnnForm from './customAlgorithm/CustomAlgorithm';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -215,6 +216,7 @@ function App() {
             <Route path="/messages" element={<Messages user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
+            <Route path="/customAlgorithm" element={<ExampleKnnForm />} />
           </Routes>
 
           <footer className="footer-container">
