@@ -21,12 +21,13 @@ const EPCFullTable = ({ properties, maxValues, loading, language }) => {
 
   return (
     <div className="epc-container">
-      <GeneralInformation properties={property} />
+      <GeneralInformation properties={property} language={language} />
       
-      {maxValues && <EPCSpecificInformation properties={property} maxValues={maxValues} />}
-      <EnergyInformation properties={property} />
+      {maxValues && <EPCSpecificInformation properties={property} maxValues={maxValues} language={language} />}
+      <EnergyInformation properties={property} maxValues={maxValues} language={language} />
       <CostComparisonGraph properties={property} />
-      <PropertyStructureInfo properties={property} />
+      {<PropertyStructureInfo properties={property} maxValues={maxValues} language={language} />
+    }
     </div>
   );
 };

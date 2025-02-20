@@ -1,73 +1,118 @@
-/* Main Wrapper - Ensures proper spacing and fills the full width */
+/* Map Wrapper for Sidebar and Map */
 .map-wrapper {
   display: flex;
-  flex-direction: row;
   align-items: flex-start;
   gap: 20px;
-  padding: 20px;
-  justify-content: flex-start; /* Fixes extra space issue */
   width: 100%;
 }
 
-/* Sidebar for Nearby Locations */
+/* Sidebar with Toggles and Extra Container */
 .map-sidebar {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: #f8f8f8;
+  background: #1f2e2d;  /* Dark green sidebar */
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 250px;
-  min-width: 230px;
-  height: 500px;
-}
-
-/* Right Sidebar for Dropdowns */
-.map-controls {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
   min-width: 280px;
-  max-width: 320px;
-  height: 500px;
+  height: auto;
+  overflow: visible;
+  color: #d4edda; /* Light green text */
 }
 
-/* Expand the map to fill extra space */
+/* Extra Container Styling */
+.extra-container {
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #1f2e2d;  /* Dark green background */
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: #d4edda;  /* Light green text */
+  font-size: 14px;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+}
+
+/* Heading Style */
+.extra-container h4 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  color: #d4edda;
+  border-bottom: 2px solid #d4edda;
+  padding-bottom: 5px;
+}
+
+/* Paragraph Styling */
+.extra-container p {
+  margin: 5px 0 15px;
+  color: #d4edda;
+}
+
+/* Dropdown Selector Inside Extra Container */
+.extra-container .dropdown-selector {
+  margin-top: 10px;
+  padding: 10px;
+  background: #2a3c3a;  /* Slightly lighter green for contrast */
+  border-radius: 8px;
+}
+
+/* Styled Dropdown */
+.extra-container select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d4edda;
+  background-color: #2a3c3a;
+  color: #d4edda;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.extra-container select:hover {
+  background-color: #344c4a;
+}
+
+/* Travel Time Display */
+.map-travel-time {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #2a3c3a;
+  border-radius: 8px;
+  color: #d4edda;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Map Container */
 .map-container {
-  flex-grow: 1; /* Expands to fill remaining space */
-  height: 500px;
-  width: 100%; /* Ensures full width */
+  flex-grow: 1;
+  height: 600px;
+  width: 100%;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-/* Ensuring Sidebar, Controls, and Map Have Equal Heights */
-.map-sidebar, .map-controls, .map-container {
-  height: 500px;
-}
-
-/* Responsive Fixes */
+/* Responsive Design */
 @media screen and (max-width: 900px) {
   .map-wrapper {
     flex-direction: column;
     align-items: center;
   }
 
-  .map-sidebar,
-  .map-controls {
-    max-width: 100%;
-    width: auto;
-    height: auto;
+  .map-sidebar {
+    width: 100%;
+  }
+
+  .extra-container {
+    padding: 10px;
+    font-size: 12px;
   }
 
   .map-container {
-    width: 100%;
     height: 400px;
   }
 }
