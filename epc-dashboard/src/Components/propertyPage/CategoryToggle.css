@@ -1,53 +1,69 @@
-/*  Ensure toggle switches are well spaced */
+/* Toggle Container */
 .category-toggle {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  
-  /*  Style for each toggle switch */
-  .toggle-switch {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  /*  Hide default checkbox */
-  .toggle-switch input {
-    display: none;
-  }
-  
-  /*  Toggle background */
-  .slider {
-    width: 40px;
-    height: 20px;
-    background-color: #ccc;
-    border-radius: 20px;
-    position: relative;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  /*  Toggle switch knob */
-  .slider::before {
-    content: "";
-    width: 16px;
-    height: 16px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    transition: 0.3s ease;
-  }
-  
-  /*  Active toggle styles */
-  input:checked + .slider {
-    background-color: #4caf50;
-  }
-  
-  input:checked + .slider::before {
-    transform: translateX(20px);
-  }
-  
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: #d4edda; /* Light green text */
+}
+
+/* Individual Toggle Switch */
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d4edda; /* Light green text for labels */
+}
+
+/* Hide default checkbox */
+.toggle-switch input {
+  display: none;
+}
+
+/* Toggle Background */
+.slider {
+  width: 40px;
+  height: 20px;
+  background-color: #1f2e2d; /* Dark green background */
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 1px solid #d4edda; /* Light green border */
+}
+
+/* Toggle Knob */
+.slider::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: #d4edda; /* Light green knob */
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s ease;
+}
+
+/* Active Toggle Styles */
+input:checked + .slider {
+  background-color: #4caf50; /* Green when active */
+  border-color: #81c784;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* Hover Effect */
+.slider:hover {
+  border-color: #81c784;
+  background-color: #2a3c3a; /* Slightly lighter green */
+}
+
+/* Disabled Toggle */
+.toggle-switch input:disabled + .slider {
+  background-color: #3c4f4d;
+  opacity: 0.6;
+  cursor: not-allowed;
+}

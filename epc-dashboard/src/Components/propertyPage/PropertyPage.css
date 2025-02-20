@@ -4,13 +4,15 @@
   flex-direction: column;
   padding: 20px;
   background-color: #f9f9f9;
+  min-height: 100vh; /* Ensure full height */
+  margin: 0;
+  box-sizing: border-box;
 }
 
 /* Header Styling */
 .property-header {
-  position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -19,61 +21,127 @@
   margin: 0;
 }
 
-.property-header h3 {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-/* Favorite Star Component */
 .starComponent {
-  display: inline-flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-left: 6px;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
 }
 
 /* Image and Map Section */
 .image-and-map-section {
   display: flex;
   justify-content: space-between;
-  margin-bottom: -450px;
+  align-items: stretch;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex: 1;
 }
 
 /* Street View and Map View */
 .street-view,
 .map-view {
   flex: 1;
-  height: 1000px;
-}
-
-.street-view {
-  margin-right: 20px;
-  height: 485px;
+  height: 500px; /* Ensure both views are the same height */
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .street-view img {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
   object-fit: cover;
+  border-radius: 10px;
 }
 
-/* EPC Graph Section */
-.epc-graph-section {
-  margin-top: 40px;
+.map-view {
+  height: 500px;
+}
+
+/* Map Container - Ensure full height */
+.map-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+/* Extra Container for Map Journey */
+.extra-container {
+  padding: 20px;
+  background-color: #1f2e2d;
+  color: #d4edda;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+/* Sidebar - Ensure Full Height */
+.map-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #1f2e2d;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow: auto;
+  color: #d4edda;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+/* Footer Styling */
+footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background-color: #1f2e2d;
+  color: #d4edda;
   text-align: center;
+  padding: 10px 0;
+  height: auto;
+  margin-top: auto;
+  box-sizing: border-box;
 }
 
-.title-street-view {
-  margin-top: 30px;
-  margin-bottom: 20px;
+/* Ensure Map and Sidebar Full Height */
+.map-wrapper {
+  display: flex;
+  align-items: stretch;
+  gap: 20px;
+  height: calc(100vh - 80px);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.title-map-view {
-  margin-top: 30px;
-  margin-bottom: -10px;
+/* Responsive Design */
+@media screen and (max-width: 900px) {
+  .image-and-map-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .street-view,
+  .map-view {
+    height: 400px;
+  }
+
+  .map-container {
+    height: 400px;
+  }
+
+  .map-sidebar {
+    height: auto;
+  }
 }

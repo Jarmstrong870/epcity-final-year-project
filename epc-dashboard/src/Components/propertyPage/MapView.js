@@ -117,36 +117,46 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
     <div className="map-wrapper">
       {/* Left Sidebar: Nearby Locations */}
       <div className="map-sidebar">
+        {/* Category Toggles */}
         <CategoryToggle categories={t.categories} activeCategories={activeCategories} toggleCategory={toggleCategory} />
-      </div>
 
-      {/* Right Sidebar: Dropdowns & Estimated Time */}
-      <div className="map-controls">
-        <DropdownSelector
-          categories={t.categories}
-          locations={locations}
-          activeCategories={activeCategories}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={handleLocationChange}
-          fetchRoute={fetchRoute}
-          travelMode={travelMode}
-          setTravelMode={setTravelMode}
-          language={language}
-        />
-
-        {/* Estimated Travel Time */}
-        {travelTime && (
-          <p className="map-travel-time">
-            Estimated {travelMode.toLowerCase()} time: <strong>{travelTime}</strong>
+        {/* Extra Container with Updated Instructions */}
+        <div className="extra-container">
+          <h4>Plan Your Journey</h4>
+          <p>
+            Enable nearby location toggles, select a destination, and choose your preferred travel mode
+            to view the estimated route and travel time.
           </p>
-        )}
+
+          {/* Dropdown Selector Inside Extra Info Box */}
+          <DropdownSelector
+            categories={t.categories}
+            locations={locations}
+            activeCategories={activeCategories}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={handleLocationChange}
+            fetchRoute={fetchRoute}
+            travelMode={travelMode}
+            setTravelMode={setTravelMode}
+            language={language}
+          />
+
+          {/* Display Travel Time */}
+          {travelTime && (
+            <p className="map-travel-time">
+              Estimated {travelMode.toLowerCase()} time: <strong>{travelTime}</strong>
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* Google Map */}
+      {/* Map Section */}
       <div className="map-container">
         <GoogleMap center={locationCoords} zoom={13} mapContainerClassName="map-container">
           {/* House Icon for Property Location */}
-          {showMarker && houseIcon && <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />}
+          {showMarker && houseIcon && (
+            <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />
+          )}
 
           {/* InfoWindow for Property */}
           {selected && (
