@@ -493,18 +493,3 @@ def update_properties_uni_distances(liverpool_coords, hope_coords, john_moores_c
         if conn:
             conn.close()
             
-
-if __name__ == "__main__":
-    # Example usage
-
-    # 1. Populate lat/long for each property using the Google Maps API
-    google_maps_api_key = "AIzaSyDzftcx-wqjX9JZ2Ye3WfWWY1qLEZLDh1c"
-    #update_properties_lat_long(google_maps_api_key)
-
-    # 2. Populate distances to each university
-    #    Coordinates: (latitude, longitude)
-    uni_liverpool = (53.40466001031567, -2.96515092329804)
-    uni_hope = (53.39077022255688, -2.89245139754843)
-    uni_john_moores = (53.40638638325872, -2.975167791764491)
-
-    update_properties_uni_distances(uni_liverpool, uni_hope, uni_john_moores)
