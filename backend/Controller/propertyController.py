@@ -57,8 +57,10 @@ def get_properties_page_route():
         order = request.args.get('order', '').lower() if request.args.get('order') in ['asc', 'desc'] else None
         page = int(request.args.get('page', 1))  # Defaults to 1
         local_authority = request.args.get('local_authority', '').strip()
+        min_bedrooms = int(request.args.get('min_bedrooms', 1))
+        max_bedrooms = int(request.args.get('max_bedrooms', 10))
         # Call service layer
-        result = properties.return_properties(property_types, energy_ratings, search, sort_by, order, page, local_authority)
+        result = properties.return_properties(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200

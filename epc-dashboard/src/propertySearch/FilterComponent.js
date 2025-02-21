@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import './FilterComponent.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_filtercomponent'; // Import translations
+import { Range } from "react-range";
 
 const PropertyFilter = ({ language }) => {
     const location = useLocation();
@@ -11,6 +12,7 @@ const PropertyFilter = ({ language }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [epcRatings, setEpcRatings] = useState([]);
+    const [bedroomRange, setBedroomRange] = useState([1, 10]); // Min & Max Bedrooms
 
     const t = translations[language] || translations.en;
 
@@ -20,7 +22,11 @@ const PropertyFilter = ({ language }) => {
         setSearchQuery(searchTerm);
         fetchProperties(searchTerm)
     }, [searchTerm]);
-    
+
+    useEffect(() => {
+        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange);
+    }, [searchQuery, propertyTypes, epcRatings, bedroomRange]);
+
     // Handle search query change
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -62,7 +68,7 @@ const PropertyFilter = ({ language }) => {
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
-                    
+
                     onChange={handleSearchChange} // Fix for search query
                     placeholder={t.search}
                 />
@@ -104,6 +110,33 @@ const PropertyFilter = ({ language }) => {
                 </div>
             </div>
 
+            {/* Bedroom Range Slider */}
+            <div className="bedroomFilterTitle">
+                <label><strong>{t.bedrooms}</strong></label>
+                <div className="rangeSliderContainer">
+                    <Range
+                        step={1}
+                        min={1}
+                        max={10}
+                        values={bedroomRange}
+                        onChange={(values) => setBedroomRange(values)}
+                        renderTrack={({ props, children }) => (
+                            <div {...props} className="rangeTrack">
+                                {children}
+                            </div>
+                        )}
+                        renderThumb={({ props, index }) => (
+                            <div {...props} className="rangeThumb">
+                                {bedroomRange[index]}
+                            </div>
+                        )}
+                    />
+                    <div className="rangeValues">
+                        <span>{bedroomRange[0]} {t.minBedrooms}</span>
+                        <span>{bedroomRange[1]} {t.maxBedrooms}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

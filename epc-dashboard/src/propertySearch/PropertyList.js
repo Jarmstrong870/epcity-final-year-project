@@ -17,7 +17,7 @@ const PropertyList = ({ loading, language }) => {
   const { properties, getNewPage, sortProperties, page } = useContext(PropertyContext);
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
-  const expectedPageSize = 30; // Number of properties per page
+  const expectedPageSize = 30;
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -104,11 +104,9 @@ const PropertyList = ({ loading, language }) => {
           </div>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
-            <option value="address">{t.address}</option>
-            <option value="postcode">{t.postcode}</option>
-            <option value="property_type">{t.propertyType}</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
+            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
           {/* Order Dropdown with TTS */}
@@ -155,6 +153,7 @@ const PropertyList = ({ loading, language }) => {
               <th>{t.address}</th>
               <th>{t.postcode}</th>
               <th>{t.propertyType}</th>
+              <th>{'Number of Bedrooms'}</th>
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
               <th>{t.favorite}</th>
@@ -169,6 +168,7 @@ const PropertyList = ({ loading, language }) => {
                 </td>
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
+                <td>{property.number_bedrooms}</td>
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>

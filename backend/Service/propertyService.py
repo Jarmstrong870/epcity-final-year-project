@@ -150,9 +150,10 @@ def update_properties():
             search_results = search_results.dropna(subset=[col])
 
         # Ensure valid values
-        search_results = search_results[search_results["total_floor_area"] > 0]
+        search_results = search_results[(search_results["total_floor_area"] >= 37) & (search_results["total_floor_area"] <= 1000)]
         
-        search_results = search_results[search_results["number_bedrooms"] > 0]
+        # Ensure `number_bedrooms` is within the valid range (1 to 20)
+        search_results = search_results[(search_results["number_bedrooms"] > 0) & (search_results["number_bedrooms"] <= 11)]
 
         # Adjust 'number_bedrooms' (subtract 1 if >= 2)
         search_results["number_bedrooms"] = search_results["number_bedrooms"].apply(
@@ -179,9 +180,9 @@ def get_top_rated_properties():
 """
 Method that gets a page of 30 properties from database
 """
-def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1, local_authority=None):
+def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page=1, local_authority=None):
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page, local_authority)
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
     return thisPage
 
 """
