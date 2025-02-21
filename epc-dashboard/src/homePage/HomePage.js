@@ -4,10 +4,10 @@ import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
-import CitySection from "../homePage/CitySection"; // ✅ Import CitySection
-import liverpoolVideo from '../assets/liverpool.mp4'; // 🎥 Import the Liverpool Video
-import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; // 🏙️ Import the EPCity Logo
-import CustomAlgorithm from '../homePage/CustomAlgorithm';
+import CitySection from "../homePage/CitySection"; 
+import liverpoolVideo from '../assets/liverpool.mp4'; 
+import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
+import TextToSpeech from '../Components/utils/TextToSpeech';import CustomAlgorithm from '../homePage/CustomAlgorithm';
 //import CustomAlgorithmStarRating from '../homePage/StarRatingComponent';
 import SliderComponent from '../homePage/SliderComponent';
 
@@ -17,7 +17,7 @@ const HomePage = ({ user, language }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
-  const { fetchTopRatedProperties, topRatedProperties, fetchProperties } = useContext(PropertyContext);
+  const { fetchTopRatedProperties, topRatedProperties } = useContext(PropertyContext);
 
   const t = translations[language] || translations.en;
 
@@ -41,8 +41,7 @@ const HomePage = ({ user, language }) => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      fetchProperties(searchTerm, [], []);
-      navigate(`/propertylist?search=${searchTerm}`);
+      navigate(`/propertylist?search=${encodeURIComponent(searchTerm)}`);
     }
   };
 
@@ -57,12 +56,13 @@ const HomePage = ({ user, language }) => {
 
         {/* 🔹 Dark Overlay */}
         <div className="hero-overlay">
-          {/* 🔹 Logo & Header Overlay */}
-
-          {/* 🔹 Welcome Text */}
           <div className="welcomeText">
-            <h1 className="mainMessage">{t.welcomeMessage}</h1>
-            <p className="subMessage">{t.subMessage}</p>
+            <h1 className="mainMessage">
+              {t.welcomeMessage}
+            </h1>
+            <p className="subMessage">
+              {t.subMessage}
+            </p>
           </div>
 
           {/* 🔍 Search Bar */}
@@ -88,7 +88,7 @@ const HomePage = ({ user, language }) => {
 
 
       {/* City Section */}
-      <CitySection />
+      <CitySection language={language} />
 
       {/*<CustomAlgorithmStarRating />*/}
 
@@ -102,7 +102,6 @@ const HomePage = ({ user, language }) => {
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
             <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
-            
           ))}
         </div>
       </div>
@@ -115,15 +114,25 @@ const HomePage = ({ user, language }) => {
           className="about-image" 
         />
         <div className="content">
-          <h2>A bit about us..</h2>
-          <p>
-            EPCity is designed to help you find your perfect property in Liverpool. 
-            Whether you're a student, professional, or a landlord, we offer an intuitive 
-            platform to search, compare, and evaluate which property is right for you in Liverpool.
-          </p>
-          <p>Use our search bar above to get started or explore some of Liverpool's top-rated properties below!</p>
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
+              {t.aboutUsTitle}
+            </h2>
+            <TextToSpeech 
+              text={`${t.aboutUsTitle}. ${t.aboutUsDescription1} ${t.aboutUsDescription2}`} 
+              language={language} 
+            />
+          </div>
+          <p>{t.aboutUsDescription1}</p>
+          <p>{t.aboutUsDescription2}</p>
         </div>
       </div>
+      <div>
+            {/* Existing content */}
+            <button onClick={() => navigate('/customAlgorithm')}>
+              Go to Custom Algorithm
+            </button>
+          </div>
     </>
   );
 };

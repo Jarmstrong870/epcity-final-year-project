@@ -26,23 +26,16 @@ const locations = {
   "Sheppard-Worlock Library, Liverpool Hope University": { lat: 53.3922854133878, lng: -2.890909689060898, color: "orange", category: "libraries" },
 };
 
+
 const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
   const [houseIcon, setHouseIcon] = useState(null);
   const [showMarker, setShowMarker] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [showRoute, setShowRoute] = useState(false);
   const [directions, setDirections] = useState(null);
   const [travelTime, setTravelTime] = useState(null);
   const [travelMode, setTravelMode] = useState("DRIVING");
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [activeCategories, setActiveCategories] = useState({
-    universities: false,
-    trainStations: false,
-    busStations: false,
-    pointsOfInterest: false,
-    gyms: false,
-    libraries: false,
-  });
+  const [activeCategories, setActiveCategories] = useState({ universities: false });
 
   const t = translations[language] || translations.en;
 
@@ -65,8 +58,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
     if (!window.google || !window.google.maps || !newDestination) return;
 
     const destination = locations[newDestination];
-
-    if (!destination || !activeCategories[destination.category] || !showRoute) {
+    if (!destination || !activeCategories[destination.category]) {
       setDirections(null);
       setTravelTime(null);
       return;
@@ -78,9 +70,6 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
         origin: locationCoords,
         destination,
         travelMode: window.google.maps.TravelMode[travelMode],
-        drivingOptions: travelMode === "DRIVING"
-          ? { departureTime: new Date(), trafficModel: "bestguess" }
-          : undefined,
       },
       (result, status) => {
         if (status === "OK") {
@@ -94,82 +83,82 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
   };
 
   useEffect(() => {
-    if (showRoute && selectedLocation) {
+    if (selectedLocation) {
       fetchRoute();
     } else {
-      setDirections(null); // Clear route if toggle is off
+      setDirections(null);
       setTravelTime(null);
     }
-  }, [showRoute, travelMode, selectedLocation, activeCategories]);
+  }, [travelMode, selectedLocation, activeCategories]);
 
   const toggleCategory = (category) => {
     setActiveCategories((prev) => {
       const updatedCategories = { ...prev, [category]: !prev[category] };
-
       if (selectedLocation && !updatedCategories[locations[selectedLocation]?.category]) {
         setSelectedLocation(null);
         setDirections(null);
         setTravelTime(null);
       }
-
       return updatedCategories;
-    });
-  };
-
-  const handleRouteToggle = () => {
-    setShowRoute((prev) => {
-      const newShowRoute = !prev;
-      if (!newShowRoute) {
-        setDirections(null);
-        setTravelTime(null);
-      } else if (selectedLocation) {
-        fetchRoute();
-      }
-      return newShowRoute;
     });
   };
 
   const handleLocationChange = (location) => {
     setSelectedLocation(location);
-    setDirections(null); // Clear previous route
+    setDirections(null);
     setTravelTime(null);
-
-    if (showRoute) {
-      fetchRoute(location);
-    }
+    fetchRoute(location);
   };
 
   if (!isLoaded) return <p className="map-loading">Loading map...</p>;
   if (errorMessage) return <p className="map-error">{errorMessage}</p>;
 
   return (
-    <div>
-      <CategoryToggle categories={t.categories} activeCategories={activeCategories} toggleCategory={toggleCategory} />
+    <div className="map-wrapper">
+      {/* Left Sidebar: Nearby Locations */}
+      <div className="map-sidebar">
+        {/* Category Toggles */}
+        <CategoryToggle categories={t.categories} activeCategories={activeCategories} toggleCategory={toggleCategory} />
 
-      <label className="toggle-switch">
-        <input type="checkbox" checked={showRoute} onChange={handleRouteToggle} />
-        <span className="slider"></span> {t.showRoute}
-      </label>
+        {/* Extra Container with Updated Instructions */}
+        <div className="extra-container">
+          <h4>Plan Your Journey</h4>
+          <p>
+            Enable nearby location toggles, select a destination, and choose your preferred travel mode
+            to view the estimated route and travel time.
+          </p>
 
-      <DropdownSelector
-        categories={t.categories}
-        locations={locations}
-        activeCategories={activeCategories}
-        selectedLocation={selectedLocation}
-        setSelectedLocation={handleLocationChange}
-        fetchRoute={fetchRoute}
-        travelMode={travelMode}
-        setTravelMode={setTravelMode}
-        showRoute={showRoute}
-        language={language}
-      />
+          {/* Dropdown Selector Inside Extra Info Box */}
+          <DropdownSelector
+            categories={t.categories}
+            locations={locations}
+            activeCategories={activeCategories}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={handleLocationChange}
+            fetchRoute={fetchRoute}
+            travelMode={travelMode}
+            setTravelMode={setTravelMode}
+            language={language}
+          />
 
-      {travelTime && <p>{t.estimatedTime.replace("{mode}", travelMode.toLowerCase()).replace("{time}", travelTime)}</p>}
+          {/* Display Travel Time */}
+          {travelTime && (
+            <p className="map-travel-time">
+              Estimated {travelMode.toLowerCase()} time: <strong>{travelTime}</strong>
+            </p>
+          )}
+        </div>
+      </div>
 
+      {/* Map Section */}
       <div className="map-container">
         <GoogleMap center={locationCoords} zoom={13} mapContainerClassName="map-container">
-          {showMarker && houseIcon && <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />}
+          {/* House Icon for Property Location */}
+          {showMarker && houseIcon && (
+            <Marker position={locationCoords} icon={houseIcon} onClick={() => setSelected(locationCoords)} />
+          )}
 
+          {/* InfoWindow for Property */}
           {selected && (
             <InfoWindow position={selected} onCloseClick={() => setSelected(null)}>
               <div>
@@ -179,8 +168,18 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
             </InfoWindow>
           )}
 
+          {/* Route Directions */}
           {directions && (
-            <DirectionsRenderer directions={directions} options={{ suppressMarkers: true, polylineOptions: { strokeColor: locations[selectedLocation]?.color || "blue", strokeWeight: 5 } }} />
+            <DirectionsRenderer
+              directions={directions}
+              options={{
+                suppressMarkers: true,
+                polylineOptions: {
+                  strokeColor: locations[selectedLocation]?.color || "blue",
+                  strokeWeight: 5,
+                },
+              }}
+            />
           )}
         </GoogleMap>
       </div>

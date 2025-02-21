@@ -1,8 +1,10 @@
-/* ✅ Highlight best values (Lowest Price & Highest Energy Efficiency) */
+/* Green highlight for best EPC Grade & EPC Rating */
 .highlight-green {
-    background-color: #d4edda; /* Light green */
-    color: #155724; /* Dark green text */
+    background-color: #d4edda !important;
+    color: #155724 !important;
     font-weight: bold;
-    padding: 10px;
+    border: 2px solid #28a745;
+    padding: 5px;
     border-radius: 5px;
-}
+  }
+  

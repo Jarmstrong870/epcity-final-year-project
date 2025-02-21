@@ -16,6 +16,9 @@ const translations = {
     cardView: 'Card View',
     compare: 'Compare',
     favorite: 'Favorite',
+    compareSpeech: 'Pick 2 or more properties to compare',
+    previous: 'Previous',    
+    next: 'Next'             
   },
   fr: {
     loading: 'Chargement des propriétés...',
@@ -34,6 +37,9 @@ const translations = {
     cardView: 'Vue en carte',
     compare: 'Comparer',
     favorite: 'Favori',
+    compareSpeech: 'Choisissez deux propriétés ou plus à comparer',
+    previous: 'Précédent',    
+    next: 'Suivant'          
   },
   es: {
     loading: 'Cargando propiedades...',
@@ -52,6 +58,9 @@ const translations = {
     cardView: 'Vista en tarjeta',
     compare: 'Comparar',
     favorite: 'Favorito',
+    compareSpeech: 'Elija dos o más propiedades para comparar',
+    previous: 'Anterior',     
+    next: 'Siguiente'         
   },
   pl: {
     loading: 'Ładowanie nieruchomości...',
@@ -70,6 +79,9 @@ const translations = {
     cardView: 'Widok karty',
     compare: 'Porównaj',
     favorite: 'Ulubione',
+    compareSpeech: 'Wybierz co najmniej 2 nieruchomości do porównania',
+    previous: 'Poprzedni',    
+    next: 'Następny'          
   },
   zh: {
     loading: '加载房产信息...',
@@ -88,7 +100,10 @@ const translations = {
     cardView: '卡片视图',
     compare: '比较',
     favorite: '收藏',
-  },
+    compareSpeech: '选择两个或更多房产进行比较',
+    previous: '上一页',      
+    next: '下一页'           
+  }
 };
 
 export default translations;

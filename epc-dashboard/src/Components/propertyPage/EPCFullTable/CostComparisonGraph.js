@@ -77,6 +77,8 @@ const CostComparisonGraph = ({ properties }) => {
                                     fill={entry.uprn === properties.uprn ? "#FFD700" : "#FF5733"} // Highlight current property in gold
                                     stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Add a black border for extra emphasis
                                     strokeWidth={entry.uprn === properties.uprn ? 2 : 0}
+                                    cursor="pointer" // Makes it visually clickable
+                                    onClick={() => window.location.href = `/property/${entry.uprn}`} // Redirect when clicked
                                 />
                             ))}
                         </Bar>

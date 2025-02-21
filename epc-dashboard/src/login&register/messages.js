@@ -3,12 +3,13 @@ import { io } from "socket.io-client";
 import axios from "axios";
 import "./messages.css";
 import profileIcon from "../assets/profileicon.png";
-
+import translations from "../locales/translations_messages"; // Import translations
+import TextToSpeech from "../Components/utils/TextToSpeech"; // Import TextToSpeech for microphone
 
 const socket = io("http://localhost:5000");
 
-const Messages = ({ user }) => {
-  const [groups, setGroups] = useState([]);      // List of user's groups
+const Messages = ({ user, language }) => {
+  const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [messages, setMessages] = useState([]);  // Messages in the selected group
   const [newGroupName, setNewGroupName] = useState(""); 
@@ -36,7 +37,6 @@ const Messages = ({ user }) => {
     });
   }, []);
 
-  // Join a group room and fetch its messages
   useEffect(() => {
     if (selectedGroup) {
       fetchMessages(selectedGroup.group_id);
@@ -134,34 +134,36 @@ const Messages = ({ user }) => {
 
   const sendMessage = async () => {
     if (!selectedGroup || !messageContent.trim()) {
-        setErrorMessage("Message cannot be empty."); // Prevent empty messages
-        return;
+      setErrorMessage(t.messageEmptyError);
+      return;
     }
 
     try {
-        const response = await axios.post(
-            "http://localhost:5000/send-group-message",
-            {
-                group_id: selectedGroup.group_id,
-                content: messageContent,
-            },
-            {
-                headers: { "User-Email": user.email },
-            }
-        );
+      const response = await axios.post(
+        "http://localhost:5000/send-group-message",
+        {
+          group_id: selectedGroup.group_id,
+          content: messageContent,
+        },
+        {
+          headers: { "User-Email": user.email },
+        }
+      );
 
-        if (response.status === 201) {
-            const newMessage = response.data;
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-            setMessageContent(""); // Clear message input
-            setErrorMessage(""); // Clear any error messages
-        }
+      if (response.status === 201) {
+        const newMessage = response.data;
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setMessageContent("");
+        setErrorMessage("");
+      }
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            setErrorMessage(error.response.data.error || "Your message contains inappropriate language.");
-        } else {
-            setErrorMessage("Failed to send message. Please try again.");
-        }
+      if (error.response && error.response.status === 400) {
+        setErrorMessage(
+          error.response.data.error || t.messageProfanityError
+        );
+      } else {
+        setErrorMessage(t.messageSendError);
+      }
     }
 };
 
@@ -374,7 +376,10 @@ const searchMessage = async () => {
     <div className="messaging-container">
       {/* === Left Sidebar === */}
       <div className="sidebar">
-        <h2 className="logo">Group Chats</h2>   
+        <h2 className="logo">
+          {t.groupChats}{" "}
+          <TextToSpeech text={t.groupChats} language={language} />
+        </h2>   
 
       {createGroupPopUp && (
         <div className="create-group-popup-base">
@@ -558,22 +563,24 @@ const searchMessage = async () => {
                     className={`message-bubble ${
                       isSentByUser ? "sent" : "received"
                     }`}
-                  >         
-
+                  >
                     <div className="message-info">
-                      {console.log("Profile Image URL:", msg.profile_image_url)}
-
                       <img
                         src={
-                          !msg.profile_image_url || msg.profile_image_url === "null" || msg.profile_image_url.trim() === "" || msg.profile_image_url === undefined
-                            ? profileIcon // Use default image if profile_image_url is missing or empty
+                          !msg.profile_image_url ||
+                          msg.profile_image_url === "null" ||
+                          msg.profile_image_url.trim() === "" ||
+                          msg.profile_image_url === undefined
+                            ? profileIcon
                             : msg.profile_image_url
                         }
                         alt="Profile"
                         className="profile-image"
-                        onError={(e) => { e.target.onerror = null; e.target.src = profileIcon; }} // Fallback for broken image links
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = profileIcon;
+                        }}
                       />
-
                       <span className="sender-name">{msg.sender_name}</span>
                     </div>
                     <p className="message-content">{msg.content}</p>
@@ -588,11 +595,12 @@ const searchMessage = async () => {
 
             {/* Display error message if there's an error */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
+
             {/* Input Box */}
             <div className="chat-input">
               <textarea
                 className="input-field"
-                placeholder="Type your message..."
+                placeholder={t.typeMessagePlaceholder}
                 value={messageContent}
                 onChange={(e) => setMessageContent(e.target.value)}
                 onKeyDown={(e) => {
@@ -609,7 +617,7 @@ const searchMessage = async () => {
           </>
         ) : (
           <div className="no-chat-selected">
-            <p>Select a group to start chatting</p>
+            <p>{t.selectGroupToChat}</p>
           </div>
         )}
       </div>
@@ -638,3 +646,4 @@ const searchMessage = async () => {
 };
 
 export default Messages;
+
