@@ -1,6 +1,6 @@
 .baseStyling {
     padding: 20px;
-    
+
 }
 
 .searchBarTitle {
@@ -9,9 +9,11 @@
     justify-content: center;
     align-items: center;
     max-width: 800px;
-    border-radius: 12px; /* Box-like appearance */
+    border-radius: 12px;
+    /* Box-like appearance */
     padding: 15px 20px;
-    background-color: white; /* White background for contrast */
+    background-color: white;
+    /* White background for contrast */
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     gap: 15px;
 }
@@ -22,9 +24,11 @@
     justify-content: center;
     align-items: center;
     max-width: 800px;
-    border-radius: 12px; /* Box-like appearance */
+    border-radius: 12px;
+    /* Box-like appearance */
     padding: 15px 20px;
-    background-color: white; /* White background for contrast */
+    background-color: white;
+    /* White background for contrast */
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     gap: 15px;
 }
@@ -54,7 +58,7 @@
     text-align: center;
     border-radius: 10px;
     width: 600px;
-    margin:auto
+    margin: auto
 }
 
 .propertyTypeFilterTitle,
@@ -67,11 +71,11 @@
     text-align: center;
     border-radius: 10px;
     width: 600px;
-    margin:auto
+    margin: auto
 }
 
 .propertyTypeFilter label,
-.ratingLetterFilter label{
+.ratingLetterFilter label {
     width: 100%;
     /* Enforce consistent width */
     display: flex;
@@ -125,4 +129,42 @@ input[type="number"] {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-left: 5px;
+}
+
+.rangeSliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.rangeTrack {
+    height: 5px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 3px;
+    position: relative;
+}
+
+.rangeThumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: grab;
+}
+
+.rangeValues {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 5px;
 }

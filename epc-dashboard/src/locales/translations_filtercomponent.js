@@ -5,7 +5,7 @@ const translations = {
     findProperties: 'Find Properties',
     propertyTypes: 'Property Types',
     epcRatings: 'EPC Ratings',
-    propertyTypeOptions: ['House', 'Flat', 'Apartment', 'Studio', 'Bungalow'],
+    propertyTypeOptions: ['House', 'Flat', 'Maisonette', 'Bungalow'],
   },
   fr: {
     findYourProperty: 'Trouvez votre propriété',
