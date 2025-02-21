@@ -1,0 +1,37 @@
+Step-by-Step Cypress Testing 
+
+1. Open Cypress Test Runner:
+   In the EPC dashboard terminal, run the following command:
+   npx cypress open
+   (This will launch the Cypress Test Runner interface.)
+
+2. Select the E2E Test:
+   - Ensure "E2E Testing" is selected.
+   - Choose your preferred browser (e.g., Chrome).
+   - Click on the any of the tests to run them, for creating one make sure they end with .cy.js
+
+
+3. Verify Test Results:
+   In the Cypress Test Runner, you will see:
+   - Green Checkmarks for passed steps.
+   - Red Crosses for any failures.
+   (If the test fails, expand the error logs for details.)
+
+5. Rerun the Test (Optional):
+   - Click the "Run All Tests" button in Cypress.
+   - Or, make code changes and save the test file – Cypress will auto-reload the test.
+
+6. Exit Cypress:
+   Once the test passes, close the Cypress Test Runner:
+   - Press Ctrl + C in the terminal to stop the process.
+   note if you lock computer test may not run just close down web tab and opening another
+
+If you encounter issues, share the Cypress logs and screenshots to me (Jarm) .
+dont worry about orientation of test it looks squished but wont impact functionality 
+i have set up googlemaps api and local host to run so writing cy.visit('/') should take you to home page 
+
+also if you havent installed cypress use npm install and check package.json for something like this 
+"devDependencies": {
+    "cypress": "^14.0.0"
+  }
+  Happy auto testing 

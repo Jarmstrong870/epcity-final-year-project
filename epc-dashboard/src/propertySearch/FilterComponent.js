@@ -2,7 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './FilterComponent.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
-import translations from '../locales/translations_filtercomponent'; // Import translations
+import TextToSpeech from '../Components/utils/TextToSpeech'; // Import TTS component
+import translations from '../locales/translations_filtercomponent';
 
 const PropertyFilter = ({ language }) => {
     const location = useLocation();
@@ -13,20 +14,17 @@ const PropertyFilter = ({ language }) => {
     const [epcRatings, setEpcRatings] = useState([]);
 
     const t = translations[language] || translations.en;
-
-    const { fetchProperties } = useContext(PropertyContext); // Use `fetchProperties` from context
+    const { fetchProperties } = useContext(PropertyContext);
 
     useEffect(() => {
         setSearchQuery(searchTerm);
-        fetchProperties(searchTerm)
+        fetchProperties(searchTerm);
     }, [searchTerm]);
-    
-    // Handle search query change
+
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
     };
 
-    // Handle property type checkbox change
     const handlePropertyTypeChange = (e) => {
         const { value, checked } = e.target;
         setPropertyTypes((prev) =>
@@ -34,7 +32,6 @@ const PropertyFilter = ({ language }) => {
         );
     };
 
-    // Handle EPC ratings checkbox change
     const handleEpcRatingChange = (e) => {
         const { value, checked } = e.target;
         setEpcRatings((prev) =>
@@ -42,10 +39,9 @@ const PropertyFilter = ({ language }) => {
         );
     };
 
-    // Apply filters (single action)
     const handleFetchProperties = (e) => {
         e.preventDefault();
-        fetchProperties(searchQuery, propertyTypes, epcRatings); // Apply search and filters
+        fetchProperties(searchQuery, propertyTypes, epcRatings);
     };
 
     return (
@@ -62,24 +58,30 @@ const PropertyFilter = ({ language }) => {
                     type="text"
                     id="searchQuery"
                     value={searchQuery}
-                    
-                    onChange={handleSearchChange} // Fix for search query
+                    onChange={handleSearchChange}
                     placeholder={t.search}
                 />
-                {/* Submit Button */}
-                <button className='stylingFilterButton' onClick={handleFetchProperties}>{t.findProperties}</button>
+                <button className='stylingFilterButton' onClick={handleFetchProperties}>
+                    {t.findProperties}
+                </button>
             </div>
 
-            {/* Property Type Filter (Checkboxes) */}
+            {/* Property Type Filter with TTS */}
             <div className="propertyTypeFilterTitle">
-                <label><strong>{t.propertyTypes}</strong></label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <TextToSpeech
+                        text={`${t.propertyTypes}: ${t.propertyTypeOptions.join(', ')}`}
+                        language={language}
+                    />
+                    <label><strong>{t.propertyTypes}</strong></label>
+                </div>
                 <div className="propertyTypeFilter">
                     {t.propertyTypeOptions.map((type, index) => (
                         <label key={index}>
                             <input
                                 type="checkbox"
                                 value={type}
-                                onChange={handlePropertyTypeChange} // Fix for property types
+                                onChange={handlePropertyTypeChange}
                             />
                             {type}
                         </label>
@@ -87,26 +89,30 @@ const PropertyFilter = ({ language }) => {
                 </div>
             </div>
 
-            {/* EPC Rating Filter (Checkboxes) */}
+            {/* EPC Rating Filter with TTS */}
             <div className="ratingLetterFilterTitle">
-                <label><strong>{t.epcRatings}</strong></label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <TextToSpeech
+                        text={`${t.epcRatings}: A, B, C, D, E, F, G`}
+                        language={language}
+                    />
+                    <label><strong>{t.epcRatings}</strong></label>
+                </div>
                 <div className="ratingLetterFilter">
                     {['A', 'B', 'C', 'D', 'E', 'F', 'G'].map((rating) => (
                         <label key={rating}>
                             <input
                                 type="checkbox"
                                 value={rating}
-                                onChange={handleEpcRatingChange} // Fix for EPC ratings
+                                onChange={handleEpcRatingChange}
                             />
                             {rating}
                         </label>
                     ))}
                 </div>
             </div>
-
         </div>
     );
 };
 
 export default PropertyFilter;
-

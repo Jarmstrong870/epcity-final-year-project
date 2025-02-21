@@ -183,7 +183,7 @@ Finds info for when a property is selected by the user
 """
 def get_property_info(uprn):
     # Define query parameters
-    query_params = {'local-authority': 'E08000012', 'uprn': uprn}
+    query_params = { 'uprn': uprn}
 
     # Encode query parameters
     encoded_params = urlencode(query_params)
