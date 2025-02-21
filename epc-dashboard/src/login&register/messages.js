@@ -12,11 +12,23 @@ const Messages = ({ user }) => {
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [messages, setMessages] = useState([]);  // Messages in the selected group
   const [newGroupName, setNewGroupName] = useState(""); 
-  const [groupMembers, setGroupMembers] = useState(""); 
+  const [groupMembers, setNewGroupMembers] = useState(""); 
   const [messageContent, setMessageContent] = useState("");
+  const [newUserEmail, setNewUserEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Error for profanity filter 
+  const [dropdownActionsPopUp, setDropdownActionsPopUp] = useState(false);
+  const [createGroupPopUp, setCreateGroupPopUp] = useState(false);
+  const [searchOutputPopUp, setSearchOutputPopUp] = useState(true);
+  const [addNewUserPopUp, setAddNewUserPopUp] = useState(false);
+  const [groupDetailsPopUp, setGroupDetailsPopUp] = useState(true);
+  const [popUpFunction, setPopUpFunction] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [dropdownMenu, setDropdownMenu] = useState(false);
+  const [searchedMessage, setSearchedMessage] = useState("");
+  const [messagesFound, setMessagesFound] = useState([]);
+  const [allGroupMembers, setAllGroupMembers] = useState([]);
+  const [action, setAction] = useState("");
 
-  // Fetch groups on mount and listen for socket messages
   useEffect(() => {
     fetchGroups();
     socket.on("receive_message", (message) => {
@@ -59,6 +71,25 @@ const Messages = ({ user }) => {
     }
   };
 
+  const fetchAllGroupMembers = async (groupId) => {
+    if (!groupId) {
+      return;
+    }
+      
+    try {
+
+      console.log(`fetching for groupId: ${groupId}`)
+
+      const response = await axios.get(
+        `http://localhost:5000/get-all-group-members/${groupId}`,
+      );
+      console.log(`output:`, response.data)
+      setAllGroupMembers(response.data);
+    } catch (error) {
+      console.error("Error fetching group members", error);
+    }
+  };
+
   const createGroup = async () => {
     if (!newGroupName || !groupMembers) return;
 
@@ -75,11 +106,31 @@ const Messages = ({ user }) => {
       );
       setGroups([...groups, response.data]);
       setNewGroupName("");
-      setGroupMembers("");
+      setNewGroupMembers("");
     } catch (error) {
       console.error("Error creating group:", error);
     }
+
   };
+
+  const addNewMember = async (groupId, latestUserEmail) => {
+
+    try {
+         const newUser = await axios.post("http://localhost:5000/add-new-member",
+          {
+            group_id: groupId,
+            user_email: latestUserEmail
+          });
+
+          if (newUser.status === 200) {
+            console.log("Successfully added");
+            await fetchAllGroupMembers(groupId);
+            setNewUserEmail("");
+          }
+        } catch (error) {
+        console.error("Error adding another user:", error);
+      }
+    };
 
   const sendMessage = async () => {
     if (!selectedGroup || !messageContent.trim()) {
@@ -116,7 +167,7 @@ const Messages = ({ user }) => {
 
 const searchMessage = async () => {
     
-  if (!searchedMessage || !messageContent.trim()) {
+  if (!searchedMessage.trim()) {
       setErrorMessage("Message cannot be found."); // Prevent empty messages
       return;
   }
@@ -126,25 +177,29 @@ const searchMessage = async () => {
           "http://localhost:5000/search-group-message",
           {
               group_id: selectedGroup.group_id,
-              content: messageContent,
+              content: searchedMessage,
           },
           {
               headers: { "User-Email": user.email },
           }
       );
 
-      if (response.status === 200) {
+      if (!selectedGroup) {
+        setErrorMessage("Select a group before searching");
+        return;
+      }
+
+      if (response.status === 200 && response.data.length > 0) {
           setMessagesFound(response.data);
+          setSearchOutputPopUp(true);
           setErrorMessage(""); 
-      }
-  } catch (error) {
-      if (error.response && error.response.status === 400) {
-          setErrorMessage(error.response.data || "No messages match your search  term.");
       } else {
-          setErrorMessage("Failed to send message. Please try again.");
+        setErrorMessage("No messages match your search term.");
+      } 
+    } catch {
+          setErrorMessage("Failed to search message. Please try again.");
       }
-  }
-};
+  };
 
   const deleteGroup = async (groupId) => {
     const updatedGroups = [];
@@ -167,7 +222,7 @@ const searchMessage = async () => {
           });
           setGroups(updatedGroups);
 
-          if(selectedGroup?.group_id !== groupId){
+          if(selectedGroup?.group_id == groupId){
             setSelectedGroup(null);
             setMessages([]);
           }
@@ -200,7 +255,7 @@ const searchMessage = async () => {
           });
           setGroups(updatedGroups);
 
-          if(selectedGroup?.group_id !== groupId){
+          if(selectedGroup?.group_id === groupId){
             setSelectedGroup({...selectedGroup, name: newGroupName});
         }
       }
@@ -245,6 +300,10 @@ const searchMessage = async () => {
         popupMessage = "Do you want to create a new group?"
         break; 
 
+      case "add":
+        popupMessage = "Do you want to be added"
+        break
+
       case "delete":
         popupMessage = "Are you sure you want to delete the group?";
         break;
@@ -259,7 +318,6 @@ const searchMessage = async () => {
 
       case "details":
         popupMessage = "Below are all the members in this group: "
-        fetchAllGroupMembers(groupId);
         break;
       
       default:
@@ -267,9 +325,15 @@ const searchMessage = async () => {
     }
 
     setPopUpFunction(() => () => {
-      if(action === "create")
+      if(action === "create") {
         setCreateGroupPopUp(true);
         createGroup();
+      }
+
+      if(action === "add-member") {
+        setAddNewUserPopUp(true);
+        addNewMember(groupId, newUserEmail);
+      }
       
       if(action === "delete")
         deleteGroup(groupId);
@@ -282,12 +346,19 @@ const searchMessage = async () => {
       if(updatedName)
         editGroupName(groupId, updatedName);
       }
+
+      if (action === "details") {
+        if (!groupId) {
+            setErrorMessage("Unable to locate GroupID to fetch group details");
+            return;
+        }
+        fetchAllGroupMembers(groupId);
+    }
   });
 
   setPopupMessage(popupMessage);
   setAction(action);
   setDropdownActionsPopUp(true);
-  setCreateGroupPopUp(false);
 
   };
 
@@ -295,35 +366,34 @@ const searchMessage = async () => {
     setDropdownMenu(!dropdownMenu);
   };
 
+  const groupDetailsHandle = (groupId) => {
+    setGroupDetailsPopUp((response) => (response === groupId ? null : groupId));
+  };
+
   return (
     <div className="messaging-container">
       {/* === Left Sidebar === */}
       <div className="sidebar">
-        <h2 className="logo">Group Chats
+        <h2 className="logo">Group Chats</h2>   
 
-        <button className="create-group-button-plus"
-            onClick = {() => confirmationPopUp("create")} >
-            <span> {"\u002B"} </span>
-        </button>
-        </h2>
- 
       {createGroupPopUp && (
         <div className="create-group-popup-base">
           <div className="create-group-popup-message">
-          <h4>Create New Group
+          
+        <h4>Create New Group
           <button className="create-group-button-cancel"
             onClick = {() => confirmationPopUp("create")} >
             <span> {"\u0078"} </span>
-        </button> 
-          </h4>
+          </button> 
+        </h4>
 
-            <input className="group-input"
-              type="text"
-              placeholder="Group Name"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-            />
-            <input className="email-input"
+          <input className="group-input"
+            type="text"
+            placeholder="Group Name"
+            value={newGroupName}
+            onChange={(e) => setNewGroupName(e.target.value)}
+          />
+          <input className="email-input"
               type="text"
               placeholder="Members' Emails (comma separated)"
               value={groupMembers}
@@ -337,15 +407,146 @@ const searchMessage = async () => {
           </div>
         </div>
       </div>
+      )}
+
+      {addNewUserPopUp && (
+        <div className="add-new-user-popup-base">
+          <div className="add-new-user-popup-message">
+          
+        <h4>Add New User
+          <button className="add-new-user-button-cancel"
+            onClick = {() => setAddNewUserPopUp(false)} >
+            <span> {"\u0078"} </span>
+          </button> 
+        </h4>
+
+          <input className="group-input"
+            type="email"
+            placeholder="Enter your email"
+            value={newUserEmail}
+            onChange={(e) => setNewUserEmail(e.target.value)}
+          />
+            <div className="add-new-user-popup">
+              <button onClick={() => {
+                confirmationPopUp("add", selectedGroup?.group_id);
+              }}> Add New User </button>
+          </div>
+        </div>
+      </div>
+      )}
+
+        <div className="groups-list">
+          {groups.map((group) => (
+            <div
+              key={group.group_id}
+              onClick={() => setSelectedGroup(group)}
+              className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}>
+              <span className="group-name">{group.name}</span>
+
+              <span className="group-icon" onClick={(e) => {
+                e.stopPropagation();
+                groupDetailsHandle(group.group_id);
+              }}>
+                {"\u2699"}
+              </span>
+
+              {groupDetailsPopUp === group.group_id && (
+              <div className="option-dropdown">
+              <button className="icon-button"
+                  onClick = {() => confirmationPopUp("details", selectedGroup?.group_id)}>
+                  <span className="icon-border"> {"\u270D"} </span> 
+                  View Group Details
+              </button>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+        
+        <div className="action-buttons">
+        <div className="create-title"> Create A New Group
+          <button className="create-group-button-plus"
+            onClick = {() => confirmationPopUp("create")} > 
+              <span className="create-group-border">  {"\u002B"} </span>
+          </button> 
+        </div>
+
+        <div className="add-title"> Add a user to an existing group
+          <button className="add-existing-group-plus"
+            onClick = {() => confirmationPopUp("add-member")} > 
+            <span className="add-group-border"> {"\u270E"} </span>
+          </button> 
+        </div>
+      </div>
+    </div>
 
       {/* === Main Chat Area === */}
       <div className="chat-area">
+        {/* === Search Bar === */}
+        {searchOutputPopUp && (
+        <div className = "search-message-bar">
+          <textarea
+                className="search-input-field"
+                placeholder= "Search for messages"
+                value= {messagesFound?.length > 0 
+                  ? messagesFound.map((msg) => `${msg.sender_name}: ${msg.content}`).join("\n")
+                  : searchedMessage
+                }
+                onChange={(e) => setSearchedMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    searchMessage();
+                  }
+                }}
+              />
+              <button className="search-button" onClick={searchMessage}>
+                <span className="search-button-icon"> {"\uD83D\uDD0E"} </span> 
+              </button>
+
+              <button className="clear-search-button"
+                onClick = {() => {
+                  setSearchedMessage("");
+                  setMessagesFound([]); 
+                }}>
+                <span> {"\u2717"} </span>
+                  Clear
+              </button>   
+          </div>
+        )}
+
         {selectedGroup ? (
           <>
             {/* Header with group name */}
-            <div className="chat-header">
-              <h3 className="chat-title">{selectedGroup.name}</h3>
-            </div>
+            <div className="message-chat-header">
+              <h3 className="message-chat-title">{selectedGroup.name}</h3>
+
+              <div className="message-profile-icon" onClick={toggleDropdown}>
+                <h2 className="message-dropdown-icon">...</h2>
+
+                {dropdownMenu && selectedGroup &&(
+                <div className="message-dropdown-menu">
+                    <button className="icon-button"
+                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}>
+                        <span className="icon-border"> {"\u270D"} </span> 
+                          Edit Group Name
+                        </button>
+
+                      <button className="icon-button"
+                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}>
+                        <span className="icon-border"> {"\uD83D\uDDD1"} </span>
+                          Delete Group and Data
+                        </button>   
+
+                      <button className="icon-button"
+                        onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}>
+                        <span className="icon-border"> {"\uD83D\uDEAA"} </span>
+                          Leave Group?
+                        </button>   
+                    </div>
+                  )}
+                  </div>
+              </div>
 
             {/* Messages */}
             <div className="messages-list">
@@ -382,7 +583,8 @@ const searchMessage = async () => {
                   </div>
                 );
               })}
-            </div>
+
+           </div>
 
             {/* Display error message if there's an error */}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
@@ -401,7 +603,7 @@ const searchMessage = async () => {
                 }}
               />
               <button className="send-button" onClick={sendMessage}>
-                Send
+              <span className="send-button-icon"> {"\u279C"} </span> 
               </button>
             </div>
           </>
@@ -411,6 +613,26 @@ const searchMessage = async () => {
           </div>
         )}
       </div>
+
+      {dropdownActionsPopUp && (
+        <div className = "dropdown-popup-base">
+          <div className = "dropdown-popup-message">
+            <p>{popupMessage}</p>
+              <div className = "dropdown-popup-action">
+                <button onClick={() => {
+                  if(popUpFunction) {
+                    popUpFunction();
+                    setDropdownActionsPopUp(false);
+                  } else {
+                    setErrorMessage("Unable to show pop up");
+                  }
+                }}>Yes</button>
+
+                <button onClick={() => setDropdownActionsPopUp(false)}>No</button>
+              </div>
+          </div>
+          </div>
+        )}
     </div>
   );
 };

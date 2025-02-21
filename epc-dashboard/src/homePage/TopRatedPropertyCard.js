@@ -83,3 +83,4 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
 };
 
 export default TopRatedPropertyCard;
+

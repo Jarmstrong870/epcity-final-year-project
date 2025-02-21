@@ -1,6 +1,6 @@
 const translations = {
   en: {
-    welcomeMessage: 'Welcome to Liverpool',
+    welcomeMessage: 'Welcome to EPCity',
     subMessage: 'Now, time to find somewhere you can call home.',
     searchPlaceholder: 'Search for properties...',
     searchButton: 'Search',
@@ -27,10 +27,22 @@ const translations = {
       Newcastle: "Newcastle",
       Southampton: "Southampton",
     },
+
+    amenities: {
+      Gym: "Gym",
+      Cafe: "Cafe",
+      Restaurant: "Restaurant",
+      Park: "Park",
+      Pubs: "Pubs",
+      Nightclubs: "Nightclubs",
+      Libraries: "Libraries",
+      ClothesShopping: "Clothes Shopping",
+      GroceryShopping: "Grocery Shopping",
+    },
   },
 
   fr: {
-    welcomeMessage: 'Bienvenue à Liverpool',
+    welcomeMessage: 'Bienvenue à EPCity',
     subMessage: 'Il est temps de trouver un endroit que vous pouvez appeler chez vous.',
     searchPlaceholder: 'Rechercher des propriétés...',
     searchButton: 'Rechercher',
@@ -60,7 +72,7 @@ const translations = {
   },
 
   es: {
-    welcomeMessage: 'Bienvenido a Liverpool',
+    welcomeMessage: 'Bienvenido a EPCity',
     subMessage: 'Ahora, es hora de encontrar un lugar que puedas llamar hogar.',
     searchPlaceholder: 'Buscar propiedades...',
     searchButton: 'Buscar',
@@ -90,7 +102,7 @@ const translations = {
   },
 
   pl: {
-    welcomeMessage: 'Witamy w Liverpoolu',
+    welcomeMessage: 'Witamy w EPCity',
     subMessage: 'Czas znaleźć miejsce, które będziesz mógł nazwać domem.',
     searchPlaceholder: 'Szukaj nieruchomości...',
     searchButton: 'Szukaj',

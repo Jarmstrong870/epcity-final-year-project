@@ -187,7 +187,7 @@
 
 .property-list-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
   margin-bottom: 15px;
 }
@@ -195,6 +195,7 @@
 .sort-container {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 

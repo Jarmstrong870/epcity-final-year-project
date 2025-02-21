@@ -52,7 +52,7 @@ def get_favourite_properties_from_db(email):
     # Database exception
     except psycopg2.Error as e:
         print(f"Database error: {e}")
-        return False
+        return []
 
 """
 Adds a row to the user_properties table using the user's email and uprn

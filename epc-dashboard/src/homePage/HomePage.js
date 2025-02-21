@@ -7,6 +7,10 @@ import translations from '../locales/translations_homepage';
 import CitySection from "../homePage/CitySection"; // ✅ Import CitySection
 import liverpoolVideo from '../assets/liverpool.mp4'; // 🎥 Import the Liverpool Video
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; // 🏙️ Import the EPCity Logo
+import CustomAlgorithm from '../homePage/CustomAlgorithm';
+//import CustomAlgorithmStarRating from '../homePage/StarRatingComponent';
+import SliderComponent from '../homePage/SliderComponent';
+
 
 
 const HomePage = ({ user, language }) => {
@@ -73,12 +77,24 @@ const HomePage = ({ user, language }) => {
             <button className="stylingSearchButton" onClick={handleSearch}>
               {t.searchButton}
             </button>
+
           </div>
+
+          <h1 className = "scrollDownMessage"> Scroll down to find out more </h1>
+          <span class="scrollDownArrow"> {"\u2193"} </span>
+
         </div>
       </div>
 
+
       {/* City Section */}
       <CitySection />
+
+      {/*<CustomAlgorithmStarRating />*/}
+
+      <SliderComponent minValue={1} maxValue={5} process={1} startValue={1}/>
+
+      <CustomAlgorithm />
 
       {/* Top Rated Properties Section */}
       <div className="top-rated-properties">

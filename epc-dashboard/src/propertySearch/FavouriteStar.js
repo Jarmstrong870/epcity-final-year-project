@@ -42,3 +42,4 @@ const FavouriteStar = ({ user = {}, property = {}}) => {
 };
 
 export default FavouriteStar;
+

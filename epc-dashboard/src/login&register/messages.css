@@ -6,12 +6,14 @@
   background: #f0f2f5; /* A light background */
   font-family: "Helvetica Neue", sans-serif;
   color: #444;
+  margin-top: 100px;
 }
 
 /* ====== Sidebar ====== */
 .sidebar {
+  margin-top: 0;
   width: 300px;
-  background: #1f2a48;
+  background: #1f2e2d;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -25,6 +27,9 @@
   font-size: 1.4rem;
   margin-bottom: 20px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* List of Groups */
@@ -39,19 +44,20 @@
   padding: 12px 15px;
   margin: 4px 0;
   cursor: pointer;
-  background: #2d3b5e;
+  background: #1f2e2d;
   border-radius: 6px;
   transition: background 0.2s ease;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .group-item:hover {
-  background: #37476b;
+  background: #325350;
 }
 
 .group-item.active {
-  background: #4e6ef2; /* Highlight for selected group */
+  background: #1d3835; /* Highlight for selected group */
 }
 
 .group-name {
@@ -60,28 +66,10 @@
   font-size: 1rem;
 }
 
-/* ====== Create Group Form ====== */
-.create-group {
-  width: 100%;
-  background: #263354;
-  border-radius: 6px;
-  padding: 10px;
-}
-
-.create-group h4 {
-  color: #ffffff;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-.create-group input {
-  width: 100%;
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  box-sizing: border-box;
+.group-icon {
+  font-size: 20px;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .message-info {
@@ -113,17 +101,6 @@
   border: 1px solid red;
 }
 
-.create-group button {
-  width: 100%;
-  padding: 10px;
-  background: #4e6ef2;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
 .create-group button:hover {
   background: #3f5bd5;
 }
@@ -138,13 +115,16 @@
 }
 
 /* Header Section for Chat */
-.chat-header {
-  padding: 16px 20px;
+.message-chat-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
   background: #f7f7f7;
   border-bottom: 1px solid #e2e2e2;
+  position: relative;
 }
 
-.chat-title {
+.message-chat-title {
   margin: 0;
   font-size: 1.3rem;
   color: #333;
@@ -162,7 +142,7 @@
 
 /* Individual Message Bubble */
 .message-bubble {
-  max-width: 60%;
+  max-width: 80%;
   margin-bottom: 12px;
   padding: 12px 16px;
   border-radius: 12px;
@@ -214,10 +194,11 @@
   flex: 1;
   resize: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 26px;
   border: 1px solid #ccc;
   margin-right: 10px;
   font-size: 1rem;
+  width: 80%;
 }
 
 .send-button {
@@ -225,7 +206,7 @@
   padding: 12px 16px;
   background: #4e6ef2;
   border: none;
-  border-radius: 6px;
+  border-radius: 26px;
   color: #ffffff;
   font-weight: bold;
   cursor: pointer;
@@ -234,6 +215,10 @@
 
 .send-button:hover {
   background: #3f5bd5;
+}
+
+.send-button-icon{
+  font-size: 20px;
 }
 
 /* ====== If No Group Selected ====== */
@@ -268,25 +253,29 @@
   font-size: 1.3rem;
 }
 
+.add-existing-group-plus,
 .create-group-button-plus{
   display: inline-flex;
   justify-content: center;
   align-items: center;
   padding: 10px;
-  width: 15px;
-  height: 15px;
+  width: 40px;
+  height: 40px;
   border: none;
   border-radius: 50%;
   margin-right: 7px;
   font-size: 30px;
   cursor: pointer;
   margin-left: 5px;
+  flex-direction: column;
 }
 
+.add-existing-group-plus:hover,
 .create-group-button-plus:hover {
   background-color: #d6d6d6;
 }
 
+.add-new-user-button-cancel,
 .create-group-button-cancel{
   display: inline-flex;
   justify-content: center;
@@ -297,6 +286,7 @@
   height: 15px;
   border-radius: 50%;
   margin-right: 7px;
+  font-size: 30px;
   font-size: 22px;
   font-weight: bold;
   cursor: pointer;
@@ -308,6 +298,7 @@
   background-color: #d6d6d6;
 }
 
+.add-new-user-popup-base,
 .create-group-popup-base {
   width: 100%;
   border-radius: 6px;
@@ -322,6 +313,7 @@
   align-items: center;
 }
 
+.add-new-user-popup-message,
 .create-group-popup-message {
   width: 40%;
   height: 30%;
@@ -335,6 +327,7 @@
   text-align: center;
 }
 
+.add-new-user-popup-message h4,
 .create-group-popup-message h4 {
   color: #ffffff;
   font-size: 1.1rem;
@@ -349,6 +342,7 @@
   margin-top: 20px;
 }
 
+.add-new-user-popup button,
 .create-group-popup button{
   margin-top: 20px;
   width: 100%;
@@ -362,8 +356,27 @@
   transition: background 0.2s ease;
 }
 
+.add-new-user-popup button:hover,
 .create-group-popup button:hover {
   background: #27413f;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.add-title,
+.create-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  font-size: 16px;
+  color: white;
+  width: fit-content;
 }
 
 .icon-button {
@@ -424,11 +437,11 @@
 }
 
 .search-message-bar {
-  margin-top: 100px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 15px;
+  padding-top: 20px;
   font-size: 12px;
   background-color: #f7f7f7;
   border-radius: 8px;
@@ -483,4 +496,71 @@
 
 .clear-search-button:hover {
   background-color: #d1d1d1;
+}
+
+* Group Details Popup */
+.group-details-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.group-details-area h4 {
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.group-listing {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 15px;
+  max-height: 200px; /* Scrollable if too many members */
+  overflow-y: auto;
+}
+
+.group-listing li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+  font-size: 1rem;
+  color: #444;
+}
+
+.close-icon {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.close-icon:hover {
+  background: #d32f2f;
+}
+
+.gear-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.gear-icon:hover {
+  transform: rotate(30deg);
 }

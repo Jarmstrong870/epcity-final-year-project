@@ -140,9 +140,16 @@ function App() {
         <div className="App">
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className="logo-container">
-              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
+              {isScrolled && (
+              <div className="header-navigation-links">
+              <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+              <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+              <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
             </div>
-
+            )}          
+            </div>
+          
             <div className="header-right">
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />

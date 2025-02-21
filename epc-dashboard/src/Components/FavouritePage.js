@@ -27,7 +27,8 @@ const FavouritePage = ({user, language}) => {
     const fetchFavouritedProperties = async () => {
         try{
             //console.log("users email = ", user.email);
-            const data = await fetch(`http://127.0.0.1:5000/favourites/getFavourites?email=${user.email}`);
+            const email = encodeURIComponent(user.email);
+            const data = await fetch(`http://127.0.0.1:5000/favourites/getFavourites?email=${email}`);
             if (!data.ok) {
                 throw new Error('Failed to fetch property data');
             }
@@ -40,7 +41,7 @@ const FavouritePage = ({user, language}) => {
     };
 
         fetchFavouritedProperties();
-    }, [user.email]);
+    }, [user?.email]);
 
     /* 
         updateFavouriteProperties is called to remove a property based on their specifc uprn. If the property's

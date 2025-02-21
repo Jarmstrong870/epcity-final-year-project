@@ -27,26 +27,13 @@ export function FavouriteProvider ({ children }) {
             console.log("added:", user.email);
             console.log("added:", property.uprn);
             if (added.ok){
-                setFavouriteProperties((currentFavourites) => {
-                    const newFavourites = [...currentFavourites]; // setting newFavourites to contain contents already in currentFavourites
-                    let status = false;
-
-                    for(let i = 0; i < currentFavourites.length; i++) { // looping through currentFavourites array
-                        if(currentFavourites[i].uprn === property.uprn) {
-                            status = true;
-                            break;
-                        }
-                    }
-                    if (!status) {
-                        newFavourites.push(property);
-                    }
-                    return newFavourites;   // reutrning updated array with newly added favourite
-                });  
+                setFavouriteProperties((currentFavourites) => 
+                    [...currentFavourites, property]);
             } else {
-                console.log("unable to remove favourites")
+                console.log("unable to add favourites")
             }
         } catch (e){
-            console.log("error removing property", e);
+            console.log("error adding property", e);
         }
     };
 
@@ -68,18 +55,8 @@ export function FavouriteProvider ({ children }) {
             console.log("removed:", user.email);
             console.log("removed:", property.uprn);
             if (removed.ok){
-                setFavouriteProperties((currentFavourites) => {
-
-                    const newFavourites = []; // define blank array to add updated favourites 
-
-                    for(let i = 0; i < currentFavourites.length; i++){  // looping through currentFavourites
-                        if(currentFavourites[i].uprn !== property.uprn) {
-                            newFavourites.push(currentFavourites[i]); 
-                        }
-                    }
-
-                    return newFavourites;   // returning updated array with specified property removed
-                });
+                setFavouriteProperties((currentFavourites) => 
+                    currentFavourites.filter((favourite) => favourite.uprn !== property.uprn));
             } else {
                 console.log("unable to remove favourites")
             }
