@@ -126,3 +126,13 @@ def get_graph_data_route():
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@property_blueprint.route('/property/knnSearch', methods=['POST'])
+def knn_search():
+    try:
+        user_preferences = request.get_json()
+        print(user_preferences)
+        recommendations = properties.recommend_by_knn(user_preferences)
+        return jsonify(recommendations), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

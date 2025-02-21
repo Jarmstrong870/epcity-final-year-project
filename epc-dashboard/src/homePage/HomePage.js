@@ -105,8 +105,14 @@ const HomePage = ({ user, language }) => {
             platform to search, compare, and evaluate which property is right for you in Liverpool.
           </p>
           <p>Use our search bar above to get started or explore some of Liverpool's top-rated properties below!</p>
-        </div>
+        </div>   
       </div>
+      <div>
+            {/* Existing content */}
+            <button onClick={() => navigate('/customAlgorithm')}>
+              Go to Custom Algorithm
+            </button>
+          </div>
     </>
   );
 };
