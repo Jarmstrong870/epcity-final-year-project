@@ -56,9 +56,9 @@ def get_properties_page_route():
         sort_by = request.args.get('sort_by')
         order = request.args.get('order', '').lower() if request.args.get('order') in ['asc', 'desc'] else None
         page = int(request.args.get('page', 1))  # Defaults to 1
-
+        local_authority = request.args.get('local_authority', '').strip()
         # Call service layer
-        result = properties.return_properties(property_types, energy_ratings, search, sort_by, order, page)
+        result = properties.return_properties(property_types, energy_ratings, search, sort_by, order, page, local_authority)
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200
@@ -115,10 +115,10 @@ def get_graph_data_route():
     try:
         # Get params from argument
         postcode = request.args.get('postcode', '').strip()
-        nubher_bedrooms = request.args.get('num_bedrooms')
+        number_bedrooms = request.args.get('num_bedrooms')
 
         # Call service layer
-        result = properties.get_properties_from_area(postcode, nubher_bedrooms)
+        result = properties.get_properties_from_area(postcode, number_bedrooms)
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200

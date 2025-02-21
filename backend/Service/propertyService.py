@@ -122,7 +122,7 @@ def update_properties():
             "total-floor-area": "total_floor_area",
             "number-habitable-rooms": "number_bedrooms",
             "energy-consumption-current": "energy_consumption_current",
-            "local-authority": "local_authority"  # Renamed correctly
+            "local-authority": "local_authority"
             }
         )
 
@@ -179,9 +179,9 @@ def get_top_rated_properties():
 """
 Method that gets a page of 30 properties from database
 """
-def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1, local_authority=None):
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page)
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page, local_authority)
     return thisPage
 
 """
@@ -189,7 +189,7 @@ Finds info for when a property is selected by the user
 """
 def get_property_info(uprn):
     # Define query parameters
-    query_params = {'local-authority': 'E08000012', 'uprn': uprn}
+    query_params = {'uprn': uprn}
 
     # Encode query parameters
     encoded_params = urlencode(query_params)

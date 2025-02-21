@@ -13,6 +13,7 @@ export function PropertyProvider({ children }) {
     const [sort, setSort] = useState('sort_by')
     const [sortOrder, setSortOrder] = useState('order')
     const [page, setPage] = useState(1);
+    const [city, setCity] = useState(null)
 
     const fetchProperties = async (query = null, propertyTypes = [], epcRatings = [], sortOption = 'sort_by', order = 'order', pageNumber = 1) => {
         setLoading(true);
@@ -30,7 +31,8 @@ export function PropertyProvider({ children }) {
                 url += `sort_by=${sortOption}&`;
                 url += `order=${order}&`;
             }
-            url += `page=${pageNumber}`;
+            url += `page=${pageNumber}&`;
+            url += `local_authority=${city}`;
 
             // Fetch property search results
             const response = await fetch(url);
@@ -48,7 +50,7 @@ export function PropertyProvider({ children }) {
         }
     };
 
-    const sortProperties = async (sortOption = 'sort_by', order = 'order', pageNumber = 1, query = null, propertyTypes = [], epcRatings = [] ) => {
+    const sortProperties = async (sortOption = 'sort_by', order = 'order', pageNumber = 1, query = null, propertyTypes = [], epcRatings = []) => {
         setLoading(true);
         try {
             // Build the property search URL
@@ -64,7 +66,8 @@ export function PropertyProvider({ children }) {
                 if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
                 url += `sort_by=${sortOption}&`;
                 url += `order=${order}&`;
-                url += `page=${pageNumber}`;
+                url += `page=${pageNumber}&`;
+                url += `local_authority=${city}`;
 
                 // Fetch property search results
                 const response = await fetch(url);
@@ -101,7 +104,8 @@ export function PropertyProvider({ children }) {
                 url += `sort_by=${sortOption}&`;
                 url += `order=${order}&`;
             }
-            url += `page=${pageNumber}`;
+            url += `page=${pageNumber}&`;
+            url += `local_authority=${city}`;
 
             // Fetch property search results
             const response = await fetch(url);
@@ -136,6 +140,7 @@ export function PropertyProvider({ children }) {
                 topRatedProperties,
                 error,
                 page,
+                setCity,
                 fetchProperties,
                 fetchTopRatedProperties,
                 sortProperties,

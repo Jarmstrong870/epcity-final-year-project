@@ -167,7 +167,7 @@ def get_top_rated_from_db():
 Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
 with optional sorting. Returns the results as a Pandas DataFrame.
 """
-def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page = 1):
+def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page = 1, local_authority=None):
     
     try:
         # Connect to the PostgreSQL database
@@ -176,9 +176,11 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
 
         # Base query
         query = """
-            SELECT * FROM properties WHERE 1=1
+            SELECT * FROM properties WHERE local_authority = %s
         """
         params = []
+        
+        params.append(local_authority)
 
         # Dynamically append filters
         if property_types:
