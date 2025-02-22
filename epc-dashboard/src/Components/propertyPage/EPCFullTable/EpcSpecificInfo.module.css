@@ -5,6 +5,7 @@
     padding: 20px;
     background-color: #f9f9f9; /* Light grey background */
     border-radius: 10px;
+    max-width: 100%;
 }
 
 .energyHeader {
@@ -13,7 +14,6 @@
     font-size: 22px;
     font-weight: bold;
     padding: 10px;
-    background: white;
     border-radius: 10px;
 }
 

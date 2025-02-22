@@ -15,3 +15,33 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+// Mock Google Maps API to avoid test failures
+Cypress.on('window:before:load', (win) => {
+    win.google = {
+        maps: {
+            Size: class {
+                constructor(width, height) {
+                    this.width = width;
+                    this.height = height;
+                }
+            },
+            Map: class {},
+            Marker: class {},
+            LatLng: class {
+                constructor(lat, lng) {
+                    this.lat = () => lat;
+                    this.lng = () => lng;
+                }
+            },
+            Geocoder: class {
+                geocode(request, callback) {
+                    callback([{ formatted_address: 'Mocked Address' }], 'OK');
+                }
+            },
+            places: {
+                Autocomplete: class {},
+            },
+        },
+    };
+});

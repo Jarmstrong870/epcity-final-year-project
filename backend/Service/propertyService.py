@@ -9,6 +9,9 @@ import os
 from Repository import propertyRepo as repo
 import datetime
 import locale
+import pandas as pd
+import numpy as np
+from sklearn.neighbors import NearestNeighbors
 
 load_dotenv()
 
@@ -26,138 +29,148 @@ headers = {
 Retrives all valid properties from API and calls the database method to update the property table
 """
 def update_properties():
-    # Page size (max 5000)
-    query_size = 5000
+    query_size = 5000  # Max number of records per request
 
-    #Query Parameters
-    query_params = {
-        'size': query_size,
-        'constituency': 'E14000795',        
-    }
+    # List of local authorities to fetch data for
+    LOCAL_AUTHORITIES = [
+        "E08000035", "E08000012", "E08000003", "E06000023",
+        "E08000019", "E08000025", "E06000043", "E08000021", "E06000045"
+    ]
 
-    # Initialize a list to store all rows
-    all_rows = []
+    print("Starting API requests for all local authorities...")
 
-    # Keep track of whether we have made at least one request for CSV headers and search-after
-    first_request = True
-    # Keep track of search-after from previous request
-    search_after = None
+    # Loop through each local authority
+    for local_authority in LOCAL_AUTHORITIES:
+        all_rows = []  # Store all fetched data
+        print(f"Fetching data for local authority: {local_authority}")
 
-    # Loop over entries in query blocks of up to 5000 to write all the data into a file
-    # Perform at least one request; if there's no search_after, there are no further results
-    print("Start API request")
-    while search_after != None or first_request:
-        # Only set search-after if this isn't the first request
-        if not first_request:
-            query_params["search-after"] = search_after
+        query_params = {
+            "size": query_size,
+            "local-authority": local_authority
+        }
 
-        # Set parameters for this query
-        encoded_params = urlencode(query_params)
-        full_url = f"{base_url}?{encoded_params}"
+        first_request = True
+        search_after = None
 
-        # Now make request and extract the data and next search_after
-        with urllib.request.urlopen(urllib.request.Request(full_url, headers=headers)) as response:
-            response_body = response.read()
-            body = response_body.decode()
-            search_after = response.getheader('X-Next-Search-After')
+        while search_after is not None or first_request:
+            if not first_request:
+                query_params["search-after"] = search_after
 
-        data = json.loads(body)
+            # Encode URL parameters and make the API request
+            encoded_params = urlencode(query_params)
+            full_url = f"{base_url}?{encoded_params}"
 
-        if 'rows' in data:
-                rows = data['rows']
+            try:
+                with urllib.request.urlopen(urllib.request.Request(full_url, headers=headers)) as response:
+                    response_body = response.read()
+                    body = response_body.decode()
+                    search_after = response.getheader('X-Next-Search-After')
 
-                # Break loop if no more records
-                if not rows:
-                    print("No more data to fetch.")
+                data = json.loads(body)
+
+                if 'rows' in data:
+                    rows = data['rows']
+
+                    if not rows:
+                        print(f"No more data for {local_authority}.")
+                        break
+
+                    all_rows.extend(rows)
+                else:
+                    print(f"No data found for {local_authority}.")
                     break
 
-                # Append each property's data to the all_rows list
-                all_rows.extend(rows)
-        else:
-            print("No data found in the response.")
-            break
+            except Exception as e:
+                print(f"Error fetching data for {local_authority}: {e}")
+                break
 
-        first_request = False
-    
-    print('Finish API Request')
+            first_request = False
 
-    # Convert the data to a DataFrame
-    search_results = pd.DataFrame(all_rows)
-    
-    # Convert 'uprn' to numeric and drop rows where it's missing
-    search_results['uprn'] = pd.to_numeric(search_results['uprn'], errors='coerce')
-    search_results = search_results.dropna(subset=['uprn'])
+        # Convert the collected data into a DataFrame
+        search_results = pd.DataFrame(all_rows)
 
-    # Convert 'lodgement-datetime' to datetime safely
-    search_results['lodgement-datetime'] = pd.to_datetime(search_results['lodgement-datetime'], format='mixed', errors='coerce')
+        if search_results.empty:
+            print("No data retrieved. Exiting update process.")
+            return False
 
-    # Drop rows where 'lodgement-datetime' is NaT (missing)
-    search_results = search_results.dropna(subset=['lodgement-datetime'])
+        # Convert 'uprn' to numeric and remove rows with missing values
+        search_results["uprn"] = pd.to_numeric(search_results["uprn"], errors="coerce")
+        search_results = search_results.dropna(subset=["uprn"])
 
-    # Convert datetime to date (important for SQL storage)
-    search_results['lodgement-datetime'] = search_results['lodgement-datetime'].dt.date
+        # Convert 'lodgement-datetime' to datetime
+        search_results["lodgement-datetime"] = pd.to_datetime(
+            search_results["lodgement-datetime"], format="mixed", errors="coerce"
+        )
+        search_results = search_results.dropna(subset=["lodgement-datetime"])
+        search_results["lodgement-datetime"] = search_results["lodgement-datetime"].dt.date
 
-    # Sort by 'uprn' and 'lodgement_datetime' in descending order
-    search_results = search_results.sort_values(by=['uprn', 'lodgement-datetime'], ascending=[True, False])
+        # Sort by 'uprn' and 'lodgement_datetime'
+        search_results = search_results.sort_values(
+            by=["uprn", "lodgement-datetime"], ascending=[True, False]
+        )
 
-    # Keep only the most recent entry for each 'uprn'
-    search_results = search_results.drop_duplicates(subset='uprn', keep='first')
-    
-    # Rename columns for consistency
-    search_results = search_results.rename(columns={
-        'property-type': 'property_type',
-        'current-energy-efficiency': 'current_energy_efficiency',
-        'current-energy-rating': 'current_energy_rating',
-        'lodgement-datetime': 'lodgement_datetime',
-        'heating-cost-current': 'heating_cost_current',
-        'hot-water-cost-current': 'hot_water_cost_current',
-        'lighting-cost-current': 'lighting_cost_current',
-        'total-floor-area': 'total_floor_area',
-        'number-habitable-rooms': 'number_bedrooms',
-        'energy-consumption-current': 'energy_consumption_current'
-    })
-    
-    # Define the required columns to keep
-    required_columns = [
-        'uprn', 'address', 'postcode', 'property_type', 'lodgement_datetime',
-        'current_energy_efficiency', 'current_energy_rating', 'heating_cost_current',
-        'hot_water_cost_current', 'lighting_cost_current', 'total_floor_area',
-        'number_bedrooms', 'energy_consumption_current'
-    ]
+        # Keep only the latest entry for each 'uprn'
+        search_results = search_results.drop_duplicates(subset="uprn", keep="first")
 
-    # Ensure only these columns are retained
-    search_results = search_results[required_columns]
-    
-    # Define numeric columns
-    numeric_columns = [
-        'heating_cost_current', 'hot_water_cost_current', 'lighting_cost_current', 
-        'number_bedrooms', 'current_energy_efficiency', 'total_floor_area', 'energy_consumption_current'
-    ]
+        # Rename columns for consistency
+        search_results = search_results.rename(
+            columns={
+            "property-type": "property_type",
+            "current-energy-efficiency": "current_energy_efficiency",
+            "current-energy-rating": "current_energy_rating",
+            "lodgement-datetime": "lodgement_datetime",
+            "heating-cost-current": "heating_cost_current",
+            "hot-water-cost-current": "hot_water_cost_current",
+            "lighting-cost-current": "lighting_cost_current",
+            "total-floor-area": "total_floor_area",
+            "number-habitable-rooms": "number_bedrooms",
+            "energy-consumption-current": "energy_consumption_current",
+            "local-authority": "local_authority"
+            }
+        )
 
-    # Convert columns to numeric, coercing errors to NaN
-    for col in numeric_columns:
-        search_results[col] = pd.to_numeric(search_results[col], errors='coerce')
+        # Define required columns
+        required_columns = [
+        "uprn", "address", "postcode", "property_type", "lodgement_datetime",
+        "current_energy_efficiency", "current_energy_rating", "heating_cost_current",
+        "hot_water_cost_current", "lighting_cost_current", "total_floor_area",
+        "number_bedrooms", "energy_consumption_current", "local_authority"
+        ]
+
+        # Keep only these columns
+        search_results = search_results[required_columns]
+
+        # Convert numeric columns to float and remove rows with missing values
+        numeric_columns = [
+        "heating_cost_current", "hot_water_cost_current", "lighting_cost_current",
+        "number_bedrooms", "current_energy_efficiency", "total_floor_area", "energy_consumption_current"
+        ]
+        for col in numeric_columns:
+            search_results[col] = pd.to_numeric(search_results[col], errors="coerce")
+
+        # Drop rows where numeric values are missing
+        for col in numeric_columns:
+            search_results = search_results.dropna(subset=[col])
+
+        # Ensure valid values
+        search_results = search_results[(search_results["total_floor_area"] >= 37) & (search_results["total_floor_area"] <= 1000)]
         
-    # Drop rows where column values are missing
-    search_results = search_results.dropna(subset=['number_bedrooms'])
-    search_results = search_results.dropna(subset=['property_type'])
-    search_results = search_results.dropna(subset=['current_energy_efficiency'])
-    search_results = search_results.dropna(subset=['heating_cost_current'])
-    search_results = search_results.dropna(subset=['hot_water_cost_current'])
-    search_results = search_results.dropna(subset=['lighting_cost_current'])
-    search_results = search_results.dropna(subset=['total_floor_area'])
-    search_results = search_results.dropna(subset=['address'])
-    search_results = search_results.dropna(subset=['postcode'])
-    search_results = search_results.dropna(subset=['current_energy_rating'])
-    search_results = search_results.dropna(subset=['energy_consumption_current'])
+        # Ensure `number_bedrooms` is within the valid range (1 to 20)
+        search_results = search_results[(search_results["number_bedrooms"] > 0) & (search_results["number_bedrooms"] <= 11)]
+
+        # Adjust 'number_bedrooms' (subtract 1 if >= 2)
+        search_results["number_bedrooms"] = search_results["number_bedrooms"].apply(
+            lambda x: x - 1 if x >= 2 else x
+        )
+
+        # Save the filtered DataFrame to the database
+        success = repo.update_properties_in_db(search_results, local_authority)
         
-    search_results = search_results[search_results['total_floor_area'] > 0]
+        if success == False:
+            return False
     
-    # Adjust 'number_bedrooms' by subtracting 1, but only if the value is >= 2
-    search_results['number_bedrooms'] = search_results['number_bedrooms'].apply(lambda x: x - 1 if x >= 2 else x)
-    
-    # save the filtered DataFrame to the hosted database
-    return repo.update_properties_in_db(search_results)
+    print("Database fully updated")
+    return True
 
 """
 Method that sorts the propertied by epc rating and returns the top 6
@@ -170,9 +183,9 @@ def get_top_rated_properties():
 """
 Method that gets a page of 30 properties from database
 """
-def return_properties(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page=1):
+def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page=1, local_authority=None):
     # get property data from database
-    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, sort_by, order, page)
+    thisPage = repo.get_data_from_db(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
     return thisPage
 
 """
@@ -180,7 +193,7 @@ Finds info for when a property is selected by the user
 """
 def get_property_info(uprn):
     # Define query parameters
-    query_params = {'local-authority': 'E08000012', 'uprn': uprn}
+    query_params = {'uprn': uprn}
 
     # Encode query parameters
     encoded_params = urlencode(query_params)
@@ -253,8 +266,20 @@ def get_property_info(uprn):
     for col in cost_columns:
         if col in df.columns:
             df[col] = df[col].apply(lambda x: adjust_cost(float(x), inflation_rate) if pd.notna(x) else None)
-
             
+    # Convert annual costs to daily costs
+    df['heating_daily'] = df['heating_cost_current'] / 365
+    df['lighting_daily'] = df['lighting_cost_current'] / 365
+    df['hot_water_daily'] = df['hot_water_cost_current'] / 365
+
+    # Calculate real-world examples
+    df['heating_example'] = df['heating_daily'] * 2  # 2 full days (weekend)
+    df['hot_water_example'] = df['hot_water_daily'] / 48  # Half-hour shower (assuming 24 hours per day)
+    df['lighting_example'] = df['lighting_daily'] / 3  # 8 hours overnight (assuming 24-hour reference)
+
+    # Drop intermediate daily cost columns if not needed
+    df.drop(columns=['heating_daily', 'lighting_daily', 'hot_water_daily'], inplace=True)
+
     # Set locale for currency formatting
     locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
@@ -263,26 +288,32 @@ def get_property_info(uprn):
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
             df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
-
-
-    # Compute monthly & weekly costs
-    for col in cost_columns:
+            
+    examples = ['heating_example', 'hot_water_example', 'lighting_example']
+    
+    for col in examples:
         if col in df.columns:
-            df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
-            df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
+            df[col] = pd.to_numeric(df[col], errors='coerce')  # Ensure numeric format
+            df[f"{col}_formatted"] = df[col].apply(lambda x: locale.currency(x) if pd.notna(x) else None)
 
-            # Store formatted currency versions separately
-            df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
-                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-            )
-            df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
-                lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-            )
+    # # Compute monthly & weekly costs
+    # for col in cost_columns:
+    #     if col in df.columns:
+    #         df[f"{col}_monthly"] = round(df[col] / 12, 2)  # Divide annual cost by 12
+    #         df[f"{col}_weekly"] = round(df[col] / 52, 2)  # Divide annual cost by 52
 
-    cost_per_kwh = 0.2542  # Define the cost per kWh
+    #         # Store formatted currency versions separately
+    #         df[f"{col}_monthly_formatted"] = df[f"{col}_monthly"].apply(
+    #             lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    #         )
+    #         df[f"{col}_weekly_formatted"] = df[f"{col}_weekly"].apply(
+    #             lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    #         )
 
-    # Add cost_per_kwh column
-    df['cost_per_kwh'] = cost_per_kwh
+    # cost_per_kwh = 0.2542  # Define the cost per kWh
+
+    # # Add cost_per_kwh column
+    # df['cost_per_kwh'] = cost_per_kwh
 
     # Convert to numeric and fill missing values with NaN
     df['number_habitable_rooms'] = pd.to_numeric(df['number_habitable_rooms'], errors='coerce')
@@ -293,19 +324,19 @@ def get_property_info(uprn):
     )
 
     # Add energy_consumption_cost column
-    df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
-    df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
-    total_floor_area = df['total_floor_area']
+    # df['energy_consumption_current'] = pd.to_numeric(df['energy_consumption_current'], errors='coerce')
+    # df['total_floor_area'] = pd.to_numeric(df['total_floor_area'], errors='coerce')
+    # total_floor_area = df['total_floor_area']
 
-    # Compute annual energy cost
-    df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
-        lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
-    )
+    # # Compute annual energy cost
+    # df['energy_consumption_cost'] = df['energy_consumption_current'].apply(
+    #     lambda x: cost_per_kwh * x * total_floor_area if pd.notna(x) else None
+    # )
 
-    # Format as currency
-    df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
-        lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
-    )
+    # # Format as currency
+    # df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
+    #     lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
+    # )
         
     return df
 
@@ -423,3 +454,92 @@ def adjust_cost(cost, inflation_rate):
     except (TypeError, ValueError) as e:
         print(f"Error adjusting cost: {e}")
         return cost  # Fallback to original cost if adjustment fails
+
+def recommend_by_knn(user_prefs):
+    """
+    Recommends properties based on user preferences and proximity to a selected university using KNN.
+
+    Expected user_prefs example:
+    {
+        "number_bedrooms": 3,
+        "current_energy_rating": "B",
+        "property_type": "HOUSE",
+        "selectedUniversity": "liverpool",   # or "johnmoores" or "hope"
+        "maxDistance": 10                     # maximum distance in kilometers
+    }
+    """
+    # Retrieve all property data from the repository.
+    # (Assumes properties table has been joined with spatial data columns)
+    all_props = repo.get_all_properties()
+    df = pd.DataFrame(all_props)
+    
+    # --- Filter by Distance to Selected University ---
+    if "selectedUniversity" in user_prefs and "maxDistance" in user_prefs:
+        uni = user_prefs["selectedUniversity"].lower()
+        try:
+            max_dist = float(user_prefs["maxDistance"])
+        except ValueError:
+            max_dist = None
+        # Mapping from user-friendly key to the column name in the dataframe.
+        mapping = {
+            "liverpool": "distance_uni_liverpool",
+            "johnmoores": "distance_uni_john_moores",
+            "hope": "distance_uni_hope"
+        }
+        distance_col = mapping.get(uni)
+        if distance_col and max_dist is not None and distance_col in df.columns:
+            df = df[df[distance_col] <= max_dist]
+    
+    # --- Standardise and Process Features ---
+    df['property_type'] = df['property_type'].str.upper()
+    df['number_bedrooms'] = pd.to_numeric(df['number_bedrooms'], errors='coerce').fillna(0)
+    
+    # Map EPC rating letter to numeric value (lower is better)
+    epc_mapping = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7}
+    df['current_energy_rating'] = df['current_energy_rating'].str.upper().map(epc_mapping).fillna(8)
+    
+    # One-hot encode the property type.
+    property_type_dummies = pd.get_dummies(df['property_type'], prefix='type')
+    df = pd.concat([df, property_type_dummies], axis=1)
+    
+    # --- Build the User Preference Vector ---
+    user_vector = []
+    
+    # a) Number of bedrooms
+    try:
+        user_bedrooms = int(user_prefs.get('number_bedrooms', 0))
+    except ValueError:
+        user_bedrooms = 0
+    user_vector.append(user_bedrooms)
+    
+    # b) EPC Rating
+    user_epc = user_prefs.get('current_energy_rating', 'G')
+    user_epc_numeric = epc_mapping.get(user_epc.upper(), 8)
+    user_vector.append(user_epc_numeric)
+    
+    # c) Property Type: Create a one-hot vector matching the dummy columns
+    property_type_columns = property_type_dummies.columns.tolist()
+    user_property_type = user_prefs.get('property_type', '').upper()
+    property_vector = [1 if col == f"type_{user_property_type}" else 0 for col in property_type_columns]
+    user_vector.extend(property_vector)
+    
+    # Debug prints to help verify the vector and columns.
+    print("User vector:", user_vector)
+    print("Property type columns:", property_type_columns)
+    
+    # --- Prepare the Feature Matrix for KNN ---
+    feature_columns = ['number_bedrooms', 'current_energy_rating'] + property_type_columns
+    feature_matrix = df[feature_columns].values
+    
+    # --- Build and Apply the KNN Model ---
+    from sklearn.neighbors import NearestNeighbors
+    knn = NearestNeighbors(n_neighbors=5, metric='euclidean')
+    knn.fit(feature_matrix)
+    
+    # Convert the user vector to a 2D numpy array (required by scikit-learn)
+    import numpy as np
+    user_vector_np = np.array([user_vector])
+    distances, indices = knn.kneighbors(user_vector_np)
+    
+    recommended = df.iloc[indices[0]].to_dict(orient='records')
+    return recommended

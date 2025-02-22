@@ -5,7 +5,7 @@ const translations = {
     logout: 'Logout',
     accountOverview: 'Account Overview',
     myProperties: 'My Properties',
-    viewAllProperties: 'View All Properties',
+    viewAllProperties: 'View Properties',
     faqs: 'Frequently Asked Questions',
     messages: "Messages",  
     favourites: 'My Favourite Properties',

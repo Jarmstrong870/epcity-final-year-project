@@ -1,0 +1,93 @@
+.custom-algorithm-container {
+    margin-top: 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .custom-algorithm-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    margin-top: 100px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .custom-algorithm-container form label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1em;
+  }
+  
+  .custom-algorithm-container form input[type="number"],
+  .custom-algorithm-container form input[type="text"] {
+    padding: 5px;
+    margin-left: 10px;
+    font-size: 1em;
+  }
+  
+  .university-selection {
+    margin-top: 20px;
+  }
+  
+  .university-selection p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .universities {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .university-option {
+    position: relative;
+    cursor: pointer;
+    border: 2px solid transparent;
+    padding: 10px;
+    text-align: center;
+    transition: border 0.3s ease;
+    flex: 1;
+  }
+  
+  .university-option.selected {
+    border: 2px solid #007bff; /* Blue border for selected option */
+  }
+  
+  .university-option img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .university-option p {
+    margin-top: 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+  }
+  
+  .tick-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 123, 255, 0.8);
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
+    font-size: 1.2em;
+    line-height: 1;
+  }
+  
+  .distance-slider {
+    margin: 20px 0;
+  }
+  
+  .distance-slider p {
+    margin-bottom: 5px;
+    font-size: 1em;
+  }
+  

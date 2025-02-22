@@ -1,45 +1,59 @@
-/*  Ensure dropdowns are stacked under their labels */
+/* Dropdown Selector Container */
 .dropdown-selector {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-  
-  /*  Label styling */
-  .dropdown-selector label {
-    font-weight: bold;
-    display: block; /* Ensures the label is on a new line */
-    margin-bottom: 4px;
-  }
-  
-  /*  Dropdown styling */
-  .dropdown-selector select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-  }
-  
-  /*  Hover and focus styles */
-  .dropdown-selector select:hover {
-    border-color: #4caf50;
-  }
-  
-  .dropdown-selector select:focus {
-    outline: none;
-    border-color: #4caf50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-  }
-  
-  /*  Disabled select dropdown */
-  .dropdown-selector select:disabled {
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-  
+  margin-top: -170px; /* Adjust value to move higher */
+  margin-bottom: 10px; /* Reduce space below */
+}
+
+/* Label Styling */
+.dropdown-selector label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+  color: #d4edda; /* Light green text for labels */
+}
+
+/* Dropdown Styling */
+.dropdown-selector select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d4edda; /* Light green border */
+  border-radius: 8px;
+  background-color: #1f2e2d; /* Dark green background */
+  color: #d4edda; /* Light green text */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover and Focus Styles */
+.dropdown-selector select:hover {
+  border-color: #81c784;
+  background-color: #2a3c3a; /* Slightly lighter green */
+}
+
+.dropdown-selector select:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+/* Disabled Dropdown */
+.dropdown-selector select:disabled {
+  background-color: #3c4f4d;
+  color: #a8d5ba;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Dropdown Option Styling */
+.dropdown-selector select option {
+  background-color: #1f2e2d;
+  color: #d4edda;
+  padding: 10px;
+}
+
+/* Dropdown Label */
+.dropdown-label {
+  color: #d4edda;
+  margin-bottom: 5px;
+}

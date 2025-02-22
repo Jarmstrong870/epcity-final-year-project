@@ -78,6 +78,9 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
       <p>
         <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
       </p>
+      <p>
+        <strong>{"Number of Bedrooms"}:</strong> {property.number_bedrooms}
+      </p>
     </div>
   );
 };
