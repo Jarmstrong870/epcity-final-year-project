@@ -77,20 +77,6 @@ const HomePage = ({ user, language }) => {
         </div>
       </div>
 
-      {/* City Section */}
-      <CitySection />
-
-      {/* Top Rated Properties Section */}
-      <div className="top-rated-properties">
-        <h2>{t.topRatedProperties}</h2>
-        <div className="property-grid">
-          {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
-            
-          ))}
-        </div>
-      </div>
-
       {/* About Website Section */}
       <div className="about-website">
         <img 
@@ -108,6 +94,22 @@ const HomePage = ({ user, language }) => {
           <p>Use our search bar above to get started or explore some of Liverpool's top-rated properties below!</p>
         </div>
       </div>
+
+      {/* City Section */}
+      <CitySection />
+
+      {/* Top Rated Properties Section */}
+      <div className="top-rated-properties">
+        <h2>{t.topRatedProperties}</h2>
+        <div className="property-grid">
+          {topRatedProperties.map((property, index) => (
+            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
+            
+          ))}
+        </div>
+      </div>
+
+      
     </>
   );
 };

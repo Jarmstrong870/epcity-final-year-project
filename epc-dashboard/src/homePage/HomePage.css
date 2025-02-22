@@ -1,3 +1,6 @@
+/* ===========================
+   Global Base Styles
+   =========================== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -5,7 +8,9 @@ body {
   color: #333;
 }
 
-/* Background Image Section with Overlay */
+/* ===========================
+   Background Image Section with Overlay
+   =========================== */
 .backgroundImageStyling {
   position: relative;
   text-align: center;
@@ -21,7 +26,20 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* 🎥 Hero Section (Video Background) */
+.backgroundImageStyling::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
+  z-index: 1;
+}
+
+/* ===========================
+   Hero Section (Video Background)
+   =========================== */
 .hero-section {
   position: relative;
   width: 100%;
@@ -32,7 +50,7 @@ body {
   align-items: center;
 }
 
-/* 🎥 Video Background */
+/* Video Background */
 .hero-video {
   position: absolute;
   width: 100%;
@@ -41,7 +59,7 @@ body {
   z-index: 0;
 }
 
-/* 🔹 Header Overlay (Navbar & Logo) */
+/* Header Overlay (Navbar & Logo) */
 .hero-header {
   position: absolute;
   top: 20px;
@@ -55,12 +73,12 @@ body {
   z-index: 3;
 }
 
-/* 🏙️ EPCity Logo */
+/* EPCity Logo */
 .hero-logo {
   width: 150px;
 }
 
-/* 🔹 Navigation Links */
+/* Navigation Links */
 .hero-nav {
   display: flex;
   gap: 20px;
@@ -78,7 +96,7 @@ body {
   color: #ffd700; /* Gold highlight effect */
 }
 
-/* 🔹 Dark Overlay */
+/* Dark Overlay */
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -94,8 +112,11 @@ body {
   z-index: 2;
 }
 
-/* 📝 Welcome Text */
+/* ===========================
+   Welcome Text (Hero)
+   =========================== */
 .welcomeText {
+  z-index: 2;
   color: white;
   margin-bottom: 20px;
 }
@@ -103,19 +124,37 @@ body {
 .welcomeText .mainMessage {
   font-size: 3rem;
   font-weight: bold;
+  color: white;  
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   margin: 0;
   line-height: 1.2;
+  background: none; 
+  padding: 0;
+  border: none;
 }
 
 .welcomeText .subMessage {
-  font-size: 1.2rem;
-  font-weight: normal;
-  color: #d4edda; /* Subtle green tone */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 1.5rem; /* Slightly larger for better readability */
+  font-weight: 500; /* Medium weight for a refined look */
+  margin-top: 15px;
+  color: #ffffff; /* Pure white for contrast */
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
+  letter-spacing: 0.5px; /* Slight spacing for a clean look */
+  text-align: center;
+  max-width: 700px; /* Restrict width for better readability */
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6; /* Improved spacing between lines */
+  opacity: 0.9; /* Subtle fade effect */
 }
 
-/* 🔍 Search Bar - Modernized & Enhanced */
+.welcomeText span {
+  display: block;
+}
+
+/* ===========================
+   Search Bar - Modern & Enhanced
+   =========================== */
 .stylingSearchBar {
   display: flex;
   justify-content: center;
@@ -124,14 +163,13 @@ body {
   max-width: 850px;
   border-radius: 50px; /* More rounded, sleek look */
   padding: 18px 25px;
-  background: rgba(255, 255, 255, 0.95); /* Slight transparency for a smooth overlay effect */
+  background: rgba(255, 255, 255, 0.95); /* Slight transparency */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Soft, elegant shadow */
   gap: 15px;
   backdrop-filter: blur(10px); /* Frosted glass effect */
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border for better visibility */
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* 🔠 Input Field */
 .stylingSearchInput {
   flex: 1;
   padding: 15px 20px;
@@ -140,7 +178,7 @@ body {
   border: none;
   border-radius: 50px;
   outline: none;
-  background: rgba(255, 255, 255, 0.8); /* Slightly frosted background */
+  background: rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
   color: #333;
@@ -152,14 +190,12 @@ body {
   font-weight: 400;
 }
 
-/* ✨ Input Focus Effect */
 .stylingSearchInput:focus {
   background: #fff;
   box-shadow: 0 0 15px rgba(44, 95, 45, 0.3);
   border: 1px solid #2c5f2d;
 }
 
-/* 🔘 Search Button */
 .stylingSearchButton {
   padding: 15px 22px;
   font-size: 18px;
@@ -178,10 +214,9 @@ body {
 }
 
 .stylingSearchButton i {
-  font-size: 18px; /* Optional: Add a magnifying glass icon */
+  font-size: 18px;
 }
 
-/* 🖱️ Hover & Click Effects */
 .stylingSearchButton:hover {
   background: linear-gradient(135deg, #1e4020, #163017);
   transform: scale(1.08);
@@ -193,245 +228,70 @@ body {
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
-/* 📱 Responsive Tweaks */
-@media (max-width: 768px) {
-  .stylingSearchBar {
-    flex-direction: column;
-    width: 100%;
-    max-width: 600px;
-    padding: 15px;
-  }
-
-  .stylingSearchInput {
-    font-size: 16px;
-    padding: 12px 15px;
-  }
-
-  .stylingSearchButton {
-    width: 100%;
-    justify-content: center;
-    font-size: 16px;
-    padding: 12px;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-logo {
-    width: 120px;
-  }
-
-  .welcomeText .mainMessage {
-    font-size: 2.5rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 1rem;
-  }
-
-  .stylingSearchBar {
-    flex-direction: column;
-    padding: 10px;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .welcomeText .mainMessage {
-    font-size: 2rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 0.9rem;
-  }
-
-  .stylingSearchBar {
-    padding: 10px;
-  }
-}
-
-.backgroundImageStyling::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
-  z-index: 1;
-}
-
-/* Welcome Text Styling */
-.welcomeText {
-  z-index: 2;
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.welcomeText .mainMessage {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;  
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  margin: 0;
-  line-height: 1.2;
-  background: none; 
-  padding: 0;
-  border:none;
-}
-
-.welcomeText .subMessage {
-  font-size: 1.5rem; /* Slightly larger for better readability */
-  font-weight: 500; /* Medium weight for a refined look */
-  margin-top: 15px;
-  color: #ffffff; /* Pure white for contrast */
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
-  letter-spacing: 0.5px; /* Slight spacing for a clean look */
-  text-align: center;
-  max-width: 700px; /* Restrict width for better readability */
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6; /* Improved spacing between lines */
-  opacity: 0.9; /* Subtle fade effect */
-}
-
-
-.welcomeText span {
-  display: block;
-}
-
-/* Top Rated Properties Section */
-.top-rated-properties {
-  margin: 40px auto;
-  padding: 40px 20px;
-  max-width: 1200px;
-  background: #DEDEDE;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.top-rated-properties h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #2c3e3d;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.property-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 20px;
-}
-
-.property-card {
-  background: #fff;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.property-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.property-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-bottom: 3px solid #ddd;
-}
-
-.property-card .property-details {
-  padding: 15px;
-  text-align: left;
-}
-
-.property-card .property-details h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0 0 10px;
-  color: #333;
-}
-
-.property-card .property-details p {
-  font-size: 1rem;
-  color: #666;
-  margin: 5px 0;
-}
-
-.property-card .property-details .price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2c5f2d;
-}
-
-/* About Website Section */
+/* ===========================
+   Modern & Sleek About Section
+   =========================== */
 .about-website {
   display: flex;
-  gap: 30px;
-  margin: 60px auto;
-  max-width: 1200px;
-  padding: 40px;
-  background: #DEDEDE;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 3rem 0;
+  padding: 3rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
 }
 
-.about-website img {
+/* About Image */
+.about-website .about-image {
   flex: 1;
-  max-width: 40%; /* Limit the image width to 40% of the container */
-  height: auto; /* Maintain the aspect ratio */
-  border-radius: 15px; /* Keep the rounded corners */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-  object-fit: cover; /* Ensures proper scaling for the image */
+  max-width: 50%;
+  border-radius: 1rem;
+  object-fit: cover;
 }
 
+/* About Content */
 .about-website .content {
-  flex: 2;
-  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .about-website .content h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #2c3e3d;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2c2c2c;
 }
 
 .about-website .content p {
-  font-size: 1.1rem;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.about-website .content a {
-  display: inline-block;
-  padding: 12px 20px;
   font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  background-color: #2c5f2d;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  color: #555;
 }
 
-.about-website .content a:hover {
-  background-color: #1e4020;
-  transform: scale(1.05);
+/* Hover or subtle transition effects */
+.about-website .about-image,
+.about-website .content h2,
+.about-website .content p {
+  transition: transform 0.3s ease;
 }
 
+.about-website:hover .about-image {
+  transform: scale(1.02);
+}
 
-/* UK Cities Section */
+.about-website:hover .content h2,
+.about-website:hover .content p {
+  transform: translateX(2px);
+}
+
+/* ===========================
+   UK Cities Section
+   =========================== */
 .uk-cities-section {
   margin: 60px auto;
   max-width: 1200px;
@@ -446,7 +306,7 @@ body {
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 3x3 Grid Layout */
+/* 3x3 Grid Layout for cities */
 .cities-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -479,14 +339,14 @@ body {
   border-radius: 8px;
 }
 
-/* Default Overlay (light grey) */
+/* Default Overlay */
 .city-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Light overlay by default */
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -496,10 +356,10 @@ body {
 
 /* Darken overlay on hover */
 .city-card:hover .city-overlay {
-  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
+  background: rgba(0, 0, 0, 0.6);
 }
 
-/* City Name - Hidden by Default */
+/* City Name - hidden by default */
 .city-name {
   font-size: 1.8rem;
   font-weight: bold;
@@ -509,23 +369,23 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Show City Name on Hover */
+/* Show city name on hover */
 .city-card:hover .city-name {
   opacity: 1;
 }
 
-/* Title Styling for the UK Cities Section */
+/* Title styling for the UK Cities Section */
 .uk-cities-title {
-  font-size: 2.8rem; /* Large and eye-catching */
+  font-size: 2.8rem;
   font-weight: bold;
-  color: #2c3e3d; /* Darker shade for contrast */
+  color: #2c3e3d; 
   text-align: center;
   margin-bottom: 20px;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
-  letter-spacing: 1px; /* Slight spacing for readability */
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px; 
   padding-bottom: 10px;
-  border-bottom: 3px solid #2c5f2d; /* Underline effect */
-  display: inline-block; /* Makes border only as wide as text */
+  border-bottom: 3px solid #2c5f2d;
+  display: inline-block;
 }
 
 .uk-cities-subtitle {
@@ -540,41 +400,122 @@ body {
   opacity: 0.8;
 }
 
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .cities-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
-    gap: 15px;
-  }
-
-  .city-card {
-    height: 200px;
-  }
-
-  .city-name {
-    font-size: 1.5rem;
-  }
+/* ===========================
+   Top Rated Properties Section (Updated)
+   =========================== */
+.top-rated-properties {
+  margin: 60px auto;
+  padding: 60px 20px;
+  max-width: 1200px;
+  background: #f5f5f5; /* Subtle light background */
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-@media (max-width: 480px) {
-  .cities-grid {
-    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
-  }
-
-  .city-card {
-    height: 180px;
-  }
-
-  .city-name {
-    font-size: 1.3rem;
-  }
+.top-rated-properties h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #2c3e3d;
+  margin-bottom: 40px;
+  text-transform: capitalize;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Grid uses auto-fill so it wraps into however many columns fit */
+.property-grid {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  padding: 0 20px;
+}
 
+/* Individual property card */
+.property-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+  position: relative;
+}
 
-/* Responsive Adjustments */
+.property-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Card image */
+.property-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 4px solid #eee;
+}
+
+/* Card details */
+.property-details {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.property-details h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #333;
+  line-height: 1.3;
+}
+
+.property-details p {
+  margin: 6px 0;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Price highlight */
+.property-details .price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c5f2d;
+  margin-top: 10px;
+}
+
+/* Optional CTA button inside the card */
+.property-details .cta-button {
+  margin-top: 15px;
+  align-self: flex-start;
+  padding: 10px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #2c5f2d;
+  color: #ffffff;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.property-details .cta-button:hover {
+  background: #1e4020;
+  transform: scale(1.03);
+}
+
+/* ===========================
+   Responsive Adjustments
+   =========================== */
 @media (max-width: 768px) {
+  .hero-logo {
+    width: 120px;
+  }
+
   .backgroundImageStyling {
     height: 400px;
   }
@@ -602,6 +543,43 @@ body {
     width: 100%;
     max-height: 300px;
   }
+
+  .cities-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .city-card {
+    height: 200px;
+  }
+
+  .city-name {
+    font-size: 1.5rem;
+  }
+
+  /* Top Rated Properties */
+  .top-rated-properties {
+    padding: 40px 20px;
+  }
+
+  .top-rated-properties h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  .property-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-gap: 15px;
+    padding: 0;
+  }
+
+  .property-card img {
+    height: 180px;
+  }
+
+  .property-details {
+    padding: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -621,12 +599,53 @@ body {
     padding: 10px;
   }
 
+  .cities-grid {
+    grid-template-columns: 1fr; /* 1 column for mobile */
+  }
+
+  .city-card {
+    height: 180px;
+  }
+
+  .city-name {
+    font-size: 1.3rem;
+  }
+
+  /* Top Rated Properties on mobile */
+  .top-rated-properties {
+    margin: 40px auto;
+    padding: 30px 10px;
+  }
+
+  .top-rated-properties h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+  }
+
   .property-grid {
     grid-template-columns: 1fr;
   }
 
+  .property-grid {
+    grid-gap: 15px;
+    padding: 0;
+  }
+
   .property-card img {
     height: 150px;
+  }
+
+  .property-details {
+    padding: 15px;
+  }
+
+  .property-details h3 {
+    font-size: 1.2rem;
+  }
+
+  .property-details .cta-button {
+    font-size: 0.9rem;
+    padding: 8px 14px;
   }
 }
 

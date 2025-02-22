@@ -12,6 +12,7 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+  margin-top: 100px;
 }
 
 .property-title {
@@ -24,6 +25,25 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.send-to-group-btn {
+  background-color: #2c5f2d; /* Dark green */
+  color: white;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  margin: 15px auto;
+}
+
+.send-to-group-btn:hover {
+  background-color: #1e4020;
+  transform: scale(1.05);
 }
 
 /* Favorite Star Component */
