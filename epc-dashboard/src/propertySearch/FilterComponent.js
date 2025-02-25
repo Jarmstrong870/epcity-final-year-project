@@ -10,22 +10,29 @@ const PropertyFilter = ({ language }) => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get("search") || '';
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState(searchTerm);
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [epcRatings, setEpcRatings] = useState([]);
-    const [bedroomRange, setBedroomRange] = useState([1, 10]); // Min & Max Bedrooms
+    const [bedroomRange, setBedroomRange] = useState([1, 10]);
+
+    const cities = [
+        { name: "Liverpool", value: "E08000012" },
+        { name: "Leeds", value: "E08000035" },
+        { name: "Manchester", value: "E08000003" },
+        { name: "Bristol", value: "E06000023" },
+        { name: "Sheffield", value: "E08000019" },
+        { name: "Birmingham", value: "E08000025" },
+        { name: "Brighton", value: "E06000043" },
+        { name: "Newcastle", value: "E08000021" },
+        { name: "Southampton", value: "E06000045" },
+    ];
 
     const t = translations[language] || translations.en;
-    const { fetchProperties } = useContext(PropertyContext);
+    const { fetchProperties, city, setCity } = useContext(PropertyContext);
 
     useEffect(() => {
-        setSearchQuery(searchTerm);
-        fetchProperties(searchTerm);
-    }, [searchTerm]);
-
-    useEffect(() => {
-        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange);
-    }, [searchQuery, propertyTypes, epcRatings, bedroomRange]);
+        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city);
+    }, [propertyTypes, epcRatings, bedroomRange, city]);
 
     // Handle search query change
     const handleSearchChange = (e) => {
@@ -48,7 +55,11 @@ const PropertyFilter = ({ language }) => {
 
     const handleFetchProperties = (e) => {
         e.preventDefault();
-        fetchProperties(searchQuery, propertyTypes, epcRatings);
+        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city);
+    };
+
+    const handleCityChange = (e) => {
+        setCity(e.target.value);
     };
 
     return (
@@ -146,6 +157,23 @@ const PropertyFilter = ({ language }) => {
                         <span>{bedroomRange[1]} {t.maxBedrooms}</span>
                     </div>
                 </div>
+            </div>
+
+            {/* City DropDown */}
+            <div>
+                <label>Cities</label>
+                <select
+                    value={city}
+                    onChange={handleCityChange}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
+                >
+                    <option value="">Select a city</option>
+                    {cities.map((city) => (
+                        <option key={city.value} value={city.value}>
+                            {city.name}
+                        </option>
+                    ))}
+                </select>
             </div>
         </div>
     );

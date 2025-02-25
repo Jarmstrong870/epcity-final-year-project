@@ -29,7 +29,7 @@ const CostComparisonGraph = ({ properties }) => {
         Heating: "£ per year",
         "Hot Water": "£ per year",
         Lighting: "£ per year",
-        "Total Floor Area": "Square Meters (m²)"
+        "Total Floor Area": "Square Meters(m²)"
     };
 
     // Custom Tooltip Formatter (Now returns JSX instead of a string)
