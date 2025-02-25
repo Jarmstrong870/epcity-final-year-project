@@ -259,6 +259,9 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
         offset = (page - 1) * per_page
         query += " LIMIT %s OFFSET %s"
         params.extend([per_page, offset])
+        
+        print(query)
+        print(params)
 
         # Execute the query
         cursor.execute(query, params)

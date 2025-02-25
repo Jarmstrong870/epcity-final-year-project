@@ -32,7 +32,8 @@ export function PropertyProvider({ children }) {
                 url += `order=${sortOrder}&`;
             }
             url += `page=${1}&`;
-            url += `local_authority=${localAuthority}`;
+            if (localAuthority) url += `local_authority=${localAuthority}`;
+
 
             // Fetch property search results
             const response = await fetch(url);
@@ -67,7 +68,7 @@ export function PropertyProvider({ children }) {
                 url += `sort_by=${sortOption}&`;
                 url += `order=${order}&`;
                 url += `page=${1}&`;
-                url += `local_authority=${city}`;
+                if (city) url += `local_authority=${city}`;
 
                 // Fetch property search results
                 const response = await fetch(url);
@@ -101,7 +102,7 @@ export function PropertyProvider({ children }) {
                 url += `order=${sortOrder}&`;
             }
             url += `page=${pageNumber}&`;
-            url += `local_authority=${city}`;
+            if (city) url += `local_authority=${city}`;
 
             // Fetch property search results
             const response = await fetch(url);
