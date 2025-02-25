@@ -1,0 +1,95 @@
+/* Container for each EPC rating card */
+.epc-rating-container {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Ensures consistent spacing between rows */
+}
+
+/* Consistent row for EPC data */
+.epc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+}
+
+/* Highlight only the best values */
+.highlight-best {
+    background-color: #d4edda;
+    border: 1px solid #28a745;
+}
+
+/* Ensure spacing for each EPC card */
+.epc-card {
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header style for EPC section */
+.epc-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Progress bar container */
+.epc-progress-container {
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Wrapper to align progress bar and percentage */
+.epc-progress-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+/* Style for the progress bar */
+.epc-progress-bar {
+    width: 80%;
+    height: 10px;
+    appearance: none;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #e0e0e0;
+    border: none;
+}
+
+/* Webkit progress bar (Chrome, Safari) */
+.epc-progress-bar::-webkit-progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 10px;
+}
+
+/* Webkit progress value */
+.epc-progress-bar::-webkit-progress-value {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+/* Firefox progress bar */
+.epc-progress-bar::-moz-progress-bar {
+    background-color: #007bff;
+    border-radius: 10px;
+}
+
+/* Percentage label */
+.epc-progress-label {
+    font-size: 0.9em;
+    color: #333;
+    white-space: nowrap;
+}
