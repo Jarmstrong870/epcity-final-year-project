@@ -1,18 +1,148 @@
+/* Full-width Graph Container */
+.epc-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 30px auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa, #f5f6f7);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeInUp 0.5s ease both;
+}
+
+/* Graph Title */
+.graph-title {
+    font-size: 1.8em;
+    color: #1e4020;
+    margin-bottom: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Graph Wrapper */
+.graph-wrapper {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+/* Axis Labels */
+.recharts-cartesian-axis-tick {
+    fill: #1e4020 !important; /* Dark green for axis labels */
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.recharts-cartesian-axis-tick text {
+    fill: #1e4020 !important; /* Ensures axis labels are properly colored */
+}
+
+/* Y-Axis Label */
+.recharts-yAxis text {
+    fill: #1e4020 !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* X-Axis Label */
+.recharts-xAxis text {
+    fill: #1e4020 !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Bar Colors */
+.recharts-bar-rectangle {
+    stroke: #1e4020 !important; /* Dark green border for bars */
+    stroke-width: 2;
+}
+
+/* Toggle Metric Buttons */
 .toggle-buttons {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .toggle-buttons button {
-    margin-right: 10px;
-    padding: 8px 12px;
+    padding: 10px 20px;
     font-size: 14px;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
-    background-color: #ddd;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #1e4020, #2c5f2d);
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
 }
 
 .toggle-buttons button.active {
-    background-color: #4caf50;
-    color: white;
+    background: linear-gradient(135deg, #2c5f2d, #2c5f2d);
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-buttons button:hover {
+    background: linear-gradient(135deg, #1e4020, #2c5f2d);
+    transform: scale(1.05);
+}
+
+/* Tooltip Styling */
+.recharts-tooltip-wrapper {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    color: #1e4020 !important; /* Dark green for tooltip text */
+}
+
+/* Legend Styling */
+.recharts-legend-wrapper {
+    margin-top: 10px;
+    color: #1e4020 !important;
+    font-weight: 600;
+}
+
+/* Smooth Appearance Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .epc-container {
+        padding: 20px;
+    }
+
+    .toggle-buttons button {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .graph-title {
+        font-size: 1.4em;
+    }
+
+    .recharts-cartesian-axis-tick text {
+        font-size: 12px !important;
+    }
 }

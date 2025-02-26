@@ -265,18 +265,7 @@ const PropertyInfoDropdown = ({ property, allProperties }) => {
                 )}
             </div>
 
-            {/* Cost Comparison Graph Dropdown */}
-            <div className="accordion">
-                <div className="accordion-header" onClick={() => toggleDropdown("costGraph")}>
-                    {openDropdowns.costGraph ? "▼ Hide Cost Comparison Graph" : "▶ Show Cost Comparison Graph"}
-                </div>
-                {openDropdowns.costGraph && (
-                    <div className="accordion-content">
-                        <CostComparisonGraph properties={property} />
-                    </div>
-                )}
-            </div>
-
+            
             {/* Property Structure Dropdown */}
             <div className="accordion">
                 <div className="accordion-header" onClick={() => toggleDropdown("structure")}>

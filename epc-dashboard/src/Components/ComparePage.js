@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StreetView from "./propertyPage/StreetView";
 import EPCInfoDropdown from "./EPCInfoDropdown";
+import ComparePropertiesGraph from "./Compare_utils/ComparePropertiesGraph";
 import { fetchLocationCoords } from "./propertyPage/propertyUtils";
-import { findMaxValues, energyRatingToNumber } from "./Compare_utils/Compare_utils";  
+import { findMaxValues } from "./Compare_utils/Compare_utils";
 import translations from "../locales/translations_comparepage";
 import "./ComparePage.css";
-import "./Compare_utils/ComparePropertiesGraph"
 
 const ComparePage = ({ language }) => {
     const location = useLocation();
@@ -22,7 +22,10 @@ const ComparePage = ({ language }) => {
     const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const t = translations[language] || translations.en;
 
+    // Set page title and fetch property details on load
     useEffect(() => {
+        document.title = t.compareProperties || "Compare Properties";
+
         if (selectedProperties.length < 2 || selectedProperties.length > 4) {
             setError(t.errorInvalidSelection);
         } else {
@@ -30,6 +33,7 @@ const ComparePage = ({ language }) => {
         }
     }, [selectedProperties, language]);
 
+    // Fetch property details from the backend
     const fetchPropertyDetails = async (uprns) => {
         setLoading(true);
         setError("");
@@ -48,11 +52,11 @@ const ComparePage = ({ language }) => {
             const data = await response.json();
             setPropertyDetails(data);
 
-            // Calculate max values from fetched property details
+            // Find max values for graph display
             const calculatedMaxValues = findMaxValues(data);
             setMaxValues(calculatedMaxValues);
 
-            // Fetch street view URLs for each property
+            // Fetch street view images
             data.forEach((property) => {
                 fetchLocationCoords(
                     property.address,
@@ -76,58 +80,59 @@ const ComparePage = ({ language }) => {
         }
     };
 
-    // Function to check if a property has the best EPC rating
-    const isBestEPC = (rating, maxRating) => energyRatingToNumber(rating) === maxRating;
-
     return (
         <div className="compare-container">
-            <button className="back-button" onClick={() => navigate(-1)}>
-                {t.backToProperties}
-            </button>
-            <h2>{t.compareProperties}</h2>
+            {/* Back to Properties link */}
+            <div className="compare-header">
+                <button className="back-button" onClick={() => navigate(-1)}>
+                    ← {t.backToProperties || "Back to Properties"}
+                </button>
+            </div>
 
+            {/* Display loading, error, or property details */}
             {loading ? (
                 <p>{t.loading}</p>
             ) : error ? (
                 <p className="error-message">{error}</p>
             ) : (
-                <div className="property-grid">
-                    {propertyDetails.map((property) => (
-                        <div key={property.uprn} className="property-column">
-                            <div className="property-image">
-                                {streetViewURLs[property.uprn] ? (
-                                    <StreetView streetViewURL={streetViewURLs[property.uprn]} errorMessage="" />
-                                ) : (
-                                    <img
-                                        src={property.image_url || "/default-image.jpg"}
-                                        alt={`Property at ${property.address}`}
-                                    />
-                                )}
+                <>
+                    <div className="property-grid">
+                        {propertyDetails.map((property) => (
+                            <div key={property.uprn} className="property-column">
+                                {/* Property Image */}
+                                <div className="property-image">
+                                    {streetViewURLs[property.uprn] ? (
+                                        <StreetView streetViewURL={streetViewURLs[property.uprn]} errorMessage="" />
+                                    ) : (
+                                        <img
+                                            src={property.image_url || "/default-image.jpg"}
+                                            alt={`Property at ${property.address}`}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* Property Information */}
+                                <div className="property-info">
+                                    <p><strong>Address:</strong> {property.address}</p>
+                                    <p><strong>Postcode:</strong> {property.postcode}</p>
+                                    <p><strong>Property Type:</strong> {property.property_type}</p>
+                                    <p><strong>Number of Bedrooms:</strong> {property.number_bedrooms}</p>
+
+                                    {/* EPC Information Dropdown */}
+                                    <EPCInfoDropdown property={property} allProperties={propertyDetails} />
+                                </div>
                             </div>
+                        ))}
+                    </div>
 
-                            <div className="property-info">
-                                <p><strong>Address:</strong> {property.address}</p>
-                                <p><strong>Postcode:</strong> {property.postcode}</p>
-                                <p><strong>Property Type:</strong> {property.property_type}</p>
-                                <p><strong>Number of Bedrooms:</strong> {property.number_bedrooms}</p>
-
-                                
-
-                                {/* Pass remaining details to dropdown */}
-                                <EPCInfoDropdown property={property} allProperties={propertyDetails} />
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                    {/* Graph Section */}
+                    <div className="graph-section">
+                        <ComparePropertiesGraph properties={propertyDetails} maxValues={maxValues} />
+                    </div>
+                </>
             )}
-            <div>
-                <ComparePropertiesGraph properties={selectedProperties}></ComparePropertiesGraph>
-            </div>
         </div>
     );
 };
 
 export default ComparePage;
-
-
-
