@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StreetView from "./propertyPage/StreetView";
-import EPCInfoDropdown from "./EPCInfoDropdown";
+import PropertyInfoDropdown from "./PropertyInfoDropdown";
 import ComparePropertiesGraph from "./Compare_utils/ComparePropertiesGraph";
 import { fetchLocationCoords } from "./propertyPage/propertyUtils";
 import { findMaxValues } from "./Compare_utils/Compare_utils";
 import translations from "../locales/translations_comparepage";
 import "./ComparePage.css";
+
 
 const ComparePage = ({ language }) => {
     const location = useLocation();
@@ -106,20 +107,20 @@ const ComparePage = ({ language }) => {
                                     ) : (
                                         <img
                                             src={property.image_url || "/default-image.jpg"}
-                                            alt={`Property at ${property.address}`}
+                                            alt={`${t.propertyAt} ${property.address}`}
                                         />
                                     )}
                                 </div>
 
                                 {/* Property Information */}
                                 <div className="property-info">
-                                    <p><strong>Address:</strong> {property.address}</p>
-                                    <p><strong>Postcode:</strong> {property.postcode}</p>
-                                    <p><strong>Property Type:</strong> {property.property_type}</p>
-                                    <p><strong>Number of Bedrooms:</strong> {property.number_bedrooms}</p>
+                                    <p><strong>{t.address}:</strong> {property.address}</p>
+                                    <p><strong>{t.postcode}:</strong> {property.postcode}</p>
+                                    <p><strong>{t.propertyType}:</strong> {property.property_type}</p>
+                                    <p><strong>{t.numberOfBedrooms}:</strong> {property.number_bedrooms}</p>
 
                                     {/* EPC Information Dropdown */}
-                                    <EPCInfoDropdown property={property} allProperties={propertyDetails} />
+                                    <PropertyInfoDropdown property={property} allProperties={propertyDetails}  />
                                 </div>
                             </div>
                         ))}
