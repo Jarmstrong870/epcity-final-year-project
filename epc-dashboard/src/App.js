@@ -34,7 +34,6 @@ import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import AdminDashboard from './login&register/AdminDashboard'; 
 import { useLocation } from "react-router-dom"; // Import to detect current page
-import ExampleKnnForm from './customAlgorithm/CustomAlgorithm';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -207,7 +206,7 @@ function App() {
             <Route path="/register" element={<Register language={language} />} />
             <Route path="/property/:uprn" element={<PropertyPage properties={properties} user={user} language={language} />} />
             <Route path="/FAQs" element={<FAQs language={language} />} />
-            <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
+            <Route path="/glossary" element={<GlossaryPage language={language} />} />
             <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -220,10 +219,9 @@ function App() {
             <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
             <Route path="/favourites" element={<FavouritePage user={user} language={language} />} />
             <Route path="/compare-results" element={<ComparePage language={language} />} />
-            <Route path="/messages" element={<Messages user={user}  language={language} />} />
+            <Route path="/messages" element={<Messages user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
-            <Route path="/customAlgorithm" element={<ExampleKnnForm />} />
           </Routes>
 
           <footer className="footer-container">

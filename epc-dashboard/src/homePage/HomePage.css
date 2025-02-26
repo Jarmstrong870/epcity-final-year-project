@@ -44,7 +44,6 @@ body {
 /* 🔹 Header Overlay (Navbar & Logo) */
 .hero-header {
   position: absolute;
-  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -81,7 +80,6 @@ body {
 /* 🔹 Dark Overlay */
 .hero-overlay {
   position: absolute;
-  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -97,7 +95,6 @@ body {
 /* 📝 Welcome Text */
 .welcomeText {
   color: white;
-  margin-bottom: 20px;
 }
 
 .welcomeText .mainMessage {
@@ -430,6 +427,54 @@ body {
   transform: scale(1.05);
 }
 
+/* Top Rated Properties Section */
+.custom-algorithm-section {
+  display: flex;
+  gap: 30px;
+  margin: 60px auto;
+  max-width: 1200px;
+  padding: 40px;
+  background: #dedede;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.custom-algorithm-section h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-algorithm-section img {
+  flex: 1;
+  max-width: 40%; /* Limit the image width to 40% of the container */
+  height: auto; /* Maintain the aspect ratio */
+  border-radius: 15px; /* Keep the rounded corners */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  object-fit: cover; /* Ensures proper scaling for the image */
+}
+
+.custom-algorithm-button {
+  background-color: #0a2e15;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 400px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+  border-radius: 15px;
+}
+
+.custom-algorithm-button:hover {
+  background-color: #183d25;
+}
 
 /* UK Cities Section */
 .uk-cities-section {
@@ -540,107 +585,6 @@ body {
   opacity: 0.8;
 }
 
-/* Title Styling for the UK Cities Section */
-.uk-amenities-title {
-  font-size: 2.0rem; /* Large and eye-catching */
-  font-weight: bold;
-  color: #2c3e3d; /* Darker shade for contrast */
-  text-align: left;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
-  letter-spacing: 1px; /* Slight spacing for readability */
-  padding-bottom: 10px;
-  border-bottom: 3px solid #2c5f2d; /* Underline effect */
-  display: inline-block; /* Makes border only as wide as text */
-}
-
-.uk-amenities-subtitle {
-  font-size: 1.2rem;
-  color: #555;
-  text-align: center;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
-  opacity: 0.8;
-}
-
-/* UK Cities Section */
-.amenities-section {
-  margin: 60px auto;
-  max-width: 1200px;
-  text-align: center;
-}
-
-/* 3x3 Grid Layout */
-.amenities-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 20px;
-}
-
-/* Individual City Card */
-.amenity-card {
-  position: relative;
-  width: 100%;
-  height: 250px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.amenity-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* City Background Image */
-.amenity-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Default Overlay (light grey) */
-.amenity-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Light overlay by default */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 1;
-  transition: background 0.3s ease, opacity 0.3s ease;
-}
-
-/* Darken overlay on hover */
-.amenity-card:hover .amenity-overlay {
-  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
-}
-
-/* City Name - Hidden by Default */
-.amenity-name {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Show City Name on Hover */
-.amenity-card:hover .amenity-name {
-  opacity: 1;
-}
-
 .scrollDownMessage {
   font-size: 20px;
   font-weight: bold;
@@ -649,204 +593,41 @@ body {
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   line-height: 1.2;
   background: none; 
-  margin-top: 80px;
   border:none;
+  text-align: center;
+}
+
+.scrollingArrow {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .scrollDownArrow {
   color: #ffffff;
   font-size: 35px;
   border: solid 4px #ffffff;
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Title Styling for the UK Cities Section */
-.number-of-bedrooms-title {
-  font-size: 2.0rem; /* Large and eye-catching */
-  font-weight: bold;
-  color: #163017; /* Darker shade for contrast */
-  text-align: center;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
-  letter-spacing: 1px; /* Slight spacing for readability */
-  padding-bottom: 10px;
-  border-bottom: 3px solid #2c5f2d; /* Underline effect */
-  display: inline-block; /* Makes border only as wide as text */
-}
-
-.number-of-bedrooms-subtitle {
-  font-size: 1.2rem;
-  color: #555;
-  text-align: center;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
+.scrollDownArrow:hover .scrollDownArrow {
   opacity: 0.8;
 }
 
-/* UK Cities Section */
-.number-of-bedrooms-section {
-  margin: 60px auto;
-  max-width: 1200px;
-  text-align: center;
-}
 
-/* 3x3 Grid Layout */
-.number-of-bedrooms-grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 20px;
-  padding: 20px;
-}
-
-/* Individual City Card */
-.number-of-bedrooms-card {
-  position: relative;
-  width: 50%;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  color: #000;
-  font-size: 16px;
-}
-
-.number-of-bedrooms-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Darken overlay on hover */
-.number-of-bedrooms-card:hover .bedroom-overlay {
-  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
-}
-
-/* City Background Image */
-.number-of-bedrooms-image {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Show City Name on Hover */
-.number-of-bedrooms-card:hover .bedroom-name {
-  opacity: 1;
-}
-
-/* Title Styling for the UK Cities Section */
-.uk-amenities-title {
-  font-size: 2.0rem; /* Large and eye-catching */
-  font-weight: bold;
-  color: #2c3e3d; /* Darker shade for contrast */
-  text-align: left;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
-  letter-spacing: 1px; /* Slight spacing for readability */
-  padding-bottom: 10px;
-  border-bottom: 3px solid #2c5f2d; /* Underline effect */
-  display: inline-block; /* Makes border only as wide as text */
-}
-
-.uk-amenities-subtitle {
-  font-size: 1.2rem;
-  color: #555;
-  text-align: center;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
-  opacity: 0.8;
-}
-
-/* UK Cities Section */
-.amenities-section {
-  margin: 60px auto;
-  max-width: 1200px;
-  text-align: center;
-}
-
-/* 3x3 Grid Layout */
-.amenities-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 20px;
-}
-
-/* Individual City Card */
-.amenity-card {
-  position: relative;
-  width: 100%;
-  height: 250px;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.amenity-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* City Background Image */
-.amenity-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Default Overlay (light grey) */
-.amenity-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* Light overlay by default */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 1;
-  transition: background 0.3s ease, opacity 0.3s ease;
-}
-
-/* Darken overlay on hover */
-.amenity-card:hover .amenity-overlay {
-  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
-}
-
-/* City Name - Hidden by Default */
-.amenity-name {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: white;
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Show City Name on Hover */
-.amenity-card:hover .amenity-name {
-  opacity: 1;
-}
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -877,97 +658,6 @@ body {
     font-size: 1.3rem;
   }
 }
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .amenities-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
-    gap: 15px;
-  }
-
-  .amenity-card {
-    height: 200px;
-  }
-
-  .amenity-name {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .amenities-grid {
-    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
-  }
-
-  .amenity-card {
-    height: 180px;
-  }
-
-  .amenity-name {
-    font-size: 1.3rem;
-  }
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .bedroom-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
-    gap: 15px;
-  }
-
-  .bedroom-card {
-    height: 200px;
-  }
-
-  .bedroom-name {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .bedroom-grid {
-    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
-  }
-
-  .bedroom-card {
-    height: 180px;
-  }
-
-  .bedroom-name {
-    font-size: 1.3rem;
-  }
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .type-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
-    gap: 15px;
-  }
-
-  .type-card {
-    height: 200px;
-  }
-
-  .type-name {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .type-grid {
-    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
-  }
-
-  .type-card {
-    height: 180px;
-  }
-
-  .type-name {
-    font-size: 1.3rem;
-  }
-}
-
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -995,6 +685,11 @@ body {
   }
 
   .about-website img {
+    width: 100%;
+    max-height: 300px;
+  }
+
+  .custom-algorithm-section img {
     width: 100%;
     max-height: 300px;
   }

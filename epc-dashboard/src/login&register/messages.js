@@ -29,6 +29,7 @@ const Messages = ({ user, language }) => {
   const [messagesFound, setMessagesFound] = useState([]);
   const [allGroupMembers, setAllGroupMembers] = useState([]);
   const [action, setAction] = useState("");
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     fetchGroups();

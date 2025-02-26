@@ -9,6 +9,8 @@ const translations = {
       "EPCity is designed to help you find your perfect property in Liverpool. Whether you're a student, professional, or a landlord, we offer an intuitive platform to search, compare, and evaluate which property is right for you in Liverpool.",
     aboutUsDescription2:
       "Use our search bar above to get started or explore some of Liverpool's top-rated properties below!",
+    customAlgorithmTitle: "Need help finding a property?",
+    customAlgorithmDescription: "this is the custom algorithm",
     topRatedProperties: "Top Rated Properties",
     ukCitiesTitle: "Find Your Next Dream Property in the UK",
     ukCitiesSubtitle:

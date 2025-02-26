@@ -7,13 +7,11 @@ import translations from '../locales/translations_homepage';
 import CitySection from "../homePage/CitySection"; 
 import liverpoolVideo from '../assets/liverpool.mp4'; 
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
-import TextToSpeech from '../Components/utils/TextToSpeech';import CustomAlgorithm from '../homePage/CustomAlgorithm';
-//import CustomAlgorithmStarRating from '../homePage/StarRatingComponent';
-import SliderComponent from '../homePage/SliderComponent';
-
-
+import TextToSpeech from '../Components/utils/TextToSpeech';
+import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
 
 const HomePage = ({ user, language }) => {
+  const [customAlgorithmPopUp, setCustomAlgorithmPopUp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -39,9 +37,20 @@ const HomePage = ({ user, language }) => {
     setSearchTerm(event.target.value);
   };
 
+  const togglePopUp = () => {
+    setCustomAlgorithmPopUp(!customAlgorithmPopUp);
+  };
+
   const handleSearch = () => {
     if (searchTerm.trim()) {
       navigate(`/propertylist?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
+  const clickableArrow = (pageId) => {
+    const pageSection = document.getElementById(pageId);
+    if(pageSection) {
+      pageSection.scrollIntoView({behavior: "smooth"});
     }
   };
 
@@ -79,23 +88,46 @@ const HomePage = ({ user, language }) => {
             </button>
 
           </div>
-
+          
           <h1 className = "scrollDownMessage"> Scroll down to find out more </h1>
-          <span class="scrollDownArrow"> {"\u2193"} </span>
+          <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
+            <span class="scrollDownArrow"> {"\u2193"} </span>
+          </button>
 
         </div>
       </div>
 
 
+
+      <pageSection id ="cityGrid">
       {/* City Section */}
       <CitySection language={language} />
+      </pageSection>
 
-      {/*<CustomAlgorithmStarRating />*/}
+      {/* Custom Algorithm Section */}
+      <div className="custom-algorithm-section">
+        <img src={require('../assets/dream property.jpg')} alt="dream-property" className="custom-algorithm-icon" />
+        <div className="custm-algorithm-description">
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
+              {t.customAlgorithmTitle}
+            </h2>
+            <TextToSpeech 
+              text={`${t.customAlgorithmTitle}. ${t.customAlgorithmDescription}`} 
+              language={language} 
+            />
+          </div>
+          <p>{t.customAlgorithmDescription}</p>
+        
+          <div>
+              <button className="custom-algorithm-button" onClick={togglePopUp}> Go to Custom Algorithm </button>
+                {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp}/>}
+          </div>
+          </div>
+        </div>
 
-      <SliderComponent minValue={1} maxValue={5} process={1} startValue={1}/>
 
-      <CustomAlgorithm />
-
+      
       {/* Top Rated Properties Section */}
       <div className="top-rated-properties">
         <h2>{t.topRatedProperties}</h2>
@@ -125,15 +157,11 @@ const HomePage = ({ user, language }) => {
           </div>
           <p>{t.aboutUsDescription1}</p>
           <p>{t.aboutUsDescription2}</p>
-        </div>
-      </div>
-      <div>
-            {/* Existing content */}
-            <button onClick={() => navigate('/customAlgorithm')}>
-              Go to Custom Algorithm
-            </button>
           </div>
-    </>
+        </div>
+      <div>
+    </div>
+  </>
   );
 };
 

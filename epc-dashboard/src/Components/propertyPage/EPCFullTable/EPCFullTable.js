@@ -8,6 +8,7 @@ import EnergyInformation from './EnergyInformation';
 import CostComparisonGraph from './CostComparisonGraph';
 import PropertyStructureInfo from './PropertyStructureInfo';
 
+
 const EPCFullTable = ({ properties, maxValues, loading, language }) => {
   if (loading) {
     return <p>Loading...</p>;
