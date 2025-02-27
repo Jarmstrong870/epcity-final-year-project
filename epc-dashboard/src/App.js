@@ -51,7 +51,7 @@ function App() {
   const location = useLocation(); // Get current page path
   const isHomePage = location.pathname === "/"; // Check if on home page
 
-  const t = translations[language] || translations.en; // Load translations
+  const t = translations[language] || translations.en; // Load translations;
 
   // Persist language selection in localStorage
   const handleLanguageChange = (newLanguage) => {
@@ -148,18 +148,28 @@ function App() {
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
+              {console.log("user object:", JSON.stringify(user, null, 2))}
 
               <div className="profile-icon" onClick={toggleDropdown}>
                 <img src={profileImage} alt="Profile" className="profile-img" />
                 {dropdownVisible && (
                   <div className="dropdown-menu">
+
+   
                     {user ? (
                       <>
-                        <p>Welcome, {user.firstname}</p>
+                        <p className="welcome-message">Welcome, {user.firstname}</p>
+
+                        {user.isAdmin === true && (
+                          <Link to="/admin-dashboard">Admin Dashboard</Link>
+                        )}
                         <Link to="/account-overview">{t.accountOverview}</Link>
                         <Link to="/property">{t.myProperties}</Link>
                         <Link to="/messages">{t.messages}</Link>
-                        <button onClick={showLogoutConfirmation}>{t.logout}</button>
+
+                        <button onClick={showLogoutConfirmation} className="logout-button">
+                          {t.logout}
+                        </button>
                       </>
                     ) : (
                       <>
@@ -170,6 +180,7 @@ function App() {
                   </div>
                 )}
               </div>
+
             </div>
           </div>
 

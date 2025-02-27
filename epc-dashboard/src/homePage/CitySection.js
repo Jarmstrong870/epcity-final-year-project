@@ -44,18 +44,8 @@ const CitySection = ({ language }) => {
         {cities.map((city, index) => (
           <div key={index} className="city-card">
             <img src={city.image} alt={city.name} className="city-image" />
-<<<<<<< HEAD
-            <div className="city-overlay">
-              <div className="city-info">
-                <span className="city-name">{city.name}</span>
-                <span className="city-count">
-                  {city.propertyCount?.toLocaleString()}+ properties
-                </span>
-              </div>
-=======
             <div className="city-overlay" onClick={() => handleCityChoice(city.value)}>
               <span className="city-name">{t.cities[city.name] || city.name}</span>
->>>>>>> 19e3f3909a6b9bae80f0a6ca1f0e4ff305ef6d0f
             </div>
           </div>
         ))}

@@ -71,4 +71,21 @@ def send_group_message():
     except Exception as e:
         print(f"Error sending message: {e}")
         return jsonify({"message": "Internal server error"}), 500
+    
+@group_chat_blueprint.route("/send-property-to-group", methods=["POST"])
+def send_property_to_group():
+    """ Send a property URL to a group chat. """
+    data = request.json
+    group_id = data.get("group_id")
+    property_url = data.get("property_url")
+    sender_email = request.headers.get("User-Email")
 
+    if not group_id or not property_url or not sender_email:
+        return jsonify({"message": "Group ID, property URL, and sender email are required."}), 400
+
+    try:
+        new_message = GroupChatService.send_group_property(group_id, property_url, sender_email)
+        return jsonify(new_message), 201
+    except Exception as e:
+        print(f"Error sending property to group: {e}")
+        return jsonify({"message": "Internal server error"}), 500

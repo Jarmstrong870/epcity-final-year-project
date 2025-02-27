@@ -164,3 +164,42 @@ class GroupChatRepo:
         finally:
             cursor.close()
             connection.close()
+
+    @staticmethod
+    def insert_message(group_id, content, sender_email):
+        """ Insert a new message into the group chat """
+        try:
+            connection = psycopg2.connect(**db_config)
+            cursor = connection.cursor()
+
+            cursor.execute("SELECT user_id FROM users WHERE email_address = %s;", (sender_email,))
+            sender_data = cursor.fetchone()
+
+            if not sender_data:
+                return {"error": "Sender email not found in database"}, 400
+
+            sender_id = sender_data[0]
+
+            cursor.execute(
+                """
+                INSERT INTO group_messages (group_id, sender_id, content, sent_at)
+                VALUES (%s, %s, %s, NOW())
+                RETURNING message_id, content, sent_at;
+                """,
+                (group_id, sender_id, content),
+            )
+            message = cursor.fetchone()
+            connection.commit()
+
+            return {
+                "message_id": message[0],
+                "content": message[1],
+                "sent_at": message[2].isoformat(),
+                "sender_id": sender_id,
+            }
+        except Exception as e:
+            print(f"❌ Database Insert Error: {e}")
+            return {"error": str(e)}
+        finally:
+            cursor.close()
+            connection.close()
