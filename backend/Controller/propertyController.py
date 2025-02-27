@@ -54,7 +54,7 @@ def get_properties_page_route():
         )
         search = request.args.get('search', '').strip()
         sort_by = request.args.get('sort_by')
-        order = request.args.get('order', '').lower() if request.args.get('order') in ['asc', 'desc'] else None
+        order = request.args.get('order').lower() if request.args.get('order') in ['asc', 'desc'] else None
         page = int(request.args.get('page', 1))  # Defaults to 1
         local_authority = request.args.get('local_authority', '').strip()
         min_bedrooms = int(request.args.get('min_bedrooms', 1))

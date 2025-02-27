@@ -19,14 +19,6 @@ const PropertyList = ({ loading, language }) => {
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
 
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const searchTerm = searchParams.get("search");
-
-  useEffect(() => {
-    getNewPage(page);
-  }, [page]);
-
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
 

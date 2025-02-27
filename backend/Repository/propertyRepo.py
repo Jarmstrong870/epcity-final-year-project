@@ -221,11 +221,13 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
 
         # Base query
         query = """
-            SELECT * FROM properties WHERE local_authority = %s
+            SELECT * FROM properties WHERE 1 = 1
         """
         params = []
         
-        params.append(local_authority)
+        if local_authority:
+            query += " AND local_authority = %s"
+            params.append(local_authority)
 
         # Dynamically append filters
         if property_types:
@@ -241,8 +243,7 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
             params.extend([f"%{search}%", f"%{search}%"])
             
         query += " AND number_bedrooms BETWEEN %s AND %s"
-        print(min_bedrooms)
-        print(max_bedrooms)
+        
         params.extend([min_bedrooms, max_bedrooms])
 
         # Append sorting
