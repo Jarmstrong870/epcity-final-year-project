@@ -42,17 +42,17 @@ def get_favourite_properties_from_db(email):
         # Close the cursor and connection
         cur.close()
         conn.close()
-    
-        # Convert rows to a Pandas DataFrame
-        df = pd.DataFrame(rows, columns=column_names)
+
+        # Convert rows to a Pandas DataFrame & return the dataframe
+        if rows:
+            return pd.DataFrame(rows, columns=column_names)
+        else: 
+            return pd.DataFrame(column=column_names)
         
-        # Return the dataframe
-        return df
-    
     # Database exception
     except psycopg2.Error as e:
         print(f"Database error: {e}")
-        return False
+        return pd.DataFrame()
 
 """
 Adds a row to the user_properties table using the user's email and uprn

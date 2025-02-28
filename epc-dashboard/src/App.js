@@ -34,7 +34,6 @@ import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import AdminDashboard from './login&register/AdminDashboard'; 
 import { useLocation } from "react-router-dom"; // Import to detect current page
-import ExampleKnnForm from './customAlgorithm/CustomAlgorithm';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -137,13 +136,20 @@ function App() {
 
   return (
     <PropertyProvider>
-      <FavouriteProvider>
+      <FavouriteProvider user={user}>
         <div className="App">
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className="logo-container">
-              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
+              {isScrolled && (
+              <div className="header-navigation-links">
+              <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+              <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+              <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
             </div>
-
+            )}          
+            </div>
+          
             <div className="header-right">
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
@@ -191,7 +197,7 @@ function App() {
               element={
                 <>
                   <PropertyFilter onFilterChange={fetchProperties} language={language} />
-                  <PropertyList properties={properties} loading={loading} language={language} />
+                  <PropertyList user={user} properties={properties} loading={loading} language={language} />
                 </>
               }
             />
@@ -200,7 +206,7 @@ function App() {
             <Route path="/register" element={<Register language={language} />} />
             <Route path="/property/:uprn" element={<PropertyPage properties={properties} user={user} language={language} />} />
             <Route path="/FAQs" element={<FAQs language={language} />} />
-            <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
+            <Route path="/glossary" element={<GlossaryPage language={language} />} />
             <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -213,10 +219,9 @@ function App() {
             <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
             <Route path="/favourites" element={<FavouritePage user={user} language={language} />} />
             <Route path="/compare-results" element={<ComparePage language={language} />} />
-            <Route path="/messages" element={<Messages user={user}  language={language} />} />
+            <Route path="/messages" element={<Messages user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
-            <Route path="/customAlgorithm" element={<ExampleKnnForm />} />
           </Routes>
 
           <footer className="footer-container">

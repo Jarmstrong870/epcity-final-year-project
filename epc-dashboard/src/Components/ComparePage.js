@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import StreetView from "./propertyPage/StreetView";
 import PropertyInfoDropdown from "./PropertyInfoDropdown";
-import ComparePropertiesGraph from "./Compare_utils/ComparePropertiesGraph";
 import { fetchLocationCoords } from "./propertyPage/propertyUtils";
 import { findMaxValues } from "./Compare_utils/Compare_utils";
 import translations from "../locales/translations_comparepage";
 import "./ComparePage.css";
-
+import ComparePropertiesGraph from "./Compare_utils/ComparePropertiesGraph"
 
 const ComparePage = ({ language }) => {
     const location = useLocation();

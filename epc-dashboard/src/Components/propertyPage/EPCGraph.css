@@ -1,66 +1,132 @@
 .epc-graph-container {
-    width: 100%;
-    margin-top: 30px;
-  }
-  
-  .epc-title {
-    margin-bottom: 10px;
-  }
-  
-  .epc-bars-container {
-    width: 100%;
+    width: auto;
     display: flex;
     flex-direction: column;
-    margin-top: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    padding: 0px 18px;
+    border-radius: 15px;
   }
-  
-  .epc-bar-wrapper {
+
+  .epc-graph-container .epc-title {
+    margin-top: 30px;
+    font-size: 1.8rem; /* Large and eye-catching */
+    font-weight: bold;
+    color: #2c5f2d; /* Darker shade for contrast */
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+    letter-spacing: 1px; /* Slight spacing for readability */
+    padding-bottom: 10px;
+    border-bottom: 3px solid #2c5f2d; /* Underline effect */
+    display: inline-block; /* Makes border only as wide as text */
+  }
+
+  .graph-content {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 10px;
-    position: relative;
+    width: 100%;
   }
-  
+
+  .epc-bars-container {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .epc-bar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0px;
+    margin: 0px;
+  }
+
   .epc-bar {
-    height: 50px;
-    width: 90%;
+    height: 40px;
     border-radius: 5px;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-bottom: 10px;
   }
-  
-  .epc-bar-label {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: black;
+
+  .epc-bar-range {
     font-weight: bold;
     font-size: 20px;
     text-align: left;
   }
   
-  .epc-marker {
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    height: 40px;
-    width: 60px;
+  .epc-bar-letter{
+    text-align: right;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .epc-marker-summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    height: auto;
+    margin: 0;
+  }
+
+  .epc-marker-base{
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 100%;
+    margin-left: 300px;
+    background-color:rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+  }
+
+  .epc-current-title,
+  .epc-potential-title {
+    margin-top: 5px;
+    font-size: 1rem; /* Large and eye-catching */
+    font-weight: bold;
+    color: #000000; /* Darker shade for contrast */
+    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+    letter-spacing: 1px; /* Slight spacing for readability */
+    padding-bottom: 5px;
+    border-bottom: 3px solid #000000; /* Underline effect */
+  }
+
+  .epc-current,
+  .epc-potential {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+  }
+
+  .epc-marker.current,
+  .epc-marker.potential{
+    height: 80px;
+    width: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     color: white;
-    font-size: 14px;
     font-weight: bold;
     flex-direction: column;
+    text-align: center;
   }
-  
-  .epc-marker.current {
-    left: 80%; /* Position the current efficiency marker on the right */
-  }
-  
-  .epc-marker.potential {
-    left: 20%; /* Position the potential efficiency marker on the left */
-  }
-  

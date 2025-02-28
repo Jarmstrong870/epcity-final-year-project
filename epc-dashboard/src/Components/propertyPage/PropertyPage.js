@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
@@ -9,16 +9,16 @@ import StreetView from './StreetView';
 import FavouriteStar from '../../propertySearch/FavouriteStar';
 import { fetchPropertyDetails, fetchLocationCoords } from './propertyUtils';
 import './PropertyPage.css';
+import { FavouriteContext } from '../utils/favouriteContext';
 
-const PropertyPage = ({ user, property, email, language }) => {
+const PropertyPage = ({ user, property, language }) => {
   const { uprn } = useParams();
-
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isFavourited, setIsFavourited] = useState(false);
+  const {favouriteProperties} = useContext(FavouriteContext);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
@@ -33,6 +33,10 @@ const PropertyPage = ({ user, property, email, language }) => {
   }, [uprn]);
 
   useEffect(() => {
+    setPropertyData((previous) => ({...previous}));
+  }, [favouriteProperties]);
+
+  useEffect(() => {
     if (propertyData?.address && propertyData?.postcode) {
       fetchLocationCoords(
         propertyData.address,
@@ -44,20 +48,6 @@ const PropertyPage = ({ user, property, email, language }) => {
       );
     }
   }, [propertyData]);
-
-  const toggleFavorite = () => {
-    setIsFavourited(!isFavourited);
-    setPopupMessage(
-      !isFavourited
-        ? `${propertyData?.address || 'This property'} has been favorited.`
-        : `${propertyData?.address || 'This property'} has been unfavorited.`
-    );
-    setShowPopup(true);
-
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 5000);
-  };
 
   if (loading) {
     return <p>Loading property details...</p>;
@@ -71,9 +61,10 @@ const PropertyPage = ({ user, property, email, language }) => {
 
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
-        <div onClick={toggleFavorite} className="starComponent">
-          <FavouriteStar user={user} property={property} />
-        </div>
+      </div>
+
+      <div className="starComponent" >
+        <FavouriteStar user={user} property={propertyData} key={favouriteProperties.length}/>
       </div>
 
       {/* Section to display street view and map view */}

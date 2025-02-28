@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+import pandas as pd
 from flask_cors import CORS
 from Service import favouriteService as favourites
 
@@ -14,7 +15,11 @@ Service layer is called and returns a jsonified dataframe of the user's favourit
 @favourites_blueprint.route('/favourites/getFavourites', methods=['GET'])
 def get_favourites():
     email = request.args.get('email', '').lower()
-    return jsonify(favourites.get_favourite_properties(email).to_dict(orient='records'))
+    result = favourites.get_favourite_properties(email)
+    if isinstance(result, pd.DataFrame):
+        return jsonify(result.to_dict(orient='records'))
+    else: 
+        return jsonify([])
 
 """
 Route method that adds a property to a user's favourites
