@@ -1,8 +1,8 @@
 /*  Ensure the map always displays correctly */
 .map-container {
-    height: 500px;
+    height: 600px;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 5px;
     border-radius: 10px;
     overflow: hidden;
   }

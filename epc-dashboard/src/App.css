@@ -22,6 +22,7 @@
   background-color: #1f2e2d; 
   padding: 15px 30px; 
   width: 100%;
+  height: 60px;
   box-sizing: border-box;
   position: sticky; 
   top: 0;
@@ -244,32 +245,161 @@ td a:hover {
   color: #183d25;
 }
 
-/* Footer Styles */
+/*******************************************************
+  FOOTER - Modern Column Layout (Centered)
+********************************************************/
+/*******************************************************
+  FOOTER - Fully Centered Fix
+********************************************************/
 .footer-container {
   background-color: #1f2e2d; /* Dark green */
   color: white;
-  padding: 40px 20px;
-  text-align: center;
-  font-size: 1rem;
+  padding: 50px 20px;
   border-top: 3px solid #0a2315;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  
+  /* Ensures the footer itself is centered */
+  display: flex;
+  justify-content: center;
 }
 
+/* Center the main footer content */
 .footer-content {
   max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
+  width: 100%; /* Ensures full responsiveness */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+
+  /* 💡 This ensures everything is aligned centrally */
+  justify-items: center;
+  text-align: center;
 }
 
-.footer-content img {
+.admin-dashboard-link:hover {
+  background-color: rgba(255, 204, 0, 0.2);
+  color: white;
+  transform: translateX(5px);
+}
+
+.admin-dashboard-link {
+  color: #ffcc00; /* Gold color */
+  font-weight: bold;
+  text-align: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+
+/* Each column block */
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  /* If you want each column's content *text* centered too: */
+  text-align: center;
+  align-items: center; /* Ensures items inside are centered along the column's cross-axis */
+}
+
+/* ============ Column 1: Brand/Logo & Tagline ============ */
+.footer-brand {}
+
+.footer-logo {
   height: 60px; 
   width: auto;
   cursor: pointer;
   transition: transform 0.3s ease;
+  margin-bottom: 10px;
 }
+
+.footer-logo:hover {
+  transform: scale(1.1);
+}
+
+.footer-tagline {
+  font-size: 0.95rem;
+  color: #d4edda; 
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ============ Column Titles ============ */
+.footer-column-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* ============ Links ============ */
+.footer-link {
+  color: #d4edda; 
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  
+  /* Because columns are center-aligned, 
+     we limit link width so it doesn't stretch horizontally */
+  width: fit-content;
+}
+
+.footer-link:hover {
+  color: #ffffff; 
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
+
+/* ============ Socials & Email ============ */
+.footer-socials {
+  display: flex;
+  flex-direction: column; 
+  gap: 8px;
+}
+
+.footer-email {
+  margin-top: 10px;
+  color: #d4edda; 
+  font-size: 0.95rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  
+  width: fit-content; /* keep it snug around the text */
+}
+
+.footer-email:hover {
+  color: #ffffff; 
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
+
+/*******************************************************
+  RESPONSIVE BEHAVIOR
+********************************************************/
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr; /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
+
+  .footer-column-title {
+    font-size: 1rem;
+  }
+  
+  .footer-link,
+  .footer-email {
+    font-size: 0.9rem;
+  }
+}
+
+
 
 /* 🏗️ Header Base Styles */
 .header-container {
@@ -277,11 +407,11 @@ td a:hover {
   top: 0;
   left: 0;
   width: 100%;
-  height: auto;
+  height: 100px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 15px 30px;
+  padding: 20px 30px;
   z-index: 1000;
   transition: background-color 0.4s ease, box-shadow 0.3s ease;
   background-color: transparent; /* 🚀 Initially Transparent */
@@ -290,68 +420,59 @@ td a:hover {
 
 /* 🚀 When User Scrolls Down */
 .header-container.scrolled {
-  background-color: #1f2e2d; /* Dark Green when scrolling */
+  background-color: #1a2e2d; /* 🚀 Initially Transparent */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 100px; /* Ensures it's high enough when scrolling */
-  padding: 20px 30px;
+  height: 80px; /* Ensures it's high enough when scrolling */
+  padding: 15px 30px;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  transform: all 0.3s ease;
+  position: absolute; /* Ensures it stays at the top */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%);
+  background-color: #1f2e2d;
+  padding: 15px 30px;
+  border-radius: 10px;
 }
 
 /* Logo Moves Inside the Header When Scrolling */
 .header-container.scrolled .logo-container {
   position: relative;
-  top: 0;
   left: 0;
-  background: none; /* Remove background when sticky */
-  padding: 10px 20px; /* Add padding inside header */
-  border-radius: 0;
-  transform: translateY(0);
+  transform: none;
+  background-color: transparent;
+  padding: 0;
 }
 
-/* 🏙️ Logo Styling */
-.logo-link {
-  display: flex;
-  align-items: center;
-}
 .logo-img {
   width: 140px; /* Increased size */
   height: auto;
   transition: all 0.3s ease-in-out;
 }
+
 .logo-img:hover {
   transform: scale(1.1);
 }
 
-.logo-container {
-  background-color: #1f2e2d; /* Green background */
-  padding: 20px 40px; /* Adjust padding if needed */
-  border-radius: 0 0 20px 20px; /* Curved bottom */
-  
-  position: fixed; /* Ensures it stays at the top */
-  top: 0;
-  left: 50%; /* Center horizontally */
-  transform: translateX(-50%);
-  width: fit-content; /* Ensure background wraps around logo only */
-  
-  z-index: 1100;
-}
-
 /* 🏡 Navbar Links */
-.navigationLinks {
+.header-navigation-links {
   display: flex;
-  gap: 20px;
+  gap: 40px;
+  flex-grow: 1;
+  justify-content: center;
+  padding-top: 10px;
 }
 
-.navigation-button {
-  color: white;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: bold;
-  padding: 10px;
-  transition: color 0.3s ease;
+/* Logo Moves Inside the Header When Scrolling */
+.header-container.scrolled .header-navigation-links {
+  justify-content: center;
+  padding: 15px;
 }
-.navigation-button:hover {
-  color: #a8dadc;
-}
+
 
 /* 👤 Profile Icon */
 .profile-icon {

@@ -8,6 +8,7 @@ from Controller.accountOverviewController import account_overview_controller
 from Controller.resetPasswordController import reset_password_controller
 from Controller.favouriteController import favourites_blueprint
 from Controller.groupChatController import group_chat_blueprint
+from Controller.adminController import admin_controller;
 from dotenv import load_dotenv  
 import os 
 
@@ -27,6 +28,7 @@ app.register_blueprint(account_overview_controller)
 app.register_blueprint(reset_password_controller)
 app.register_blueprint(favourites_blueprint)
 app.register_blueprint(group_chat_blueprint)
+app.register_blueprint(admin_controller)
 
 @socketio.on("connect")
 def handle_connect():

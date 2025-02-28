@@ -1,17 +1,37 @@
 .custom-algorithm-container {
-    margin-top: 100px;
     position: relative;
-    z-index: 1;
+    max-width: 900px;
+    max-height: 80vh;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
 
-  .custom-algorithm-container {
-    max-width: 800px;
-    margin: 0 auto;
+  .custom-algorithm-popup {
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .custom-algorithm-base {
+    flex: 1;
     padding: 20px;
-    font-family: Arial, sans-serif;
-    margin-top: 100px;
-    position: relative;
-    z-index: 1;
+    overflow-y: auto;
+    max-height: 75vh;
+    text-align: center;
+    background: #ffffff;
   }
   
   .custom-algorithm-container form label {
@@ -54,6 +74,8 @@
   
   .university-option.selected {
     border: 2px solid #007bff; /* Blue border for selected option */
+    background-color: #ebebeb;
+    border-radius: 15px;
   }
   
   .university-option img {
@@ -90,4 +112,309 @@
     margin-bottom: 5px;
     font-size: 1em;
   }
+
+  .number-of-bedrooms-selection {
+    margin-top: 20px;
+  }
   
+  .number-of-bedrooms-selection p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+
+/* 3x3 Grid Layout */
+.number-of-bedrooms-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Individual City Card */
+.number-of-bedrooms-card {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  color: #000;
+  font-size: 16px;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.number-of-bedrooms-card.selected {
+  border: 2px solid #000000; /* Blue border for selected option */
+  background-color: #ebebeb;
+  border-radius: 50%;
+}
+
+.number-of-bedrooms-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Darken overlay on hover */
+.number-of-bedrooms-card:hover .bedroom-overlay {
+  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
+}
+
+/* City Background Image */
+.number-of-bedrooms-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Show City Name on Hover */
+.number-of-bedrooms-card:hover .bedroom-name {
+  opacity: 1;
+}
+
+.property-type-selection {
+  margin-top: 20px;
+}
+
+.property-type-selection p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.property-types {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.property-type-option {
+  position: relative;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 10px;
+  text-align: center;
+  transition: border 0.3s ease;
+  flex: 1;
+}
+
+.property-type-option.selected {
+  border: 2px solid #000000; /* Blue border for selected option */
+  background-color: #ebebeb;
+  border-radius: 15px;
+}
+
+.property-type-option img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+.property-type-option p {
+  margin-top: 10px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.epc-rating-selection {
+  margin-top: 20px;
+}
+
+.epc-rating-selection p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+/* 3x3 Grid Layout */
+.epc-rating-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Individual City Card */
+.epc-rating-card {
+position: relative;
+width: 120px;
+height: 140px;
+border-radius: 10px;
+border: none;
+background-color: transparent;
+overflow: hidden;
+box-shadow: none;
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+cursor: pointer;
+color: #000;
+font-size: 16px;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+font-weight: bold;
+}
+
+.epc-rating-card.selected {
+  border: 2px solid #000000; /* Blue border for selected option */
+  background-color: #ebebeb;
+  padding: 10px;
+}
+
+.epc-rating-card:hover {
+transform: scale(1.05);
+}
+
+.epc-rating-house {
+  position: relative;
+  width: 90px;
+  height: 100px;
+  background-color: #ff2a6e;
+  border: 3px solid transparent;
+  margin-bottom: 10px;
+  clip-path: polygon(50% 0%, 100% 40%, 100% 100%, 0% 100%, 0% 40%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.epc-rating-letter {
+  color: #000000;
+  font-size: 40px;
+  font-weight: bold;
+  position: absolute;
+}
+
+/* UK Cities Section */
+.amenities-section {
+  margin: 60px auto;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.amenities{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* Individual City Card */
+.amenity-card {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.amenity-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* City Background Image */
+.amenity-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Default Overlay (light grey) */
+.amenity-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Light overlay by default */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+  transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+/* Darken overlay on hover */
+.amenity-card:hover .amenity-overlay {
+  background: rgba(0, 0, 0, 0.6); /* Darker overlay on hover */
+}
+
+/* City Name - Hidden by Default */
+.amenity-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Show City Name on Hover */
+.amenity-card:hover .amenity-name {
+  opacity: 1;
+}
+
+.cancel-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background-color: #ffffff;
+  color: #2c3e3d;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  color: #2c3e3d;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .amenities-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
+    gap: 15px;
+  }
+
+  .amenity-card {
+    height: 200px;
+  }
+
+  .amenity-name {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .amenities-grid {
+    grid-template-columns: repeat(1, 1fr); /* 1 column for mobile */
+  }
+
+  .amenity-card {
+    height: 180px;
+  }
+
+  .amenity-name {
+    font-size: 1.3rem;
+  }
+}
