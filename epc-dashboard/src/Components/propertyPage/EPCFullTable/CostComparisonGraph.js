@@ -45,7 +45,7 @@ const CostComparisonGraph = ({ properties }) => {
 
     return (
         <div className="epc-container">
-            <h2>Cost Comparison Graph</h2>
+            <h2 className="sectionHeader">Cost Comparison Graph</h2>
 
             {/* Dropdown to select one metric at a time */}
             <div className="metric-selector">
@@ -74,7 +74,7 @@ const CostComparisonGraph = ({ properties }) => {
                             {chartData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={entry.uprn === properties.uprn ? "#FFD700" : "#FF5733"} // Highlight current property in gold
+                                    fill={entry.uprn === properties.uprn ? "#279f49" : "#2d2d2d" } // Highlight current property in gold
                                     stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Add a black border for extra emphasis
                                     strokeWidth={entry.uprn === properties.uprn ? 2 : 0}
                                     cursor="pointer" // Makes it visually clickable

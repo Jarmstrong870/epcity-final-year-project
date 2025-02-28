@@ -1,6 +1,6 @@
 .street-view-image {
     width: 50%; /* Make the image take up the full width of its container. */
-    height: 50%; /* Make the image take up the full height of its container. */
+    height: 40%; /* Make the image take up the full height of its container. */
     border-radius: 10px; /* Add rounded corners to the image. */
     object-fit: cover; /* Ensure the image covers the container without distortion. */
   }

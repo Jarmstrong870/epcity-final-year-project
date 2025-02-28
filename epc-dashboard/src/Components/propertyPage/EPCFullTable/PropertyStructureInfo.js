@@ -1,20 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './PropertyStructureInfo.css';
 import { efficiencyRatingToNumber } from '../../Compare_utils/Compare_utils';
 import translations from './locales/translations_propertystructureinfo';
+import { classifyWall } from './EfficiencyMeter';
+import WallProgressMeter from './ProgressMeter';
 
 
 const PropertyStructureInfo = ({ properties, maxValues, language }) => {
   const t = translations[language] || translations.en;
+  const [dropdownClick, setDropdownClick] = useState("");
 
   // Utility function to replace variations of NO DATA! with N/A
-  const formatValue = (value, label) => {
-    if (!value) return `${label}: ${t.headers.notAvailable}`;
+  const formatValue = (value) => {
+    if (!value) return t.headers.notAvailable;
 
     const cleanedValue = value.trim().toUpperCase();
     const noDataValues = ['NODATA!', 'NO DATA!', 'NO DATA', 'NODATA', 'NO-DATA'];
 
-    return noDataValues.includes(cleanedValue) ? `${label}: ${t.headers.notAvailable}` : `${label}: ${value}`;
+    return noDataValues.includes(cleanedValue) ? t.headers.notAvailable : value;
   };
 
   // Function to render star ratings based on efficiency
@@ -45,53 +48,80 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
     return numericEfficiency === maxValue;
   };
 
+  const toggleDropdown = (infoArea) => {
+    setDropdownClick(selection => (selection === infoArea ? null : infoArea));
+  };
+
   return (
     <div className="propertyInfoContainer">
+      
+      <div className="info-dropdown">
+      <button onClick={() => toggleDropdown("windows")}>{t.headers.windowsInfo}</button>
       {/* Windows Information */}
-      <div className="infoBox">
-        <h3>{t.headers.windowsInfo}</h3>
+      <div className={`infoBox ${dropdownClick === "windows" ? "active" : "inactive"}`}>
+  
         <div className="progressContainer">
-          <p>{t.headers.multiGlazeProportion}:</p>
-          <progress value={properties.multi_glaze_proportion} max={100} />
-          <span>{properties.multi_glaze_proportion}%</span>
+          <p><span className="data-headers">{t.headers.multiGlazeProportion}: </span>
+          <progress className="progressBar" value={properties.multi_glaze_proportion} max={100} />
+          <span>{properties.multi_glaze_proportion}%</span> </p>
         </div>
-        <p>{formatValue(properties.glazed_type, t.headers.glazedType)}</p>
-        <p>{formatValue(properties.glazed_area, t.headers.glazedArea)}</p>
-        <p>{formatValue(properties.windows_description, t.headers.windowsDescription)}</p>
-        <p
-          className={
-            isHighestEfficiency(properties.windows_energy_eff, maxValues?.maxWindowsEnergyEff)
-              ? 'highlight-green'
-              : ''
-          }
-        >
-          {t.headers.windowsEnergyEff}: {renderStarRating(properties.windows_energy_eff)}
-        </p>
-      </div>
 
-      {/* Floor Information */}
-      <div className="infoBox">
-        <h3>{t.headers.floorInfo}</h3>
-        <p>{formatValue(properties.total_floor_area + ' m²', t.headers.totalFloorArea)}</p>
-        <p>{formatValue(properties.floor_level, t.headers.floorLevel)}</p>
-        <p>{formatValue(properties.flat_top_storey, t.headers.flatTopStorey)}</p>
-        <p>{formatValue(properties.floor_height + ' m', t.headers.floorHeight)}</p>
-        <p>{formatValue(properties.floor_description, t.headers.floorDescription)}</p>
-        <p
+        <p><span className="data-headers">{t.headers.glazedType}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.glazed_type)} </span> </p>
+        
+        <p><span className="data-headers">{t.headers.glazedArea}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.glazed_area)} </span> </p>
+
+        <p><span className="data-headers">{t.headers.windowsDescription}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.windows_description)} </span></p>
+
+        <p className={isHighestEfficiency(properties.windows_energy_eff, maxValues?.maxWindowsEnergyEff)
+              ? 'highlight-green' : ''} >
+          <strong>{t.headers.windowsEnergyEff}: </strong> </p>
+      
+          <p><span className="data-field"> {renderStarRating(properties.windows_energy_eff)}</span></p>
+
+      </div>
+    </div>
+
+    <div className="info-dropdown">
+    <button onClick={() => toggleDropdown("floor")}>{t.headers.floorInfo}</button>
+      <div className={`infoBox ${dropdownClick === "floor" ? "active" : "inactive"}`}>
+        <p><span className="data-headers">{ t.headers.totalFloorArea}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.total_floor_area + ' m²')} </span> </p>
+
+        <p><span className="data-headers">{ t.headers.floorLevel}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.floor_level)} </span> </p>
+
+        <p><span className="data-headers">{ t.headers.flatTopStorey}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.flat_top_storey)} </span> </p>
+
+        <p><span className="data-headers">{ t.headers.floorHeight}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.floor_height + ' m')} </span> </p>
+
+        <p><span className="data-headers">{ t.headers.floorDescription}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.floor_description)} </span> </p>
+
+        <p 
           className={
             isHighestEfficiency(properties.floor_energy_eff, maxValues?.maxFloorEnergyEff)
               ? 'highlight-green'
               : ''
           }
         >
-          {t.headers.floorEnergyEff}: {renderStarRating(properties.floor_energy_eff)}
-        </p>
+          <strong> {t.headers.floorEnergyEff}: </strong> </p>
+          
+        <p><span className="data-field"> {renderStarRating(properties.floor_energy_eff)}</span></p>
+ 
       </div>
+  </div>
 
-      {/* Roof Information */}
-      <div className="infoBox">
-        <h3>{t.headers.roofInfo}</h3>
-        <p>{formatValue(properties.roof_description, t.headers.roofDescription)}</p>
+
+  <div className="info-dropdown">
+    <button onClick={() => toggleDropdown("roof")}>{t.headers.roofInfo}</button>
+    <div className={`infoBox ${dropdownClick === "roof" ? "active" : "inactive"}`}>
+        <p><span className="data-headers">{ t.headers.roofDescription}: </span> </p>
+        <p><span className="data-field"> {formatValue(properties.roof_description)} </span> </p>
         <p
           className={
             isHighestEfficiency(properties.roof_energy_eff, maxValues?.maxRoofEnergyEff)
@@ -99,27 +129,41 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
               : ''
           }
         >
-          {t.headers.roofEnergyEff}: {renderStarRating(properties.roof_energy_eff)}
-        </p>
-      </div>
-
-      {/* Walls Information */}
-      <div className="infoBox">
-        <h3>{t.headers.wallsInfo}</h3>
-        <p>{formatValue(properties.unheated_corridor_length, t.headers.unheatedCorridorLength)}</p>
-        <p>{formatValue(properties.heat_loss_corridor, t.headers.heatLossCorridor)}</p>
-        <p>{formatValue(properties.walls_description, t.headers.wallsDescription)}</p>
-        <p
-          className={
-            isHighestEfficiency(properties.walls_energy_eff, maxValues?.maxWallsEnergyEff)
-              ? 'highlight-green'
-              : ''
-          }
-        >
-          {t.headers.wallsEnergyEff}: {renderStarRating(properties.walls_energy_eff)}
-        </p>
-      </div>
+        <span className="data-headers">{t.headers.roofEnergyEff}: </span> </p>
+        <p><span className="data-field">{renderStarRating(properties.roof_energy_eff)} </span> </p>
     </div>
+  </div>
+
+      
+  <div className="info-dropdown">
+    <button onClick={() => toggleDropdown("walls")}>{t.headers.wallsInfo}</button>
+    {/* walls Information */}
+    <div className={`infoBox ${dropdownClick === "walls" ? "active" : "inactive"}`}>
+        <p><span className="data-headers">{t.headers.unheatedCorridorLength}: </span> </p>
+        <p><span className="data-field">{formatValue(properties.unheated_corridor_length)} </span> </p>
+        
+        <p><span className="data-headers">{t.headers.heatLossCorridor}: </span> </p>
+        <p><span className="data-field">{formatValue(properties.heat_loss_corridor)} </span> </p>
+        
+        <p><span className="data-headers">{t.headers.wallsDescription}: </span> </p>
+        <p><span className="data-field">{formatValue(properties.walls_description)} </span> </p>
+
+        <p>
+          <span className="data-headers">{t.headers.wallsDescription}: </span>
+          <span className="data-field">{classifyWall(properties.walls_description)}</span>
+        </p>
+
+        <WallProgressMeter category={classifyWall(properties.walls_description)} />
+
+
+        <p className={isHighestEfficiency(properties.walls_energy_eff, maxValues?.maxWallsEnergyEff)
+              ? 'highlight-green' : '' } >
+
+          <span className="data-headers">{t.headers.wallsEnergyEff}: </span> </p>
+        <p><span className="data-field">{renderStarRating(properties.walls_energy_eff)} </span> </p>
+      </div>
+  </div>
+</div>
   );
 };
 

@@ -45,4 +45,32 @@ class GroupChatService:
         message_content = f"🏡 Check out this property: {property_url}"
         return GroupChatRepo.insert_message(group_id, message_content, sender_email)
 
+    def delete_group_data(group_id, user_email):
+        """ Deletes existing group and all relevant data """
+        return GroupChatRepo.delete_group_data(group_id, user_email)
+    
+    @staticmethod
+    def edit_group_name(group_id, updated_name, user_email):
+        """ Editing group name of an existing group """
+        return GroupChatRepo.edit_group_name(group_id, updated_name, user_email)
+
+    @staticmethod
+    def exit_group(group_id, user_email):
+        """ Current group memeber can exit from group """
+        return GroupChatRepo.exit_group(group_id, user_email)
+    
+    @staticmethod
+    def get_all_group_members(group_id):
+        """ Returning all members within a specified group """
+        return GroupChatRepo.get_all_group_members(group_id)
+    
+    @staticmethod
+    def search_group_message(group_id, searched_message):
+        """ Searching for a term within group chat messages """
+        return GroupChatRepo.search_group_message(group_id, searched_message)
+    
+    @staticmethod
+    def add_new_member(group_id, user_email):
+        """ Searching for a term within group chat messages """
+        return GroupChatRepo.search_group_message(group_id, user_email)
 

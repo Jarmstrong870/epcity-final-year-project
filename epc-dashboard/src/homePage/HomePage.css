@@ -43,7 +43,7 @@ body {
 .hero-section {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -62,7 +62,6 @@ body {
 /* Header Overlay (Navbar & Logo) */
 .hero-header {
   position: absolute;
-  top: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -99,7 +98,6 @@ body {
 /* Dark Overlay */
 .hero-overlay {
   position: absolute;
-  top: 0;
   left: 0;
   width: 100%;
   height: 100%;
@@ -118,7 +116,6 @@ body {
 .welcomeText {
   z-index: 2;
   color: white;
-  margin-bottom: 20px;
 }
 
 .welcomeText .mainMessage {
@@ -231,6 +228,159 @@ body {
 /* ===========================
    Modern & Sleek About Section
    =========================== */
+/* 📱 Responsive Tweaks */
+@media (max-width: 768px) {
+  .stylingSearchBar {
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    padding: 15px;
+  }
+
+  .stylingSearchInput {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
+
+  .stylingSearchButton {
+    width: 100%;
+    justify-content: center;
+    font-size: 16px;
+    padding: 12px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-logo {
+    width: 120px;
+  }
+
+  .welcomeText .mainMessage {
+    font-size: 2.5rem;
+  }
+
+  .welcomeText .subMessage {
+    font-size: 1rem;
+  }
+
+  .stylingSearchBar {
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeText .mainMessage {
+    font-size: 2rem;
+  }
+
+  .welcomeText .subMessage {
+    font-size: 0.9rem;
+  }
+
+  .stylingSearchBar {
+    padding: 10px;
+  }
+}
+
+.backgroundImageStyling::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
+  z-index: 1;
+}
+
+/* Welcome Text Styling */
+.welcomeText {
+  z-index: 2;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcomeText .mainMessage {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;  
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  margin-top: 200px;
+  line-height: 1.2;
+  background: none; 
+  padding: 0;
+  border:none;
+}
+
+.welcomeText .subMessage {
+  font-size: 1.5rem; /* Slightly larger for better readability */
+  font-weight: 500; /* Medium weight for a refined look */
+  margin-top: 15px;
+  color: #ffffff; /* Pure white for contrast */
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
+  letter-spacing: 0.5px; /* Slight spacing for a clean look */
+  text-align: center;
+  max-width: 700px; /* Restrict width for better readability */
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6; /* Improved spacing between lines */
+  opacity: 0.9; /* Subtle fade effect */
+}
+
+
+.welcomeText span {
+  display: block;
+}
+
+/* Top Rated Properties Section */
+.most-efficient-properties {
+  margin: 20px auto;
+  padding: 20px 20px;
+  max-width: 1550px;
+  background: none;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.most-efficient-properties h2 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 30px;
+  text-decoration: underline;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.property-card {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.property-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 3px solid #ddd;
+}
+
+/* About Website Section */
 .about-website {
   display: flex;
   align-items: center;
@@ -282,6 +432,53 @@ body {
 
 .about-website:hover .about-image {
   transform: scale(1.02);
+/* Top Rated Properties Section */
+.custom-algorithm-section {
+  display: flex;
+  gap: 30px;
+  margin: 60px auto;
+  max-width: 1200px;
+  padding: 40px;
+  background: #dedede;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.custom-algorithm-section h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.custom-algorithm-section img {
+  flex: 1;
+  max-width: 40%; /* Limit the image width to 40% of the container */
+  height: auto; /* Maintain the aspect ratio */
+  border-radius: 15px; /* Keep the rounded corners */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  object-fit: cover; /* Ensures proper scaling for the image */
+}
+
+.custom-algorithm-button {
+  background-color: #0a2e15;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 400px;
+  text-transform: uppercase;
+  box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
+  border-radius: 15px;
+}
+
+.custom-algorithm-button:hover {
+  background-color: #183d25;
 }
 
 .about-website:hover .content h2,
@@ -377,6 +574,7 @@ body {
 /* Title styling for the UK Cities Section */
 .uk-cities-title {
   font-size: 2.8rem;
+  font-size: 2.0rem; /* Large and eye-catching */
   font-weight: bold;
   color: #2c3e3d; 
   text-align: center;
@@ -411,6 +609,64 @@ body {
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
+.scrollDownMessage {
+  font-size: 20px;
+  font-weight: bold;
+  font-style: italic;
+  color: white;  
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+  background: none; 
+  border:none;
+  text-align: center;
+}
+
+.scrollingArrow {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.scrollDownArrow {
+  color: #ffffff;
+  font-size: 35px;
+  border: solid 4px #ffffff;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scrollDownArrow:hover .scrollDownArrow {
+  opacity: 0.8;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .cities-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
+    gap: 15px;
+  }
+
+  .city-card {
+    height: 200px;
+  }
+
+  .city-name {
+    font-size: 1.5rem;
+  }
 }
 
 .top-rated-properties h2 {
@@ -511,6 +767,7 @@ body {
 /* ===========================
    Responsive Adjustments
    =========================== */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .hero-logo {
     width: 120px;
@@ -579,6 +836,9 @@ body {
 
   .property-details {
     padding: 15px;
+  .custom-algorithm-section img {
+    width: 100%;
+    max-height: 300px;
   }
 }
 

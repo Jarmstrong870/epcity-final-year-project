@@ -1,23 +1,32 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
-import FavoriteStar from './FavoriteStar';
+import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import TextToSpeech from '../Components/utils/TextToSpeech';
+import { FavouriteContext } from '../Components/utils/favouriteContext';
 
-const PropertyList = ({ loading, language }) => {
+const PropertyList = ({ user, loading, language }) => {
   const [viewMode, setViewMode] = useState('table');
   const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
+  const {addFavourite, removeFavourite, isFavourited} = useContext(FavouriteContext);
   const { properties, getNewPage, sortProperties, page } = useContext(PropertyContext);
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get("search");
+
+  useEffect(() => {
+    getNewPage(page);
+  }, [page]);
 
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
@@ -57,15 +66,6 @@ const PropertyList = ({ loading, language }) => {
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
 
-  const handleToggleFavorite = (propertyData, isFavorited) => {
-    setPopupMessage(
-      isFavorited
-        ? `${propertyData?.address || 'This property'} has been favorited.`
-        : `${propertyData?.address || 'This property'} has been unfavorited.`
-    );
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 5000);
-  };
 
   return (
     <div className="property-list">
@@ -155,9 +155,9 @@ const PropertyList = ({ loading, language }) => {
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
-                  <FavoriteStar
-                    propertyData={property}
-                    onToggle={handleToggleFavorite}
+                  <FavouriteStar
+                    user = {user}
+                    property ={property}
                   />
                 </td>
                 <td className="compare-checkbox">
