@@ -82,11 +82,9 @@ const PropertyList = ({ user, loading, language }) => {
           </div>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
-            <option value="address">{t.address}</option>
-            <option value="postcode">{t.postcode}</option>
-            <option value="property_type">{t.propertyType}</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
+            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
           <div className="dropdown-with-tts">
@@ -138,6 +136,7 @@ const PropertyList = ({ user, loading, language }) => {
               <th>{t.address}</th>
               <th>{t.postcode}</th>
               <th>{t.propertyType}</th>
+              <th>{'Number of Bedrooms'}</th>
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
               <th>{t.favorite}</th>
@@ -152,6 +151,7 @@ const PropertyList = ({ user, loading, language }) => {
                 </td>
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
+                <td>{property.number_bedrooms}</td>
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>

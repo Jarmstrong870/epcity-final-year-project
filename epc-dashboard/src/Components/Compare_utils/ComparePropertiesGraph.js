@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { fetchGraphData } from "../propertyUtils";
+import React, { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
-import "./CostComparisonGraph.css";
+import "./ComparePropertiesGraph.css";
 
-const CostComparisonGraph = ({ properties }) => {
+const ComparePropertiesGraph = ({ properties }) => {
     const [graphData, setGraphData] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedMetric, setSelectedMetric] = useState("Heating"); // Default: Heating
-
-    useEffect(() => {
-        if (properties) {
-            fetchGraphData(properties.number_bedrooms, properties.postcode, setGraphData, setErrorMessage);
-        }
-    }, [properties.number_bedrooms, properties.postcode]);
 
     // Format data for Recharts (NUMBERS ONLY)
     const chartData = graphData.map((prop) => ({
@@ -45,7 +38,7 @@ const CostComparisonGraph = ({ properties }) => {
 
     return (
         <div className="epc-container">
-            <h2 className="sectionHeader">Cost Comparison Graph</h2>
+            <h2>Cost Comparison Graph</h2>
 
             {/* Dropdown to select one metric at a time */}
             <div className="metric-selector">
@@ -74,7 +67,6 @@ const CostComparisonGraph = ({ properties }) => {
                             {chartData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={entry.uprn === properties.uprn ? "#279f49" : "#2d2d2d" } // Highlight current property in gold
                                     stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Add a black border for extra emphasis
                                     strokeWidth={entry.uprn === properties.uprn ? 2 : 0}
                                     cursor="pointer" // Makes it visually clickable
@@ -89,4 +81,4 @@ const CostComparisonGraph = ({ properties }) => {
     );
 };
 
-export default CostComparisonGraph;
+export default ComparePropertiesGraph;

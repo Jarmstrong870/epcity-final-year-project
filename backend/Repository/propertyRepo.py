@@ -63,7 +63,7 @@ def get_all_properties():
 """
 Connect to the database, wipe the properties table, and populate it with new data.
 """    
-def update_properties_in_db(dataframe):
+def update_properties_in_db(dataframe, local_authority):
     
     conn = None  # Ensure conn is defined before try block
     cursor = None  # Ensure cursor is also pre-defined
@@ -83,9 +83,14 @@ def update_properties_in_db(dataframe):
         up_columns = ['user_id', 'uprn']
         
         user_properties_dataframe = pd.DataFrame(user_properties_data, columns=up_columns)
+        
+        cursor.execute("DELETE FROM user_properties")
 
         # Step 2: Wipe the properties table
-        cursor.execute("DELETE FROM properties")
+        cursor.execute(
+            "DELETE FROM properties WHERE local_authority = %s",
+            (local_authority,)
+        )
 
         # Step 3: Insert updated property data
         insert_data = [tuple(row) for row in dataframe.itertuples(index=False, name=None)]
@@ -93,19 +98,17 @@ def update_properties_in_db(dataframe):
             INSERT INTO properties (uprn, address, postcode, property_type, lodgement_datetime, 
                                     current_energy_efficiency, current_energy_rating, heating_cost_current, 
                                     hot_water_cost_current, lighting_cost_current, total_floor_area, 
-                                    number_bedrooms, energy_consumption_current)
+                                    number_bedrooms, energy_consumption_current, local_authority)
             VALUES %s
         """
         execute_values(cursor, insert_query, insert_data)
 
         # Step 4: Restore user_properties with valid uprns
-        
         up_data = [tuple(row) for row in user_properties_dataframe.itertuples(index=False, name=None)]
         if up_data:
             insert_user_properties_query = """
                 INSERT INTO user_properties (user_id, uprn)
                 VALUES %s
-                ON CONFLICT (user_id, uprn) DO NOTHING
             """
             execute_values(cursor, insert_user_properties_query, up_data)
 
@@ -209,7 +212,7 @@ def get_top_rated_from_db():
 Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
 with optional sorting. Returns the results as a Pandas DataFrame.
 """
-def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort_by=None, order=None, page = 1):
+def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page = 1, local_authority=None):
     
     try:
         # Connect to the PostgreSQL database
@@ -218,9 +221,13 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
 
         # Base query
         query = """
-            SELECT * FROM properties WHERE 1=1
+            SELECT * FROM properties WHERE 1 = 1
         """
         params = []
+        
+        if local_authority:
+            query += " AND local_authority = %s"
+            params.append(local_authority)
 
         # Dynamically append filters
         if property_types:
@@ -234,6 +241,10 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, sort
         if search:
             query += " AND (address ILIKE %s OR postcode ILIKE %s)"
             params.extend([f"%{search}%", f"%{search}%"])
+            
+        query += " AND number_bedrooms BETWEEN %s AND %s"
+        
+        params.extend([min_bedrooms, max_bedrooms])
 
         # Append sorting
         if sort_by and order:

@@ -7,30 +7,33 @@ export function PropertyProvider({ children }) {
     const [loading, setLoading] = useState(false);
     const [topRatedProperties, setTopRatedProperties] = useState([]);
     const [error, setError] = useState(null);
-    const [search, setSearch] = useState(null)
-    const [propertyTypesList, setPropertyTypesList] = useState([])
-    const [epcRatingsList, setEpcRatingsList] = useState([])
-    const [sort, setSort] = useState('sort_by')
-    const [sortOrder, setSortOrder] = useState('order')
+    const [search, setSearch] = useState(null);
+    const [propertyTypesList, setPropertyTypesList] = useState([]);
+    const [epcRatingsList, setEpcRatingsList] = useState([]);
+    const [sort, setSort] = useState('sort_by');
+    const [sortOrder, setSortOrder] = useState('order');
     const [page, setPage] = useState(1);
+    const [city, setCity] = useState(null);
+    const [bedrooms, setBedrooms] = useState([1, 10]);
 
-    const fetchProperties = async (query = null, propertyTypes = [], epcRatings = [], sortOption = 'sort_by', order = 'order', pageNumber = 1) => {
+    const fetchProperties = async (query = null, propertyTypes = [], epcRatings = [], bedroomRange = [1,10], localAuthority = null) => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            sortOption = sort;
-            order = sortOrder;
-
             if (query) url += `search=${query}&`;
             if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
             if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-            if (sortOption !== 'sort_by' && order !== 'order') {
-                url += `sort_by=${sortOption}&`;
-                url += `order=${order}&`;
+            url += `min_bedrooms=${bedroomRange[0]}&`;
+            url += `max_bedrooms=${bedroomRange[1]}&`;
+            if (sort !== 'sort_by' && sortOrder !== 'order') {
+                url += `sort_by=${sort}&`;
+                url += `order=${sortOrder}&`;
             }
-            url += `page=${pageNumber}`;
+            url += `page=${1}&`;
+            if (localAuthority) url += `local_authority=${localAuthority}`;
+
 
             // Fetch property search results
             const response = await fetch(url);
@@ -40,7 +43,9 @@ export function PropertyProvider({ children }) {
             setSearch(query);
             setPropertyTypesList(propertyTypes);
             setEpcRatingsList(epcRatings);
-            setPage(pageNumber);
+            setBedrooms(bedroomRange);
+            setCity(localAuthority);
+            setPage(1);
         } catch (error) {
             console.error('There was an error fetching the property data!', error);
         } finally {
@@ -48,23 +53,22 @@ export function PropertyProvider({ children }) {
         }
     };
 
-    const sortProperties = async (sortOption = 'sort_by', order = 'order', pageNumber = 1, query = null, propertyTypes = [], epcRatings = [] ) => {
+    const sortProperties = async (sortOption = 'sort_by', order = 'order') => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            query = search;
-            propertyTypes = propertyTypesList;
-            epcRatings = epcRatingsList;
-
             if (sortOption !== "sort_by" && order !== "order") {
-                if (query) url += `search=${query}&`;
-                if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
-                if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
+                if (search) url += `search=${search}&`;
+                if (propertyTypesList.length > 0) url += `pt=${propertyTypesList.join(',')}&`;
+                if (epcRatingsList.length > 0) url += `epc=${epcRatingsList.join(',')}&`;
+                url += `min_bedrooms=${bedrooms[0]}&`;
+                url += `max_bedrooms=${bedrooms[1]}&`;
                 url += `sort_by=${sortOption}&`;
                 url += `order=${order}&`;
-                url += `page=${pageNumber}`;
+                url += `page=${1}&`;
+                if (city) url += `local_authority=${city}`;
 
                 // Fetch property search results
                 const response = await fetch(url);
@@ -74,7 +78,7 @@ export function PropertyProvider({ children }) {
             }
             setSort(sortOption);
             setSortOrder(order);
-            setPage(pageNumber);
+            setPage(1);
         } catch (error) {
             console.error('There was an error fetching the property data!', error);
         } finally {
@@ -82,26 +86,23 @@ export function PropertyProvider({ children }) {
         }
     };
 
-    const getNewPage = async (pageNumber = 1, query = null, propertyTypes = [], epcRatings = [], sortOption = 'sort_by', order = 'order') => {
+    const getNewPage = async (pageNumber = 1) => {
         setLoading(true);
         try {
             // Build the property search URL
             let url = `http://127.0.0.1:5000/api/property/getPage?`;
 
-            query = search;
-            propertyTypes = propertyTypesList;
-            epcRatings = epcRatingsList;
-            sortOption = sort;
-            order = sortOrder;
-
-            if (query) url += `search=${query}&`;
-            if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
-            if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-            if (sortOption !== 'sort_by' && order !== 'order') {
-                url += `sort_by=${sortOption}&`;
-                url += `order=${order}&`;
+            if (search) url += `search=${search}&`;
+            if (propertyTypesList.length > 0) url += `pt=${propertyTypesList.join(',')}&`;
+            if (epcRatingsList.length > 0) url += `epc=${epcRatingsList.join(',')}&`;
+            url += `min_bedrooms=${bedrooms[0]}&`;
+            url += `max_bedrooms=${bedrooms[1]}&`;
+            if (sort !== 'sort_by' && sortOrder !== 'order') {
+                url += `sort_by=${sort}&`;
+                url += `order=${sortOrder}&`;
             }
-            url += `page=${pageNumber}`;
+            url += `page=${pageNumber}&`;
+            if (city) url += `local_authority=${city}`;
 
             // Fetch property search results
             const response = await fetch(url);
@@ -136,6 +137,8 @@ export function PropertyProvider({ children }) {
                 topRatedProperties,
                 error,
                 page,
+                city,
+                setCity,
                 fetchProperties,
                 fetchTopRatedProperties,
                 sortProperties,

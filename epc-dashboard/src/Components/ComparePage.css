@@ -1,120 +1,188 @@
+/* General Layout */
 .compare-container {
-    text-align: center;
     padding: 20px;
-    background-color: #f8f9fa;
-    overflow: hidden;
-    width: 100%;
-    min-height: 100vh; /* Ensure full height for visibility */
-    display: flex;
-    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    text-align: center;
 }
 
-/* ✅ Scrollbar at the TOP */
-.scroll-indicator-container {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: white;
+/* Property Grid */
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
     padding: 10px;
-    text-align: center;
-    font-weight: bold;
-    border-bottom: 2px solid #ddd;
-    z-index: 101;
-    display: flex;
-    align-items: center;
     justify-content: center;
 }
 
-/* ✅ Horizontal Scrollbar (Styled & Positioned at the Top) */
-.scroll-indicator-bar {
-    width: 80%;
-    height: 14px;  /* Thicker for better usability */
-    background: #e0e0e0;
+/* Individual Property Column */
+.property-column {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.property-column:hover {
+    transform: translateY(-5px);
+}
+
+/* Property Image */
+.property-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* Accordion Styling */
+.accordion {
+    margin: 10px 0;
     border-radius: 10px;
     overflow: hidden;
-    position: relative;
-    cursor: pointer; /* Enables clicking to scroll */
-    margin: 5px auto; /* Centers the scrollbar */
 }
 
-/* ✅ Smooth Green Scroll Progress Effect */
-.scroll-indicator-progress {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #4caf50, #2e7d32); /* Green gradient */
+.accordion-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
     border-radius: 10px;
-    transition: width 0.2s ease-out;
+    transition: background-color 0.3s ease;
 }
 
-/* ✅ FIX: REMOVE BOTTOM SCROLLBAR */
-.compare-table-container {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;  /* Prevents vertical scrollbar */
-    width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    position: relative;
-    min-height: 85vh; /* Ensures content isn't cut off */
+.accordion-header:hover {
+    background-color: #0056b3;
 }
 
-/* ✅ Ensure Compare Page is Fully Visible */
-.compare-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 20px;
-    align-items: flex-start;
-    width: max-content;
-    padding-bottom: 15px;
-    overflow: visible;
-}
-
-/* ✅ Prevent Vertical Scrolling */
-.compare-column {
-    background: white;
-    padding: 20px;
+.accordion-content {
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #007bff;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    animation: slideDown 0.3s ease;
+}
+
+/* Tabbed Interface for EPC */
+.tabs {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-width: 1200px;
-    max-width: 1250px;
-    overflow: visible;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
-
-body {
-    overflow-x: hidden;
+.tabs button {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 8px 15px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/*  Ensure Images Fit Correctly */
-.property-image-container img {
-    width: 450px;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 2px solid #ccc;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+.tabs button.active {
+    background-color: #007bff;
+    color: white;
 }
 
-/*  Responsive Adjustments for Medium Screens */
-@media (max-width: 1200px) {
-    .compare-grid {
-        flex-wrap: wrap;
-        justify-content: center;
+.tabs button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* EPC Card Styling */
+.epc-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    text-align: left;
+}
+
+.epc-card h4 {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.epc-card p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* ⭐ Energy Information Sections */
+.energy-section {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    text-align: left;
+}
+
+.energy-section h4 {
+    margin-bottom: 10px;
+    color: #28a745;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.energy-section p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Highlight Savings */
+.highlight-green {
+    background-color: #d4edda;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Efficiency Stars */
+.star-rating {
+    color: #ffa500;
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .property-grid {
+        grid-template-columns: 1fr;
     }
-    .compare-column {
-        min-width: 400px;
-    }
-}
 
-/*  Stack Cards for Small Screens */
-@media (max-width: 600px) {
-    .compare-grid {
+    .tabs {
         flex-direction: column;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        gap: 5px;
     }
+
+    .accordion-header {
+        text-align: center;
+    }
+}
+
+/* Green highlight for best EPC Grade & EPC Rating */
+.highlight-green {
+    background-color: #d4edda !important;
+    color: #155724 !important;
+    font-weight: bold;
+    border: 2px solid #28a745;
+    padding: 5px;
+    border-radius: 5px;
 }

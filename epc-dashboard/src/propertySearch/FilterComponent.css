@@ -1,10 +1,21 @@
 .baseStyling {
-    padding: 2rem;
-    margin-top: 3rem;
+    padding: 20px;
+
+}
+
+.searchBarTitle {
+    z-index: 2;
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: #f9f9f9;
+    max-width: 800px;
+    border-radius: 12px;
+    /* Box-like appearance */
+    padding: 15px 20px;
+    background-color: white;
+    /* White background for contrast */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    gap: 15px;
 }
 
 .searchBarTitle {
@@ -14,9 +25,11 @@
     justify-content: center;
     width: 90%;
     max-width: 800px;
-    border-radius: 12px; /* Box-like appearance */
-    padding: 1.2rem;
-    background-color: #ffffff; /* White background for contrast */
+    border-radius: 12px;
+    /* Box-like appearance */
+    padding: 15px 20px;
+    background-color: white;
+    /* White background for contrast */
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
     gap: 1rem;
     position: relative;
@@ -43,10 +56,8 @@
     align-items: center;
     text-align: center;
     border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
-    margin: 1.5rem auto;
-    background: #ffffff;
+    width: 600px;
+    margin: auto
 }
 
 .propertyTypeFilterTitle,
@@ -59,11 +70,11 @@
     text-align: center;
     border-radius: 10px;
     width: 600px;
-    margin:auto
+    margin: auto
 }
 
 .propertyTypeFilter label,
-.ratingLetterFilter label{
+.ratingLetterFilter label {
     width: 100%;
     display: flex;
     align-items: center;
@@ -118,10 +129,47 @@ input[type="number"] {
 .stylingFilterButton {
     margin-left: 0.5rem;
     background-color: #2c5f2d;
-    
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 5px;
 }
 
-.searchButton:hover,
-.stylingFilterButton:hover {
-    background-color: #267210;
+.rangeSliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.rangeTrack {
+    height: 5px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 3px;
+    position: relative;
+}
+
+.rangeThumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: grab;
+}
+
+.rangeValues {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 5px;
 }
