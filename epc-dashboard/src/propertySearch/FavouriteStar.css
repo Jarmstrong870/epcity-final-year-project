@@ -2,13 +2,17 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    vertical-align: middle;
 }
 
 .starComponent {
     font-size: 2rem;
     cursor: pointer;
     transition: color 0.3s ease;
+    margin-left: 5px;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .starComponent.gold {

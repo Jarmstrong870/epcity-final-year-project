@@ -17,6 +17,16 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
     G: '#B22222', // Dark red
   };
 
+  const ratingLengths = {
+    A: "40%", // length of A rating bar
+    B: "50%", // length of B rating bar
+    C: "60%", // length of C rating bar
+    D: "70%", // length of D rating bar
+    E: "80%", // length of E rating bar
+    F: "90%", // length of F rating bar
+    G: "100%", // length of G rating bar
+  }
+
   // Labels for EPC ratings and their corresponding thresholds.
   const ratingLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
   const thresholds = [92, 81, 69, 55, 39, 21, 1]; // Thresholds for each rating, starting from A.
@@ -40,6 +50,7 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
       {/* Graph Title */}
       <h3 className="epc-title">{t.epcRatingGraph}</h3>
 
+    <div className="graph-content">
       {/* EPC Rating Bars */}
       <div className="epc-bars-container">
         {ratingLabels.map((label, index) => {
@@ -49,49 +60,65 @@ const EPCGraph = ({ currentEnergyEfficiency, potentialEnergyEfficiency, language
           return (
             <div key={label} className="epc-bar-wrapper">
               {/* Rating Bar */}
-              <div
-                className="epc-bar"
-                style={{
-                  backgroundColor: ratingColors[label], // Set the color based on the rating label.
-                }}
-              >
-                {/* Display the rating range and label inside the bar */}
-                <div className="epc-bar-label">
-                  <span style={{ color: 'black' }}>{t.ranges[index].split(' ')[0]}</span>
-                  <span style={{ color: 'white' }}>{t.ranges[index].split(' ')[1]}</span>
+                  <div className="epc-bar"
+                      style={{
+                        backgroundColor: ratingColors[label], // Set the color based on the rating label.
+                        width: ratingLengths[label], // Set the bar length based on rating label 
+                      }} >
+                      
+                      {/* Display the rating range and label inside the bar */}
+                        <span className="epc-bar-range"
+                          style={{ color: 'black' }}>{t.ranges[index].split(' ')[0]}
+                        </span>
+                        
+                        <span className="epc-bar-letter"
+                          style={{ color: 'white' }}>{t.ranges[index].split(' ')[1]}
+                        </span>
                 </div>
-
-                {/* Marker for Current Efficiency */}
-                {isCurrentEfficiency && (
-                  <div
-                    className="epc-marker current"
-                    style={{
-                      backgroundColor: ratingColors[label], // Match color with the bar.
-                    }}
-                  >
-                    <span>{t.current}</span> {/* Label for current rating */}
-                    <span>{currentEnergyEfficiency}</span> {/* Current efficiency score */}
-                  </div>
-                )}
-
-                {/* Marker for Potential Efficiency */}
-                {isPotentialEfficiency && (
-                  <div
-                    className="epc-marker potential"
-                    style={{
-                      backgroundColor: ratingColors[label], // Match color with the bar.
-                    }}
-                  >
-                    <span>{t.potential}</span> {/* Label for potential rating */}
-                    <span>{potentialEnergyEfficiency}</span> {/* Potential efficiency score */}
-                  </div>
-                )}
               </div>
-            </div>
           );
         })}
       </div>
-    </div>
+          
+            <div className="epc-marker-summary">
+
+              <div className="epc-marker-base">
+                <h4 className="epc-current-title">This property's Current Efficiency Rating is</h4>
+          
+                <div className="epc-current">
+                  {/* Marker for Current Efficiency */}
+                  {ratingLabels.map((label, index) => (
+                    currentEfficiencyPosition === index && (
+                      <div className="epc-marker current" style={{ backgroundColor: ratingColors[label], // Match color with the bar.
+                      }}>
+                          <span>{t.current}</span> {/* Label for current rating */}
+                          <span>{currentEnergyEfficiency}</span> {/* Current efficiency score */}
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+          
+              <div className="epc-marker-base">
+                <h4 className="epc-potential-title">This property's Potential Efficiency Rating is</h4>
+          
+                <div className="epc-potential">
+                  {/* Marker for Current Efficiency */}
+                  {ratingLabels.map((label, index) => (
+                    potentialEfficiencyPosition === index && (
+                      <div className="epc-marker potential" style={{ backgroundColor: ratingColors[label], // Match color with the bar.
+                      }}>
+                          <span>{t.potential}</span> {/* Label for current rating */}
+                          <span>{potentialEnergyEfficiency}</span> {/* Current efficiency score */}
+                      </div>
+                    )
+                  ))}
+                </div>
+              </div>
+              
+              </div>
+          </div>
+        </div>
   );
 };
 

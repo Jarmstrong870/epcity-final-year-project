@@ -1,7 +1,7 @@
 const translations = {
     en: {
-      energyInformation: "Energy Information",
-      heating: "Heating",
+      energyInformation: "Key Energy Information",
+      heating: "Heating Costs",
       currentAnnualCost: "Current Annual Cost",
       potentialAnnualCost: "Potential Annual Cost",
       savings: "Savings",
@@ -12,7 +12,7 @@ const translations = {
       mainheatControllerDescription: "Mainheat Controller Description",
       mainheatControllerEnergyEfficiency: "Mainheat Controller Energy Efficiency",
   
-      lighting: "Lighting",
+      lighting: "Lighting Costs",
       lowEnergyLighting: "Low Energy Lighting",
       lightingDescription: "Lighting Description",
       lightingEnergyEfficiency: "Lighting Energy Efficiency",

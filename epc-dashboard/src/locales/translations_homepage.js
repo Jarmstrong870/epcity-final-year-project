@@ -4,12 +4,20 @@ const translations = {
     subMessage: "Now, time to find somewhere you can call home.",
     searchPlaceholder: "Search for properties...",
     searchButton: "Search",
+    epcInformation: "What is an EPC?",
+    epcInformationDescription1:
+      "this is an EPC",
+      epcInformationDescription2:
+      "THIS IS AN EPC",
+    
     aboutUsTitle: "A bit about us..",
     aboutUsDescription1:
       "EPCity is designed to help you find your perfect property in Liverpool. Whether you're a student, professional, or a landlord, we offer an intuitive platform to search, compare, and evaluate which property is right for you in Liverpool.",
     aboutUsDescription2:
       "Use our search bar above to get started or explore some of Liverpool's top-rated properties below!",
-    topRatedProperties: "Top Rated Properties",
+    customAlgorithmTitle: "Need help finding a property?",
+    customAlgorithmDescription: "Welcome to our Dream Property Survey. Here you can fill out a range of questions to help us determine what property best suits your needs",
+    mostEfficientProperties: "Most Efficient Properties",
     ukCitiesTitle: "Find Your Next Dream Property in the UK",
     ukCitiesSubtitle:
       "Explore properties in top UK cities and find the perfect home that suits your lifestyle.",
@@ -23,6 +31,18 @@ const translations = {
       Brighton: "Brighton",
       Newcastle: "Newcastle",
       Southampton: "Southampton",
+    },
+
+    amenities: {
+      Gym: "Gym",
+      Cafe: "Cafe",
+      Restaurant: "Restaurant",
+      Park: "Park",
+      Pubs: "Pubs",
+      Nightclubs: "Nightclubs",
+      Libraries: "Libraries",
+      ClothesShopping: "Clothes Shopping",
+      GroceryShopping: "Grocery Shopping",
     },
   },
 
