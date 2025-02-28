@@ -97,6 +97,29 @@ const HomePage = ({ user, language }) => {
         </div>
       </div>
 
+{/* About Website Section */}
+<div className="about-website">
+        <img 
+          src={require('../assets/liverpool-houses.jpg')} 
+          alt="Liverpool" 
+          className="about-image" 
+        />
+        <div className="content">
+          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
+              {t.epcInformation}
+            </h2>
+            <TextToSpeech 
+              text={`${t.epcInformation}. ${t.epcInformationDescription1} ${t.epcInformationDescription2}`} 
+              language={language} 
+            />
+          </div>
+          <p>{t.epcInformationDescription1}</p>
+          <p>{t.epcInformationDescription2}</p>
+          </div>
+        </div>
+      <div>
+    </div>
 
 
       <pageSection id ="cityGrid">
@@ -129,8 +152,8 @@ const HomePage = ({ user, language }) => {
 
       
       {/* Top Rated Properties Section */}
-      <div className="top-rated-properties">
-        <h2>{t.topRatedProperties}</h2>
+      <div className="most-efficient-properties">
+        <h2>{t.mostEfficientProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
             <TopRatedPropertyCard key={index} user={user} property={property} language={language} />

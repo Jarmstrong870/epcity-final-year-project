@@ -3,8 +3,8 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  margin: 10px;
+  padding: 10px;
+  height: 600px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -19,26 +19,51 @@
   transform: translateY(-5px); /* Slight lift effect */
 }
 
-.propertyImage img {
-  border-radius: 8px;
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-.propertyDetails h3 {
-  display: inline;  
-  white-space: nowrap;
-  overflow: hidden;
+.propertyDetails {
   text-align: center;
-  font-size: 1.3rem;
-  color: #333;
-  margin-bottom: 10px;
+  width: 100%;
 }
 
-.propertyDetails p {
-  margin: 3px 0;
-  font-size: 0.9em;
-  color: #666;
+.propertyHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
+.propertyTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  text-decoration: underline;
+  text-align: center;
+}
+
+.propertyPostcode {
+  font-size: 6rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.summaryPropertyDetails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.summaryDetails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  text-align: center;
+}
+
+.property-title {
+  font-weight: bold;
+  padding: 8px;
+}
+
+.property-value {
+  padding: 15px;
+}

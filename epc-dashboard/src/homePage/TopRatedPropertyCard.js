@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { FavouriteContext } from '../Components/utils/favouriteContext';
 import { useNavigate } from 'react-router-dom';
 import StreetViewComponent from './StreetViewComponent';
 import './TopRatedPropertyCard.css';
@@ -14,7 +15,7 @@ import translations from '../locales/translations_topratedpropertycard'; // Impo
 
 const TopRatedPropertyCard = ({ user, property, language }) => {
   const navigate = useNavigate();
-  const [isFavourited, setIsFavourited] = useState(false); // State for favorite status
+  const {favouriteProperties} = useContext(FavouriteContext);
   const [popupMessage, setPopupMessage] = useState(''); // Popup message state
   const [showPopup, setShowPopup] = useState(false); // Popup visibility state
 
@@ -25,22 +26,7 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
       state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
     });
   };
-
-  const toggleFavourite = (event) => {
-    event.stopPropagation(); // Prevent triggering the card click
-    setIsFavourited(!isFavourited);
-    setPopupMessage(
-      isFavourited
-        ? `${property.address} has been unfavourited.`
-        : `${property.address} has been favourited.`
-    );
-    setShowPopup(true);
-
-    // Hide the popup after 5 seconds
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 5000);
-  };
+    
 
   return (
     <div className="topRatedPropertyCard" onClick={handleClick}>
@@ -57,28 +43,30 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
       </div>
       
       <div className="propertyDetails">
-        <h3> {property.address} 
-          <div className="starComponent"> {/* Favourite Star Component */}
-            <div onClick={toggleFavourite}>
-              <FavouriteStar user={user} property={property} />
+        <div className="propertyHeader">
+          <h3 className="propertyTitle"> {property.address} </h3>
+            <div className="starComponent" onClick={(e) => e.stopPropagation()}>
+              <FavouriteStar user={user} property={property} key={favouriteProperties.length} />
             </div> 
-          </div>   
-        </h3>
-      </div>
+        </div>  
+    
+          <p className="propertyPostcode"> {/* Top 4 details presented on card view */}
+            {t.postcode}: {property.postcode}
+          </p>
 
-      <p> {/* Top 4 details presented on card view */}
-        <strong>{t.postcode}:</strong> {property.postcode}
-      </p>
-      <p>
-        <strong>{t.type}:</strong> {property.property_type}
-      </p>
-      <p>
-        <strong>{t.energyRating}:</strong> {property.current_energy_rating}
-      </p>
-      <p>
-        <strong>{t.efficiency}:</strong> {property.current_energy_efficiency}
-      </p>
-    </div>
+        <div className="summaryPropertyDetails">
+              <div className="property-title"><strong>{t.type}</strong></div>
+              <div className="property-title"> <strong>{t.energyRating}:</strong></div>
+              <div className="property-title"> <strong>{t.efficiency}:</strong></div>
+              </div>
+          </div>
+
+          <div className="summaryDetails values">
+              <div className="property-value"><span>{property.property_type}</span></div>
+              <div className="property-value"><span>{property.current_energy_rating}</span></div>
+              <div className="property-value"><span>{property.current_energy_efficiency}</span></div>
+          </div>
+        </div>
   );
 };
 

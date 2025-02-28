@@ -136,7 +136,7 @@ function App() {
 
   return (
     <PropertyProvider>
-      <FavouriteProvider>
+      <FavouriteProvider user={user}>
         <div className="App">
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className="logo-container">
@@ -197,7 +197,7 @@ function App() {
               element={
                 <>
                   <PropertyFilter onFilterChange={fetchProperties} language={language} />
-                  <PropertyList properties={properties} loading={loading} language={language} />
+                  <PropertyList user={user} properties={properties} loading={loading} language={language} />
                 </>
               }
             />

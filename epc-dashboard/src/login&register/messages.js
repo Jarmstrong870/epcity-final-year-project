@@ -86,6 +86,7 @@ const Messages = ({ user, language }) => {
       );
       console.log(`output:`, response.data)
       setAllGroupMembers(response.data);
+      setGroupDetailsPopUp(true);
     } catch (error) {
       console.error("Error fetching group members", error);
     }
@@ -107,6 +108,7 @@ const Messages = ({ user, language }) => {
       );
       setGroups([...groups, response.data]);
       setNewGroupName("");
+      setCreateGroupPopUp(false);
       setNewGroupMembers("");
     } catch (error) {
       console.error("Error creating group:", error);
@@ -127,6 +129,7 @@ const Messages = ({ user, language }) => {
             console.log("Successfully added");
             await fetchAllGroupMembers(groupId);
             setNewUserEmail("");
+            setAddNewUserPopUp(false);
           }
         } catch (error) {
         console.error("Error adding another user:", error);
@@ -445,29 +448,33 @@ const searchMessage = async () => {
           {groups.map((group) => (
             <div
               key={group.group_id}
-              onClick={() => setSelectedGroup(group)}
-              className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}>
+              className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}
+              onClick={() => setSelectedGroup(group)}>
+                
               <span className="group-name">{group.name}</span>
-
-              <span className="group-icon" onClick={(e) => {
-                e.stopPropagation();
-                groupDetailsHandle(group.group_id);
-              }}>
-                {"\u2699"}
-              </span>
 
               {groupDetailsPopUp === group.group_id && (
               <div className="option-dropdown">
-              <button className="icon-button"
-                  onClick = {() => confirmationPopUp("details", selectedGroup?.group_id)}>
-                  <span className="icon-border"> {"\u270D"} </span> 
-                  View Group Details
-              </button>
+                <div className="option-dropdown-content">
+                <h4>Group Members</h4>
+
+                <ul className="group-members">
+                  {allGroupMembers.length > 0 ? (
+                    allGroupMembers.map((member, index) => (
+                      <li key={index}>{member.email}</li>
+                    ))
+                  ) : (
+                    <li>No members found</li> 
+                  )}
+                </ul>
             </div>
-          )}
-        </div>
-      ))}
-    </div>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  
         
         <div className="action-buttons">
         <div className="create-title"> Create A New Group
@@ -549,10 +556,17 @@ const searchMessage = async () => {
                         <span className="icon-border"> {"\uD83D\uDEAA"} </span>
                           Leave Group?
                         </button>   
+
                     </div>
                   )}
                   </div>
               </div>
+
+              <button className="all-members-display"
+                onClick={(e) => {
+                 
+                }} >View All Members</button>
+  
 
             {/* Messages */}
             <div className="messages-list">

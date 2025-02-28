@@ -299,29 +299,27 @@ body {
 }
 
 /* Top Rated Properties Section */
-.top-rated-properties {
-  margin: 40px auto;
-  padding: 40px 20px;
-  max-width: 1200px;
-  background: #DEDEDE;
+.most-efficient-properties {
+  margin: 20px auto;
+  padding: 20px 20px;
+  max-width: 1550px;
+  background: none;
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.top-rated-properties h2 {
-  font-size: 2.5rem;
+.most-efficient-properties h2 {
+  font-size: 3rem;
   font-weight: bold;
   color: #2c3e3d;
   margin-bottom: 30px;
+  text-decoration: underline;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .property-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  padding: 20px;
 }
 
 .property-card {
@@ -342,30 +340,6 @@ body {
   height: 180px;
   object-fit: cover;
   border-bottom: 3px solid #ddd;
-}
-
-.property-card .property-details {
-  padding: 15px;
-  text-align: left;
-}
-
-.property-card .property-details h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0 0 10px;
-  color: #333;
-}
-
-.property-card .property-details p {
-  font-size: 1rem;
-  color: #666;
-  margin: 5px 0;
-}
-
-.property-card .property-details .price {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #2c5f2d;
 }
 
 /* About Website Section */
