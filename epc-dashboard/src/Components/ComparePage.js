@@ -6,7 +6,7 @@ import { fetchLocationCoords } from "./propertyPage/propertyUtils";
 import { findMaxValues, energyRatingToNumber } from "./Compare_utils/Compare_utils";  
 import translations from "../locales/translations_comparepage";
 import "./ComparePage.css";
-import "./Compare_utils/ComparePropertiesGraph"
+import ComparePropertiesGraph from "./Compare_utils/ComparePropertiesGraph"
 
 const ComparePage = ({ language }) => {
     const location = useLocation();
