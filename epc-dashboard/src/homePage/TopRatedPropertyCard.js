@@ -55,18 +55,24 @@ const TopRatedPropertyCard = ({ user, property, language }) => {
           </p>
 
         <div className="summaryPropertyDetails">
-              <div className="property-title"><strong>{t.type}</strong></div>
-              <div className="property-title"> <strong>{t.energyRating}:</strong></div>
-              <div className="property-title"> <strong>{t.efficiency}:</strong></div>
-              </div>
-          </div>
+          <table>
+            <tbody>
+              <tr>
+                <th><strong>{t.type}</strong></th>
+                <th>{t.energyRating}</th>
+                <th>{t.efficiency}</th>
+              </tr>
 
-          <div className="summaryDetails values">
-              <div className="property-value"><span>{property.property_type}</span></div>
-              <div className="property-value"><span>{property.current_energy_rating}</span></div>
-              <div className="property-value"><span>{property.current_energy_efficiency}</span></div>
-          </div>
+              <tr>
+                <td>{property.property_type}</td>
+                <td>{property.current_energy_rating}</td>
+                <td>{property.current_energy_efficiency}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
+      </div>
   );
 };
 
