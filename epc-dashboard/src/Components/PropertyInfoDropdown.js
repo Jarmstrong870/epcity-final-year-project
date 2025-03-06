@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import CostComparisonGraph from "./propertyPage/EPCFullTable/CostComparisonGraph";
-import { findMaxValues, energyRatingToNumber, parseNumericValue, efficiencyRatingToNumber } from "./Compare_utils/Compare_utils";
 import EPCInfoDropdown from "./subDropdowns/EPCInfoDropdown";
 import EnergyInfoDropdown from "./subDropdowns/EnergyInfoDropdown";
 import StructureInfoDropdown from "./subDropdowns/StructureInfoDropdown";
+import { findMaxValues, energyRatingToNumber, parseNumericValue, efficiencyRatingToNumber } from "./Compare_utils/Compare_utils";
 import "./PropertyInfoDropdown.css";
 
-// Function to render star ratings based on efficiency
 const renderStarRating = (efficiency) => {
     if (!efficiency) return "N/A";
     const rating = efficiency.toLowerCase();
@@ -20,7 +18,7 @@ const renderStarRating = (efficiency) => {
     }
 };
 
-const PropertyInfoDropdown = ({ property, allProperties }) => {
+const PropertyInfoDropdown = ({ property, allProperties, language }) => {  // Pass language as prop
     const [openDropdowns, setOpenDropdowns] = useState({
         epc: false,
         energy: false,
@@ -72,7 +70,8 @@ const PropertyInfoDropdown = ({ property, allProperties }) => {
                 activeTabs={activeTabs}
                 setActiveTab={setActiveTab}
                 highlightIfBest={highlightIfBest}
-                renderStarRating={renderStarRating}  // Passing function to EPC dropdown
+                renderStarRating={renderStarRating}
+                language={language}  // Passing language as prop to EPC
             />
             
             <EnergyInfoDropdown
@@ -83,7 +82,8 @@ const PropertyInfoDropdown = ({ property, allProperties }) => {
                 activeTabs={activeTabs}
                 setActiveTab={setActiveTab}
                 highlightIfBest={highlightIfBest}
-                renderStarRating={renderStarRating}  // Passing function to Energy dropdown
+                renderStarRating={renderStarRating}
+                language={language}  // Passing language as prop to Energy
             />
             
             <StructureInfoDropdown
@@ -94,7 +94,8 @@ const PropertyInfoDropdown = ({ property, allProperties }) => {
                 activeTabs={activeTabs}
                 setActiveTab={setActiveTab}
                 highlightIfBest={highlightIfBest}
-                renderStarRating={renderStarRating}  // Passing function to Structure dropdown
+                renderStarRating={renderStarRating}
+                language={language}  // Passing language as prop to Structure
             />
         </div>
     );

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import "./ComparePropertiesGraph.css";
+import translations from "../../locales/translations_comparegraph"; // Import the translation file for the graph
 
-const ComparePropertiesGraph = ({ properties }) => {
+const ComparePropertiesGraph = ({ properties, language }) => {
     const [graphData, setGraphData] = useState([]);
     const [selectedMetric, setSelectedMetric] = useState("Heating");
+
+    // Fetch translations for the selected language
+    const t = translations[language] || translations.en;
 
     // Prepare graph data
     useEffect(() => {
@@ -23,10 +27,10 @@ const ComparePropertiesGraph = ({ properties }) => {
 
     // Y-axis labels for each metric
     const yAxisLabels = {
-        Heating: "£ per year",
-        "Hot Water": "£ per year",
-        Lighting: "£ per year",
-        "Total Floor Area": "Square Meters (m²)"
+        Heating: t.currencyPerYear,
+        "Hot Water": t.currencyPerYear,
+        Lighting: t.currencyPerYear,
+        "Total Floor Area": t.squareMeters,
     };
 
     // Custom Tooltip Formatter
@@ -52,7 +56,7 @@ const ComparePropertiesGraph = ({ properties }) => {
 
     return (
         <div className="epc-container">
-            <h3 className="graph-title"> Cost Comparison Graph</h3>
+            <h3 className="graph-title">{t.costComparisonGraph}</h3>
 
             {/* Toggle Metric Buttons */}
             <div className="toggle-buttons">
@@ -62,7 +66,7 @@ const ComparePropertiesGraph = ({ properties }) => {
                         className={selectedMetric === metric ? "active" : ""}
                         onClick={() => setSelectedMetric(metric)}
                     >
-                        {metric === "Total Floor Area" ? "Total Floor Area" : `${metric} Costs`}
+                        {metric === "Total Floor Area" ? t.totalFloorArea : t[metric] + " " + t.costs}
                     </button>
                 ))}
             </div>
@@ -77,7 +81,7 @@ const ComparePropertiesGraph = ({ properties }) => {
                                 tick={{ fill: "#007bff" }}
                             />
                             <Tooltip formatter={formatTooltip} />
-                            <Legend />
+                            <Legend formatter={(value) => t[value] || value} />
                             <Bar dataKey={selectedMetric} radius={[10, 10, 0, 0]}>
                                 {graphData.map((entry, index) => (
                                     <Cell
@@ -90,7 +94,7 @@ const ComparePropertiesGraph = ({ properties }) => {
                     </ResponsiveContainer>
                 </div>
             ) : (
-                <p>No data available for this metric.</p>
+                <p>{t.noDataAvailable}</p>
             )}
         </div>
     );
