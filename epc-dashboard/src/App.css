@@ -245,32 +245,161 @@ td a:hover {
   color: #183d25;
 }
 
-/* Footer Styles */
+/*******************************************************
+  FOOTER - Modern Column Layout (Centered)
+********************************************************/
+/*******************************************************
+  FOOTER - Fully Centered Fix
+********************************************************/
 .footer-container {
   background-color: #1f2e2d; /* Dark green */
   color: white;
-  padding: 40px 20px;
-  text-align: center;
-  font-size: 1rem;
+  padding: 50px 20px;
   border-top: 3px solid #0a2315;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  
+  /* Ensures the footer itself is centered */
+  display: flex;
+  justify-content: center;
 }
 
+/* Center the main footer content */
 .footer-content {
   max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
+  width: 100%; /* Ensures full responsiveness */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 40px;
+
+  /* 💡 This ensures everything is aligned centrally */
+  justify-items: center;
+  text-align: center;
 }
 
-.footer-content img {
+.admin-dashboard-link:hover {
+  background-color: rgba(255, 204, 0, 0.2);
+  color: white;
+  transform: translateX(5px);
+}
+
+.admin-dashboard-link {
+  color: #ffcc00; /* Gold color */
+  font-weight: bold;
+  text-align: center;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+
+/* Each column block */
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  
+  /* If you want each column's content *text* centered too: */
+  text-align: center;
+  align-items: center; /* Ensures items inside are centered along the column's cross-axis */
+}
+
+/* ============ Column 1: Brand/Logo & Tagline ============ */
+.footer-brand {}
+
+.footer-logo {
   height: 60px; 
   width: auto;
   cursor: pointer;
   transition: transform 0.3s ease;
+  margin-bottom: 10px;
 }
+
+.footer-logo:hover {
+  transform: scale(1.1);
+}
+
+.footer-tagline {
+  font-size: 0.95rem;
+  color: #d4edda; 
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+/* ============ Column Titles ============ */
+.footer-column-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* ============ Links ============ */
+.footer-link {
+  color: #d4edda; 
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  
+  /* Because columns are center-aligned, 
+     we limit link width so it doesn't stretch horizontally */
+  width: fit-content;
+}
+
+.footer-link:hover {
+  color: #ffffff; 
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
+
+/* ============ Socials & Email ============ */
+.footer-socials {
+  display: flex;
+  flex-direction: column; 
+  gap: 8px;
+}
+
+.footer-email {
+  margin-top: 10px;
+  color: #d4edda; 
+  font-size: 0.95rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  
+  width: fit-content; /* keep it snug around the text */
+}
+
+.footer-email:hover {
+  color: #ffffff; 
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+}
+
+/*******************************************************
+  RESPONSIVE BEHAVIOR
+********************************************************/
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr 1fr; /* 2 columns on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
+
+  .footer-column-title {
+    font-size: 1rem;
+  }
+  
+  .footer-link,
+  .footer-email {
+    font-size: 0.9rem;
+  }
+}
+
+
 
 /* 🏗️ Header Base Styles */
 .header-container {

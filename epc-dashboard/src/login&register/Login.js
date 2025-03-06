@@ -27,7 +27,7 @@ function Login({ setUser, language }) {
                 firstname,
                 lastname,
                 email,
-                is_admin,  // Store admin status
+                isAdmin: is_admin,  // Store admin status
             });
 
             // Set different messages based on user type

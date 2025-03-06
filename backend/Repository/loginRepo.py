@@ -1,8 +1,8 @@
-from psycopg2 import connect
+import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 
-# Database configuration
+# Database connection configuration
 db_config = {
     "host": os.getenv("DATABASE_HOST"),
     "port": os.getenv("DATABASE_PORT"),
@@ -11,23 +11,37 @@ db_config = {
     "password": os.getenv("DATABASE_PASSWORD"),
 }
 
-
 def find_user_by_email(email):
     """
-    Fetch a user's details by their email address from the database.
+    Fetches user details by email.
     :param email: The user's email address
-    :return: A dictionary with user details or None if no user is found
+    :return: Dictionary containing user details or None if not found
     """
     try:
-        with connect(**db_config) as conn:
-            with conn.cursor(cursor_factory=RealDictCursor) as cursor:
-                # Fetch user details including admin status
+        # Establish a database connection
+        with psycopg2.connect(**db_config) as connection:
+            with connection.cursor(cursor_factory=RealDictCursor) as cursor:
+                
                 cursor.execute(
-                    "SELECT firstname, lastname, password_hash, is_admin FROM users WHERE email_address = %s;",
+                    "SELECT firstname, lastname, password_hash, is_admin, is_blocked FROM users WHERE email_address = %s;",
                     (email,)
                 )
-                return cursor.fetchone()  # Returns None if no user is found
+                user = cursor.fetchone()
+
+                if not user:
+                    return None
+
+                if user["is_blocked"]:
+                    return {"error": "This account has been blocked. Please contact support."}
+
+                return {
+                    "firstname": user["firstname"],
+                    "lastname": user["lastname"],
+                    "password_hash": user["password_hash"],
+                    "is_admin": user["is_admin"]
+                }
     except Exception as e:
-        print(f"Error finding user by email: {e}")
+        print(f"❌ Error finding user by email: {e}")
         return None
+
 
