@@ -108,6 +108,21 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Green Question Mark */
+.green-question-mark {
+    color: green;
+    cursor: pointer;
+    font-size: 18px; /* Adjust size of the question mark */
+    margin-right: 8px; /* Space between question mark and label */
+}
+
+
+
+
+.green-question-mark::after {
+    content: "?"; /* Add question mark using CSS */
+}
+
 /* 📏 Responsive Design */
 @media (max-width: 768px) {
     .compare-header {
