@@ -32,6 +32,19 @@ class GroupChatService:
         return new_message, 201  # Only valid messages get 201
 
     @staticmethod
+    def send_property_to_group(group_id, sender_email, property_url):
+        """
+        Sends a property link to the group chat as a message.
+        """
+        message_content = f"🏡 New Property Shared! Check it out: {property_url}"
+        return GroupChatRepo.insert_message(group_id, message_content, sender_email)
+    
+    @staticmethod
+    def send_group_property(group_id, property_url, sender_email):
+        """ Send a property URL to a group chat. """
+        message_content = f"🏡 Check out this property: {property_url}"
+        return GroupChatRepo.insert_message(group_id, message_content, sender_email)
+
     def delete_group_data(group_id, user_email):
         """ Deletes existing group and all relevant data """
         return GroupChatRepo.delete_group_data(group_id, user_email)

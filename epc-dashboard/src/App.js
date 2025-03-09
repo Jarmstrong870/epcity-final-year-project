@@ -50,7 +50,7 @@ function App() {
   const location = useLocation(); // Get current page path
   const isHomePage = location.pathname === "/"; // Check if on home page
 
-  const t = translations[language] || translations.en; // Load translations
+  const t = translations[language] || translations.en; // Load translations;
 
   // Persist language selection in localStorage
   const handleLanguageChange = (newLanguage) => {
@@ -154,18 +154,28 @@ function App() {
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
+              {console.log("user object:", JSON.stringify(user, null, 2))}
 
               <div className="profile-icon" onClick={toggleDropdown}>
                 <img src={profileImage} alt="Profile" className="profile-img" />
                 {dropdownVisible && (
                   <div className="dropdown-menu">
+
+   
                     {user ? (
                       <>
-                        <p>Welcome, {user.firstname}</p>
+                        <p className="welcome-message">Welcome, {user.firstname}</p>
+
+                        {user.isAdmin === true && (
+                          <Link to="/admin-dashboard">Admin Dashboard</Link>
+                        )}
                         <Link to="/account-overview">{t.accountOverview}</Link>
                         <Link to="/property">{t.myProperties}</Link>
                         <Link to="/messages">{t.messages}</Link>
-                        <button onClick={showLogoutConfirmation}>{t.logout}</button>
+
+                        <button onClick={showLogoutConfirmation} className="logout-button">
+                          {t.logout}
+                        </button>
                       </>
                     ) : (
                       <>
@@ -176,6 +186,7 @@ function App() {
                   </div>
                 )}
               </div>
+
             </div>
           </div>
 
@@ -206,7 +217,7 @@ function App() {
             <Route path="/register" element={<Register language={language} />} />
             <Route path="/property/:uprn" element={<PropertyPage properties={properties} user={user} language={language} />} />
             <Route path="/FAQs" element={<FAQs language={language} />} />
-            <Route path="/glossary" element={<GlossaryPage language={language} />} />
+            <Route path="/faq/glossary-page" element={<GlossaryPage language={language} />} />
             <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
@@ -224,31 +235,91 @@ function App() {
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
           </Routes>
 
+
+        
           <footer className="footer-container">
             <div className="footer-content">
-              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="footer-logo" /></Link>
+              {/* ===== Column 1: Brand/Logo ===== */}
+              <div className="footer-column footer-brand">
+                <Link to="/">
+                  <img src={epcLogo} alt="EPCity Logo" className="footer-logo" />
+                </Link>
+                {/* Optionally, a short tagline or brand message */}
+                <p className="footer-tagline">
+                  {t.shortTagline || "Find your perfect place with EPCity."}
+                </p>
+              </div>
 
-              <div className="footer-navigation">
-                <div className="navigation-links">
-                  <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-                  <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
-                  <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+              {/* ===== Column 2: Quick Navigation Links ===== */}
+              <div className="footer-column footer-links">
+                <h4 className="footer-column-title">{t.navigation || "Navigation"}</h4>
+                <Link to="/propertylist" className="footer-link">
+                  {t.viewAllProperties}
+                </Link>
+                <Link to="/FAQs" className="footer-link">
+                  {t.faqs}
+                </Link>
+                <Link to="/favourites" className="footer-link">
+                  {t.favourites}
+                </Link>
+              </div>
+
+              {/* ===== Column 3: Company/Info Pages ===== */}
+              <div className="footer-column footer-info">
+                <h4 className="footer-column-title">
+                  {t.companyInfo || "Company"}
+                </h4>
+                <Link to="/about-us" className="footer-link">
+                  {t.footerAboutUs}
+                </Link>
+                <Link to="/contact" className="footer-link">
+                  {t.footerContact}
+                </Link>
+                <Link to="/privacy-policy" className="footer-link">
+                  {t.footerPrivacyPolicy}
+                </Link>
+                <Link to="/terms" className="footer-link">
+                  {t.footerTerms}
+                </Link>
+              </div>
+
+              {/* ===== Column 4: Social & Contact ===== */}
+              <div className="footer-column footer-social">
+                <h4 className="footer-column-title">
+                  {t.stayConnected || "Stay Connected"}
+                </h4>
+
+                <div className="footer-socials">
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-link"
+                  >
+                    {t.socialFacebook}
+                  </a>
+                  <a
+                    href="https://twitter.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-link"
+                  >
+                    {t.socialTwitter}
+                  </a>
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="footer-link"
+                  >
+                    {t.socialInstagram}
+                  </a>
                 </div>
-                <nav className="footer-nav">
-                  <Link to="/about-us">{t.footerAboutUs}</Link>
-                  <Link to="/contact">{t.footerContact}</Link>
-                  <Link to="/privacy-policy">{t.footerPrivacyPolicy}</Link>
-                  <Link to="/terms">{t.footerTerms}</Link>
-                </nav>
-              </div>
 
-              <div className="footer-socials">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">{t.socialFacebook}</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">{t.socialTwitter}</a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">{t.socialInstagram}</a>
+                <a href="mailto:contact@epcity.co.uk" className="footer-email">
+                  {t.footerEmail}
+                </a>
               </div>
-
-              <a href="mailto:contact@epcity.co.uk" className="footer-email">{t.footerEmail}</a>
             </div>
           </footer>
         </div>

@@ -1,81 +1,100 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import "./ComparePropertiesGraph.css";
+import translations from "../../locales/translations_comparegraph"; // Import the translation file for the graph
 
-const ComparePropertiesGraph = ({ properties }) => {
+const ComparePropertiesGraph = ({ properties, language }) => {
     const [graphData, setGraphData] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [selectedMetric, setSelectedMetric] = useState("Heating"); // Default: Heating
+    const [selectedMetric, setSelectedMetric] = useState("Heating");
 
-    // Format data for Recharts (NUMBERS ONLY)
-    const chartData = graphData.map((prop) => ({
-        name: prop.address,
-        uprn: prop.uprn, // Unique identifier
-        Heating: prop.heating_cost_current,
-        "Hot Water": prop.hot_water_cost_current,
-        Lighting: prop.lighting_cost_current,
-        "Total Floor Area": prop.total_floor_area
-    }));
+    // Fetch translations for the selected language
+    const t = translations[language] || translations.en;
+
+    // Prepare graph data
+    useEffect(() => {
+        if (properties && properties.length > 0) {
+            const formattedData = properties.map((prop) => ({
+                name: `${prop.address || "Unknown"}`,
+                uprn: prop.uprn,
+                Heating: prop.heating_cost_current ?? 0,
+                "Hot Water": prop.hot_water_cost_current ?? 0,
+                Lighting: prop.lighting_cost_current ?? 0,
+                "Total Floor Area": prop.total_floor_area ?? 0,
+            }));
+            setGraphData(formattedData);
+        }
+    }, [properties]);
 
     // Y-axis labels for each metric
     const yAxisLabels = {
-        Heating: "£ per year",
-        "Hot Water": "£ per year",
-        Lighting: "£ per year",
-        "Total Floor Area": "Square Meters(m²)"
+        Heating: t.currencyPerYear,
+        "Hot Water": t.currencyPerYear,
+        Lighting: t.currencyPerYear,
+        "Total Floor Area": t.squareMeters,
     };
 
-    // Custom Tooltip Formatter (Now returns JSX instead of a string)
-    const formatTooltip = (value, name, props) => {
-        const isCurrentProperty = props.payload && props.payload.uprn === properties.uprn; // Check if this is the current property
-        return (
-            <span style={{ fontWeight: isCurrentProperty ? "bold" : "normal", color: isCurrentProperty ? "red" : "black" }}>
-                {name}: {name === "Total Floor Area" ? `${value} m²` : `£${value}`}
-            </span>
-        );
-    };
+    // Custom Tooltip Formatter
+    const formatTooltip = (value, name) => (
+        <span>{`${name}: ${name === "Total Floor Area" ? `${value} m²` : `£${value}`}`}</span>
+    );
 
+    // Bar Colors for Each Metric
+    const getBarColor = (metric) => {
+        switch (metric) {
+            case "Heating":
+                return "#007bff"; // Blue
+            case "Hot Water":
+                return "#00c853"; // Green
+            case "Lighting":
+                return "#ffa500"; // Orange
+            case "Total Floor Area":
+                return "#6a0dad"; // Purple
+            default:
+                return "#007bff";
+        }
+    };
 
     return (
         <div className="epc-container">
-            <h2>Cost Comparison Graph</h2>
+            <h3 className="graph-title">{t.costComparisonGraph}</h3>
 
-            {/* Dropdown to select one metric at a time */}
-            <div className="metric-selector">
-                <label>Select a Metric: </label>
-                <select value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
-                    <option value="Heating">Heating Costs</option>
-                    <option value="Hot Water">Hot Water Costs</option>
-                    <option value="Lighting">Lighting Costs</option>
-                    <option value="Total Floor Area">Total Floor Area</option>
-                </select>
+            {/* Toggle Metric Buttons */}
+            <div className="toggle-buttons">
+                {Object.keys(yAxisLabels).map((metric) => (
+                    <button
+                        key={metric}
+                        className={selectedMetric === metric ? "active" : ""}
+                        onClick={() => setSelectedMetric(metric)}
+                    >
+                        {metric === "Total Floor Area" ? t.totalFloorArea : t[metric] + " " + t.costs}
+                    </button>
+                ))}
             </div>
 
-            {/* Render Graph */}
-            {graphData.length === 0 ? (
-                <p>Loading or no data available...</p>
+            {graphData.length > 0 ? (
+                <div className="graph-wrapper">
+                    <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={graphData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                            <XAxis dataKey="name" tick={{ fill: "#007bff" }} />
+                            <YAxis
+                                label={{ value: yAxisLabels[selectedMetric], angle: -90, position: "insideLeft" }}
+                                tick={{ fill: "#007bff" }}
+                            />
+                            <Tooltip formatter={formatTooltip} />
+                            <Legend formatter={(value) => t[value] || value} />
+                            <Bar dataKey={selectedMetric} radius={[10, 10, 0, 0]}>
+                                {graphData.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={getBarColor(selectedMetric)} // Set color based on metric
+                                    />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                        <XAxis dataKey="name" />
-                        <YAxis 
-                            label={{ value: yAxisLabels[selectedMetric], angle: -90, position: "insideLeft" }} 
-                        />
-                        <Tooltip formatter={formatTooltip} />
-                        <Legend />
-                        <Bar dataKey={selectedMetric}>
-                            {chartData.map((entry, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Add a black border for extra emphasis
-                                    strokeWidth={entry.uprn === properties.uprn ? 2 : 0}
-                                    cursor="pointer" // Makes it visually clickable
-                                    onClick={() => window.location.href = `/property/${entry.uprn}`} // Redirect when clicked
-                                />
-                            ))}
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+                <p>{t.noDataAvailable}</p>
             )}
         </div>
     );
