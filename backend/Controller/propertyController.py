@@ -10,15 +10,15 @@ CORS(property_blueprint)
 """
 Route to update properties in the database
 """
-@property_blueprint.route('property/updateDB', methods=['GET'])
-def update_properties():
+@property_blueprint.route('/property/updateDB', methods=['GET'])
+def update_properties_route():
     return jsonify(properties.update_properties())
 
 """
 Route to update properties in the database
 """
-@property_blueprint.route('property/inflationDB', methods=['GET'])
-def update_inflation_data():
+@property_blueprint.route('/property/inflationDB', methods=['GET'])
+def update_inflation_data_route():
     return jsonify(properties.fetch_cpih_data())
 
 """
