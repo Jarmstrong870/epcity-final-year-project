@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 from sklearn.neighbors import NearestNeighbors
 
+
 load_dotenv()
 
 # Base url and api key
@@ -456,91 +457,71 @@ def adjust_cost(cost, inflation_rate):
         print(f"Error adjusting cost: {e}")
         return cost  # Fallback to original cost if adjustment fails
 
-def recommend_by_knn(user_prefs):
-    """
-    Recommends properties based on user preferences and proximity to a selected university using KNN.
 
-    Expected user_prefs example:
+
+def recommend_by_knn(user_prefs, n_neighbors=5):
+    """
+    Recommends properties based on user preferences by first retrieving filtered property records
+    from the database (using execute_query) and then applying a KNN algorithm on the feature matrix.
+    
+    user_prefs should be a dictionary like:
     {
         "number_bedrooms": 3,
         "current_energy_rating": "B",
         "property_type": "HOUSE",
         "selectedUniversity": "liverpool",   # or "johnmoores" or "hope"
-        "maxDistance": 10                     # maximum distance in kilometers
+        "maxDistance": 10,                    # maximum distance in km
+        "local_authority": "E08000003"         # local authority code (city) filter
     }
     """
-    # Retrieve all property data from the repository.
-    # (Assumes properties table has been joined with spatial data columns)
-    all_props = repo.get_all_properties()
-    df = pd.DataFrame(all_props)
+    # Retrieve filtered property records by calling the query helper.
+    all_props = repo.execute_query(user_prefs)
+    if not all_props:
+        print("No properties found matching the criteria.")
+        return []
     
-    # --- Filter by Distance to Selected University ---
-    if "selectedUniversity" in user_prefs and "maxDistance" in user_prefs:
-        uni = user_prefs["selectedUniversity"].lower()
-        try:
-            max_dist = float(user_prefs["maxDistance"])
-        except ValueError:
-            max_dist = None
-        # Mapping from user-friendly key to the column name in the dataframe.
-        mapping = {
-            "liverpool": "distance_uni_liverpool",
-            "johnmoores": "distance_uni_john_moores",
-            "hope": "distance_uni_hope"
-        }
-        distance_col = mapping.get(uni)
-        if distance_col and max_dist is not None and distance_col in df.columns:
-            df = df[df[distance_col] <= max_dist]
+    # Load the results into a DataFrame.
+    df = pd.DataFrame(all_props)
     
     # --- Standardise and Process Features ---
     df['property_type'] = df['property_type'].str.upper()
     df['number_bedrooms'] = pd.to_numeric(df['number_bedrooms'], errors='coerce').fillna(0)
     
-    # Map EPC rating letter to numeric value (lower is better)
     epc_mapping = {'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5, 'F': 6, 'G': 7}
     df['current_energy_rating'] = df['current_energy_rating'].str.upper().map(epc_mapping).fillna(8)
     
-    # One-hot encode the property type.
     property_type_dummies = pd.get_dummies(df['property_type'], prefix='type')
     df = pd.concat([df, property_type_dummies], axis=1)
     
     # --- Build the User Preference Vector ---
     user_vector = []
-    
-    # a) Number of bedrooms
     try:
         user_bedrooms = int(user_prefs.get('number_bedrooms', 0))
     except ValueError:
         user_bedrooms = 0
     user_vector.append(user_bedrooms)
     
-    # b) EPC Rating
     user_epc = user_prefs.get('current_energy_rating', 'G')
     user_epc_numeric = epc_mapping.get(user_epc.upper(), 8)
     user_vector.append(user_epc_numeric)
     
-    # c) Property Type: Create a one-hot vector matching the dummy columns
     property_type_columns = property_type_dummies.columns.tolist()
     user_property_type = user_prefs.get('property_type', '').upper()
     property_vector = [1 if col == f"type_{user_property_type}" else 0 for col in property_type_columns]
     user_vector.extend(property_vector)
     
-    # Debug prints to help verify the vector and columns.
-    print("User vector:", user_vector)
-    print("Property type columns:", property_type_columns)
-    
     # --- Prepare the Feature Matrix for KNN ---
     feature_columns = ['number_bedrooms', 'current_energy_rating'] + property_type_columns
     feature_matrix = df[feature_columns].values
     
-    # --- Build and Apply the KNN Model ---
-    from sklearn.neighbors import NearestNeighbors
-    knn = NearestNeighbors(n_neighbors=5, metric='euclidean')
+    # Fit the KNN model on the feature matrix.
+    knn = NearestNeighbors(n_neighbors=n_neighbors, metric='euclidean')
     knn.fit(feature_matrix)
     
-    # Convert the user vector to a 2D numpy array (required by scikit-learn)
-    import numpy as np
     user_vector_np = np.array([user_vector])
     distances, indices = knn.kneighbors(user_vector_np)
     
+    # Retrieve the recommended properties (all columns from the properties table)
     recommended = df.iloc[indices[0]].to_dict(orient='records')
     return recommended
+

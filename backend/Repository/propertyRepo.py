@@ -6,6 +6,7 @@ from psycopg2.extras import execute_values
 import googlemaps
 import time
 import math
+import csv
 
 load_dotenv()
 
@@ -55,6 +56,44 @@ def get_all_properties():
 
     finally:
         # Ensure that the cursor and connection are closed properly.
+        if cursor:
+            cursor.close()
+        if conn:
+            conn.close()
+
+
+def execute_query(user_prefs):
+    query = """
+    SELECT p.*, pc.latitude AS property_lat, pc.longitude AS property_lon
+    FROM properties p
+    JOIN postcode_coordinates pc ON p.postcode = pc.postcode
+    JOIN university_distances ud ON p.postcode = ud.postcode
+    WHERE p.local_authority = %s
+      AND ud.university = %s
+      AND ud.distance < %s;
+    """
+    params = (
+        user_prefs['local_authority'],
+        user_prefs['selectedUniversity'],
+        user_prefs['maxDistance']
+    )
+    
+    conn = None
+    cursor = None
+    try:
+        conn = psycopg2.connect(**DB_PARAMS)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        data = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        results = [dict(zip(columns, row)) for row in data]
+        return results
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("Error executing query:", e)
+        return []
+    finally:
         if cursor:
             cursor.close()
         if conn:
@@ -355,152 +394,133 @@ def get_latest_and_lodgement_cpih(lodgement_date):
         return pd.DataFrame()
 
 
-def update_properties_lat_long(google_maps_api_key):
+
+
+
+def populate_postcode_coordinates_for_local_authority(
+    google_maps_api_key,
+    local_authority,
+    sleep_time=0.1,
+    batch_size=100
+):
     """
-    Fetches each property's address and postcode from the 'properties' table,
-    constructs a more complete address (including city and country),
-    uses the Google Maps Geocoding API to find latitude and longitude,
-    and then inserts/updates these coordinates in the 'property_spatial_data' table.
+    Fetches distinct postcodes for the given local authority from the 'properties' table
+    that have no latitude/longitude values in the 'postcode_coordinates' table,
+    uses the Google Maps Geocoding API to retrieve latitude and longitude for each postcode,
+    and inserts/updates these values in the 'postcode_coordinates' table in batches.
+    Additionally, writes the geocoding results to a local CSV file.
     """
-    conn = None
-    cursor = None
     gmaps = googlemaps.Client(key=google_maps_api_key)
-
-    try:
-        conn = psycopg2.connect(**DB_PARAMS)
-        cursor = conn.cursor()
-
-        # 1. Retrieve UPRN, address, and postcode from the 'properties' table.
-        cursor.execute("SELECT uprn, address, postcode FROM properties")
-        properties = cursor.fetchall()
-
-        rows_to_insert = []
-        for uprn, address, postcode in properties:
-            if not address:
-                continue
-
-            # Construct a more detailed address string
-            # e.g., "123 Example Street, L13 3DT, Liverpool, UK"
-            full_address = f"{address}, {postcode}, Liverpool, UK"
-
-            # Use the Google Maps Geocoding API
-            try:
-                geocode_result = gmaps.geocode(full_address)
-                if geocode_result:
-                    location = geocode_result[0]['geometry']['location']
-                    lat = location['lat']
-                    lng = location['lng']
-                else:
-                    print(f"Could not geocode address: {full_address}")
-                    continue
-            except Exception as e:
-                print(f"Geocoding error for {full_address}: {e}")
-                continue
-
-            rows_to_insert.append((uprn, lat, lng))
-            # Optional sleep to respect API rate limits
-            
-
-        # 2. Insert or update the lat/long values in 'property_spatial_data'
-        #    ON CONFLICT will update existing rows if uprn already exists
-        insert_query = """
-            INSERT INTO property_spatial_data (uprn, latitude, longitude)
-            VALUES %s
-            ON CONFLICT (uprn) DO UPDATE
-            SET latitude = EXCLUDED.latitude,
-                longitude = EXCLUDED.longitude
-        """
-
-        if rows_to_insert:
-            execute_values(cursor, insert_query, rows_to_insert)
-            conn.commit()
-            print("Latitude/Longitude data updated successfully in property_spatial_data.")
-        else:
-            print("No rows to insert/update for latitude/longitude.")
-
-    except Exception as e:
-        if conn:
-            conn.rollback()
-        print("Error in update_properties_lat_long:", e)
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            conn.close()
-
-
-def haversine(lat1, lon1, lat2, lon2):
-    """
-    Calculate the great-circle distance between two points (lat/long) on Earth
-    using the Haversine formula. Returns distance in kilometers.
-    """
-    # Convert decimal degrees to radians
-    lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-    c = 2 * math.asin(math.sqrt(a))
-    r = 6371  # Radius of Earth in kilometers
-    return c * r
-
-def update_properties_uni_distances(liverpool_coords, hope_coords, john_moores_coords):
-    """
-    For each row in 'property_spatial_data' (which must have lat/long),
-    calculates distances to the three given university coordinates and updates
-    the distance_uni_liverpool, distance_uni_hope, and distance_uni_john_moores columns.
-
-    Args:
-        liverpool_coords: (lat, lon) for University of Liverpool
-        hope_coords: (lat, lon) for Liverpool Hope University
-        john_moores_coords: (lat, lon) for Liverpool John Moores
-    """
     conn = None
     cursor = None
+    # Specify the CSV file path (adjust the path as needed)
+    csv_filename = f"C:\\Users\\carlk\\Dissertation\\postcode_coordinates_{local_authority}.csv"
 
     try:
         conn = psycopg2.connect(**DB_PARAMS)
         cursor = conn.cursor()
 
-        # 1. Retrieve all rows that have lat/long from property_spatial_data
-        cursor.execute("SELECT uprn, latitude, longitude FROM property_spatial_data")
-        rows = cursor.fetchall()
+        # Retrieve distinct postcodes for the specified local authority
+        # that either have no record in postcode_coordinates or have null lat/long values.
+        cursor.execute("""
+            SELECT DISTINCT p.postcode
+            FROM properties p
+            LEFT JOIN postcode_coordinates pc ON p.postcode = pc.postcode
+            WHERE p.local_authority = %s
+              AND p.postcode IS NOT NULL
+              AND (pc.latitude IS NULL OR pc.longitude IS NULL)
+        """, (local_authority,))
+        postcodes = [row[0] for row in cursor.fetchall()]
 
-        update_data = []
-        for uprn, lat, lon in rows:
-            # Skip if lat or lon is missing
-            if lat is None or lon is None:
-                continue
+        print(f"Processing {len(postcodes)} postcodes for local authority: {local_authority}")
 
-            # Calculate distances
-            dist_liv = haversine(lat, lon, liverpool_coords[0], liverpool_coords[1])
-            dist_hope = haversine(lat, lon, hope_coords[0], hope_coords[1])
-            dist_jm = haversine(lat, lon, john_moores_coords[0], john_moores_coords[1])
-
-            update_data.append((dist_liv, dist_hope, dist_jm, uprn))
-
-        # 2. Update the table with the calculated distances
-        update_query = """
-            UPDATE property_spatial_data
-            SET distance_uni_liverpool = %s,
-                distance_uni_hope = %s,
-                distance_uni_john_moores = %s
-            WHERE uprn = %s
+        insert_query = """
+            INSERT INTO postcode_coordinates (postcode, local_authority, latitude, longitude)
+            VALUES %s
+            ON CONFLICT (postcode) DO UPDATE
+            SET local_authority = EXCLUDED.local_authority,
+                latitude = EXCLUDED.latitude,
+                longitude = EXCLUDED.longitude;
         """
 
-        if update_data:
-            cursor.executemany(update_query, update_data)
-            conn.commit()
-            print("University distances updated successfully.")
-        else:
-            print("No valid lat/long found for distance calculation.")
+        data_to_insert = []
+
+        # Open the CSV file for writing. This overwrites any existing file.
+        with open(csv_filename, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            # Write CSV header
+            writer.writerow(["postcode", "local_authority", "latitude", "longitude"])
+
+            for postcode in postcodes:
+                full_address = f"{postcode}, UK"
+
+                try:
+                    geocode_result = gmaps.geocode(full_address)
+                    if geocode_result:
+                        location = geocode_result[0]['geometry']['location']
+                        lat = location['lat']
+                        lng = location['lng']
+                        data_to_insert.append((postcode, local_authority, lat, lng))
+                    else:
+                        print(f"No geocode result for {full_address}")
+                except Exception as e:
+                    print(f"Error geocoding {full_address}: {e}")
+                    continue
+
+                # Respect rate limits
+                time.sleep(sleep_time)
+
+                # When we've collected a full batch, insert into DB and write to CSV
+                if len(data_to_insert) >= batch_size:
+                    try:
+                        execute_values(cursor, insert_query, data_to_insert)
+                        conn.commit()
+                        print(f"Inserted a batch of {len(data_to_insert)} records.")
+                        writer.writerows(data_to_insert)
+                        data_to_insert = []  # Clear the batch
+                    except psycopg2.OperationalError as op_err:
+                        print("Operational error during batch insertion:", op_err)
+                        if conn and conn.closed == 0:
+                            conn.rollback()
+                        conn = psycopg2.connect(**DB_PARAMS)
+                        cursor = conn.cursor()
+                        execute_values(cursor, insert_query, data_to_insert)
+                        conn.commit()
+                        writer.writerows(data_to_insert)
+                        print(f"Retried and inserted a batch of {len(data_to_insert)} records.")
+                        data_to_insert = []
+
+            # Insert any leftover records.
+            if data_to_insert:
+                try:
+                    execute_values(cursor, insert_query, data_to_insert)
+                    conn.commit()
+                    print(f"Inserted the final batch of {len(data_to_insert)} records.")
+                    writer.writerows(data_to_insert)
+                except psycopg2.OperationalError as op_err:
+                    print("Operational error during final batch insertion:", op_err)
+                    if conn and conn.closed == 0:
+                        conn.rollback()
+                    conn = psycopg2.connect(**DB_PARAMS)
+                    cursor = conn.cursor()
+                    execute_values(cursor, insert_query, data_to_insert)
+                    conn.commit()
+                    writer.writerows(data_to_insert)
+                    print(f"Retried and inserted the final batch of {len(data_to_insert)} records.")
+
+        print(f"Finished processing local authority: {local_authority}")
+        print(f"Data written to CSV file: {csv_filename}")
 
     except Exception as e:
-        if conn:
+        if conn and conn.closed == 0:
             conn.rollback()
-        print("Error in update_properties_uni_distances:", e)
+        print("Error in populate_postcode_coordinates_for_local_authority:", e)
     finally:
         if cursor:
             cursor.close()
         if conn:
             conn.close()
-            
+
+
+
+

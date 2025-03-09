@@ -2,89 +2,123 @@ import React, { useState } from "react";
 import "./CustomAlgorithm.css";
 import TopRatedPropertyCard from "../homePage/TopRatedPropertyCard";
 
-// Import your university images (adjust the paths as needed)
-import uniLiverpoolImg from "../assets/uni-liverpool.png";
-import johnMooresImg from "../assets/john-moores.jfif";
-import hopeUniImg from "../assets/hope-university.jfif";
+// University images for Liverpool
+import uniLiverpoolImg from "../assets/Universities/university-of-liverpool.jpg";
+import johnMooresImg from "../assets/Universities/liverpool-john-moores-university.jpg";
+import hopeUniImg from "../assets/Universities/liverpool-hope-university.jpg";
+
+// University images for Bristol
+import bristolUni from "../assets/Universities/university-of-bristol.jpg";
+import uweBristol from "../assets/Universities/uwe-bristol.jpg";
+
+// University images for Brighton
+import brightonUni from "../assets/Universities/university-of-brighton.jpg";
+import sussexUni from "../assets/Universities/university-of-sussex.jpg";
+
+// University images for Southampton
+import southamptonUni from "../assets/Universities/university-of-southampton.jpg";
+import solentUni from "../assets/Universities/solent-university-southampton.jpg";
+
+// University images for Manchester
+import manchesterUni from "../assets/Universities/university-of-manchester.jpg";
+import manchesterMet from "../assets/Universities/manchester-metropolitan-university.jpg";
+
+// University images for Sheffield
+import sheffieldUni from "../assets/Universities/sheffield-of-university.jpg";
+import sheffieldHallam from "../assets/Universities/sheffield-hallam-university.jpg";
+
+// University images for Newcastle
+import newcastleUni from "../assets/Universities/newcastle-university.jpg";
+import northumbriaUni from "../assets/Universities/northumbria-university.jpg";
+
+// University images for Birmingham
+import birminghamUni from "../assets/Universities/university-of-birmingham.jpg";
+import birminghamCity from "../assets/Universities/birmingham-city-university.jpg";
+
+// University images for Leeds
+import leedsUni from "../assets/Universities/university-of-leeds.jpg";
+import leedsBeckett from "../assets/Universities/leeds-beckett-university.jpg";
+
 import apartmentImg from "../assets/property types/apartment.png";
 import bungalowImg from "../assets/property types/bungalow.png";
 import houseImg from "../assets/property types/house.png";
 import maisonetteImg from "../assets/property types/maisonette.png";
 
-function ExampleKnnForm({closePopUp}) {
-  const [caPopUp, setCustomAlgorithmPopUp] = useState(false);
+function CustomAlgorithm({ closePopUp }) {
+  // State for the new local authority (city) dropdown.
+  const [selectedLocalAuthority, setSelectedLocalAuthority] = useState("");
+  const [selectedUniversity, setSelectedUniversity] = useState(null);
   const [number_bedrooms, setBedrooms] = useState(0);
   const [current_energy_rating, setEpcRating] = useState("C");
   const [property_type, setHouseType] = useState("HOUSE");
-  const [selectedUniversity, setSelectedUniversity] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [selectedRating, setSelectedEPCRating] = useState(null);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [maxDistance, setMaxDistance] = useState(10); // default value in km
   const [recommendations, setRecommendations] = useState([]);
 
-  // Define your university options with images, keys, and names.
-  const universities = [
-    {
-      key: "liverpool", name: "University of Liverpool", image: uniLiverpoolImg,
-    },
-    {
-      key: "johnmoores", name: "Liverpool John Moores University", image: johnMooresImg,
-    },
-    {
-      key: "hope", name: "Liverpool Hope University", image: hopeUniImg,
-    },
+  // Define your local authorities.
+  const localAuthorities = [
+    { key: "E06000023", name: "Bristol" },
+    { key: "E06000043", name: "Brighton" },
+    { key: "E06000045", name: "Southampton" },
+    { key: "E08000003", name: "Manchester" },
+    { key: "E08000012", name: "Liverpool" },
+    { key: "E08000019", name: "Sheffield" },
+    { key: "E08000021", name: "Newcastle" },
+    { key: "E08000025", name: "Birmingham" },
+    { key: "E08000035", name: "Leeds" },
   ];
 
-  const total_bedrooms = [
-    {key: "1 bedroom", name: "1"},
-    {key: "2 bedrooms", name: "2"},
-    {key: "3 bedrooms", name: "3"},
-    {key: "4 bedrooms", name: "4"},
-    {key: "5 bedrooms", name: "5"},
-    {key: "6 bedrooms", name: "6"},
-    {key: "7 bedrooms", name: "7"},
-    {key: "8 bedrooms", name: "8"},
-  ];
+  // Map each local authority to its universities.
+  const universitiesByCity = {
+    "E08000012": [ // Liverpool
+      { key: "liverpool", name: "University of Liverpool", image: uniLiverpoolImg },
+      { key: "johnmoores", name: "Liverpool John Moores University", image: johnMooresImg },
+      { key: "hope", name: "Liverpool Hope University", image: hopeUniImg },
+    ],
+    "E06000023": [ // Bristol
+      { key: "bristolUni", name: "University of Bristol", image: bristolUni },
+      { key: "uweBristol", name: "UWE Bristol", image: uweBristol },
+    ],
+    "E06000043": [ // Brighton
+      { key: "brightonUni", name: "University of Brighton", image: brightonUni },
+      { key: "sussexUni", name: "University of Sussex", image: sussexUni },
+    ],
+    "E06000045": [ // Southampton
+      { key: "southamptonUni", name: "University of Southampton", image: southamptonUni },
+      { key: "solentUni", name: "Solent University", image: solentUni },
+    ],
+    "E08000003": [ // Manchester
+      { key: "manchesterUni", name: "University of Manchester", image: manchesterUni },
+      { key: "manchesterMet", name: "Manchester Metropolitan University", image: manchesterMet },
+    ],
+    "E08000019": [ // Sheffield
+      { key: "sheffieldUni", name: "University of Sheffield", image: sheffieldUni },
+      { key: "sheffieldHallam", name: "Sheffield Hallam University", image: sheffieldHallam },
+    ],
+    "E08000021": [ // Newcastle
+      { key: "newcastleUni", name: "Newcastle University", image: newcastleUni },
+      { key: "northumbriaUni", name: "Northumbria University", image: northumbriaUni },
+    ],
+    "E08000025": [ // Birmingham
+      { key: "birminghamUni", name: "University of Birmingham", image: birminghamUni },
+      { key: "birminghamCity", name: "Birmingham City University", image: birminghamCity },
+    ],
+    "E08000035": [ // Leeds
+      { key: "leedsUni", name: "University of Leeds", image: leedsUni },
+      { key: "leedsBeckett", name: "Leeds Beckett University", image: leedsBeckett },
+    ],
+  };
 
-  const property_types = [
-    {
-      key: "Apartment", name: "Apartment", image: apartmentImg,
-    },
-    {
-      key: "Bungalow", name: "Bungalow", image: bungalowImg,
-    },
-    {
-      key: "House", name: "House", image: houseImg,
-    },
-    {
-      key: "Maisonette", name: "Maisonette", image: maisonetteImg,
-    },
-  ];
+  // If no city is selected, you might show an empty array or a default list
+  const universities = selectedLocalAuthority ? universitiesByCity[selectedLocalAuthority] || [] : [];
 
-  const epc_ratings = [
-    { key: "A",},
-    { key: "B",},
-    { key: "C",},
-    { key: "D",},
-    { key: "E",},
-    { key: "F",},
-    { key: "G",},
-  ];
-
-  const amenities = [
-    { key: "gym", name: "Gym", image: require("../assets/amenities/gym.jpg") },
-    { key: "cafe", name: "Cafe", image: require("../assets/amenities/cafe.jpg") },
-    { key: "restaurant", name: "Restaurant", image: require("../assets/amenities/restaurant.jpg") },
-    { key: "park", name: "Park", image: require("../assets/amenities/park.jpg") },
-    { key: "pubs", name: "Pubs", image: require("../assets/amenities/pub.jpg") },
-    { key: "nightclub", name: "Nightclub", image: require("../assets/amenities/nightclub.jpg") },
-    { key: "library", name: "Library", image: require("../assets/amenities/library.jpg") },
-    { key: "scentre", name: "Shopping Centres", image: require("../assets/amenities/shopping centre.jpg") },
-    { key: "gshop", name: "Grocery Shops", image: require("../assets/amenities/grocery.jpg") },
-  ];
-  
-
+  // Handle local authority selection: clear previously selected university if any
+  const handleLocalAuthorityChange = (e) => {
+    setSelectedLocalAuthority(e.target.value);
+    setSelectedUniversity(null);
+  };
 
   const handleUniversitySelect = (uniKey) => {
     setSelectedUniversity(uniKey);
@@ -92,20 +126,24 @@ function ExampleKnnForm({closePopUp}) {
 
   const handlePropertyType = (propertyKey) => {
     setSelectedProperty(propertyKey);
-  }
+  };
 
   const handleEPCRating = (ratingKey) => {
+    setEpcRating(ratingKey);
     setSelectedEPCRating(ratingKey);
-  }
+  };
+  const reverseEPCMapping = {
+    1: 'A',
+    2: 'B',
+    3: 'C',
+    4: 'D',
+    5: 'E',
+    6: 'F',
+    7: 'G',
+    8: 'N/A'
+  };
 
-  const handleAmenitySelection = (amenityKey) => {
-    for(let i = 0; i < selectedAmenities.length; i++){
-    if(selectedAmenities[i] === amenityKey){
-      selectedAmenities.push(amenityKey);
-      setSelectedAmenities(selectedAmenities);
-      }
-    }
-  }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,8 +153,8 @@ function ExampleKnnForm({closePopUp}) {
       property_type,
       selectedUniversity,
       maxDistance,
+      local_authority: selectedLocalAuthority,
     };
-
 
     try {
       const response = await fetch("http://127.0.0.1:5000/api/property/knnSearch", {
@@ -125,7 +163,13 @@ function ExampleKnnForm({closePopUp}) {
         body: JSON.stringify(userPrefs),
       });
       const recommended = await response.json();
-      setRecommendations(recommended);
+
+      const convertedRecommendations = recommended.map(property => ({
+        ...property,
+        current_energy_rating: reverseEPCMapping[property.current_energy_rating] || property.current_energy_rating
+      }));
+
+      setRecommendations(convertedRecommendations);
       console.log("KNN Recommendations:", recommended);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
@@ -134,135 +178,147 @@ function ExampleKnnForm({closePopUp}) {
 
   return (
     <div className="custom-algorithm-popup">
-    <div className="custom-algorithm-container">
-      <div className="custom-algorithm-base">
-        <div className="custom-algorithm-close">
-          <button className="cancel-button" onClick={closePopUp}>{"\u2716"}</button>
-      
-        <form onSubmit={handleSubmit}>
-        <div className="number-of-bedrooms-selection">
-        <p>How many rooms are you looking for?</p>
-        <div className="number-of-bedrooms-grid">
-            {total_bedrooms.map((bedroom_number) => (
-              <div 
-                key={bedroom_number.key} 
-                className={`number-of-bedrooms-card ${number_bedrooms === bedroom_number.key ? "selected" : ""}`}
-                onClick={() => setBedrooms(bedroom_number.key)}>
-                
-                <div className="number-of-bedrooms-image">{bedroom_number.name}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="epc-rating-selection">
-        <p>How efficient do you want your property to be</p>
-        <div className="epc-rating-grid">
-            {epc_ratings.map((rating) => (
-              <div 
-                key={rating.key} 
-                className={`epc-rating-card ${selectedRating === rating.key ? "selected" : ""}`}
-                onClick={() => setSelectedEPCRating(rating.key)}>
-                
-                <div className={`epc-rating-house ${selectedRating === rating.key ? "selected" : ""}`}>
-                  <span className="epc-rating-letter">{rating.key}</span>
-                </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-        <div className="property-type-selection">
-          <p>What kind of property do you want to live in?</p>
-          <div className="property-types">
-            {property_types.map((type) => (
-              <div
-                key={type.key}
-                className={`property-type-option ${
-                  selectedProperty === type.key ? "selected" : ""
-                }`}
-                onClick={() => handlePropertyType(type.key)}
-              >
-                <img src={type.image} alt={type.name} />
-                <p>{type.name}</p>
-                
-              </div>
-            ))}
+      <div className="custom-algorithm-container">
+        <div className="custom-algorithm-base">
+          <div className="custom-algorithm-close">
+            <button className="cancel-button" onClick={closePopUp}>{"\u2716"}</button>
           </div>
-        </div>
-      
-
-        <div className="university-selection">
-          <p>Select your University:</p>
-          <div className="universities">
-            {universities.map((uni) => (
-              <div
-                key={uni.key}
-                className={`university-option ${
-                  selectedUniversity === uni.key ? "selected" : ""
-                }`}
-                onClick={() => handleUniversitySelect(uni.key)}
+          <form onSubmit={handleSubmit}>
+            {/* Local Authority Dropdown */}
+            <div className="local-authority-dropdown">
+              <label htmlFor="local-authority">Select your city:</label>
+              <select
+                id="local-authority"
+                value={selectedLocalAuthority}
+                onChange={handleLocalAuthorityChange}
               >
-                <img src={uni.image} alt={uni.name} />
-                <p>{uni.name}</p>
-              
-              </div>
-            ))}
-          </div>
-        </div>
+                <option value="">Select City</option>
+                {localAuthorities.map((city) => (
+                  <option key={city.key} value={city.key}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div className="distance-slider">
-          <p>
-            How far would you like to be? {maxDistance} km
-          </p>
-          <input
-            type="range"
-            min="0"
-            max="50"
-            value={maxDistance}
-            onChange={(e) => setMaxDistance(e.target.value)}
-          />
-        </div>
-
-
-        <div className="amenities-section">    {/*Amenities Choices */}
-        <p>What do you like to do in your free time</p>
-          <div className="amenities">
-            {amenities.map((amenity) => (
-              <div
-                key={amenity.key}
-                className={`amenity-card ${
-                  selectedAmenities.includes(amenity.key) ? "selected" : ""
-                }`}
-                onClick={() => handleAmenitySelection(amenity.key)}
-              >
-                <img src={amenity.image} alt={amenity.name} className="amenity-image"/>
-                  <div className="amenity-overlay">
-                    <span className="amenity-name">{amenity.name}</span>
+            {/* Number of Bedrooms */}
+            <div className="number-of-bedrooms-selection">
+              <p>How many rooms are you looking for?</p>
+              <div className="number-of-bedrooms-grid">
+                {[
+                  { key: "1 bedroom", name: "1" },
+                  { key: "2 bedrooms", name: "2" },
+                  { key: "3 bedrooms", name: "3" },
+                  { key: "4 bedrooms", name: "4" },
+                  { key: "5 bedrooms", name: "5" },
+                  { key: "6 bedrooms", name: "6" },
+                  { key: "7 bedrooms", name: "7" },
+                  { key: "8 bedrooms", name: "8" },
+                ].map((bedroom) => (
+                  <div 
+                    key={bedroom.key} 
+                    className={`number-of-bedrooms-card ${number_bedrooms === bedroom.name ? "selected" : ""}`}
+                    onClick={() => setBedrooms(bedroom.name)}
+                  >
+                    <div className="number-of-bedrooms-image">{bedroom.name}</div>
                   </div>
-                {selectedAmenities.includes(amenity.key) && (
-                  <div className="tick-overlay">✔</div>
+                ))}
+              </div>
+            </div>
+
+            {/* EPC Rating Selection */}
+            <div className="epc-rating-selection">
+              <p>How efficient do you want your property to be</p>
+              <div className="epc-rating-grid">
+                {["A", "B", "C", "D", "E", "F", "G"].map((rating) => (
+                  <div 
+                    key={rating} 
+                    className={`epc-rating-card ${selectedRating === rating ? "selected" : ""}`}
+                    onClick={() => handleEPCRating(rating)}
+                  >
+                    <div className={`epc-rating-house ${selectedRating === rating ? "selected" : ""}`}>
+                      <span className="epc-rating-letter">{rating}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Property Type Selection */}
+            <div className="property-type-selection">
+              <p>What kind of property do you want to live in?</p>
+              <div className="property-types">
+                {[
+                  { key: "Apartment", name: "Apartment", image: apartmentImg },
+                  { key: "Bungalow", name: "Bungalow", image: bungalowImg },
+                  { key: "House", name: "House", image: houseImg },
+                  { key: "Maisonette", name: "Maisonette", image: maisonetteImg },
+                ].map((type) => (
+                  <div
+                    key={type.key}
+                    className={`property-type-option ${selectedProperty === type.key ? "selected" : ""}`}
+                    onClick={() => handlePropertyType(type.key)}
+                  >
+                    <img src={type.image} alt={type.name} />
+                    <p>{type.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* University Selection */}
+            <div className="university-selection">
+              <p>Select your University:</p>
+              <div className="universities">
+                {selectedLocalAuthority && universities.length > 0 ? (
+                  universities.map((uni) => (
+                    <div
+                      key={uni.key}
+                      name={uni.name}
+                      className={`university-option ${selectedUniversity === uni.name ? "selected" : ""}`}
+                      onClick={() => handleUniversitySelect(uni.name)}
+                     
+                    >
+                      <img src={uni.image} alt={uni.name} />
+                      <p>{uni.name}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>Please select a city to see available universities.</p>
                 )}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        <button type="submit">Submit</button>
-      </form>
+            {/* Distance Slider */}
+            <div className="distance-slider">
+              <p>
+                How far would you like to be? {maxDistance} km
+              </p>
+              <input
+                type="range"
+                min="0"
+                max="20"
+                value={maxDistance}
+                onChange={(e) => setMaxDistance(e.target.value)}
+              />
+            </div>
 
-      {recommendations.length > 0 && (
-        <div className="property-cards-container">
-          {recommendations.map((property, index) => (
-            <TopRatedPropertyCard key={index} property={property} language="en" />
-          ))}
-        </div>
-        )}
-          </div>
+            
+
+            <button type="submit">Submit</button>
+          </form>
+
+          {recommendations.length > 0 && (
+            <div className="property-cards-container">
+              {recommendations.map((property, index) => (
+                <TopRatedPropertyCard key={index} property={property} language="en" />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default ExampleKnnForm;
+export default CustomAlgorithm;
