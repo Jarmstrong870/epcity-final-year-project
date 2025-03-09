@@ -1,6 +1,6 @@
+from datetime import datetime
 from bcrypt import checkpw
-from Repository.loginRepo import find_user_by_email
-
+from Repository.loginRepo import find_user_by_email, update_user_last_active
 
 def login_user_service(data):
     """
@@ -33,6 +33,9 @@ def login_user_service(data):
 
         # Verify the password using bcrypt
         if checkpw(password.encode('utf-8'), stored_password_hash.encode('utf-8')):
+            # Update last active time
+            update_user_last_active(email)
+            
             return {
                 "message": f"Welcome back to EPCity, {firstname}!",
                 "lastname": lastname,
@@ -45,3 +48,4 @@ def login_user_service(data):
     except Exception as e:
         print(f"Error during login process: {e}")
         return {"message": "An internal error occurred. Please try again later."}, 500
+
