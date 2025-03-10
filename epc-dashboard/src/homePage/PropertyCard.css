@@ -1,0 +1,104 @@
+.property-card {
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 0 auto; /* centers the card */
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Image container with 95% width and centered to leave a border area */
+.property-card__image-container {
+  position: relative;
+  width: 95%;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1; /* square aspect ratio */
+  background-color: #f5f5f5; /* subtle gray background */
+  
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 2%;
+}
+
+/* Ensure the image fills the container without overflowing */
+.property-card__image-container img,
+.property-card__image-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Information section below the image */
+.property-card__info {
+  padding: 16px;
+  background-color: #fff;
+}
+
+/* Header: left-aligned address and star icon at the right */
+.property-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.property-card__address {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+}
+
+.property-card__star {
+  cursor: pointer;
+}
+
+.property-card__postcode {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 8px;
+  text-align: left;
+}
+
+/* Details grid for additional property information */
+.property-card__details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.property-card__postcode-star-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Ensures they're vertically aligned */
+  width: 100%;
+}
+
+
+.detail-value {
+  font-size: 0.95rem;
+  color: #333;
+}
