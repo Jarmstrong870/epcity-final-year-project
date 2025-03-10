@@ -358,9 +358,6 @@ body {
 .property-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  justify-content: center;
-  margin: auto;
 }
 
 .property-card {
@@ -384,8 +381,7 @@ body {
 }
 
 /* About Website Section */
-.about-website,
-.epc-introduction {
+.about-website {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -397,56 +393,45 @@ body {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
 }
 
-.about-website img,
-.epc-introduction img {
+/* About Image */
+.about-website .about-image {
   flex: 1;
-  max-width: 40%; /* Limit the image width to 40% of the container */
-  height: auto; /* Maintain the aspect ratio */
-  border-radius: 15px; /* Keep the rounded corners */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-  object-fit: cover; /* Ensures proper scaling for the image */
+  max-width: 50%;
+  border-radius: 1rem;
+  object-fit: cover;
 }
 
-.about-website .content,
-.epc-introduction .content {
-  flex: 2;
-  text-align: center;
+/* About Content */
+.about-website .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.about-website .content h2,
-.epc-introduction .content h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #2c3e3d;
-  margin-bottom: 20px;
-  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+.about-website .content h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2c2c2c;
 }
 
-.about-website .content p,
-.epc-introduction .content p {
-  font-size: 1.1rem;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 20px;
-}
-
-.about-website .content a,
-.epc-introduction .content a {
-  display: inline-block;
-  padding: 12px 20px;
+.about-website .content p {
   font-size: 1rem;
-  font-weight: bold;
-  color: white;
-  background-color: #2c5f2d;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  color: #555;
 }
 
-.about-website .content a:hover,
-.epc-introduction .content a:hover {
-  background-color: #1e4020;
-  transform: scale(1.05);
+/* Hover or subtle transition effects */
+.about-website .about-image,
+.about-website .content h2,
+.about-website .content p {
+  transition: transform 0.3s ease;
+}
+
+.about-website:hover .about-image {
+  transform: scale(1.02);
 }
 /* Top Rated Properties Section */
 .custom-algorithm-section {
@@ -668,16 +653,6 @@ body {
 
 .scrollDownArrow:hover .scrollDownArrow {
   opacity: 0.8;
-}
-
-.epc-youtube-video {
-  color: #2c5f2d;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-.epc-youtube-video:hover {
-  color: #163017;
 }
 
 
