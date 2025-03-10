@@ -62,7 +62,7 @@ const CostComparisonGraph = ({ properties }) => {
             {graphData.length === 0 ? (
                 <p>Loading or no data available...</p>
             ) : (
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width="95%" height={300}>
                     <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                         <XAxis dataKey="name" />
                         <YAxis 

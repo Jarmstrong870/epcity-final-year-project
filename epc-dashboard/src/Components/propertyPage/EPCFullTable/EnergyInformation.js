@@ -9,6 +9,21 @@ import gasCylinderIcon from "../../../assets/heating_icons/gas cylinder.png";
 import gasMeterIcon from "../../../assets/heating_icons/gas meter.png";
 import thermostatIcon from "../../../assets/heating_icons/thermostat.png";
 import valveIcon from "../../../assets/heating_icons/valve.png";
+import unspecifiedIcon from "../../../assets/heating_icons/unspecified.png";
+import heaterIcon from "../../../assets/heating_icons/electric heater.png";
+import electricIcon from "../../../assets/heating_icons/electric.png";
+
+const iconGrouping = {
+  radiator: {icon: radiatorIcon, label: "Radiator"},
+  boiler: {icon: boilerIcon, label: "Boiler"},
+  electric: {icon: electricIcon, label: "Electric"},
+  thermostat: {icon: thermostatIcon, label: "Thermostat"},
+  valve: {icon: valveIcon, label: "Valve"},
+  heater: {icon: heaterIcon, label: "Heater"},
+  unspecified: {icon: unspecifiedIcon, label: "Unspecified"},
+  gas: {icon: gasCylinderIcon, label: "Gas"},
+}
+
 
 // Function to render star ratings based on efficiency
 const renderStarRating = (efficiency, t) => {
@@ -53,6 +68,32 @@ const getProgressBarColor = (percentage) => {
   
   return darkGreen;
 }
+
+const getHeatingIcon = (description) => {
+  const icons = [];
+  if(description.toLowerCase().includes("boiler")) 
+    icons.push("boiler");
+
+  if(description.toLowerCase().includes("radiators"))
+    icons.push("radiator");
+
+  if(description.toLowerCase().includes("gas"))
+    icons.push("gas");
+
+  if(description.toLowerCase().includes("electric"))
+    icons.push("electric")
+
+  if(description.toLowerCase().includes("room heaters"))
+    icons.push("heater");
+
+  if(description.toLowerCase().includes("TRVs"))
+    icons.push("valve");
+
+  if(description.toLowerCase().includes("thermostat"))
+    icons.push("thermostat");
+
+  return icons.length > 0 ? icons.map(icon => iconGrouping[icon]) : [iconGrouping.unspecified];
+};
 
 const EnergyInformation = ({ properties, maxValues, language }) => {
   const t = translations[language] || translations.en;
@@ -105,7 +146,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
         <h2 className={styles.sectionHeader}>{t.heating}</h2>
         
         {/* Current Costs Section */}
-        <table className="heating-current-costs-table">
+        <table>
           <thead>
             <tr>
               <th>Weekly</th>
@@ -123,111 +164,60 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
         </tbody>
         </table>
 
-        {/* Potential Costs Section */}        
-        <table className="heating-potential-costs-table">
-          <thead>
-            <tr>
-              <th>Weekly</th>
-              <th>Monthly</th>
-              <th>Yearly</th>
-            </tr>
-          </thead>
-          
-        <tbody>
-          <tr>
-            <td>£{weeklyPotentialHeatingCost}</td>
-            <td>£{monthlyPotentialHeatingCost}</td>
-            <td className={isBiggestHeatingSavings ? "highlight-green" : ""}> £{properties["heating_cost_potential"]} </td>
-          </tr>
-        </tbody>
-        </table>
-
         {/* Heating Potential Savings Section */}
-        <table className="heating-savings-table">
-          <thead>
-            <tr>
-              <th>Potential Savings</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>£{(properties["heating_cost_current"] - properties["heating_cost_potential"]).toFixed(2)}</td>            
-            </tr>
-          </tbody>
-        </table>
+          <table className="savingsSummary">
+              <thead>
+                <tr>
+                  <th>Potential Savings</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>£{(properties["heating_cost_current"] - properties["heating_cost_potential"]).toFixed(2)}</td>            
+                </tr>
+              </tbody>
+          </table>
 
-      <div className={styles.heatingSummary}>
-        <div className={styles.mainFuelSection}>
-          <h4>{t.mainFuel}: {properties["main_fuel"]}</h4>
-          <p>{properties["main_fuel"]}</p>
+              <div className={styles.heatingSummary}>
+                <div className={styles.mainFuelSection}>
+                  <h4>{t.mainFuel}:</h4>
+                  <p>{properties["main_fuel"]}</p>
+                </div>
+
+                <div className={styles.efficiencyStarRatings}>
+                  <h4>{t.mainheatEnergyEfficiency}:</h4> 
+                  <p className={isHighestMainheatEff ? "highlight-green" : ""}>
+                  <p>{renderStarRating(properties["mainheat_energy_eff"], t)}</p>
+                </p>
+
+                <p className={isHighestMainheatControllerEff ? "highlight-green" : ""}>
+                  <h4>{t.mainheatControllerEnergyEfficiency}: </h4>
+                  <p>{renderStarRating(properties["mainheatc_energy_eff"], t)}</p>
+                </p>
+
+                </div>
+              </div>
+
+
+              <div className={styles.iconSection}>
+                <div className={styles.heatingIcons}>
+                  <h4>{t.mainheatControllerEnergyEfficiency}: </h4>
+                    <span>{getHeatingIcon(`${properties["mainheat_description"]} ${properties["mainheatcont_description"]}`)
+                      .map(({icon, label}, index) => (
+                        <img key = {index} src = {icon} alt = {label} title = {label} />
+                      ))}</span>
+                </div>
+              </div>
           </div>
 
-          <div className={styles.energyStarRatings}>
-          <p className={isHighestMainheatEff ? "highlight-green" : ""}>
-            <h4>{t.mainheatEnergyEfficiency}:</h4> 
-            <p>{renderStarRating(properties["mainheat_energy_eff"], t)}</p>
-          </p>
-
-          <p className={isHighestMainheatControllerEff ? "highlight-green" : ""}>
-            <h4>{t.mainheatControllerEnergyEfficiency}: </h4>
-            <p>{renderStarRating(properties["mainheatc_energy_eff"], t)}</p>
-          </p>
-
-        </div>
-      </div>
-
-
-        <div className={styles.equipmentExamples}>
-          <grid className={styles.heatingEquipmentTable}>
-              <tr className={styles.heatingIcons}>
-                <td><img src={radiatorIcon} alt="radiator"/></td>            
-                <td><img src={boilerIcon} alt="boilder"/></td>
-                <td><img src={gasCylinderIcon} alt="gas cylinder"/></td>
-                <td><img src={gasMeterIcon} alt="gas meter"/></td>
-                <td><img src={thermostatIcon} alt="thermostat"/></td>
-                <td><img src={valveIcon} alt="valve"/></td>
-              </tr>
-
-              <tr className={styles.heatingNames}>
-                <td>Radiator</td>            
-                <td>Boiler</td>
-                <td>Gas Cylinder</td>
-                <td>Gas Meter</td>
-                <td>Thermostat</td>
-                <td>Valve</td>
-              </tr>
-          </grid>
-        </div>
-
-        {/*<tr className={styles.heatingIcons}>
-                {energyIcon || controllerEnergyIcon === "radiator" && <td><img src={radiatorIcon} alt="radiator"/></td>}            
-                {energyIcon || controllerEnergyIcon === "boiler" && <td><img src={boilerIcon} alt="boiler"/></td>}
-                {energyIcon || controllerEnergyIcon === "programmer" && <td><img src={gasMeterIcon} alt="gas meter"/></td>}
-                {energyIcon || controllerEnergyIcon === "room thermostat" && <td><img src={thermostatIcon} alt="thermostat"/></td>}
-                {energyIcon || controllerEnergyIcon === "applicance thermostat" && <td><img src={thermostatIcon} alt="thermostat"/></td>}
-                {energyIcon || controllerEnergyIcon === "trvs" && <td><img src={valveIcon} alt="valve"/></td>}
-                {energyIcon || controllerEnergyIcon === "underfloor heating" && <td><img src={valveIcon} alt="valve"/></td>}
-                {energyIcon || controllerEnergyIcon === "electric storage heaters" && <td><img src={valveIcon} alt="valve"/></td>}
-                {energyIcon || controllerEnergyIcon === "manual charge control" && <td><img src={valveIcon} alt="valve"/></td>}
-                {energyIcon || controllerEnergyIcon === "" && <td><img src={valveIcon} alt="valve"/></td>}
-              </tr> */}
-
-        {/*<div className={styles.equipmentExamples}>
-          <p>{t.mainheatDescription}: {properties["mainheat_description"]}</p>
-          <p>{t.mainheatControllerDescription}: {properties["mainheatcont_description"]}</p>
-        </div>*/}
-
-        {/*<p>{t.mainHeatingControls}: {properties["main_heating_controls"]}</p>*/}
         
-        
-      </div>
 
       {/* Lighting Section */}
       <div className={`${styles.energyBox} ${styles.lighting}`}>
         <h2 className={styles.sectionHeader}>{t.lighting}</h2>
 
         {/* Current Costs Section */}
-        <table className="lighting-current-costs-table">
+        <table>
           <thead>
             <tr>
               <th>Weekly</th>
@@ -245,27 +235,8 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
         </tbody>
         </table>
 
-        {/* Potential Costs Section */}        
-        <table className="lighting-potential-costs-table">
-          <thead>
-            <tr>
-              <th>Weekly</th>
-              <th>Monthly</th>
-              <th>Yearly</th>
-            </tr>
-          </thead>
-          
-        <tbody>
-          <tr>
-            <td>£{weeklyPotentialLightingCost}</td>
-            <td>£{monthlyPotentialLightingCost}</td>
-            <td className={isBiggestLightingSavings ? "highlight-green" : ""}> £{properties["lighting_cost_potential"]} </td>
-          </tr>
-        </tbody>
-        </table>
-
         {/* Potential Savings Section */}
-        <table className="lighting-potential-savings-table">
+        <table className="savingsSummary">
           <thead>
             <tr>
               <th>Potential Savings</th>
@@ -278,34 +249,35 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
           </tbody>
         </table>
 
-      <div className={styles.progressBase}>
-        <div className={styles.progressContainer}>
-          <h4>{t.lowEnergyLighting}</h4>
-          <progress 
-            value={progressValue} max={100} style={{backgroundColor: progressValueColour}}/>
-          <p>{progressValue}%</p>
-        </div>
-        
-        <p className={isHighestLightingEff ? "highlight-green" : ""}></p>
-          <div className={styles.lightingStarRating}>
-            <h4>{t.lightingEnergyEfficiency}:</h4>
-            <p>{renderStarRating(properties["lighting_energy_eff"], t)}</p> 
+        <div className={styles.progressBase}>
+          <div className={styles.progressContainer}>
+            <h4>{t.lowEnergyLighting}</h4>
+              <progress 
+                value={progressValue} max={100} style={{backgroundColor: progressValueColour}}/>
+              <p>{progressValue}%</p>
           </div>
-      </div>
-       
-        <div className={styles.progressDescription}>
-        <h4>{t.lightingDescription}</h4>
-          <p>{properties["lighting_description"]}</p>
-        </div>
+                
+                <p className={isHighestLightingEff ? "highlight-green" : ""}></p>
+                  <div className={styles.efficiencyStarRatings}>
+                    <h4>{t.lightingEnergyEfficiency}:</h4>
+                    <p>{renderStarRating(properties["lighting_energy_eff"], t)}</p> 
+                  </div>
+              </div>
+              
+                {/*<div className={styles.progressDescription}>
+                <h4>{t.lightingDescription}</h4>
+                  <p>{properties["lighting_description"]}</p>
+                </div>*/}
 
-      </div>
- 
+              </div>
+
+        
       {/* Hot Water Section */}
       <div className={`${styles.energyBox} ${styles.hotWater}`}>
         <h2 className={styles.sectionHeader}>{t.hotWaterCosts}</h2>
 
         {/* Current Costs Section */}
-        <table className="hot-water-current-costs-table">
+        <table>
           <thead>
             <tr>
               <th>Weekly</th>
@@ -323,53 +295,35 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
         </tbody>
         </table>
 
-        {/* Potential Costs Section */}        
-        <table className="hot-water-potential-costs-table">
-          <thead>
-            <tr>
-              <th>Weekly</th>
-              <th>Monthly</th>
-              <th>Yearly</th>
-            </tr>
-          </thead>
-          
-        <tbody>
-          <tr>
-            <td>£{weeklyPotentialHotWaterCost}</td>
-            <td>£{monthlyPotentialHotWaterCost}</td>
-            <td className={isBiggestHotWaterSavings ? "highlight-green" : ""}> £{properties["hot_water_cost_potential"]} </td>
-          </tr>
-        </tbody>
-        </table>
+      {/* Potential Savings Section */}
+              <table className="savingsSummary">
+                <thead>
+                  <tr>
+                    <th>Potential Savings</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>£{(properties["hot_water_cost_current"] - properties["hot_water_cost_potential"]).toFixed(2)}</td>            
+                  </tr>
+                </tbody>
+              </table>
 
-        {/* Potential Savings Section */}
-        <table className="hot-water-potential-savings-table">
-          <thead>
-            <tr>
-              <th>Potential Savings</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>£{(properties["hot_water_cost_current"] - properties["hot_water_cost_potential"]).toFixed(2)}</td>            
-            </tr>
-          </tbody>
-        </table>
+          <div className={styles.hotWaterSummary}>
+            <div className={styles.hotWaterDescriptionsSection}>
+              <h4>{t.hotWaterDescription}:</h4>
+              <p> {properties["hotwater_description"]}</p>
+            </div>
 
-    <div className={styles.hotWaterSummary}>
-      <div className={styles.hotWaterDescriptionsSection}>
-        <h4>{t.hotWaterDescription}:</h4>
-        <p> {properties["hotwater_description"]}</p>
-      </div>
-
-        <p className={isHighestHotWaterEff ? "highlight-green" : ""}>
-          <div className={styles.hotWaterStarRating}>
-            <h4>{t.hotWaterEnergyEfficiency}:</h4>
-            <p>{renderStarRating(properties["hot_water_energy_eff"], t)}</p>
+              <p className={isHighestHotWaterEff ? "highlight-green" : ""}>
+                <div className={styles.efficiencyStarRatings}>
+                  <h4>{t.hotWaterEnergyEfficiency}:</h4>
+                  <p>{renderStarRating(properties["hot_water_energy_eff"], t)}</p>
+                </div>
+              </p>
+            </div>
           </div>
-        </p>
-      </div>
-      </div>
+
     </div>
   );
 };
