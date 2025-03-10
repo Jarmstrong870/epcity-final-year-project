@@ -458,7 +458,7 @@ def adjust_cost(cost, inflation_rate):
 
 
 
-def recommend_by_knn(user_prefs, n_neighbors=5):
+def recommend_by_knn(user_prefs, n_neighbors=6):
     """
     Recommends properties based on user preferences by first retrieving filtered property records
     from the database (using execute_query) and then applying a KNN algorithm on the feature matrix.

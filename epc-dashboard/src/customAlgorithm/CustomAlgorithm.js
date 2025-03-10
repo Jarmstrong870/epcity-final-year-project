@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./CustomAlgorithm.css";
-import TopRatedPropertyCard from "../homePage/TopRatedPropertyCard";
+import PropertyCard from "../homePage/PropertyCard";
 
 // University images for Liverpool
 import uniLiverpoolImg from "../assets/Universities/university-of-liverpool.jpg";
@@ -45,7 +45,7 @@ import houseImg from "../assets/property types/house.png";
 import maisonetteImg from "../assets/property types/maisonette.png";
 
 function CustomAlgorithm({ closePopUp }) {
-  // State for the new local authority (city) dropdown.
+  // Form states
   const [selectedLocalAuthority, setSelectedLocalAuthority] = useState("");
   const [selectedUniversity, setSelectedUniversity] = useState(null);
   const [number_bedrooms, setBedrooms] = useState(0);
@@ -54,8 +54,10 @@ function CustomAlgorithm({ closePopUp }) {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [selectedRating, setSelectedEPCRating] = useState(null);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const [maxDistance, setMaxDistance] = useState(10); // default value in km
+  const [maxDistance, setMaxDistance] = useState(10);
   const [recommendations, setRecommendations] = useState([]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Define your local authorities.
   const localAuthorities = [
@@ -72,49 +74,48 @@ function CustomAlgorithm({ closePopUp }) {
 
   // Map each local authority to its universities.
   const universitiesByCity = {
-    "E08000012": [ // Liverpool
+    "E08000012": [
       { key: "liverpool", name: "University of Liverpool", image: uniLiverpoolImg },
       { key: "johnmoores", name: "Liverpool John Moores University", image: johnMooresImg },
       { key: "hope", name: "Liverpool Hope University", image: hopeUniImg },
     ],
-    "E06000023": [ // Bristol
+    "E06000023": [
       { key: "bristolUni", name: "University of Bristol", image: bristolUni },
       { key: "uweBristol", name: "UWE Bristol", image: uweBristol },
     ],
-    "E06000043": [ // Brighton
+    "E06000043": [
       { key: "brightonUni", name: "University of Brighton", image: brightonUni },
       { key: "sussexUni", name: "University of Sussex", image: sussexUni },
     ],
-    "E06000045": [ // Southampton
+    "E06000045": [
       { key: "southamptonUni", name: "University of Southampton", image: southamptonUni },
       { key: "solentUni", name: "Solent University", image: solentUni },
     ],
-    "E08000003": [ // Manchester
+    "E08000003": [
       { key: "manchesterUni", name: "University of Manchester", image: manchesterUni },
       { key: "manchesterMet", name: "Manchester Metropolitan University", image: manchesterMet },
     ],
-    "E08000019": [ // Sheffield
+    "E08000019": [
       { key: "sheffieldUni", name: "University of Sheffield", image: sheffieldUni },
       { key: "sheffieldHallam", name: "Sheffield Hallam University", image: sheffieldHallam },
     ],
-    "E08000021": [ // Newcastle
+    "E08000021": [
       { key: "newcastleUni", name: "Newcastle University", image: newcastleUni },
       { key: "northumbriaUni", name: "Northumbria University", image: northumbriaUni },
     ],
-    "E08000025": [ // Birmingham
+    "E08000025": [
       { key: "birminghamUni", name: "University of Birmingham", image: birminghamUni },
       { key: "birminghamCity", name: "Birmingham City University", image: birminghamCity },
     ],
-    "E08000035": [ // Leeds
+    "E08000035": [
       { key: "leedsUni", name: "University of Leeds", image: leedsUni },
       { key: "leedsBeckett", name: "Leeds Beckett University", image: leedsBeckett },
     ],
   };
 
-  // If no city is selected, you might show an empty array or a default list
   const universities = selectedLocalAuthority ? universitiesByCity[selectedLocalAuthority] || [] : [];
 
-  // Handle local authority selection: clear previously selected university if any
+  // Handle local authority selection: clear previously selected university if any.
   const handleLocalAuthorityChange = (e) => {
     setSelectedLocalAuthority(e.target.value);
     setSelectedUniversity(null);
@@ -132,6 +133,7 @@ function CustomAlgorithm({ closePopUp }) {
     setEpcRating(ratingKey);
     setSelectedEPCRating(ratingKey);
   };
+
   const reverseEPCMapping = {
     1: 'A',
     2: 'B',
@@ -143,10 +145,9 @@ function CustomAlgorithm({ closePopUp }) {
     8: 'N/A'
   };
 
-  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const userPrefs = {
       number_bedrooms,
       current_energy_rating,
@@ -170,18 +171,33 @@ function CustomAlgorithm({ closePopUp }) {
       }));
 
       setRecommendations(convertedRecommendations);
-      console.log("KNN Recommendations:", recommended);
+      console.log("KNN Recommendations:", convertedRecommendations);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
+    } finally {
+      setHasSearched(true);
+      setIsLoading(false);
     }
   };
+
+  // Scroll into view when loading finishes and recommendations are available.
+  useEffect(() => {
+    if (!isLoading && recommendations.length > 0) {
+      const container = document.querySelector(".property-cards-container");
+      if (container) {
+        container.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [isLoading, recommendations]);
 
   return (
     <div className="custom-algorithm-popup">
       <div className="custom-algorithm-container">
         <div className="custom-algorithm-base">
           <div className="custom-algorithm-close">
-            <button className="cancel-button" onClick={closePopUp}>{"\u2716"}</button>
+            <button className="cancel-button" onClick={closePopUp}>
+              {"\u2716"}
+            </button>
           </div>
           <form onSubmit={handleSubmit}>
             {/* Local Authority Dropdown */}
@@ -215,8 +231,8 @@ function CustomAlgorithm({ closePopUp }) {
                   { key: "7 bedrooms", name: "7" },
                   { key: "8 bedrooms", name: "8" },
                 ].map((bedroom) => (
-                  <div 
-                    key={bedroom.key} 
+                  <div
+                    key={bedroom.key}
                     className={`number-of-bedrooms-card ${number_bedrooms === bedroom.name ? "selected" : ""}`}
                     onClick={() => setBedrooms(bedroom.name)}
                   >
@@ -231,8 +247,8 @@ function CustomAlgorithm({ closePopUp }) {
               <p>How efficient do you want your property to be</p>
               <div className="epc-rating-grid">
                 {["A", "B", "C", "D", "E", "F", "G"].map((rating) => (
-                  <div 
-                    key={rating} 
+                  <div
+                    key={rating}
                     className={`epc-rating-card ${selectedRating === rating ? "selected" : ""}`}
                     onClick={() => handleEPCRating(rating)}
                   >
@@ -277,7 +293,6 @@ function CustomAlgorithm({ closePopUp }) {
                       name={uni.name}
                       className={`university-option ${selectedUniversity === uni.name ? "selected" : ""}`}
                       onClick={() => handleUniversitySelect(uni.name)}
-                     
                     >
                       <img src={uni.image} alt={uni.name} />
                       <p>{uni.name}</p>
@@ -303,15 +318,22 @@ function CustomAlgorithm({ closePopUp }) {
               />
             </div>
 
-            
-
             <button type="submit">Submit</button>
           </form>
 
+          {/* Loading indicator */}
+          {isLoading && <p className="loading-indicator">Loading...</p>}
+
+          {/* No properties message */}
+          {hasSearched && recommendations.length === 0 && (
+            <p className="no-properties-message">No properties found matching your criteria.</p>
+          )}
+
+          {/* Recommendations */}
           {recommendations.length > 0 && (
             <div className="property-cards-container">
               {recommendations.map((property, index) => (
-                <TopRatedPropertyCard key={index} property={property} language="en" />
+                <PropertyCard key={index} property={property} language="en" />
               ))}
             </div>
           )}

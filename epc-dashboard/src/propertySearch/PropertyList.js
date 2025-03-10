@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import PropertyCard from '../homePage/PropertyCard';
 import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
@@ -175,7 +175,7 @@ const PropertyList = ({ user, loading, language }) => {
         <div className="property-cards-container">
           {properties.map((property, index) => (
             <div key={index} className="property-card">
-              <TopRatedPropertyCard property={property} language={language} />
+              <PropertyCard property={property} language={language} />
               <div className="compare-checkbox">
                 <label>
                   <input

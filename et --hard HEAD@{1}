@@ -1,0 +1,116 @@
+[33me635bf6[m[33m ([m[1;36mHEAD -> [m[1;32mBranch-CK[m[33m, [m[1;31morigin/Branch-CK[m[33m)[m HEAD@{0}: commit: Changes made to propertyCard
+[33m82b6a7f[m HEAD@{1}: pull origin dev: Merge made by the 'ort' strategy.
+[33mec467a8[m HEAD@{2}: commit: complete custom algorithm
+[33m795b861[m HEAD@{3}: pull origin dev: Fast-forward
+[33m3f25a53[m HEAD@{4}: commit: removal of main from python script
+[33m1663589[m HEAD@{5}: commit: V1 of the custom algorithm
+[33md40a999[m HEAD@{6}: pull origin dev: Fast-forward
+[33ma1820c8[m HEAD@{7}: pull origin dev: Fast-forward
+[33ma2f256b[m HEAD@{8}: commit (merge): changes fixed
+[33mde3107b[m HEAD@{9}: commit: fixed changes
+[33meb96b53[m HEAD@{10}: commit: Added propertyPage Graph and tidied up city selector so that its in its own component
+[33m21370cb[m HEAD@{11}: pull origin dev: Merge made by the 'ort' strategy.
+[33m1161a14[m HEAD@{12}: pull origin dev: Merge made by the 'ort' strategy.
+[33md4c62e7[m HEAD@{13}: commit: Styling and layout changes for the EPCSpecificInformation Page
+[33m0ba38c2[m HEAD@{14}: pull origin dev: Fast-forward
+[33m0496d8e[m HEAD@{15}: commit (merge): remerged
+[33mfb84084[m HEAD@{16}: commit: styling changes added
+[33mf35bd9a[m HEAD@{17}: pull origin dev: Merge made by the 'ort' strategy.
+[33m0e204f7[m HEAD@{18}: commit (merge): commiting
+[33mdaa4889[m HEAD@{19}: pull origin dev: Merge made by the 'ort' strategy.
+[33m483ff2e[m HEAD@{20}: commit: Styling changes made to generalInformation
+[33mfb14b57[m HEAD@{21}: pull origin dev: Fast-forward
+[33mab32ef5[m HEAD@{22}: commit: Added components to property Page
+[33m52f334c[m HEAD@{23}: pull origin dev: Merge made by the 'ort' strategy.
+[33mea6076e[m HEAD@{24}: commit (merge): merged lastest code
+[33m11e1664[m HEAD@{25}: commit: Personal styling changes
+[33mee1065d[m HEAD@{26}: pull origin dev: Fast-forward
+[33mc37acc6[m HEAD@{27}: pull origin dev: Fast-forward
+[33m3f98bfe[m HEAD@{28}: commit: updated propertiesservice
+[33m98065f5[m HEAD@{29}: commit: tidied up the filing system with the new favourite features included
+[33m0a8534d[m HEAD@{30}: commit (merge): Merge branch 'dev' of gitlab-se.eeecs.qub.ac.uk:CSC3032-2425/CSC3032-2425-TEAM4 into Branch-CK
+[33m773275e[m HEAD@{31}: commit: Before Pulling
+[33m8ada632[m HEAD@{32}: pull origin dev: Merge made by the 'ort' strategy.
+[33mdfdc63d[m HEAD@{33}: commit: change implemented
+[33m0b8a56a[m HEAD@{34}: commit (merge): Merged with errors
+[33m1306241[m HEAD@{35}: commit (merge): merged changes
+[33mcf25d65[m HEAD@{36}: commit: Remove __pycache__ from version control and ignore it
+[33me8ddc16[m HEAD@{37}: commit: Remove __pycache__ from version control and ignore it
+[33m31cd9f6[m HEAD@{38}: rebase (abort): updating HEAD
+[33m31cd9f6[m HEAD@{39}: rebase (abort): updating HEAD
+[33ma3632f5[m HEAD@{40}: rebase (continue): errors
+[33m1a20d31[m HEAD@{41}: commit (merge): Merged code 20/01/25
+[33mf1ff04f[m HEAD@{42}: commit: context Management
+[33maf1e8e9[m HEAD@{43}: commit: Frontend pageination and sorting
+[33m4fccc26[m HEAD@{44}: commit (merge): merged to dev
+[33m31cd9f6[m HEAD@{45}: checkout: moving from dev to Branch-CK
+[33maae648d[m[33m ([m[1;32mdev[m[33m)[m HEAD@{46}: reset: moving to HEAD
+[33maae648d[m[33m ([m[1;32mdev[m[33m)[m HEAD@{47}: checkout: moving from dev to dev
+[33maae648d[m[33m ([m[1;32mdev[m[33m)[m HEAD@{48}: checkout: moving from 0aab95311b2883206f867e1392d0bab7a6951237 to dev
+[33m0aab953[m HEAD@{49}: commit: dev branch code
+[33maae648d[m[33m ([m[1;32mdev[m[33m)[m HEAD@{50}: rebase (start): checkout dev
+[33m31cd9f6[m HEAD@{51}: checkout: moving from dev to Branch-CK
+[33maae648d[m[33m ([m[1;32mdev[m[33m)[m HEAD@{52}: commit: John's added code
+[33m35b96b0[m HEAD@{53}: pull origin dev: Fast-forward
+[33m8ef89a4[m HEAD@{54}: pull origin dev: Fast-forward
+[33ma8e72ad[m HEAD@{55}: checkout: moving from 07fe51235b8b88de9754d83098b76d0d33b68601 to dev
+[33m07fe512[m HEAD@{56}: commit: 102/01/2025
+[33m2b3fb82[m HEAD@{57}: commit: V6
+[33m31cd9f6[m HEAD@{58}: checkout: moving from Branch-CK to 31cd9f6
+[33m31cd9f6[m HEAD@{59}: checkout: moving from dev to Branch-CK
+[33ma8e72ad[m HEAD@{60}: reset: moving to HEAD
+[33ma8e72ad[m HEAD@{61}: checkout: moving from 0ddb8bde8f573fa4aee37ef42b5ee2958d4f35a5 to dev
+[33m0ddb8bd[m HEAD@{62}: commit: a
+[33m5ec4a49[m HEAD@{63}: checkout: moving from Branch-CK to 5ec4a49
+[33m31cd9f6[m HEAD@{64}: commit: errors
+[33m5ec4a49[m HEAD@{65}: commit: V5
+[33mc1b8d84[m HEAD@{66}: commit: V4
+[33m3288d8e[m HEAD@{67}: commit: V3
+[33md6ba487[m HEAD@{68}: checkout: moving from dev to Branch-CK
+[33ma8e72ad[m HEAD@{69}: reset: moving to HEAD
+[33ma8e72ad[m HEAD@{70}: checkout: moving from Branch-CK to dev
+[33md6ba487[m HEAD@{71}: commit: changing branch
+[33m4a01897[m HEAD@{72}: commit: V2
+[33mbca70c6[m HEAD@{73}: checkout: moving from dev to Branch-CK
+[33ma8e72ad[m HEAD@{74}: reset: moving to HEAD
+[33ma8e72ad[m HEAD@{75}: checkout: moving from Branch-CK to dev
+[33mbca70c6[m HEAD@{76}: commit: moving Branch
+[33md53218a[m HEAD@{77}: commit: V1
+[33m9b427b6[m HEAD@{78}: checkout: moving from Branch-EH to Branch-CK
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{79}: reset: moving to HEAD
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{80}: checkout: moving from Branch-CK to Branch-EH
+[33m9b427b6[m HEAD@{81}: reset: moving to HEAD
+[33m9b427b6[m HEAD@{82}: checkout: moving from Branch-EH to Branch-CK
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{83}: reset: moving to HEAD
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{84}: checkout: moving from Branch-CK to Branch-EH
+[33m9b427b6[m HEAD@{85}: reset: moving to HEAD
+[33m9b427b6[m HEAD@{86}: checkout: moving from Branch-EH to Branch-CK
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{87}: reset: moving to HEAD
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{88}: checkout: moving from Branch-CK to Branch-EH
+[33m9b427b6[m HEAD@{89}: reset: moving to HEAD
+[33m9b427b6[m HEAD@{90}: commit: updated property component view
+[33mcef3ece[m HEAD@{91}: pull origin Branch-EH: Merge made by the 'ort' strategy.
+[33m8f2ddcf[m HEAD@{92}: commit: top raated properties to property page working
+[33madc4ca3[m HEAD@{93}: checkout: moving from dev to Branch-CK
+[33ma8e72ad[m HEAD@{94}: reset: moving to HEAD
+[33ma8e72ad[m HEAD@{95}: checkout: moving from Branch-CK to dev
+[33madc4ca3[m HEAD@{96}: commit (merge): Merge with dev branch
+[33m3ce07e3[m HEAD@{97}: commit: commit
+[33m6481fcb[m HEAD@{98}: commit: better css styling for image cards
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{99}: checkout: moving from Branch-JA to Branch-CK
+[33m9a93a0e[m[33m ([m[1;32mBranch-JA[m[33m)[m HEAD@{100}: reset: moving to HEAD
+[33m9a93a0e[m[33m ([m[1;32mBranch-JA[m[33m)[m HEAD@{101}: checkout: moving from Branch-CK to Branch-JA
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{102}: reset: moving to HEAD
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{103}: checkout: moving from Branch-JA to Branch-CK
+[33m9a93a0e[m[33m ([m[1;32mBranch-JA[m[33m)[m HEAD@{104}: reset: moving to HEAD
+[33m9a93a0e[m[33m ([m[1;32mBranch-JA[m[33m)[m HEAD@{105}: checkout: moving from Branch-JA to Branch-JA
+[33m9a93a0e[m[33m ([m[1;32mBranch-JA[m[33m)[m HEAD@{106}: checkout: moving from Branch-CK to Branch-JA
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{107}: merge Branch-EH: Fast-forward
+[33mbe3a8dc[m HEAD@{108}: checkout: moving from Branch-EH to Branch-CK
+[33mbd77dbe[m[33m ([m[1;32mBranch-EH[m[33m)[m HEAD@{109}: pull --tags origin Branch-EH: Fast-forward
+[33mbe3a8dc[m HEAD@{110}: checkout: moving from Branch-CK to Branch-EH
+[33mbe3a8dc[m HEAD@{111}: reset: moving to Branch-EH
+[33m6d46b5d[m HEAD@{112}: commit (merge): Merge branch 'Branch-EH' into Branch-CK
+[33mec4972c[m HEAD@{113}: checkout: moving from Branch-EH to Branch-CK
+[33mbe3a8dc[m HEAD@{114}: commit: recent version
+[33mea77253[m HEAD@{
