@@ -65,17 +65,16 @@ export function FavouriteProvider ({ children, user }) {
             console.log("property added");
             console.log("added:", user.email);
             console.log("added:", property.uprn);
-            if (added.ok){
-                await fetchFavouritedProperties();
-                
-                //setFavouriteProperties((currentFavourites) => 
-                    //[...currentFavourites, property]);
+            if (!added.ok){
+                throw new Error("Failed to add property to favourites")
+    
             } else {
-                setFavouriteProperties((previousFavourites) => previousFavourites.filter(previousFavourites => 
-                    previousFavourites.uprn !== property.uprn));
+                await fetchFavouritedProperties();
             }
         } catch (e){
             console.log("error adding property", e);
+            setFavouriteProperties((previousFavourites) => previousFavourites.filter(previousFavourites => 
+                previousFavourites.uprn !== property.uprn));
         }
     };
 

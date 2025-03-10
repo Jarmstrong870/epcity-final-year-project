@@ -18,7 +18,7 @@ const categoryPositions = {
   "Very Poor": "5%",
 };
 
-const WallProgressMeter = ({ category }) => {
+const ProgressMeter = ({ category }) => {
   const progress = categoryPositions[category] || "0%";
   const color = categoryColors[category] || "#ccc";
 
@@ -37,8 +37,8 @@ const WallProgressMeter = ({ category }) => {
   );
 };
 
-WallProgressMeter.propTypes = {
+ProgressMeter.propTypes = {
   category: PropTypes.string.isRequired,
 };
 
-export default WallProgressMeter;
+export default ProgressMeter;
