@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
+from datetime import datetime
 
 # Database connection configuration
 db_config = {
@@ -10,6 +11,23 @@ db_config = {
     "user": os.getenv("DATABASE_USER"),
     "password": os.getenv("DATABASE_PASSWORD"),
 }
+
+def update_user_last_active(email):
+    """
+    Updates the last active timestamp for a user.
+    :param email: The user's email address
+    """
+    try:
+        with psycopg2.connect(**db_config) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "UPDATE users SET last_active = %s WHERE email_address = %s;",
+                    (datetime.utcnow(), email)
+                )
+                connection.commit()
+                print(f"Last active time updated for user {email}")
+    except Exception as e:
+        print(f"Error updating last active time: {e}")
 
 def find_user_by_email(email):
     """
@@ -41,7 +59,7 @@ def find_user_by_email(email):
                     "is_admin": user["is_admin"]
                 }
     except Exception as e:
-        print(f"❌ Error finding user by email: {e}")
+        print(f"Error finding user by email: {e}")
         return None
 
 

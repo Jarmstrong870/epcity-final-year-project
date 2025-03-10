@@ -86,10 +86,8 @@ const HomePage = ({ user, language }) => {
             <button className="stylingSearchButton" onClick={handleSearch}>
               {t.searchButton}
             </button>
-
           </div>
           
-          <h1 className = "scrollDownMessage"> Scroll down to find out more </h1>
           <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
             <span class="scrollDownArrow"> {"\u2193"} </span>
           </button>

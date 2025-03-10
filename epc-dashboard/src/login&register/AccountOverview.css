@@ -356,11 +356,12 @@
 
 /* Profile Section - need to set a deafult image for this*/
 .profile-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .read-only-input {
@@ -374,16 +375,16 @@
   }
   
 
-.profile-image {
-    width: 120px;
-    height: 120px;
+.profile-image{
+    width: 120px !important;
+    height: 120px !important;
     border-radius: 50%;
     border: 2px solid #0a2e15; 
     object-fit: cover;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.profile-image:hover {
+.profile-images:hover {
     transform: scale(1.05); /* Subtle zoom on hover */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -536,12 +537,6 @@
         padding: 20px;
         width: 95%;
     }
-
-    .profile-section img {
-        width: 80px;
-        height: 80px;
-    }
-
     .nav-bar {
         flex-direction: column;
         align-items: center;
