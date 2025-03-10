@@ -96,7 +96,7 @@ const HomePage = ({ user, language }) => {
       </div>
 
 {/* About Website Section */}
-<div className="epc-introduction">
+<div className="about-website">
         <img 
           src={require('../assets/liverpool-houses.jpg')} 
           alt="Liverpool" 
@@ -114,12 +114,6 @@ const HomePage = ({ user, language }) => {
           </div>
           <p>{t.epcInformationDescription1}</p>
           <p>{t.epcInformationDescription2}</p>
-
-          <a 
-            href="https://www.youtube.com/watch?v=u9IIOQWerSs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="epc-youtube-video">Click here to find out more information about an EPC</a>
           </div>
         </div>
       <div>
