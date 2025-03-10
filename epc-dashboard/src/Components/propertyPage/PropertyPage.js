@@ -64,20 +64,7 @@ const PropertyPage = ({ user, property, language }) => {
     }
   }, [user]);
 
-  const toggleFavorite = () => {
-    setIsFavourited(!isFavourited);
-    setPopupMessage(
-      !isFavourited
-        ? `${propertyData?.address || 'This property'} has been favorited.`
-        : `${propertyData?.address || 'This property'} has been unfavorited.`
-    );
-    setShowPopup(true);
-
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 5000);
-  };
-
+  
   if (loading) {
     return <p>Loading property details...</p>;
   }
@@ -114,13 +101,15 @@ const PropertyPage = ({ user, property, language }) => {
 
       <div className="property-header">
         <h2 className="property-title">Property Details</h2>
-        <div onClick={toggleFavorite} className="starComponent">
-          <FavouriteStar user={user} property={property} />
-        </div>
+       
         <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
           📩 Send to Group Chat
         </div>
       </div>
+
+      <div className="starComponent" onClick={(e) => e.stopPropagation()}>
+          <FavouriteStar user={user} property={property} />
+        </div>
 
       {/* MODAL POPUP */}
       {isModalOpen && (
@@ -183,3 +172,4 @@ const PropertyPage = ({ user, property, language }) => {
 };
 
 export default PropertyPage;
+

@@ -1,0 +1,103 @@
+.epcContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1100px;
+    margin: -80px auto 40px auto;
+    box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    position: relative;
+}
+
+/* 📌 Hover Effect */
+.epcContainer:hover {
+    transform: scale(1.01);
+}
+
+/* 📌 Address Section */
+.mainAddressBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+    
+.addressTitle {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: #1e3a8a;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.postcodeSubtitle {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #555;
+}
+
+/* 📌 Property Details Grid */
+.propertyDetailsTable {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+    padding: 20px 0;
+    max-width: 1000px;
+}
+
+/* 📌 Individual Property Card */
+.propertyDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8fafc;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+/* 📌 Hover Effects */
+.propertyDetails:hover {
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+/* 📌 Titles */
+.summaryTitle {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 📌 Values */
+.summaryValue {
+    font-size: 1.3rem;
+    color: #444;
+    font-weight: 600;
+}
+
+/* 📌 Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .propertyDetailsTable {
+        grid-template-columns: 1fr;
+    }
+
+    .addressTitle {
+        font-size: 1.8rem;
+    }
+
+    .postcodeSubtitle {
+        font-size: 1.2rem;
+    }
+}

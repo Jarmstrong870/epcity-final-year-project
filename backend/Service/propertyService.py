@@ -187,7 +187,6 @@ Method that gets a page of 30 properties from database
 def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page=1, local_authority=None):
     # get property data from database
     thisPage = repo.get_data_from_db(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
-    print(thisPage)
     return thisPage
 
 """
