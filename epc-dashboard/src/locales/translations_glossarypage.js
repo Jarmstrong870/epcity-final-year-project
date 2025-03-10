@@ -1,6 +1,18 @@
 const translations = {
     en: {
       title: 'Glossary of Terms',
+    searchPlaceholder: 'Search glossary...',
+    saveOptionsLabel: 'Save Options',
+    selectFileFormatLabel: 'Select File Format:',
+    nextBtnLabel: 'Next',
+    selectSectionsLabel: 'Select Sections:',
+    hideSectionsBtn: 'Hide Sections ▲',
+    selectSectionsBtn: 'Select Sections ▼',
+    pdfOption: 'PDF',
+    txtOption: 'TXT',
+    savingLabel: 'Saving...',
+    saveBtnLabel: '💾 Save EPC Glossary',
+    backToTop: 'Back to Top',
       glossary: {
         'Basic Information': {
           address: { label: 'ADDRESS', description: 'Location of the property' },
@@ -28,6 +40,18 @@ const translations = {
     },
     fr: {
       title: 'Glossaire des Termes',
+      searchPlaceholder: 'Rechercher dans le glossaire...',
+      saveOptionsLabel: 'Options d\'enregistrement',
+      selectFileFormatLabel: 'Sélectionner le format de fichier:',
+      nextBtnLabel: 'Suivant',
+      selectSectionsLabel: 'Sélectionner des sections:',
+      hideSectionsBtn: 'Masquer les sections ▲',
+      selectSectionsBtn: 'Sélectionner les sections ▼',
+      pdfOption: 'PDF',
+      txtOption: 'TXT',
+      savingLabel: 'Enregistrement...',
+      saveBtnLabel: '💾 Enregistrer le glossaire EPC',
+      backToTop: 'Retour en haut',
       glossary: {
         'Informations de base': {
           address: { label: 'ADRESSE', description: 'Emplacement de la propriété' },
@@ -55,6 +79,18 @@ const translations = {
     },
     es: {
       title: 'Glosario de Términos',
+      searchPlaceholder: 'Buscar en el glosario...',
+      saveOptionsLabel: 'Opciones de Guardado',
+    selectFileFormatLabel: 'Seleccionar formato de archivo:',
+    nextBtnLabel: 'Siguiente',
+    selectSectionsLabel: 'Seleccionar secciones:',
+    hideSectionsBtn: 'Ocultar secciones ▲',
+    selectSectionsBtn: 'Seleccionar secciones ▼',
+    pdfOption: 'PDF',
+    txtOption: 'TXT',
+    savingLabel: 'Guardando...',
+    saveBtnLabel: '💾 Guardar glosario EPC',
+    backToTop: 'Volver al principio',
       glossary: {
         'Información básica': {
           address: { label: 'DIRECCIÓN', description: 'Ubicación de la propiedad' },
@@ -83,6 +119,18 @@ const translations = {
 
     pl: {
       title: 'Słownik Terminów',
+    searchPlaceholder: 'Szukaj w słowniku...',
+    saveOptionsLabel: 'Opcje zapisywania',
+    selectFileFormatLabel: 'Wybierz format pliku:',
+    nextBtnLabel: 'Dalej',
+    selectSectionsLabel: 'Wybierz sekcje:',
+    hideSectionsBtn: 'Ukryj sekcje ▲',
+    selectSectionsBtn: 'Wybierz sekcje ▼',
+    pdfOption: 'PDF',
+    txtOption: 'TXT',
+    savingLabel: 'Zapisywanie...',
+    saveBtnLabel: '💾 Zapisz słownik EPC',
+    backToTop: 'Powrót na górę',
       glossary: {
         'Podstawowe Informacje': {
           address: { label: 'ADRES', description: 'Lokalizacja nieruchomości' },
@@ -110,6 +158,18 @@ const translations = {
     },
     zh: {
       title: '术语表',
+      searchPlaceholder: '在术语表中搜索...',
+    saveOptionsLabel: '保存选项',
+    selectFileFormatLabel: '选择文件格式:',
+    nextBtnLabel: '下一步',
+    selectSectionsLabel: '选择部分:',
+    hideSectionsBtn: '隐藏部分 ▲',
+    selectSectionsBtn: '选择部分 ▼',
+    pdfOption: 'PDF',
+    txtOption: 'TXT',
+    savingLabel: '保存中...',
+    saveBtnLabel: '💾 保存 EPC 术语表',
+    backToTop: '回到顶部',
       glossary: {
         '基本信息': {
           address: { label: '地址', description: '房产的位置' },
