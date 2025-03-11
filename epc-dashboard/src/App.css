@@ -403,7 +403,7 @@ td a:hover {
 
 /* 🏗️ Header Base Styles */
 .header-container {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
@@ -422,7 +422,7 @@ td a:hover {
 .header-container.scrolled {
   background-color: #1a2e2d; /* 🚀 Initially Transparent */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 80px; /* Ensures it's high enough when scrolling */
+  height: 5%; /* Ensures it's high enough when scrolling */
   padding: 15px 30px;
   justify-content: space-between;
 }

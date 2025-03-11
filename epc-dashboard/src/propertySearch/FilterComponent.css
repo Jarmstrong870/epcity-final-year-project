@@ -10,74 +10,101 @@ body {
 
 /* 🔹 Base Container for Filtering */
 .filterSection {
-    padding: 40px 20px;
-    max-width: 1200px;
+    /* padding: 40px 20px; */
+    padding-bottom: 10px;
+    width: 90%;
     margin: 0 auto;
-    background: white;
+    background: #1a2e2d;
     border-radius: 12px;
-    margin-top: 50px;
+    margin-top: 1%;
+    margin-bottom: 4%;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-/* 🔹 Filters Section */
 .filtersContainer {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 30px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    align-items: center;
+    flex-direction: column;
+    gap: 0px;
+    padding: 0.5%;
+    background: #1a2e2d;
 }
 
-/* 🔹 Filter Boxes */
-.filterBox {
+.filterButtons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* 🔹 Filter Title Buttons */
+.filterTitleButton {
     flex: 1;
-    padding: 20px;
-    background: #1d3b2a; /* Refined Green */
+    width: 31%;
+    margin-left: 1%;
+    margin-right: 1%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a2e2d;
+    background: white;
+    border: 1px solid #3a5f41;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.filterTitleButton:hover {
+    background: #2b4d35;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* 🔹 Expandable Filter Sections */
+.filterBox {
+    width: 100%;
+    background: white;
     border-radius: 12px;
     text-align: left;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: white;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    color: #3a5f41;
     border: 1px solid #3a5f41;
+    overflow: collapse;
+    max-height: 0;
+    opacity: 0;
+    visibility: collapse;
+    margin: 0;
 }
 
-.filterBox:hover {
-    transform: translateY(-3px);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+/* When active, expand the filter section */
+.filterBox.active {
+    margin-top: 10px;
+    max-height: 500px; 
+    opacity: 1;
+    visibility: visible;
+    padding: 20px;
 }
 
-/* 🔹 Filter Box Titles */
-.filterBox label {
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffffff;
-    display: block;
-    margin-bottom: 10px;
-}
-
-/* 🔹 Checkbox Styling */
+/* 🔹 Checkboxes and Labels */
 .checkboxContainer {
+    padding-left: 5%;
+    padding-right: 5%;
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: row;
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    /* width: 100%;  */
 }
+
 
 .checkboxLabel {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 16px;
-    color: white;
-    cursor: pointer;
-    padding: 6px 14px;
-    border-radius: 8px;
-    transition: background 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #1d3b2a;
+    
 }
 
 .checkboxLabel:hover {
@@ -88,7 +115,7 @@ input[type="checkbox"] {
     appearance: none;
     width: 18px;
     height: 18px;
-    border: 2px solid white;
+    border: 2px solid #1d3b2a;
     border-radius: 4px;
     background: transparent;
     cursor: pointer;
@@ -96,6 +123,12 @@ input[type="checkbox"] {
     align-items: center;
     justify-content: center;
     transition: background 0.3s ease, border 0.3s ease;
+}
+
+input[type="checkbox"]:focus {
+    outline: none; 
+    border-color: #1d3b2a; 
+    box-shadow: 0px 0px 4px rgba(29, 59, 42, 0.5); 
 }
 
 input[type="checkbox"]:checked {
@@ -111,6 +144,7 @@ input[type="checkbox"]:checked::after {
     font-weight: bold;
     display: block;
     text-align: center;
+    border: 2px solid #1d3b2a;
 }
 
 /* 🔹 Bedroom Slider */
@@ -142,20 +176,29 @@ input[type="checkbox"]:checked::after {
 .searchContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 25px;
-    background: #1d3b2a;
+    align-items: center; 
+    padding: 2%;
+    background: #1a2e2d;
     border-radius: 12px;
     color: white;
     text-align: center;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-    border: 1px solid #3a5f41;
+    /* box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); */
+    /* border: 1px solid #3a5f41; */
 }
 
-.searchAddress, select {
+.searchInputs {
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px; 
     width: 100%;
-    padding: 12px;
-    margin: 12px 0;
+}
+
+
+.searchAddress, select {
+    width: 70%;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
@@ -163,16 +206,17 @@ input[type="checkbox"]:checked::after {
 }
 
 .searchAddress:focus, select:focus {
-    border-color: #1d3b2a;
+    border-color: #1a2e2d;
     box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.5);
 }
 
 /* 🔹 Search Button */
 .searchButton {
     background: #ffffff;
-    color: #1d3b2a;
+    color: #1a2e2d;
     border: none;
-    padding: 14px 28px;
+    width: 20%;
+    padding: 9px 28px;
     font-size: 18px;
     font-weight: bold;
     border-radius: 8px;
@@ -209,4 +253,42 @@ input[type="checkbox"]:checked::after {
     .filterBox {
         padding: 20px;
     }
+}
+
+.rangeSliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.rangeTrack {
+    height: 5px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 3px;
+    position: relative;
+}
+
+.rangeThumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: grab;
+}
+
+.rangeValues {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 5px;
 }
