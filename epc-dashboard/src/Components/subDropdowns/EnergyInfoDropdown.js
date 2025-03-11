@@ -50,23 +50,23 @@ const EnergyInfoDropdown = ({
                             <div>
                                 <h4>🏡 {t.heating}</h4>
 
-                                {/* Current Annual Cost */}
+                                {/* Current Annual Heating Cost */}
                                 <p className={highlightIfBest(parseNumericValue(property?.heating_cost_current), maxValues?.minHeatingCostCurrent)}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualHeatingCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
                                         {t.currentAnnualCost}:
                                     </strong> £{property?.heating_cost_current || "N/A"}
                                 </p>
 
-                                {/* Potential Annual Cost with Savings */}
+                                {/* Potential Annual Heating Cost with Savings */}
                                 <p className={highlightIfBest(
                                     parseNumericValue((property?.heating_cost_current || 0) - (property?.heating_cost_potential || 0)),
                                     maxValues?.maxHeatingCostSavings
                                 )}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualHeatingCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
                                         {t.potentialAnnualCost}:
@@ -76,7 +76,7 @@ const EnergyInfoDropdown = ({
                                     )}
                                 </p>
 
-                                {/* Main Heating Efficiency with Green Question Mark */}
+                                {/* Main Heating Efficiency */}
                                 <p className={highlightIfBest(efficiencyRatingToNumber(property?.mainheat_energy_eff), maxValues?.maxMainheatEnergyEff)}>
                                     <strong>
                                         <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.mainHeatingEfficiency)}`} style={{ textDecoration: "none", color: "inherit" }}>
@@ -86,7 +86,7 @@ const EnergyInfoDropdown = ({
                                     </strong> {renderStarRating(property?.mainheat_energy_eff)}
                                 </p>
 
-                                {/* Main Heating Control Efficiency with Green Question Mark */}
+                                {/* Main Heating Control Efficiency */}
                                 <p className={`${highlightIfBest(efficiencyRatingToNumber(property?.mainheatc_energy_eff), maxValues?.maxMainheatControllerEff)} highlight-best`}>
                                     <strong>
                                         <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.mainHeatingControlEfficiency)}`} style={{ textDecoration: "none", color: "inherit" }}>
@@ -137,10 +137,10 @@ const EnergyInfoDropdown = ({
                                 <h4>💡 {t.lighting}</h4>
                                 <p className={highlightIfBest(parseNumericValue(property?.lighting_cost_current), maxValues?.minLightingCostCurrent)}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualLightingCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
-                                        {t.currentAnnualCost}:
+                                        {t.currentAnnualLightingCost}:
                                     </strong> £{property?.lighting_cost_current || "N/A"}
                                 </p>
                                 <p className={highlightIfBest(
@@ -148,10 +148,10 @@ const EnergyInfoDropdown = ({
                                     maxValues?.maxLightingCostSavings
                                 )}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualLightingCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
-                                        {t.potentialAnnualCost}:
+                                        {t.potentialAnnualLightingCost}:
                                     </strong> £{property?.lighting_cost_potential || "N/A"}
                                 </p>
 
@@ -186,10 +186,10 @@ const EnergyInfoDropdown = ({
                                 <h4>🚿 {t.hotWater}</h4>
                                 <p className={highlightIfBest(parseNumericValue(property?.hot_water_cost_current), maxValues?.minHotWaterCostCurrent)}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.currentAnnualHotWaterCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
-                                        {t.currentAnnualCost}:
+                                        {t.currentAnnualHotWaterCost}:
                                     </strong> £{property?.hot_water_cost_current || "N/A"}
                                 </p>
                                 <p className={highlightIfBest(
@@ -197,10 +197,10 @@ const EnergyInfoDropdown = ({
                                     maxValues?.maxHotWaterCostSavings
                                 )}>
                                     <strong>
-                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
+                                        <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.potentialAnnualHotWaterCost)}`} style={{ textDecoration: "none", color: "inherit" }}>
                                             <span className="green-question-mark"></span>
                                         </Link>
-                                        {t.potentialAnnualCost}:
+                                        {t.potentialAnnualHotWaterCost}:
                                     </strong> £{property?.hot_water_cost_potential || "N/A"}
                                 </p>
 

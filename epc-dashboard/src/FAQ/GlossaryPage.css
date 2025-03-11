@@ -1,15 +1,16 @@
 /* General Page Styling */
-body {
+.glossary-body {
   font-family: 'Poppins', sans-serif;
   background-color: #f8f9fa;
   margin: 0;
-  /* padding: 20px; */
+  padding: 140px 20px 20px; /* Adjusted padding to make room for header and search bar */
+  overflow: auto; /* Ensure scrolling if needed */
 }
 
 /* Sticky Search Bar & Options */
 .search-bar-container {
   position: sticky;
-  top: 0;
+  top: 200px; /* Adjusted to make sure it starts below the title and doesn't overlap */
   background: white;
   padding: 15px;
   z-index: 10;
@@ -110,8 +111,21 @@ body {
   background: #1f3e1e;
 }
 
+/* Glossary Title */
+h2.glossary {
+  font-size: 2rem;
+  color: #222;
+  text-align: center;
+  margin-bottom: 40px;
+  font-weight: bold;
+  border-bottom: 2px solid #2d582c; /* Border under the title */
+  padding-bottom: 10px;
+  margin-top: 0; /* Ensure no margin at top */
+  z-index: 9999;
+}
+
 /* Section Titles */
-h3 {
+h3.glossary {
   font-size: 1.6rem;
   color: #222;
   border-left: 4px solid #2d582c; /* Changed to green */
@@ -125,6 +139,7 @@ h3 {
   padding: 15px;
   transition: background 0.3s, transform 0.2s;
   border-radius: 5px;
+  margin-top: 80px; /* Added margin to separate the title from the top */
 }
 
 h3:hover {
@@ -160,13 +175,13 @@ h3:hover {
 
 /* Smooth Expand/Collapse */
 .glossary-content {
-  max-height: 0;
+  max-height: 1000px; /* Ensures there's enough space for the content */
   overflow: hidden;
   transition: max-height 0.3s ease-out, padding 0.3s ease-out;
 }
 
 .glossary-content.expanded {
-  max-height: 1000px;
+  max-height: 4000px; /* Allow more space when expanded */
   padding-top: 10px;
 }
 
@@ -234,7 +249,6 @@ h3:hover {
   color: #2d582c;
 }
 
-
 /* Back to Top Button */
 .back-to-top-btn {
   position: fixed;
@@ -249,4 +263,3 @@ h3:hover {
   cursor: pointer;
   z-index: 9999; /* Ensure it stays on top of other content */
 }
-
