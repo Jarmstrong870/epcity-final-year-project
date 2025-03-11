@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
@@ -89,14 +89,14 @@ const HomePage = ({ user, language }) => {
           </div>
           
           <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
-            <span class="scrollDownArrow"> {"\u2193"} </span>
+            <span className="scrollDownArrow"> {"\u2193"} </span>
           </button>
 
         </div>
       </div>
 
 {/* About Website Section */}
-<div className="epc-introduction">
+<div className="about-website">
         <img 
           src={require('../assets/liverpool-houses.jpg')} 
           alt="Liverpool" 
@@ -114,12 +114,6 @@ const HomePage = ({ user, language }) => {
           </div>
           <p>{t.epcInformationDescription1}</p>
           <p>{t.epcInformationDescription2}</p>
-
-          <a 
-            href="https://www.youtube.com/watch?v=u9IIOQWerSs"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="epc-youtube-video">Click here to find out more information about an EPC</a>
           </div>
         </div>
       <div>
@@ -160,7 +154,7 @@ const HomePage = ({ user, language }) => {
         <h2>{t.mostEfficientProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
+            <PropertyCard key={index} user={user} property={property} language={language} />
           ))}
         </div>
       </div>

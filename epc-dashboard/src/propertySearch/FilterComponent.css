@@ -101,6 +101,9 @@ body {
 
 .checkboxLabel {
     display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    padding: 15px;
     align-items: center;
     gap: 8px;
     font-size: 16px;
@@ -142,6 +145,20 @@ input[type="checkbox"]:checked::after {
     color: white;
     font-size: 16px;
     font-weight: bold;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #339715;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.searchButton {
+    background-color: #339715;
+    width: 100%;
+    max-width: 200px;
+    margin: 10px auto;
     display: block;
     text-align: center;
     border: 2px solid #1d3b2a;
@@ -155,25 +172,12 @@ input[type="checkbox"]:checked::after {
     transition: filter 0.2s ease;
     background: linear-gradient(to right, #f5a623, #f0c674);
     border-radius: 8px;
-    height: 8px;
-}
-
-.bedroomSlider:hover {
-    filter: brightness(1.2);
-}
-
-.bedroomValue {
-    text-align: center;
-    font-size: 16px;
-    color: white;
     cursor: pointer;
-    padding: 6px 14px;
-    border-radius: 8px;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 5px;
 }
 
-/* 🔹 Search Bar */
-.searchContainer {
+.rangeSliderContainer {
     display: flex;
     flex-direction: column;
     align-items: center; 

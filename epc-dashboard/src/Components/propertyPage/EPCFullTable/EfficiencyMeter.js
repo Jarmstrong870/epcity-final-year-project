@@ -23,6 +23,3 @@ export function classifyWall(description) {
         walls.some(wall => description.toLowerCase().includes(wall.toLowerCase()))
     )?.[0] || "Unidentified";
 }
-
-
-

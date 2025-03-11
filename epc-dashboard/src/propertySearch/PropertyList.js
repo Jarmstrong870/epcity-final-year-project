@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import PropertyCard from '../homePage/PropertyCard';
 import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
@@ -59,6 +59,7 @@ const PropertyList = ({ user, loading, language }) => {
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
 
+
   return (
     <div className="property-list">
       {showPopup && <div className="popup-message">{popupMessage}</div>}
@@ -97,6 +98,7 @@ const PropertyList = ({ user, loading, language }) => {
             <option value="number_bedrooms">Number of bedrooms</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
+            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
           <div className="dropdown-with-tts">
@@ -135,6 +137,7 @@ const PropertyList = ({ user, loading, language }) => {
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
                 <td>{property.number_bedrooms}</td>
+                <td>{property.number_bedrooms}</td>
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
@@ -158,7 +161,7 @@ const PropertyList = ({ user, loading, language }) => {
         <div className="property-cards-container">
           {properties.map((property, index) => (
             <div key={index} className="property-card">
-              <TopRatedPropertyCard property={property} language={language} />
+              <PropertyCard property={property} language={language} />
               <div className="compare-checkbox">
                 <label>
                   <input
