@@ -4,6 +4,7 @@ import frenchFlag from '../assets/french_flag.jpg';
 import spanishFlag from '../assets/spanish_flag.png';
 import polishFlag from '../assets/polish_flag.png';  
 import mandarinFlag from '../assets/mandarin_flag.png';  
+import { translations } from '../locales/translations_languageselector'; // Correct relative path
 import './LanguageSelector.css';
 
 const languages = [
@@ -19,14 +20,25 @@ function LanguageSelector({ setLanguage }) {
   const [selectedLanguage, setSelectedLanguage] = useState(
     localStorage.getItem('selectedLanguage') || 'UK'
   );
+  const [currentTranslations, setCurrentTranslations] = useState(translations.en);  // Default to English
 
   useEffect(() => {
+    // Update translations based on the selected language
+    const selectedTranslations = translations[selectedLanguage.toLowerCase()];
+    
+    if (selectedTranslations) {
+      setCurrentTranslations(selectedTranslations);
+    } else {
+      console.error(`Translations for language ${selectedLanguage} not found, falling back to English.`);
+      setCurrentTranslations(translations.en);  // Fallback to English if translation is missing
+    }
+
     const langMap = {
-      UK: 'en',  // English
-      FR: 'fr',  // French
-      ES: 'es',  // Spanish
-      PL: 'pl',  // Polish
-      CN: 'zh'   // Mandarin (Chinese)
+      UK: 'en',
+      FR: 'fr',
+      ES: 'es',
+      PL: 'pl',
+      CN: 'zh'
     };
     setLanguage(langMap[selectedLanguage]);
   }, [selectedLanguage, setLanguage]);
@@ -54,15 +66,6 @@ function LanguageSelector({ setLanguage }) {
   const handleLanguageChange = (languageCode) => {
     setSelectedLanguage(languageCode);
     localStorage.setItem('selectedLanguage', languageCode);
-    
-    const langMap = {
-      UK: 'en',
-      FR: 'fr',
-      ES: 'es',
-      PL: 'pl',
-      CN: 'zh'
-    };
-    setLanguage(langMap[languageCode]);
     setLanguageDropdownVisible(false);
   };
 
@@ -96,8 +99,8 @@ function LanguageSelector({ setLanguage }) {
                 src={lang.flag}
                 alt={`${lang.label} Flag`}
                 className="flag-img-dropdown"
-              />{' '}
-              {lang.label}
+              />
+              {' '}{currentTranslations.languageSelector ? currentTranslations.languageSelector[lang.label.toLowerCase()] : lang.label}
             </button>
           ))}
         </div>

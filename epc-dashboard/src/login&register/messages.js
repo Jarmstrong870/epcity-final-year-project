@@ -52,7 +52,7 @@ const Messages = ({ user, language }) => {
       });
       setGroups(response.data);
     } catch (error) {
-      console.error("Error fetching groups:", error);
+      console.error(t.errorFetchingGroups, error);
     }
   };
 
@@ -68,7 +68,7 @@ const Messages = ({ user, language }) => {
       );
       setMessages(response.data);
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error(t.errorFetchingMessages, error);
     }
   };
 
@@ -78,9 +78,7 @@ const Messages = ({ user, language }) => {
     }
       
     try {
-
       console.log(`fetching for groupId: ${groupId}`)
-
       const response = await axios.get(
         `http://localhost:5000/get-all-group-members/${groupId}`,
       );
@@ -88,7 +86,7 @@ const Messages = ({ user, language }) => {
       setAllGroupMembers(response.data);
       setGroupDetailsPopUp(true);
     } catch (error) {
-      console.error("Error fetching group members", error);
+      console.error(t.errorFetchingGroupMembers, error);
     }
   };
 
@@ -111,13 +109,11 @@ const Messages = ({ user, language }) => {
       setCreateGroupPopUp(false);
       setNewGroupMembers("");
     } catch (error) {
-      console.error("Error creating group:", error);
+      console.error(t.errorCreatingGroup, error);
     }
-
   };
 
   const addNewMember = async (groupId, latestUserEmail) => {
-
     try {
          const newUser = await axios.post("http://localhost:5000/add-new-member",
           {
@@ -126,15 +122,15 @@ const Messages = ({ user, language }) => {
           });
 
           if (newUser.status === 200) {
-            console.log("Successfully added");
+            console.log(t.userAddedSuccessfully);
             await fetchAllGroupMembers(groupId);
             setNewUserEmail("");
             setAddNewUserPopUp(false);
           }
         } catch (error) {
-        console.error("Error adding another user:", error);
+        console.error(t.errorAddingUser, error);
       }
-    };
+  };
 
   const sendMessage = async () => {
     if (!selectedGroup || !messageContent.trim()) {
@@ -169,29 +165,28 @@ const Messages = ({ user, language }) => {
         setErrorMessage(t.messageSendError);
       }
     }
-};
+  };
 
-const searchMessage = async () => {
-    
-  if (!searchedMessage.trim()) {
-      setErrorMessage("Message cannot be found."); // Prevent empty messages
+  const searchMessage = async () => {
+    if (!searchedMessage.trim()) {
+      setErrorMessage(t.messageNotFound); // Prevent empty messages
       return;
-  }
+    }
 
-  try {
+    try {
       const response = await axios.post(
-          "http://localhost:5000/search-group-message",
-          {
-              group_id: selectedGroup.group_id,
-              content: searchedMessage,
-          },
-          {
-              headers: { "User-Email": user.email },
-          }
+        "http://localhost:5000/search-group-message",
+        {
+          group_id: selectedGroup.group_id,
+          content: searchedMessage,
+        },
+        {
+          headers: { "User-Email": user.email },
+        }
       );
 
       if (!selectedGroup) {
-        setErrorMessage("Select a group before searching");
+        setErrorMessage(t.noGroupSelected);
         return;
       }
 
@@ -200,11 +195,11 @@ const searchMessage = async () => {
           setSearchOutputPopUp(true);
           setErrorMessage(""); 
       } else {
-        setErrorMessage("No messages match your search term.");
+        setErrorMessage(t.noMessagesFound);
       } 
     } catch {
-          setErrorMessage("Failed to search message. Please try again.");
-      }
+      setErrorMessage(t.searchFailed);
+    }
   };
 
   const deleteGroup = async (groupId) => {
@@ -235,7 +230,7 @@ const searchMessage = async () => {
         }
 
     } catch (error) {
-      console.error("Error deleting group:", error);
+      console.error(t.errorDeletingGroup, error);
     }
   };
 
@@ -267,10 +262,10 @@ const searchMessage = async () => {
       }
 
     } catch (error) {
-      console.error("Error updating group name:", error);
+      console.error(t.errorUpdatingGroupName, error);
     }
   };
- 
+
   const exitGroup = async (groupId) => {
     const updatedGroups = [];
 
@@ -294,7 +289,7 @@ const searchMessage = async () => {
           }
         }
     } catch (error) {
-      console.error("Error leaving group:", error);
+      console.error(t.errorLeavingGroup, error);
     }
   };
 
@@ -303,31 +298,31 @@ const searchMessage = async () => {
 
     switch(action) {
       case "create":
-        popupMessage = "Do you want to create a new group?"
+        popupMessage = t.createGroupConfirmation;
         break; 
 
       case "add":
-        popupMessage = "Do you want to be added"
-        break
+        popupMessage = t.addUserConfirmation;
+        break;
 
       case "delete":
-        popupMessage = "Are you sure you want to delete the group?";
+        popupMessage = t.deleteGroupConfirmation;
         break;
       
       case "exit":
-        popupMessage = "Are you sure you want to exit the group?";
+        popupMessage = t.exitGroupConfirmation;
         break;
 
       case "edit":
-        popupMessage = "Do you want to change the group name?";
+        popupMessage = t.editGroupNameConfirmation;
         break;
 
       case "details":
-        popupMessage = "Below are all the members in this group: "
+        popupMessage = t.groupDetails;
         break;
       
       default:
-        popupMessage = "Make sure you are sure with your decision before clicking yes";
+        popupMessage = t.defaultConfirmationMessage;
     }
 
     setPopUpFunction(() => () => {
@@ -348,14 +343,14 @@ const searchMessage = async () => {
         exitGroup(groupId);
 
       if(action === "edit") {
-        const updatedName = prompt("Enter the new group name");
-      if(updatedName)
-        editGroupName(groupId, updatedName);
+        const updatedName = prompt(t.enterNewGroupName);
+        if(updatedName)
+          editGroupName(groupId, updatedName);
       }
 
       if (action === "details") {
         if (!groupId) {
-            setErrorMessage("Unable to locate GroupID to fetch group details");
+            setErrorMessage(t.unableToLocateGroup);
             return;
         }
         fetchAllGroupMembers(groupId);
@@ -365,98 +360,94 @@ const searchMessage = async () => {
   setPopupMessage(popupMessage);
   setAction(action);
   setDropdownActionsPopUp(true);
+};
+const toggleDropdown = () => {
+  setDropdownMenu(!dropdownMenu);
+};
 
-  };
+const groupDetailsHandle = (groupId) => {
+  setGroupDetailsPopUp((response) => (response === groupId ? null : groupId));
+};
 
-  const toggleDropdown = () => {
-    setDropdownMenu(!dropdownMenu);
-  };
-
-  const groupDetailsHandle = (groupId) => {
-    setGroupDetailsPopUp((response) => (response === groupId ? null : groupId));
-  };
-
-  return (
-    <div className="messaging-container">
-      {/* === Left Sidebar === */}
-      <div className="sidebar">
-        <h2 className="logo">
-          {t.groupChats}{" "}
-          <TextToSpeech text={t.groupChats} language={language} />
-        </h2>   
+return (
+  <div className="messaging-container">
+    {/* === Left Sidebar === */}
+    <div className="sidebar">
+      <h2 className="logo">
+        {t.groupChats}{" "}
+        <TextToSpeech text={t.groupChats} language={language} />
+      </h2>   
 
       {createGroupPopUp && (
         <div className="create-group-popup-base">
           <div className="create-group-popup-message">
-          
-        <h4>Create New Group
-          <button className="create-group-button-cancel"
-            onClick = {() => confirmationPopUp("create")} >
-            <span> {"\u0078"} </span>
-          </button> 
-        </h4>
+            <h4>{t.createNewGroup}
+              <button className="create-group-button-cancel"
+                onClick = {() => confirmationPopUp("create")} >
+                <span> {"\u0078"} </span>
+              </button> 
+            </h4>
 
-          <input className="group-input"
-            type="text"
-            placeholder="Group Name"
-            value={newGroupName}
-            onChange={(e) => setNewGroupName(e.target.value)}
-          />
-          <input className="email-input"
+            <input className="group-input"
               type="text"
-              placeholder="Members' Emails (comma separated)"
-              value={groupMembers}
-              onChange={(e) => setNewGroupMembers(e.target.value)}
+              placeholder={t.groupNamePlaceholder}
+              value={newGroupName}
+              onChange={(e) => setNewGroupName(e.target.value)}
             />
-            <div className="create-group-popup">
-              <button onClick={() => {
-                createGroup();
-                setDropdownActionsPopUp(false);
-              }}> Create Group </button>
+            <input className="email-input"
+                type="text"
+                placeholder={t.groupMembersPlaceholder}
+                value={groupMembers}
+                onChange={(e) => setNewGroupMembers(e.target.value)}
+              />
+              <div className="create-group-popup">
+                <button onClick={() => {
+                  createGroup();
+                  setDropdownActionsPopUp(false);
+                }}> {t.createGroupButton} </button>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
       {addNewUserPopUp && (
         <div className="add-new-user-popup-base">
           <div className="add-new-user-popup-message">
-          
-        <h4>Add New User
-          <button className="add-new-user-button-cancel"
-            onClick = {() => setAddNewUserPopUp(false)} >
-            <span> {"\u0078"} </span>
-          </button> 
-        </h4>
+            <h4>{t.addNewUser}
+              <button className="add-new-user-button-cancel"
+                onClick = {() => setAddNewUserPopUp(false)} >
+                <span> {"\u0078"} </span>
+              </button> 
+            </h4>
 
-          <input className="group-input"
-            type="email"
-            placeholder="Enter your email"
-            value={newUserEmail}
-            onChange={(e) => setNewUserEmail(e.target.value)}
-          />
-            <div className="add-new-user-popup">
-              <button onClick={() => {
-                confirmationPopUp("add", selectedGroup?.group_id);
-              }}> Add New User </button>
+            <input className="group-input"
+              type="email"
+              placeholder={t.groupMembersPlaceholder}
+              value={newUserEmail}
+              onChange={(e) => setNewUserEmail(e.target.value)}
+            />
+              <div className="add-new-user-popup">
+                <button onClick={() => {
+                  confirmationPopUp("add", selectedGroup?.group_id);
+                }}> {t.addNewUserButtonText} </button>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
-        <div className="groups-list">
-          {groups.map((group) => (
-            <div
-              key={group.group_id}
-              className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}
-              onClick={() => setSelectedGroup(group)}>
-                
-              <span className="group-name">{group.name}</span>
+      <div className="groups-list">
+        {groups.map((group) => (
+          <div
+            key={group.group_id}
+            className={`group-item ${selectedGroup?.group_id === group.group_id ? "active" : ""}`}
+            onClick={() => setSelectedGroup(group)}>
 
-              {groupDetailsPopUp === group.group_id && (
-              <div className="option-dropdown">
-                <div className="option-dropdown-content">
-                <h4>Group Members</h4>
+            <span className="group-name">{group.name}</span>
+
+            {groupDetailsPopUp === group.group_id && (
+            <div className="option-dropdown">
+              <div className="option-dropdown-content">
+                <h4>{t.groupMembers}</h4>
 
                 <ul className="group-members">
                   {allGroupMembers.length > 0 ? (
@@ -464,201 +455,186 @@ const searchMessage = async () => {
                       <li key={index}>{member.email}</li>
                     ))
                   ) : (
-                    <li>No members found</li> 
+                    <li>{t.noMembersFound}</li> 
                   )}
                 </ul>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      ))}
+    </div>
+
+    {/* Action Buttons */}
+    <div className="action-buttons">
+      <div className="create-title">{t.createNewGroup}
+        <button className="create-group-button-plus"
+          onClick = {() => confirmationPopUp("create")} > 
+            <span className="create-group-border">  {"\u002B"} </span>
+        </button> 
       </div>
-    ))}
+
+      <div className="add-title">{t.addNewUser}
+        <button className="add-existing-group-plus"
+          onClick = {() => confirmationPopUp("add-member")} > 
+          <span className="add-group-border"> {"\u270E"} </span>
+        </button> 
+      </div>
+    </div>
   </div>
 
-  
-        
-        <div className="action-buttons">
-        <div className="create-title"> Create A New Group
-          <button className="create-group-button-plus"
-            onClick = {() => confirmationPopUp("create")} > 
-              <span className="create-group-border">  {"\u002B"} </span>
-          </button> 
-        </div>
-
-        <div className="add-title"> Add a user to an existing group
-          <button className="add-existing-group-plus"
-            onClick = {() => confirmationPopUp("add-member")} > 
-            <span className="add-group-border"> {"\u270E"} </span>
-          </button> 
-        </div>
-      </div>
-    </div>
-
-      {/* === Main Chat Area === */}
-      <div className="chat-area">
-        {/* === Search Bar === */}
-        {searchOutputPopUp && (
-        <div className = "search-message-bar">
-          <textarea
-                className="search-input-field"
-                placeholder= "Search for messages"
-                value= {messagesFound?.length > 0 
-                  ? messagesFound.map((msg) => `${msg.sender_name}: ${msg.content}`).join("\n")
-                  : searchedMessage
+    {/* === Main Chat Area === */}
+    <div className="chat-area">
+      {/* === Search Bar === */}
+      {searchOutputPopUp && (
+      <div className = "search-message-bar">
+        <textarea
+              className="search-input-field"
+              placeholder={t.searchMessages}
+              value={messagesFound?.length > 0 
+                ? messagesFound.map((msg) => `${msg.sender_name}: ${msg.content}`).join("\n")
+                : searchedMessage
+              }
+              onChange={(e) => setSearchedMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  searchMessage();
                 }
-                onChange={(e) => setSearchedMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    searchMessage();
-                  }
-                }}
-              />
-              <button className="search-button" onClick={searchMessage}>
-                <span className="search-button-icon"> {"\uD83D\uDD0E"} </span> 
-              </button>
+              }}
+            />
+            <button className="search-button" onClick={searchMessage}>
+              <span className="search-button-icon"> {"\uD83D\uDD0E"} </span> 
+            </button>
 
-              <button className="clear-search-button"
-                onClick = {() => {
-                  setSearchedMessage("");
-                  setMessagesFound([]); 
-                }}>
-                <span> {"\u2717"} </span>
-                  Clear
-              </button>   
-          </div>
-        )}
+            <button className="clear-search-button"
+              onClick = {() => {
+                setSearchedMessage("");
+                setMessagesFound([]); 
+              }}>
+              <span> {"\u2717"} </span>
+              {t.clearSearch}
+            </button>   
+        </div>
+      )}
 
-        {selectedGroup ? (
-          <>
-            {/* Header with group name */}
-            <div className="message-chat-header">
-              <h3 className="message-chat-title">{selectedGroup.name}</h3>
+      {selectedGroup ? (
+        <>
+          {/* Header with group name */}
+          <div className="message-chat-header">
+            <h3 className="message-chat-title">{selectedGroup.name}</h3>
 
-              <div className="message-profile-icon" onClick={toggleDropdown}>
-                <h2 className="message-dropdown-icon">...</h2>
+            <div className="message-profile-icon" onClick={toggleDropdown}>
+              <h2 className="message-dropdown-icon">...</h2>
 
-                {dropdownMenu && selectedGroup &&(
-                <div className="message-dropdown-menu">
+              {dropdownMenu && selectedGroup &&(
+              <div className="message-dropdown-menu">
+                  <button className="icon-button"
+                      onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}>
+                      <span className="icon-border"> {"\u270D"} </span> 
+                        {t.editGroupName}
+                      </button>
+
                     <button className="icon-button"
-                        onClick = {() => confirmationPopUp("edit", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\u270D"} </span> 
-                          Edit Group Name
-                        </button>
+                      onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}>
+                      <span className="icon-border"> {"\uD83D\uDDD1"} </span>
+                        {t.deleteGroup}
+                      </button>   
 
-                      <button className="icon-button"
-                        onClick = {() => confirmationPopUp("delete", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\uD83D\uDDD1"} </span>
-                          Delete Group and Data
-                        </button>   
+                    <button className="icon-button"
+                      onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}>
+                      <span className="icon-border"> {"\uD83D\uDEAA"} </span>
+                        {t.exitGroup}
+                      </button>   
 
-                      <button className="icon-button"
-                        onClick = {() => confirmationPopUp("exit", selectedGroup?.group_id)}>
-                        <span className="icon-border"> {"\uD83D\uDEAA"} </span>
-                          Leave Group?
-                        </button>   
-
-                    </div>
-                  )}
                   </div>
-              </div>
-
-              <button className="all-members-display"
-                onClick={(e) => {
-                 
-                }} >View All Members</button>
-  
-
-            {/* Messages */}
-            <div className="messages-list">
-              {messages.map((msg, index) => {
-                const isSentByUser = msg.sender_id === user.id;
-                return (
-                  <div
-                    key={index}
-                    className={`message-bubble ${
-                      isSentByUser ? "sent" : "received"
-                    }`}
-                  >
-                    <div className="message-info">
-                      <img
-                        src={
-                          !msg.profile_image_url ||
-                          msg.profile_image_url === "null" ||
-                          msg.profile_image_url.trim() === "" ||
-                          msg.profile_image_url === undefined
-                            ? profileIcon
-                            : msg.profile_image_url
-                        }
-                        alt="Profile"
-                        className="profile-image"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = profileIcon;
-                        }}
-                      />
-                      <span className="sender-name">{msg.sender_name}</span>
-                    </div>
-                    <p className="message-content">{msg.content}</p>
-                    <span className="message-timestamp">
-                      {new Date(msg.sent_at).toLocaleString()}
-                    </span>
-                  </div>
-                );
-              })}
-
-           </div>
-
-            {/* Display error message if there's an error */}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-            {/* Input Box */}
-            <div className="chat-input">
-              <textarea
-                className="input-field"
-                placeholder={t.typeMessagePlaceholder}
-                value={messageContent}
-                onChange={(e) => setMessageContent(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                  }
-                }}
-              />
-              <button className="send-button" onClick={sendMessage}>
-              <span className="send-button-icon"> {"\u279C"} </span> 
-              </button>
+                )}
             </div>
-          </>
-        ) : (
-          <div className="no-chat-selected">
-            <p>{t.selectGroupToChat}</p>
           </div>
-        )}
-      </div>
 
-      {dropdownActionsPopUp && (
-        <div className = "dropdown-popup-base">
-          <div className = "dropdown-popup-message">
-            <p>{popupMessage}</p>
-              <div className = "dropdown-popup-action">
-                <button onClick={() => {
-                  if(popUpFunction) {
-                    popUpFunction();
-                    setDropdownActionsPopUp(false);
-                  } else {
-                    setErrorMessage("Unable to show pop up");
-                  }
-                }}>Yes</button>
+          <button className="all-members-display"
+            onClick={(e) => groupDetailsHandle(selectedGroup?.group_id)} >{t.viewAllMembers}</button>
 
-                <button onClick={() => setDropdownActionsPopUp(false)}>No</button>
-              </div>
+          {/* Messages */}
+          <div className="messages-list">
+            {messages.map((msg, index) => {
+              const isSentByUser = msg.sender_id === user.id;
+              return (
+                <div
+                  key={index}
+                  className={`message-bubble ${isSentByUser ? "sent" : "received"}`}
+                >
+                  <div className="message-info">
+                    <img
+                      src={msg.profile_image_url || profileIcon}
+                      alt="Profile"
+                      className="profile-image"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = profileIcon;
+                      }}
+                    />
+                    <span className="sender-name">{msg.sender_name}</span>
+                  </div>
+                  <p className="message-content">{msg.content}</p>
+                  <span className="message-timestamp">
+                    {new Date(msg.sent_at).toLocaleString()}
+                  </span>
+                </div>
+              );
+            })}
+         </div>
+
+          {/* Display error message if there's an error */}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+          {/* Input Box */}
+          <div className="chat-input">
+            <textarea
+              className="input-field"
+              placeholder={t.typeMessagePlaceholder}
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+            />
+            <button className="send-button" onClick={sendMessage}>
+              <span className="send-button-icon"> {"\u279C"} </span> 
+            </button>
           </div>
-          </div>
-        )}
+        </>
+      ) : (
+        <div className="no-chat-selected">
+          <p>{t.selectGroupToChat}</p>
+        </div>
+      )}
     </div>
-  );
+
+    {dropdownActionsPopUp && (
+      <div className = "dropdown-popup-base">
+        <div className = "dropdown-popup-message">
+          <p>{popupMessage}</p>
+            <div className = "dropdown-popup-action">
+              <button onClick={() => {
+                if(popUpFunction) {
+                  popUpFunction();
+                  setDropdownActionsPopUp(false);
+                } else {
+                  setErrorMessage(t.unableToShowPopUp);
+                }
+              }}>{t.yesButton}</button>
+
+              <button onClick={() => setDropdownActionsPopUp(false)}>{t.noButton}</button>
+            </div>
+        </div>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default Messages;
-
