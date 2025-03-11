@@ -548,7 +548,3 @@ def populate_postcode_coordinates_for_local_authority(
             cursor.close()
         if conn:
             conn.close()
-
-
-
-
