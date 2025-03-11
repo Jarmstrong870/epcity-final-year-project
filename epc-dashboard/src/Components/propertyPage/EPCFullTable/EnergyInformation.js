@@ -137,9 +137,12 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
   const isHighestLightingEff = efficiencyRatingToNumber(properties["lighting_energy_eff"]) === maxValues?.maxLightingEnergyEff;
   const isHighestHotWaterEff = efficiencyRatingToNumber(properties["hot_water_energy_eff"]) === maxValues?.maxHotWaterEnergyEff;
 
+
   return (
     <div className={styles.energyInfoContainer}>
       <div className={styles.energyHeader}>{t.energyInformation}</div>
+
+      <div className={styles.energySection}>
 
       {/* Heating Section */}
       <div className={`${styles.energyBox} ${styles.heating}`}>
@@ -178,18 +181,22 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </tbody>
           </table>
 
-              <div className={styles.heatingSummary}>
-                <div className={styles.mainFuelSection}>
-                  <h4>{t.mainFuel}:</h4>
+              <div>
+                <div className={styles.visualisedDescriptions}>
+                  <h4 className = "mainfuel">{t.mainFuel}:</h4>
                   <p>{properties["main_fuel"]}</p>
                 </div>
 
-                <div className={styles.efficiencyStarRatings}>
+                <div className={styles.efficiencyStarRatings}
+                    data-value = {properties["mainheat_energy_eff"].toLowerCase()}>
                   <h4>{t.mainheatEnergyEfficiency}:</h4> 
                   <p className={isHighestMainheatEff ? "highlight-green" : ""}>
-                  <p>{renderStarRating(properties["mainheat_energy_eff"], t)}</p>
-                </p>
-
+                    {renderStarRating(properties["mainheat_energy_eff"], t)}
+                  </p>
+                </div>
+        
+                <div className={styles.efficiencyStarRatings}
+                    data-value = {properties["mainheat_energy_eff"].toLowerCase()}>
                 <p className={isHighestMainheatControllerEff ? "highlight-green" : ""}>
                   <h4>{t.mainheatControllerEnergyEfficiency}: </h4>
                   <p>{renderStarRating(properties["mainheatc_energy_eff"], t)}</p>
@@ -197,7 +204,6 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
 
                 </div>
               </div>
-
 
               <div className={styles.iconSection}>
                 <div className={styles.heatingIcons}>
@@ -208,9 +214,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                       ))}</span>
                 </div>
               </div>
-          </div>
-
-        
+          </div>      
 
       {/* Lighting Section */}
       <div className={`${styles.energyBox} ${styles.lighting}`}>
@@ -249,6 +253,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
           </tbody>
         </table>
 
+      <div className={styles.visualisedDescriptions}>
         <div className={styles.progressBase}>
           <div className={styles.progressContainer}>
             <h4>{t.lowEnergyLighting}</h4>
@@ -257,20 +262,16 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               <p>{progressValue}%</p>
           </div>
                 
-                <p className={isHighestLightingEff ? "highlight-green" : ""}></p>
-                  <div className={styles.efficiencyStarRatings}>
-                    <h4>{t.lightingEnergyEfficiency}:</h4>
-                    <p>{renderStarRating(properties["lighting_energy_eff"], t)}</p> 
-                  </div>
-              </div>
-              
-                {/*<div className={styles.progressDescription}>
-                <h4>{t.lightingDescription}</h4>
-                  <p>{properties["lighting_description"]}</p>
-                </div>*/}
 
-              </div>
-
+            <div className={styles.efficiencyStarRatings}
+                data-value = {properties["lighting_energy_eff"].toLowerCase()}>
+                  <h4>{t.lightingEnergyEfficiency}:</h4>
+                  <p className={isHighestLightingEff ? "highlight-green" : ""}>
+                    {renderStarRating(properties["lighting_energy_eff"], t)}</p>
+            </div>
+          </div>    
+        </div>
+      </div>
         
       {/* Hot Water Section */}
       <div className={`${styles.energyBox} ${styles.hotWater}`}>
@@ -309,21 +310,21 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                 </tbody>
               </table>
 
-          <div className={styles.hotWaterSummary}>
+          <div className={styles.visualisedDescriptions}>
             <div className={styles.hotWaterDescriptionsSection}>
               <h4>{t.hotWaterDescription}:</h4>
               <p> {properties["hotwater_description"]}</p>
             </div>
 
-              <p className={isHighestHotWaterEff ? "highlight-green" : ""}>
-                <div className={styles.efficiencyStarRatings}>
+              <div className={styles.efficiencyStarRatings}
+                data-value = {properties["hot_water_energy_eff"].toLowerCase()}>
                   <h4>{t.hotWaterEnergyEfficiency}:</h4>
-                  <p>{renderStarRating(properties["hot_water_energy_eff"], t)}</p>
+                  <p className={isHighestHotWaterEff ? "highlight-green" : ""}>
+                    {renderStarRating(properties["hot_water_energy_eff"], t)}</p>
                 </div>
-              </p>
             </div>
           </div>
-
+        </div>
     </div>
   );
 };

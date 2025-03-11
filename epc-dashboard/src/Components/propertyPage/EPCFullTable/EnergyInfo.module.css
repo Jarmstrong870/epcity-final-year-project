@@ -1,45 +1,63 @@
 .energyInfoContainer {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3-column layout */
-  gap: 20px;
-  padding: 20px;
   background-color: #ffffff;
   border-radius: 10px;
-  margin-bottom: 100px;
-  width: 100%; /* Full width */
-  box-sizing: border-box;
-  align-items: start; /* Ensures content aligns properly */
+  padding: 20px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Header */
 .energyHeader {
-  grid-column: span 3;
   text-align: center;
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
   color: #2c5f2d;
   text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
   letter-spacing: 1px;
   border-bottom: 3px solid #2c5f2d;
+  margin-bottom: 20px;
 }
 
-/* Individual boxes */
+/* Section Layout */
+.energySection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive */
+  gap: 30px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+/* Individual Boxes */
 .energyBox {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  padding: 25px;
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  min-height: 100%;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  min-height: 400px; /* Prevents Overlapping */
+  width: 100%;
+  flex-grow: 1;
+  transition: transform 0.3s ease-in-out;
 }
+
+.energyBox:hover {
+  transform: scale(1.02);
+}
+
 /* Section Titles */
 .sectionHeader {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #2c5f2d;
   margin-bottom: 15px;
@@ -50,7 +68,6 @@
 /* Tables */
 .energyBox table {
   width: 100%;
-  max-width: 100%; /* Prevents overflow */
   border-collapse: collapse;
   text-align: center;
   margin-top: 10px;
@@ -58,80 +75,102 @@
 
 .energyBox th, 
 .energyBox td {
-    padding: 10px;
-    border-bottom: 1px solid #ffffff;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  word-wrap: break-word;
 }
 
-/* Efficiency Star Ratings */
+.visualisedDescriptions {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 2px solid #ddd;  /* Creates a clean break between sections */
+}
+
+.visualisedDescriptions h4 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+
+/* Efficiency Ratings */
 .efficiencyStarRatings {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 600px;
+  max-width: 500px;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  margin: 0 auto;
-  text-align: center;
-  transition: transform 0.3s ease-in-out;
+  background: #f8f9fa; /* Light background for separation */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* Soft shadow for depth */
+  margin-top: 20px; 
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .efficiencyStarRatings:hover {
   transform: scale(1.02);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Star Icon Styling */
-.star-rating {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  font-size: 28px;
-  color: #ffd700;
-  transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+.efficiencyStarRatings h4 {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
 }
 
-.star:hover {
-  transform: scale(1.3);
-  color: #ff9900;
+/* 📌 Spacing Between Multiple Ratings */
+.efficiencyStarRatings p {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #555;
 }
 
-/* Progress Container */
-.progressBase {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 20px;
-  gap: 20px;
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease-in-out;
-  margin-top: 20px;
+.efficiencyStarRatings[data-value="very good"] {
+  background: #d4edda; /* ✅ Light Green */
+  color: #155724;
 }
 
-.progressBase:hover {
-  transform: scale(1.02);
+.efficiencyStarRatings[data-value="good"] {
+  background: #fff8e1; /* ✅ Light Yellow */
+  color: #856404;
+}
+
+.efficiencyStarRatings[data-value="average"] {
+  background: #e0e0e0; /* ✅ Light Gray */
+  color: #444;
+}
+
+.efficiencyStarRatings[data-value="poor"] {
+  background: #ffe5e5; /* ✅ Light Red */
+  color: #a50e0e;
+}
+
+.efficiencyStarRatings[data-value="very poor"] {
+  background: #f8d7da; /* ✅ Darker Red */
+  color: #721c24;
 }
 
 /* Progress Bar */
 .progressContainer {
-  width: 90%;
-  max-width: 600px;
+  width: 100%;
+  max-width: 500px;
   background: white;
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   padding: 15px;
   text-align: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
 }
 
 .progressContainer progress {
   width: 100%;
-  height: 15px;
+  height: 20px;
   border-radius: 15px;
   background: #ffffff;
   appearance: none;
@@ -148,51 +187,38 @@
   border-radius: 15px;
 }
 
-/* Icon Grid */
+/* Icons */
 .heatingIcons {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   gap: 15px;
   width: 100%;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .heatingIcons img {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Savings Summary */
-.savingsSummary {
-  grid-column: span 3;
-  text-align: center;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-  width: 100%;
+.heatingIcons img:hover {
+  transform: scale(1.1);
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .energyInfoContainer {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .energyHeader {
     font-size: 26px;
   }
-
-  .energyBox {
-    min-height: 250px;
+  .energySection {
+    grid-template-columns: 1fr; /* Stack sections on smaller screens */
   }
 }
 
 @media (max-width: 768px) {
-  .energyInfoContainer {
-    grid-template-columns: 1fr;
-  }
-
   .energyHeader {
     font-size: 22px;
     padding: 10px;
@@ -207,5 +233,3 @@
     width: 100%;
   }
 }
-
-

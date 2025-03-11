@@ -74,3 +74,31 @@
   }
   
   
+  .energy-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 50px auto;
+    align-items: stretch; 
+  }
+  
+  .energy-section > .energyInfoContainer {
+    min-height: 100%;
+  }
+
+/* Responsive Grid Fix */
+@media screen and (max-width: 1024px) {
+  .energy-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .energy-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+  
