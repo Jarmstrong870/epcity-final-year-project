@@ -15,18 +15,11 @@ const PropertyList = ({ user, loading, language }) => {
   const [showPopup, setShowPopup] = useState(false);
   const t = translations[language] || translations.en;
   const navigate = useNavigate();
-  const {addFavourite, removeFavourite, isFavourited} = useContext(FavouriteContext);
+  const { addFavourite, removeFavourite, isFavourited } = useContext(FavouriteContext);
   const { properties, getNewPage, sortProperties, page } = useContext(PropertyContext);
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const searchTerm = searchParams.get("search");
-
-  useEffect(() => {
-    getNewPage(page);
-  }, [page]);
 
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
@@ -53,8 +46,8 @@ const PropertyList = ({ user, loading, language }) => {
       prevSelection.includes(uprn)
         ? prevSelection.filter((id) => id !== uprn)
         : prevSelection.length < 4
-        ? [...prevSelection, uprn]
-        : prevSelection
+          ? [...prevSelection, uprn]
+          : prevSelection
     );
   };
 
@@ -72,6 +65,26 @@ const PropertyList = ({ user, loading, language }) => {
       {showPopup && <div className="popup-message">{popupMessage}</div>}
 
       <div className="property-list-header">
+        {/* View Mode Toggle (Center) */}
+        <div className="view-toggle-container">
+          <div className="view-toggle">
+            <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
+              {t.tableView}
+            </button>
+            <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
+              {t.cardView}
+            </button>
+          </div>
+        </div>
+        {/* Compare Button (Right) */}
+        <div className="compare-button-container">
+          <button className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`} onClick={handleCompareClick} disabled={selectedForComparison.length < 2}>
+            {t.compare} ({selectedForComparison.length}/4)
+          </button>
+          <TextToSpeech text={t.compareSpeech} language={language} />
+        </div>
+
+        {/* Sort Container (Right) */}
         <div className="sort-container">
           <div className="dropdown-with-tts">
             <label>{t.sortBy}</label>
@@ -82,6 +95,7 @@ const PropertyList = ({ user, loading, language }) => {
           </div>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
+            <option value="number_bedrooms">Number of bedrooms</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
             <option value="number_bedrooms">Number of Bedrooms</option>
@@ -89,10 +103,7 @@ const PropertyList = ({ user, loading, language }) => {
 
           <div className="dropdown-with-tts">
             <label>{t.order}</label>
-            <TextToSpeech
-              text={`${t.order}. ${t.ascending}, ${t.descending}`}
-              language={language}
-            />
+            <TextToSpeech text={`${t.order}. ${t.ascending}, ${t.descending}`} language={language} />
           </div>
           <select value={sortOrder} onChange={handleOrderChange}>
             <option value="order">{t.order}</option>
@@ -102,32 +113,6 @@ const PropertyList = ({ user, loading, language }) => {
         </div>
       </div>
 
-      {/* View Mode Toggle & Compare Button with TTS */}
-      <div className="view-toggle-container">
-        <div className="view-toggle">
-          <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
-            {t.tableView}
-          </button>
-          <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
-            {t.cardView}
-          </button>
-        </div>
-
-        {/* Compare button with microphone */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`}
-            onClick={handleCompareClick}
-            disabled={selectedForComparison.length < 2}
-          >
-            {t.compare} ({selectedForComparison.length}/4)
-          </button>
-          <TextToSpeech
-            text={t.compareSpeech}
-            language={language}
-          />
-        </div>
-      </div>
 
       {viewMode === 'table' ? (
         <table className="table-view">
@@ -136,7 +121,7 @@ const PropertyList = ({ user, loading, language }) => {
               <th>{t.address}</th>
               <th>{t.postcode}</th>
               <th>{t.propertyType}</th>
-              <th>{'Number of Bedrooms'}</th>
+              <th>Number of bedrooms</th>
               <th>{t.currentEnergyRating}</th>
               <th>{t.currentEnergyEfficiency}</th>
               <th>{t.favorite}</th>
@@ -156,8 +141,8 @@ const PropertyList = ({ user, loading, language }) => {
                 <td>{property.current_energy_efficiency}</td>
                 <td>
                   <FavouriteStar
-                    user = {user}
-                    property ={property}
+                    user={user}
+                    property={property}
                   />
                 </td>
                 <td className="compare-checkbox">
@@ -192,23 +177,23 @@ const PropertyList = ({ user, loading, language }) => {
       )}
 
       <div>
-      <div className="pagination-container">
-  <button
-    className="paginationPrevious"
-    onClick={() => handlePageChange(page - 1)}
-    disabled={page === 1}
-  >
-    {t.previous}
-  </button>
+        <div className="pagination-container">
+          <button
+            className="paginationPrevious"
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          >
+            {t.previous}
+          </button>
 
-  <button
-    className="paginationNext"
-    onClick={() => handlePageChange(page + 1)}
-    disabled={properties.length < expectedPageSize}
-  >
-    {t.next}
-  </button>
-</div>
+          <button
+            className="paginationNext"
+            onClick={() => handlePageChange(page + 1)}
+            disabled={properties.length < expectedPageSize}
+          >
+            {t.next}
+          </button>
+        </div>
 
       </div>
     </div>

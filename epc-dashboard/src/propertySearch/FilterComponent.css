@@ -1,139 +1,270 @@
-.baseStyling {
-    padding: 20px;
-
+body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: #333;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 40px;
+    margin-top: 90px;
 }
 
-.searchBarTitle {
-    z-index: 2;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: 800px;
-    border-radius: 12px;
-    /* Box-like appearance */
-    padding: 15px 20px;
-    background-color: white;
-    /* White background for contrast */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-    gap: 15px;
+.searchTitle{
+    color: white;
+    padding-top: 2%;
 }
 
-.searchBarTitle {
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.searchContainer{
+    margin: 2%;
+    margin-bottom: 0%;
+}
+.cityDropDown{
+    width: 22%;
+}
+/* 🔹 Base Container for Filtering */
+.filterSection {
+    /* padding: 40px 20px; */
+    padding-bottom: 10px;
     width: 90%;
-    max-width: 800px;
+    margin: 0 auto;
+    background: #1a2e2d;
     border-radius: 12px;
-    /* Box-like appearance */
-    padding: 15px 20px;
-    background-color: white;
-    /* White background for contrast */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-    gap: 1rem;
-    position: relative;
+    margin-top: 1%;
+    margin-bottom: 4%;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
 }
 
-.searchAddress {
-    flex: 1;
-    padding: 1rem;
-    font-size: 1rem;
-    width: 100%;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.filtersContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    padding: 0.5%;
+    background: #1a2e2d;
 }
 
-.propertyTypeFilter,
-.ratingLetterFilter {
+.filterButtons {
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
-    padding: 1.5rem;
-    align-items: center;
-    text-align: center;
-    border-radius: 10px;
-    width: 600px;
-    margin: auto
+    gap: 10px;
 }
 
-.propertyTypeFilterTitle,
-.ratingLetterFilterTitle {
+/* 🔹 Filter Title Buttons */
+.filterTitleButton {
+    flex: 1;
+    width: 31%;
+    margin-left: 1%;
+    margin-right: 1%;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a2e2d;
+    background: white;
+    border: 1px solid #3a5f41;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.filterTitleButton:hover {
+    background: #2b4d35;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* 🔹 Expandable Filter Sections */
+.filterBox {
+    width: 97%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    background: white;
+    border-radius: 12px;
+    text-align: left;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    color: #3a5f41;
+    border: 1px solid #3a5f41;
+    overflow: collapse;
+    max-height: 0;
+    opacity: 0;
+    visibility: collapse;
+    /* margin: 0; */
+}
+
+/* When active, expand the filter section */
+.filterBox.active {
+    margin-top: 10px;
+    max-height: 500px; 
+    opacity: 1;
+    visibility: visible;
+    padding: 10px;
+}
+
+/* 🔹 Checkboxes and Labels */
+.checkboxContainer {
+    padding-left: 5%;
+    padding-right: 5%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    gap: 10px; 
+    /* width: 100%;  */
+}
+
+
+.checkboxLabel {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     padding: 15px;
     align-items: center;
-    text-align: center;
-    border-radius: 10px;
-    width: 600px;
-    margin: auto
+    gap: 8px;
+    font-size: 16px;
+    
 }
 
-.propertyTypeFilter label,
-.ratingLetterFilter label {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-align: left;
-    font-size: 1rem;
-    font-style: italic;
+.checkboxLabel:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
-    accent-color: #103405;
-}
-
-select,
-input[type="number"] {
-    width: 100%;
-    max-width: 260px;
-    padding: 0.8rem;
-    font-size: 14px;
-    border: none;
-    border-radius: 12px;
-    box-sizing: border-box;
-    outline: none;
-    background-color: #ffffff;
-}
-
-.searchButton,
-.stylingFilterButton{
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border: 1px solid #ccc;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #1d3b2a;
     border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #339715;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+input[type="checkbox"]:focus {
+    outline: none; 
+    border-color: #1d3b2a; 
+    box-shadow: 0px 0px 4px rgba(29, 59, 42, 0.5); 
+}
+
+input[type="checkbox"]:checked {
+    background: #1d3b2a;
+    border: 2px solid #1d3b2a;
+    box-shadow: 0px 0px 8px rgba(255, 255, 255, 0.3);
+}
+
+input[type="checkbox"]:checked::after {
+    content: '\2713';
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #1d3b2a;
     color: white;
     cursor: pointer;
     display: inline-block;
+    height: 130%;
 }
 
 .searchButton {
     background-color: #339715;
     width: 100%;
-    max-width: 200px;
+    height: 80%;
+    /* max-width: 200px; */
     margin: 10px auto;
     display: block;
+    text-align: center;
+    border: 2px solid #1d3b2a;
 }
 
-.stylingFilterButton {
-    margin-left: 0.5rem;
-    background-color: #2c5f2d;
-    border: none;
+/* 🔹 Bedroom Slider */
+.bedroomSlider {
+    width: 100%;
+    accent-color: #ffffff;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+    background: linear-gradient(to right, #f5a623, #f0c674);
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-left: 5px;
+}
+
+.rangeSliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 2%;
+    background: white;
+    border-radius: 12px;
+    color: #1a2e2d;
+    text-align: center;
+    /* box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2); */
+    /* border: 1px solid #3a5f41; */
+}
+
+.searchInputs {
+    margin-top: 1%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+}
+
+
+.searchAddress, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.searchAddress:focus, select:focus {
+    border-color: #1a2e2d;
+    box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.5);
+}
+
+/* 🔹 Search Button */
+.searchButton {
+    background: #ffffff;
+    color: #1a2e2d;
+    border: none;
+    width: 20%;
+    padding: 9px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.searchButton:hover {
+    background: #18653a;
+    box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 1200px) {
+    .filtersContainer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 768px) {
+    .filterSection {
+        padding: 20px;
+        margin-top: 40px;
+    }
+    .filtersContainer {
+        padding: 20px;
+    }
+    .filterBox {
+        padding: 20px;
+    }
 }
 
 .rangeSliderContainer {
@@ -155,7 +286,7 @@ input[type="number"] {
 .rangeThumb {
     width: 20px;
     height: 20px;
-    background: #007bff;
+    background: #1a2e2d;
     border-radius: 50%;
     display: flex;
     justify-content: center;
