@@ -138,7 +138,7 @@ function App() {
       <FavouriteProvider user={user}>
         <div className="App">
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
-            <div className="logo-container">
+            <div className={`logo-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
               {isScrolled && (
               <div className="header-navigation-links">

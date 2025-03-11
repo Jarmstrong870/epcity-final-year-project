@@ -417,6 +417,16 @@ td a:hover {
   background-color: transparent; /* 🚀 Initially Transparent */
   box-shadow: none;
 }
+.header-container.transparent{
+  height: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #1a2e2d;
+}
+.logo-container.transparent{
+  margin-top: 100px;
+}
+
 
 /* 🚀 When User Scrolls Down */
 .header-container.scrolled {
