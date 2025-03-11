@@ -156,22 +156,20 @@ input[type="checkbox"]:checked {
 
 input[type="checkbox"]:checked::after {
     content: '\2713';
-    color: white;
     font-size: 16px;
     font-weight: bold;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #339715;
+    background-color: #1d3b2a;
     color: white;
     cursor: pointer;
     display: inline-block;
+    height: 130%;
 }
 
 .searchButton {
     background-color: #339715;
     width: 100%;
-    max-width: 200px;
+    height: 80%;
+    /* max-width: 200px; */
     margin: 10px auto;
     display: block;
     text-align: center;
