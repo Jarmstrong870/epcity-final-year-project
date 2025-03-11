@@ -20,7 +20,6 @@ import LanguageSelector from './homePage/LanguageSelector';
 import VerifyOtp from './login&register/VerifyOtp';
 import ResetPassword from './login&register/resetPassword';
 import PropertyFinder from './FAQ/PropertyFinder';
-import EICalculator from './FAQ/EICalculator';
 import Checklist from './FAQ/Checklist';
 import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
@@ -222,7 +221,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
-            <Route path="/faq/budget-calculator" element={<EICalculator language={language} />} />
             <Route path="/faq/checklist" element={<Checklist language={language} />} />
             <Route path="/faq/socialmedia" element={<SocialMedia />} />
             <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />

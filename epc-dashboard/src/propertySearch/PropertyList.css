@@ -7,7 +7,7 @@ body {
   padding: 0;
 }
 
-.property-list{
+.property-list {
   margin-left: 5%;
   margin-right: 5%;
 
@@ -24,7 +24,7 @@ body {
 
 .property-list-header {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   margin-bottom: 20px
@@ -243,6 +243,7 @@ body {
   .paginationNext {
     width: 100%;
     text-align: center;
+  }
 
   .paginationPrevious,
   .paginationNext {

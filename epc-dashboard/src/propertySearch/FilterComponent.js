@@ -72,7 +72,7 @@ const PropertyFilter = ({ language }) => {
     return (
         <div className="filterSection">
             <div className="searchContainer">
-                <h2>Search Properties</h2>
+                <h2 className="searchTitle">Search Properties</h2>
                 <div className="searchInputs">
                     {/* Search Bar */}
                     <input
@@ -174,23 +174,6 @@ const PropertyFilter = ({ language }) => {
                         ))}
                     </div>
                 </div>
-            </div>
-
-            {/* City DropDown */}
-            <div>
-                <label>Cities</label>
-                <select
-                    value={city}
-                    onChange={handleCityChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2"
-                >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                        <option key={city.value} value={city.value}>
-                            {city.name}
-                        </option>
-                    ))}
-                </select>
             </div>
         </div>
     );

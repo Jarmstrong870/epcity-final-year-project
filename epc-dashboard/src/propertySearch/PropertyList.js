@@ -137,7 +137,6 @@ const PropertyList = ({ user, loading, language }) => {
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
                 <td>{property.number_bedrooms}</td>
-                <td>{property.number_bedrooms}</td>
                 <td>{property.current_energy_rating}</td>
                 <td>{property.current_energy_efficiency}</td>
                 <td>
