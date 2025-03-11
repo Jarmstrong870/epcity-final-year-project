@@ -139,7 +139,7 @@ const GlossaryPage = ({ language }) => {
       }));
 
     if (selectedContent.length === 0) {
-      setAlertMessage('Please select at least one section to save.');
+      setAlertMessage(uiText.alertMessage);
       setTimeout(() => {
         setAlertMessage(null);
       }, 4000);

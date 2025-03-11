@@ -13,6 +13,7 @@ const translations = {
     savingLabel: 'Saving...',
     saveBtnLabel: '💾 Save EPC Glossary',
     backToTop: 'Back to Top',
+    alertMessage: 'Please select at least one section to save.',
       glossary: {
         'Basic Information': {
           address: { label: 'ADDRESS', description: 'Location of the property' },
@@ -92,6 +93,7 @@ const translations = {
       savingLabel: 'Enregistrement...',
       saveBtnLabel: '💾 Enregistrer le glossaire EPC',
       backToTop: 'Retour en haut',
+      alertMessage: "Veuillez sélectionner au moins une section à enregistrer.",
       glossary: {
         'Informations de base': {  // Translated "Basic Information"
           address: { label: 'ADRESSE', description: 'Emplacement de la propriété' },
@@ -170,6 +172,7 @@ const translations = {
       savingLabel: 'Guardando...',
       saveBtnLabel: '💾 Guardar glosario EPC',
       backToTop: 'Volver arriba',
+      alertMessage: "Por favor, seleccione al menos una sección para guardar.",
       glossary: {
         'Información básica': {  // Translated "Basic Information"
           address: { label: 'DIRECCIÓN', description: 'Ubicación de la propiedad' },
@@ -246,6 +249,7 @@ const translations = {
       savingLabel: 'Zapisywanie...',
       saveBtnLabel: '💾 Zapisz słownik EPC',
       backToTop: 'Powrót na górę',
+      alertMessage: "Proszę wybrać przynajmniej jedną sekcję do zapisania.",
       glossary: {
         'Podstawowe Informacje': {
           address: { label: 'ADRES', description: 'Lokalizacja nieruchomości' },
@@ -322,6 +326,7 @@ const translations = {
       savingLabel: '保存中...',
       saveBtnLabel: '💾 保存 EPC 术语表',
       backToTop: '回到顶部',
+      alertMessage: "请选择至少一个部分进行保存。",
       glossary: {
         '基本信息': {
           address: { label: '地址', description: '房产的位置' },
