@@ -10,7 +10,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
 .energyHeader {
   text-align: center;
   font-size: 32px;
@@ -24,10 +23,9 @@
   margin-bottom: 20px;
 }
 
-/* Section Layout */
 .energySection {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
   width: 100%;
   max-width: 1400px;
@@ -35,7 +33,7 @@
   align-items: stretch;
 }
 
-/* Individual Boxes */
+
 .energyBox {
   display: flex;
   flex-direction: column;
@@ -45,7 +43,7 @@
   background: white;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  min-height: 400px; /* Prevents Overlapping */
+  min-height: 400px; 
   width: 100%;
   flex-grow: 1;
   transition: transform 0.3s ease-in-out;
@@ -55,7 +53,6 @@
   transform: scale(1.02);
 }
 
-/* Section Titles */
 .sectionHeader {
   font-size: 1.8rem;
   font-weight: bold;
@@ -65,7 +62,7 @@
   letter-spacing: 1px;
 }
 
-/* Tables */
+
 .energyBox table {
   width: 100%;
   border-collapse: collapse;
@@ -83,7 +80,7 @@
 .visualisedDescriptions {
   margin-top: 25px;
   padding-top: 15px;
-  border-top: 2px solid #ddd;  /* Creates a clean break between sections */
+  border-top: 2px solid #ddd; 
 }
 
 .visualisedDescriptions h4 {
@@ -95,7 +92,6 @@
 }
 
 
-/* Efficiency Ratings */
 .efficiencyStarRatings {
   display: flex;
   flex-direction: column;
@@ -104,8 +100,8 @@
   max-width: 500px;
   padding: 20px;
   border-radius: 15px;
-  background: #f8f9fa; /* Light background for separation */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* Soft shadow for depth */
+  background: #f8f9fa; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); 
   margin-top: 20px; 
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
@@ -122,7 +118,6 @@
   margin-bottom: 10px;
 }
 
-/* 📌 Spacing Between Multiple Ratings */
 .efficiencyStarRatings p {
   font-size: 1rem;
   font-weight: 500;
@@ -131,31 +126,31 @@
 }
 
 .efficiencyStarRatings[data-value="very good"] {
-  background: #d4edda; /* ✅ Light Green */
+  background: #d4edda;
   color: #155724;
 }
 
 .efficiencyStarRatings[data-value="good"] {
-  background: #fff8e1; /* ✅ Light Yellow */
+  background: #fff8e1;
   color: #856404;
 }
 
 .efficiencyStarRatings[data-value="average"] {
-  background: #e0e0e0; /* ✅ Light Gray */
+  background: #e0e0e0; 
   color: #444;
 }
 
 .efficiencyStarRatings[data-value="poor"] {
-  background: #ffe5e5; /* ✅ Light Red */
+  background: #ffe5e5;
   color: #a50e0e;
 }
 
 .efficiencyStarRatings[data-value="very poor"] {
-  background: #f8d7da; /* ✅ Darker Red */
+  background: #f8d7da; 
   color: #721c24;
 }
 
-/* Progress Bar */
+
 .progressContainer {
   width: 100%;
   max-width: 500px;
@@ -214,7 +209,7 @@
     font-size: 26px;
   }
   .energySection {
-    grid-template-columns: 1fr; /* Stack sections on smaller screens */
+    grid-template-columns: 1fr;
   }
 }
 
