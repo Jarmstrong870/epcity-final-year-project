@@ -4,11 +4,13 @@ import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
-import CitySection from "../homePage/CitySection"; 
+import CitySection from "./CitySection"; 
 import liverpoolVideo from '../assets/liverpool.mp4'; 
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
 import TextToSpeech from '../Components/utils/TextToSpeech';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
+import PropertyCarousel from '../homePage/PropertyCarousel';
+import EPCSection from './EPCSection';
 
 const HomePage = ({ user, language }) => {
   const [customAlgorithmPopUp, setCustomAlgorithmPopUp] = useState(false);
@@ -83,10 +85,11 @@ const HomePage = ({ user, language }) => {
               onChange={handleInputChange}
               placeholder={t.searchPlaceholder}
             />
+          </div>
             <button className="stylingSearchButton" onClick={handleSearch}>
               {t.searchButton}
             </button>
-          </div>
+          
           
           <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
             <span className="scrollDownArrow"> {"\u2193"} </span>
@@ -96,28 +99,9 @@ const HomePage = ({ user, language }) => {
       </div>
 
 {/* About Website Section */}
-<div className="about-website">
-        <img 
-          src={require('../assets/liverpool-houses.jpg')} 
-          alt="Liverpool" 
-          className="about-image" 
-        />
-        <div className="content">
-          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.epcInformation}
-            </h2>
-            <TextToSpeech 
-              text={`${t.epcInformation}. ${t.epcInformationDescription1} ${t.epcInformationDescription2}`} 
-              language={language} 
-            />
-          </div>
-          <p>{t.epcInformationDescription1}</p>
-          <p>{t.epcInformationDescription2}</p>
-          </div>
-        </div>
-      <div>
-    </div>
+      <EPCSection  />
+      
+      
 
 
       <pageSection id ="cityGrid">
@@ -150,14 +134,7 @@ const HomePage = ({ user, language }) => {
 
       
       {/* Top Rated Properties Section */}
-      <div className="most-efficient-properties">
-        <h2>{t.mostEfficientProperties}</h2>
-        <div className="property-grid">
-          {topRatedProperties.map((property, index) => (
-            <PropertyCard key={index} user={user} property={property} language={language} />
-          ))}
-        </div>
-      </div>
+      <PropertyCarousel topRatedProperties={topRatedProperties} user={user} language={language} />
 
       {/* About Website Section */}
       <div className="about-website">
