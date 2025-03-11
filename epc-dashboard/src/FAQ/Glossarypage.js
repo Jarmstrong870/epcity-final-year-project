@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import './GlossaryPage.css';
 import translations from '../locales/translations_glossarypage';
@@ -7,10 +7,11 @@ import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png';
 
 const GlossaryPage = ({ language }) => {
   const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);  // Parse the query parameters
-  const searchTermFromUrl = searchParams.get("searchTerm") || "";  // Default to empty if not found
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTermFromUrl = searchParams.get("searchTerm") || "";
   const glossaryRefs = useRef({});
-  const [searchTerm, setSearchTerm] = useState(searchTermFromUrl);  // Set initial search term from URL
+  const [searchTerm, setSearchTerm] = useState(searchTermFromUrl);
   const [expandedSections, setExpandedSections] = useState({});
   const [selectedSections, setSelectedSections] = useState({});
   const [fileFormat, setFileFormat] = useState('pdf');
@@ -18,11 +19,11 @@ const GlossaryPage = ({ language }) => {
   const [showSectionDropdown, setShowSectionDropdown] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null);
-  const [isSaving, setIsSaving] = useState(false); // Added saving state
-  const [showBackToTop, setShowBackToTop] = useState(false); // State for Back to Top button visibility
+  const [isSaving, setIsSaving] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const { title, glossary } = translations[language] || translations.en;
-  const uiText = translations[language] || translations.en; // Dynamic UI text
+  const uiText = translations[language] || translations.en;
 
   // Automatically focus the search bar when the page loads
   useEffect(() => {
@@ -32,23 +33,18 @@ const GlossaryPage = ({ language }) => {
     }
   }, []);
 
-  // Handle scrolling to the specific glossary section based on the URL hash
+  // Reset dropdown and expanded sections when the language or search term changes
   useEffect(() => {
-    const hash = location.hash.slice(1);
-    if (hash && glossaryRefs.current[hash]) {
-      glossaryRefs.current[hash].scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-  }, [location.hash]);
+    setShowDropdown(false);
+    setExpandedSections({});
+  }, [language, searchTerm]);
 
-  // Filter glossary terms based on the search term
+  // Update glossary terms based on search term
   useEffect(() => {
     if (searchTerm) {
       const foundTerm = Object.entries(glossary).find(([section, terms]) =>
         Object.values(terms).some(({ label }) =>
-          label.toLowerCase().includes(searchTerm)
+          label.toLowerCase().includes(searchTerm.toLowerCase()) // Ensure search is case insensitive
         )
       );
 
@@ -72,8 +68,8 @@ const GlossaryPage = ({ language }) => {
       const documentHeight = document.documentElement.scrollHeight;
       const footerHeight = document.querySelector('footer') ? document.querySelector('footer').offsetHeight : 0;
 
-      if (scrollPosition >= documentHeight - footerHeight - 100) { // Show when near the bottom, but before footer
-        setShowBackToTop(true); 
+      if (scrollPosition >= documentHeight - footerHeight - 100) {
+        setShowBackToTop(true);
       } else {
         setShowBackToTop(false);
       }
@@ -89,7 +85,7 @@ const GlossaryPage = ({ language }) => {
     setShowDropdown((prev) => {
       const newShowDropdown = !prev;
       if (!newShowDropdown) {
-        setStep(1); 
+        setStep(1);
       }
       return newShowDropdown;
     });
@@ -100,7 +96,7 @@ const GlossaryPage = ({ language }) => {
       Object.entries(glossary).map(([section, terms]) => [
         section,
         Object.entries(terms).filter(([_, { label }]) =>
-          label.toLowerCase().includes(searchTerm)
+          label.toLowerCase().includes(searchTerm.toLowerCase())
         ),
       ])
     );
@@ -111,7 +107,6 @@ const GlossaryPage = ({ language }) => {
       ...prev,
       [section]: !prev[section],
     }));
-    // Scroll to the section after it expands
     setTimeout(() => {
       if (glossaryRefs.current[section]) {
         glossaryRefs.current[section].scrollIntoView({
@@ -119,7 +114,7 @@ const GlossaryPage = ({ language }) => {
           block: 'center',
         });
       }
-    }, 200);  // Small delay to ensure content has expanded
+    }, 200);
   };
 
   const toggleSectionSelection = (section) => {
@@ -144,7 +139,7 @@ const GlossaryPage = ({ language }) => {
       }));
 
     if (selectedContent.length === 0) {
-      setAlertMessage('Please select at least one section to save.');
+      setAlertMessage(uiText.alertMessage);
       setTimeout(() => {
         setAlertMessage(null);
       }, 4000);
@@ -154,20 +149,19 @@ const GlossaryPage = ({ language }) => {
 
     if (fileFormat === 'pdf') {
       const doc = new jsPDF();
-      
+
       // Add Green Bar at the top
-      doc.setFillColor(31, 62, 30); 
+      doc.setFillColor(31, 62, 30);
       doc.rect(0, 0, doc.internal.pageSize.width, 20, 'F');
       
       const logo = new Image();
-      logo.src = epcLogo; 
+      logo.src = epcLogo;
       logo.onload = () => {
         doc.addImage(logo, 'PNG', 10, 5, 40, 10); 
         let y = 35;
         
         doc.setFontSize(16);
-        // Replace 'EPC Glossary' with the translated title
-        doc.text(uiText.title || 'EPC Glossary', 10, y); // Dynamically using the translated title
+        doc.text(uiText.title || 'EPC Glossary', 10, y); 
         y += 10;
 
         selectedContent.forEach(({ section, terms }) => {
@@ -177,20 +171,28 @@ const GlossaryPage = ({ language }) => {
 
           terms.forEach(([key, { label, description }]) => {
             doc.setFontSize(12);
-            doc.text(`${label}: ${description}`, 10, y, { maxWidth: 180 }); 
-            y += 10;
 
-            if (y >= 270) {
+            // Check if content is overflowing and create a new page if necessary
+            if (y + 10 >= doc.internal.pageSize.height - 20) {
               doc.addPage();
-              y = 20; 
+              y = 20;  // Reset position for next page
             }
+
+            // Wrap text to avoid overflow
+            doc.text(`${label}: ${description}`, 10, y, { maxWidth: 180 });
+            y += 15; // Add more space between terms
+
+            // Additional space after each description
+            y += 10; 
           });
 
-          y += 5; 
+          // Add extra space between sections
+          y += 15;
         });
 
-        doc.save(`${uiText.title || 'EPC Glossary'}.pdf`); // Saving with translated title
-        setIsSaving(false); // Hide saving state
+        // Save the document after processing
+        doc.save(`${uiText.title || 'EPC Glossary'}.pdf`); 
+        setIsSaving(false); 
       };
     } else if (fileFormat === 'txt') {
       const content = selectedContent
@@ -215,28 +217,33 @@ const GlossaryPage = ({ language }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSearchChange = (e) => {
+    const newSearchTerm = e.target.value.toLowerCase();
+    setSearchTerm(newSearchTerm);
+    navigate(`?searchTerm=${newSearchTerm}`);
+  };
+
   return (
     <div style={{ padding: '20px', paddingBottom: '80px' }}>
-      {/* Search Bar */}
+      {/* Search Bar & Save Options */}
       <div className="search-bar-container">
         <input
           type="text"
-          placeholder={uiText.searchPlaceholder || "Search glossary..."} // Translated placeholder
+          placeholder={uiText.searchPlaceholder || "Search glossary..."} 
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+          onChange={handleSearchChange}
           className="search-bar"
         />
-
-        {/* Save Options Dropdown */}
+        
         <div className="dropdown">
           <button className="dropdown-btn" onClick={toggleDropdown}>
-            {uiText.saveOptionsLabel || 'Save Options'} {showDropdown ? '▲' : '▼'} {/* Translated button text */}
+            {uiText.saveOptionsLabel || 'Save Options'} {showDropdown ? '▲' : '▼'}
           </button>
           {showDropdown && (
             <div className="dropdown-content show">
               {step === 1 && (
                 <>
-                  <p>{uiText.selectFileFormatLabel || 'Select File Format:'}</p> {/* Translated label */}
+                  <p>{uiText.selectFileFormatLabel || 'Select File Format:'}</p>
                   <select
                     className="file-format-dropdown"
                     value={fileFormat}
@@ -245,12 +252,12 @@ const GlossaryPage = ({ language }) => {
                     <option value="pdf">📄 {uiText.pdfOption || 'PDF'}</option>
                     <option value="txt">📄 {uiText.txtOption || 'TXT'}</option>
                   </select>
-                  <button className="next-btn" onClick={() => setStep(2)}>{uiText.nextBtnLabel || 'Next'}</button> {/* Translated next button */}
+                  <button className="next-btn" onClick={() => setStep(2)}>{uiText.nextBtnLabel || 'Next'}</button>
                 </>
               )}
               {step === 2 && (
                 <>
-                  <p>{uiText.selectSectionsLabel || 'Select Sections:'}</p> {/* Translated label */}
+                  <p>{uiText.selectSectionsLabel || 'Select Sections:'}</p>
                   <button className="dropdown-btn" onClick={() => setShowSectionDropdown(!showSectionDropdown)}>
                     {showSectionDropdown ? uiText.hideSectionsBtn || 'Hide Sections ▲' : uiText.selectSectionsBtn || 'Select Sections ▼'}
                   </button>
@@ -283,18 +290,16 @@ const GlossaryPage = ({ language }) => {
         </div>
       </div>
 
-      {/* Alert Box */}
       {alertMessage && <div className="alert-box">{alertMessage}</div>}
 
-      <h2 style={{ textAlign: 'center' }}>{uiText.title || 'EPC Glossary'}</h2> {/* Translated title */}
+      <h2 className="glossary">{uiText.title || 'EPC Glossary'}</h2>
 
-      {/* Glossary Sections */}
       {Object.entries(filteredGlossary).map(([section, terms]) => (
         <div key={section} className="glossary-section" ref={(el) => (glossaryRefs.current[section] = el)}>
           <h3
             onClick={() => toggleSection(section)}
             onKeyPress={(e) => e.key === 'Enter' && toggleSection(section)}
-            className="glossary-section-title"
+            className="glossary"
             tabIndex="0"
           >
             {section} {expandedSections[section] ? '▼' : '▶'}
@@ -312,13 +317,11 @@ const GlossaryPage = ({ language }) => {
         </div>
       ))}
 
-      {/* Back to Top Button */}
       {showBackToTop && (
         <button onClick={scrollToTop} className="back-to-top-btn">
-          {uiText.backToTop ? uiText.backToTop : 'Back to Top'} {/* Corrected comment */}
+          {uiText.backToTop || 'Back to Top'}
         </button>
       )}
-
     </div>
   );
 };

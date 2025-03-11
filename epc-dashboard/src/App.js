@@ -230,7 +230,7 @@ function App() {
             <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
             <Route path="/favourites" element={<FavouritePage user={user} language={language} />} />
             <Route path="/compare-results" element={<ComparePage language={language} />} />
-            <Route path="/messages" element={<Messages user={user} />} />
+            <Route path="/messages" element={<Messages user={user} language={language} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
           </Routes>
