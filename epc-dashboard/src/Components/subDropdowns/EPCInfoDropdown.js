@@ -34,12 +34,6 @@ const EPCInfoDropdown = ({
                 {t.epcRating}
               </button>
               <button
-                className={activeTabs.epc === "costs" ? "active" : ""}
-                onClick={() => setActiveTab("epc", "costs")}
-              >
-                {t.estimatedCosts}
-              </button>
-              <button
                 className={activeTabs.epc === "info" ? "active" : ""}
                 onClick={() => setActiveTab("epc", "info")}
               >
@@ -82,21 +76,6 @@ const EPCInfoDropdown = ({
                       </Link>
                       {t.totalEnergyUsage}:
                     </strong> {property.energy_consumption_current * (property.total_floor_area || 1)} KWh
-                  </p>
-                </div>
-              )}
-
-              {activeTabs.epc === "costs" && (
-                <div>
-                  <h4>{t.estimatedCosts}</h4>
-                  <p className={highlightIfBest(parseNumericValue(property.heating_cost_current), maxValues?.minHeatingCostCurrent)}>
-                    <strong>{t.heatingCostExample}:</strong> {property.heating_example_formatted || "N/A"}
-                  </p>
-                  <p className={highlightIfBest(parseNumericValue(property.hot_water_cost_current), maxValues?.minHotWaterCostCurrent)}>
-                    <strong>{t.hotWaterCostExample}:</strong> {property.hot_water_example_formatted || "N/A"}
-                  </p>
-                  <p className={highlightIfBest(parseNumericValue(property.lighting_cost_current), maxValues?.minLightingCostCurrent)}>
-                    <strong>{t.lightingCostExample}:</strong> {property.lighting_example_formatted || "N/A"}
                   </p>
                 </div>
               )}
