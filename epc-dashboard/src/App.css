@@ -610,6 +610,10 @@ td a:hover {
   transition: color 0.3s ease, transform 0.2s ease;
 }
 
+.footer-column-title{
+  color: #ffffff;
+}
+
 .footer-nav a:hover {
   color: #ffffff;
   transform: translateY(-2px);

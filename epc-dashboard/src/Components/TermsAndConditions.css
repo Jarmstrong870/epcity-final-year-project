@@ -1,0 +1,87 @@
+/* Terms & Conditions Page Styles */
+.terms-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    line-height: 1.8;
+  }
+  
+  .terms-header {
+    background: linear-gradient(135deg, #2c5f2d, #1e4020);
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 100px;
+  }
+  
+  .terms-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background-color:transparent;
+
+    border: transparent;
+  }
+  
+  .terms-header p {
+    font-size: 1rem;
+    opacity: 0.9;
+    color: #ffffff;
+  }
+  
+  .terms-content {
+    background: #ffffff;
+    padding: 30px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .terms-content h2 {
+    color: #2c5f2d;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  
+  .terms-content p, 
+  .terms-content ul {
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .terms-content ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .terms-content a {
+    color: #2c5f2d;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .terms-content a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .terms-container {
+      padding: 15px;
+    }
+  
+    .terms-header h1 {
+      font-size: 2rem;
+    }
+  
+    .terms-content h2 {
+      font-size: 1.5rem;
+    }
+  
+    .terms-content p,
+    .terms-content ul {
+      font-size: 1rem;
+    }
+  }
+  
