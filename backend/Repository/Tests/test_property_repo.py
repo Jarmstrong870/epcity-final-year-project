@@ -8,7 +8,7 @@ from Repository import propertyRepo  # Importing from the same Repository direct
 
 class TestPropertyRepo(unittest.TestCase):
 
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_all_properties_success(self, mock_connect):
         """Test successful retrieval of properties"""
 
@@ -41,7 +41,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_all_properties_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -54,8 +54,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertEqual(result, [])  # Should return an empty list on failure
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
-    @patch('propertyRepo.execute_values')  # Mock bulk insert
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.execute_values')  # Mock bulk insert
     def test_update_properties_in_db_success(self, mock_execute_values, mock_connect):
         """Test successful update of the properties table"""
 
@@ -102,7 +102,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_update_properties_in_db_failure(self, mock_connect):
         """Test error handling when database update fails"""
 
@@ -118,8 +118,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertFalse(result)  # Should return False on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_properties_in_db_partial_failure(self, mock_execute_values, mock_connect):
         """Test rollback when insert fails"""
 
@@ -147,8 +147,8 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
-    @patch('propertyRepo.execute_values')  # Mock bulk insert
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.execute_values')  # Mock bulk insert
     def test_update_inflation_data_in_db_success(self, mock_execute_values, mock_connect):
         """Test successful update of the inflation table"""
 
@@ -175,7 +175,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_update_inflation_data_in_db_failure(self, mock_connect):
         """Test error handling when database update fails"""
 
@@ -191,8 +191,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertFalse(result)  # Should return False on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_inflation_data_in_db_partial_failure(self, mock_execute_values, mock_connect):
         """Test rollback when insert fails"""
 
@@ -217,8 +217,8 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_inflation_data_in_db_empty_dataframe(self, mock_execute_values, mock_connect):
         """Test handling of empty DataFrame"""
 
@@ -242,7 +242,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_top_rated_from_db_success(self, mock_connect):
         """Test successful retrieval of top 6 rated energy-efficient properties"""
 
@@ -281,7 +281,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_top_rated_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -294,7 +294,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsNone(result)  # Should return None on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_top_rated_from_db_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
@@ -316,7 +316,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_data_from_db_success(self, mock_connect):
         """Test successful retrieval of filtered properties"""
 
@@ -349,7 +349,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -362,7 +362,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsInstance(result, str)  # Should return an error message
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_invalid_sort_order(self, mock_connect):
         """Test ValueError when an invalid sort order is provided"""
 
@@ -379,7 +379,7 @@ class TestPropertyRepo(unittest.TestCase):
         self.assertIsInstance(result, str)
         self.assertIn("Invalid input", result)
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_empty_filtering(self, mock_connect):
         """Test function with no filters applied"""
 
@@ -412,7 +412,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_area_data_from_db_success(self, mock_connect):
         """Test successful retrieval of properties in a given postcode and bedroom count"""
 
@@ -448,7 +448,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_area_data_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -461,7 +461,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsNone(result)  # Should return None on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_area_data_from_db_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
@@ -483,7 +483,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')
+    @patch('Repository.propertyRepo.psycopg2.connect')
     def test_get_latest_and_lodgement_cpih_success(self, mock_connect):
         """Test successful retrieval of latest and lodgement date CPIH values"""
 
@@ -534,7 +534,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_latest_and_lodgement_cpih_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -547,7 +547,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertTrue(result.empty)  # Should return an empty DataFrame
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_latest_and_lodgement_cpih_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
