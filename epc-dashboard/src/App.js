@@ -33,6 +33,10 @@ import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import AdminDashboard from './login&register/AdminDashboard'; 
 import { useLocation } from "react-router-dom"; // Import to detect current page
+import Aboutus from './aboutUs/aboutus';
+import TermsAndConditions from './Components/TermsAndConditions';
+import AboutUs from './aboutUs/aboutus';
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -231,6 +235,9 @@ function App() {
             <Route path="/messages" element={<Messages user={user} language={language} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/about-us" element={<AboutUs />} />
+           <Route path="/terms" element={<TermsAndConditions />} />
           </Routes>
 
 

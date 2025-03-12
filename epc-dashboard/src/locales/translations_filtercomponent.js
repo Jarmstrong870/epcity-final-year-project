@@ -5,6 +5,8 @@ const translations = {
     findProperties: 'Find Properties',
     propertyTypes: 'Property Types',
     epcRatings: 'EPC Ratings',
+    bedroomRange: 'Number of Bedrooms',
+    selectCity: 'Select City',
     propertyTypeOptions: ['House', 'Flat', 'Maisonette', 'Bungalow'],
   },
   fr: {
@@ -13,6 +15,8 @@ const translations = {
     findProperties: 'Trouver des propriétés',
     propertyTypes: 'Types de propriétés',
     epcRatings: 'Classements EPC',
+    bedroomRange: 'Nombre de chambres',
+    selectCity: 'Sélectionnez une ville',
     propertyTypeOptions: ['Maison', 'Appartement', 'Studio', 'Bungalow'],
   },
   es: {
@@ -21,6 +25,8 @@ const translations = {
     findProperties: 'Buscar propiedades',
     propertyTypes: 'Tipos de propiedades',
     epcRatings: 'Clasificaciones EPC',
+    bedroomRange: 'Número de habitaciones',
+    selectCity: 'Seleccionar ciudad',
     propertyTypeOptions: ['Casa', 'Piso', 'Apartamento', 'Estudio', 'Bungaló'],
   },
   pl: {
@@ -29,6 +35,8 @@ const translations = {
     findProperties: 'Znajdź nieruchomości',
     propertyTypes: 'Typy nieruchomości',
     epcRatings: 'Oceny EPC',
+    bedroomRange: 'Liczba sypialni',
+    selectCity: 'Wybierz miasto',
     propertyTypeOptions: ['Dom', 'Mieszkanie', 'Apartament', 'Studio', 'Bungalow'],
   },
   zh: {
@@ -37,6 +45,8 @@ const translations = {
     findProperties: '查找房产',
     propertyTypes: '房产类型',
     epcRatings: 'EPC评级',
+    bedroomRange: '卧室数量',
+    selectCity: '选择城市',
     propertyTypeOptions: ['房子', '公寓', '套房', '单间', '平房'],
   },
 };

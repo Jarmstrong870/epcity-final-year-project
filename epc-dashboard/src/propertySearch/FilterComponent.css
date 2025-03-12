@@ -167,14 +167,23 @@ input[type="checkbox"]:checked::after {
 
 .searchButton {
     background-color: #339715;
-    width: 100%;
+    width: 15%; /* Keep it responsive but not too wide */
     height: 80%;
-    /* max-width: 200px; */
+    min-width: 160px; /* Ensures it's never too small */
+    max-width: 220px; /* Prevents excessive growth */
     margin: 10px auto;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     border: 2px solid #1d3b2a;
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Ensures content stays inside */
+    text-overflow: ellipsis; /* Adds "..." if text overflows */
+    padding: 10px 15px; /* Adds spacing inside the button */
 }
+
+
 
 /* 🔹 Bedroom Slider */
 .bedroomSlider {
