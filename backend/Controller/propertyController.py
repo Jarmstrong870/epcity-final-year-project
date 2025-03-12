@@ -12,14 +12,21 @@ Route to update properties in the database
 """
 @property_blueprint.route('/property/updateDB', methods=['GET'])
 def update_properties_route():
-    return jsonify(properties.update_properties())
+    success = properties.update_properties()
+    
+    # Ensure a JSON response with a key-value pair
+    return jsonify({"success": success}), 200
+
 
 """
 Route to update properties in the database
 """
 @property_blueprint.route('/property/inflationDB', methods=['GET'])
 def update_inflation_data_route():
-    return jsonify(properties.fetch_cpih_data())
+    success = properties.fetch_cpih_data()
+    
+    # Ensure a JSON response with a key-value pair
+    return jsonify({"success": success}), 200
 
 """
 Route to load top 6 properties from DB for Home Page
@@ -82,6 +89,9 @@ Response: JSON list containing comparison data for selected properties.
 def compare_properties_route():
     try:
         # Extract request data
+        if not request.is_json:
+            return jsonify({"error": "Invalid or missing JSON body"}), 400
+        
         data = request.get_json()
         print("Received Data:", data)  # Debugging
 
@@ -99,7 +109,7 @@ def compare_properties_route():
         # Fetch comparison data from the service layer
         comparison_data = properties.compare_properties(uprns)
 
-        #  Convert DataFrame to JSON format
+        # Convert DataFrame to JSON format
         if isinstance(comparison_data, pd.DataFrame):
             comparison_data = comparison_data.to_dict(orient="records")
 
@@ -109,6 +119,7 @@ def compare_properties_route():
         print("Error in compare_properties_route:", str(e))  # Debugging
         return jsonify({"error": str(e)}), 500
 
+
 """
 Route method that returns property data for properties within the same postcode and have the same number of bedrooms as a given property
 """
@@ -117,10 +128,16 @@ def get_graph_data_route():
     try:
         # Get params from argument
         postcode = request.args.get('postcode', '').strip()
-        number_bedrooms = request.args.get('num_bedrooms')
+        num_bedrooms = request.args.get('num_bedrooms')
+
+        # Validate `num_bedrooms`
+        if not num_bedrooms or not num_bedrooms.isdigit():
+            return jsonify({"error": "Invalid or missing 'num_bedrooms' parameter"}), 400
+
+        num_bedrooms = int(num_bedrooms)  # Convert to integer
 
         # Call service layer
-        result = properties.get_properties_from_area(postcode, number_bedrooms)
+        result = properties.get_properties_from_area(postcode, num_bedrooms)
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200
@@ -128,6 +145,7 @@ def get_graph_data_route():
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @property_blueprint.route('/property/knnSearch', methods=['POST'])
 def knn_search():
