@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import PropertyCard from '../homePage/PropertyCard';
 import './FavouritePage.css';
 import translations from '../locales/translations_favouritepage'; // Import translations
 import { FavouriteContext } from './utils/favouriteContext';
@@ -27,7 +27,7 @@ const FavouritePage = ({user, language}) => {
                     <p>No properties have been favourited yet </p>
                 ) : (
                     favouriteProperties.map((property) => (
-                    <TopRatedPropertyCard   /* calling Top Rated Property Card component */
+                    <PropertyCard   /* calling Top Rated Property Card component */
                         key={property.uprn} 
                         user = {user} 
                         property={property}  

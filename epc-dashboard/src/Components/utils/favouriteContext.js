@@ -4,7 +4,6 @@ export const FavouriteContext = createContext();
 
 export function FavouriteProvider ({ children, user }) {
     const [favouriteProperties, setFavouriteProperties] = useState([]);
-    const [loading, setLoading] = useState(false);
     
     /*
        fetchFavouritedProperties uses the fetch the data from the backend API getFavourites method based on the 
@@ -12,11 +11,10 @@ export function FavouriteProvider ({ children, user }) {
     */
        
     const fetchFavouritedProperties = async () => {
-        if(!user?.email || loading)
+        if(!user?.email)
             return;
 
         try{
-            setLoading(true);
             //console.log("users email = ", user.email);
             const email = encodeURIComponent(user.email);
             const data = await fetch(`http://127.0.0.1:5000/favourites/getFavourites?email=${email}`);
@@ -28,17 +26,17 @@ export function FavouriteProvider ({ children, user }) {
             setFavouriteProperties(favouriteData || []); 
             console.log(favouriteProperties);
 
+            setTimeout(() => console.log("updated favourites", favouriteData), 100);
+
         } catch (error) {
             console.error('Failed to fetch properties:', error);
             setFavouriteProperties([]);
-        } finally {
-            setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchFavouritedProperties();
-    }, [user?.email]);
+    }, [favouriteProperties]);
 
 
     /* 
@@ -65,16 +63,17 @@ export function FavouriteProvider ({ children, user }) {
             console.log("property added");
             console.log("added:", user.email);
             console.log("added:", property.uprn);
-            if (!added.ok){
-                throw new Error("Failed to add property to favourites")
-    
-            } else {
+            if (added.ok){
                 await fetchFavouritedProperties();
+                
+                //setFavouriteProperties((currentFavourites) => 
+                    //[...currentFavourites, property]);
+            } else {
+                setFavouriteProperties((previousFavourites) => previousFavourites.filter(previousFavourites => 
+                    previousFavourites.uprn !== property.uprn));
             }
         } catch (e){
             console.log("error adding property", e);
-            setFavouriteProperties((previousFavourites) => previousFavourites.filter(previousFavourites => 
-                previousFavourites.uprn !== property.uprn));
         }
     };
 

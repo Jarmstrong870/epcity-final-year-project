@@ -74,7 +74,7 @@ export const waterDescriptionIcon = (description) => {
     ];
 
 
-    const mainWaterSupplyDescription = description.toLowerCase();
+    const mainWaterSupplyDescription = description;
 
     const match = waterSupplyGroups.find(type =>
         type.waterSupply.some(type => mainWaterSupplyDescription.includes(type))

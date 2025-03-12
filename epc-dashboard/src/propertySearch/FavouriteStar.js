@@ -13,17 +13,16 @@ const FavouriteStar = ({ user, property}) => {
   //const uprn = property?.uprn.toString() || "";
 
   const [isLoading, setIsLoading] = useState(false);
-  //const [defaultPopUp, setDefaultPopUp] = useState(false);
+  const [defaultPopUp, setDefaultPopUp] = useState(false);
   const [propertyFavourited, setIsPropertyFavourited] = useState(isFavourited(uprn));
 
   useEffect(() => {
     setIsPropertyFavourited(isFavourited(uprn));
   }, [favouriteProperties]);
 
-  const toggleFavourite = async (e) => {
-    e.stopPropagation();
+  const toggleFavourite = async () => {
     if(!user?.email || isLoading) {
-      //setDefaultPopUp(true);
+      setDefaultPopUp(true);
       return;
     }
 

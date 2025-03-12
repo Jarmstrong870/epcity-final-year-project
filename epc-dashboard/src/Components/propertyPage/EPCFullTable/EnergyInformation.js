@@ -11,7 +11,6 @@ import valveIcon from "../../../assets/heating_icons/valve.png";
 import unspecifiedIcon from "../../../assets/heating_icons/unspecified.png";
 import heaterIcon from "../../../assets/heating_icons/electric heater.png";
 import electricIcon from "../../../assets/heating_icons/electric.png";
-import heatPumpIcon from "../../../assets/heating_icons/heat pump.png"
 import {mainFuelIcon} from './descriptionIcons/mainFuelIcons';
 import {waterDescriptionIcon} from './descriptionIcons/hotWaterIcons';
 
@@ -22,7 +21,6 @@ const iconGrouping = {
   thermostat: {icon: thermostatIcon, label: "Thermostat"},
   valve: {icon: valveIcon, label: "Valve"},
   heater: {icon: heaterIcon, label: "Heater"},
-  heat_pump: {icon: heatPumpIcon, label: "Heat Pump"},
   unspecified: {icon: unspecifiedIcon, label: "Unspecified"},
   gas: {icon: gasCylinderIcon, label: "Gas"},
 }
@@ -91,9 +89,6 @@ const getHeatingIcon = (description) => {
 
   if(description.toLowerCase().includes("TRVs"))
     icons.push("valve");
-
-  if(description.toLowerCase().includes("heat pump"))
-    icons.push("heat pump");
 
   if(description.toLowerCase().includes("thermostat"))
     icons.push("thermostat");
