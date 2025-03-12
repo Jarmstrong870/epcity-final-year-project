@@ -523,4 +523,3 @@ def recommend_by_knn(user_prefs, n_neighbors=6):
     # Retrieve the recommended properties (all columns from the properties table)
     recommended = df.iloc[indices[0]].to_dict(orient='records')
     return recommended
-

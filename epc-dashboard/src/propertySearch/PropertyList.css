@@ -1,7 +1,110 @@
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #333;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
 .property-list {
+  margin-left: 5%;
+  margin-right: 5%;
+
+}
+
+/* 🔹 Property Listings Container */
+.property-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.property-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px
+}
+
+
+.property-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.property-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.property-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 3px solid #f5a623;
+}
+
+.property-card .card-content {
+  padding: 15px;
+  text-align: left;
+}
+
+.property-card h3 {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 5px 0;
+  color: #333;
+}
+
+.property-card p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.property-card .badge {
+  display: inline-block;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+
+.badge-orange {
+  background-color: #f5a623;
+  color: white;
+}
+
+.badge-blue {
+  background-color: #007bff;
+  color: white;
+}
+
+/* 🔹 View Details Button */
+.view-details {
+  display: block;
   text-align: center;
-  margin: 20px auto;
-  max-width: 1200px;
+  padding: 10px 15px;
+  background-color: #3a5f41;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.view-details:hover {
+  background-color: #3a5f41;
 }
 
 /* View Toggle and Compare Button Container */
@@ -10,13 +113,8 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  margin-bottom: 20px;
-}
-
-/* View Toggle Buttons */
-.view-toggle {
-  display: flex;
-  gap: 10px;
+  flex: 0 1 auto;
+  margin-left: 40%;
 }
 
 .view-toggle button {
@@ -31,15 +129,15 @@
 }
 
 .view-toggle button.active {
-  background-color: #007bff;
+  background-color: #3a5f41;
   color: white;
-  border: 2px solid #0056b3;
+  border: 2px solid #3a5f41;
 }
 
 .view-toggle button:hover {
-  background-color: #0056b3;
+  background-color: #3a5f41;
   color: white;
-  border-color: #003a75;
+  border-color: #3a5f41;
 }
 
 /* Compare Button */
@@ -54,6 +152,10 @@
   text-align: center;
   border: none;
 }
+.compare-checkbox {
+  margin: 2%;
+}
+
 
 /* Disabled Compare Button */
 .compare-button.gray {
@@ -63,152 +165,32 @@
 
 /* Active Compare Button */
 .compare-button.green {
-  background-color: #28a745;
+  background-color: #3a5f41;
 }
 
-/* Table Styling */
-.table-view {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  border-collapse: collapse;
-  background-color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
 
-.table-view th {
-  background-color: #043927;
-  color: white;
-  text-align: left;
-  padding: 15px;
-}
-
-.table-view td {
-  border: 1px solid #ddd;
-  padding: 15px;
-}
-
-.table-view tr:hover {
-  background-color: #f2f2f2;
-}
-
-/* Ensure last row touches pagination */
-.table-view tr:last-child td {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-/* Compare Checkbox Column */
-.compare-checkbox {
-  text-align: center;
-}
-
-/* Card View Styling */
-.property-cards-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  justify-content: center;
-  padding: 20px;
-}
-
-@media (max-width: 768px) {
-  .property-cards-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .property-cards-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-.property-cards-container > .topRatedPropertyCard {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.property-cards-container > .topRatedPropertyCard:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Card Content Styling */
-.topRatedPropertyCard h3 {
-  font-size: 18px;
-  margin: 10px;
-  color: #333;
-}
-
-.topRatedPropertyCard p {
-  margin: 5px 10px;
-  font-size: 14px;
-  color: #555;
-}
-
-.topRatedPropertyCard .propertyImage img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-/* Popup Styling */
-.popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
-  z-index: 1000;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  animation: fadeInOut 5s ease-in-out forwards;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  10% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  90% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-}
-
-/* Header Section */
-.property-list-header {
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
+/* 🔹 Sort & Order Container Positioned Right and Inline */
 .sort-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
+  flex: 0 1 auto;
+  margin-left: auto;
+}
+
+.sort-container label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 5px;
 }
 
 .sort-container select {
   padding: 5px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  background: white;
+  width: 20%;
 }
 
 /* Pagination Container */
@@ -230,7 +212,7 @@
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #2c5f2d;
+  background-color: #1a2e2d;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -240,18 +222,23 @@
 
 .paginationPrevious:hover,
 .paginationNext:hover {
-  background-color: #1b4332;
-}
-
-/* Ensure buttons touch table */
-.table-pagination-wrapper {
-  margin: 0;
-  padding: 0;
+  background-color: #3a5f41;
 }
 
 /* Responsive Fix for Pagination */
 @media (max-width: 768px) {
+  .property-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sort-container {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
   .pagination-container {
+    flex-direction: column;
+    gap: 10px;
     flex-direction: column;
     gap: 10px;
   }
@@ -260,5 +247,21 @@
   .paginationNext {
     width: 100%;
     text-align: center;
+  }
+
+  .paginationPrevious,
+  .paginationNext {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .property-cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .sort-container {
+    justify-content: center;
   }
 }
