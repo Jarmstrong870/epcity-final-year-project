@@ -18,19 +18,31 @@
     padding: 0 10px;
 }
 
-/* 🔙 Back to Properties Link */
+/* 🔙 Back to Properties Button */
 .back-to-properties {
-    font-size: 14px;
-    color: #1e4020;
-    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
     font-weight: bold;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2c5f2d, #1e4020);
+    padding: 12px 18px;
+    border-radius: 8px;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: none;
+    cursor: pointer;
 }
 
 .back-to-properties:hover {
-    color: #2c5f2d;
-    text-decoration: underline;
+    background: linear-gradient(135deg, #1e4020, #2c5f2d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.back-to-properties:active {
+    transform: scale(0.98);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* 🏡 Property Grid */
@@ -108,19 +120,51 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Green Question Mark */
+/* 🆕 📊 Estimated Costs Container */
+.estimated-costs-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 30px 0;
+    justify-content: center;
+}
+
+/* 🎨 Estimated Costs Card */
+.estimated-costs-card {
+    background: white;
+    border-radius: 18px;
+    padding: 20px;
+    border: 2px solid #2c5f2d;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+}
+
+/* 🖱️ Hover Effect for Cost Cards */
+.estimated-costs-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 🏷️ Title */
+.estimated-costs-card h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #1e4020;
+    border-bottom: 2px solid rgba(44, 95, 45, 0.5);
+    padding-bottom: 8px;
+}
+
+/* 🔥 Green Question Mark */
 .green-question-mark {
     color: green;
     cursor: pointer;
-    font-size: 18px; /* Adjust size of the question mark */
-    margin-right: 8px; /* Space between question mark and label */
+    font-size: 18px;
+    margin-right: 8px;
 }
 
-
-
-
 .green-question-mark::after {
-    content: "?"; /* Add question mark using CSS */
+    content: "?";
 }
 
 /* 📏 Responsive Design */
@@ -131,6 +175,10 @@
     }
 
     .property-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .estimated-costs-section {
         grid-template-columns: 1fr;
     }
 

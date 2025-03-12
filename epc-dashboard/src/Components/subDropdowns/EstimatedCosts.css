@@ -1,0 +1,105 @@
+/* 🌟 Main Container */
+.estimated-costs-container {
+    background: rgba(255, 255, 255, 0.98);
+    color: #222;
+    padding: 35px;
+    border-radius: 20px;
+    border: 2px solid rgba(0, 128, 0, 0.4);
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    max-width: 520px;
+    margin: 20px auto;
+}
+
+/* ✨ Hover Effect */
+.estimated-costs-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* 🏷️ Title */
+.estimated-costs-container h4 {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #006400;
+    border-bottom: 2px solid rgba(0, 128, 0, 0.5);
+    padding-bottom: 10px;
+}
+
+/* 📜 Cost Items */
+.estimated-costs-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* 🎭 Cost Item */
+.estimated-cost-item {
+    padding: 18px;
+    background: rgba(245, 245, 245, 0.98);
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 🏆 Highlighted Items */
+.estimated-cost-item.highlight-green {
+    background: rgba(46, 204, 113, 0.2);
+    border: 2px solid rgba(46, 204, 113, 0.6);
+}
+
+.estimated-cost-item.highlight-red {
+    background: rgba(231, 76, 60, 0.2);
+    border: 2px solid rgba(231, 76, 60, 0.6);
+}
+
+/* 🔥 Animated Icons */
+.cost-icon {
+    width: 50px;
+    height: 50px;
+    display: block;
+    mix-blend-mode: multiply;
+    background: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 🖱️ Hover Effect - Slight Zoom */
+.estimated-cost-item:hover .cost-icon {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+/* 💰 Cost Value */
+.cost-value {
+    font-size: 1.6em;
+    font-weight: bold;
+    background: linear-gradient(to right, #27ae60, #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 0px 10px rgba(46, 204, 113, 0.5);
+}
+
+/* 📏 Responsive Adjustments */
+@media (max-width: 768px) {
+    .estimated-costs-container {
+        max-width: 90%;
+    }
+    
+    .estimated-cost-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cost-icon {
+        width: 40px;
+        height: 40px;
+    }
+}

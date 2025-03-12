@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './FilterComponent.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
-import TextToSpeech from '../Components/utils/TextToSpeech'; // Import TTS component
 import translations from '../locales/translations_filtercomponent';
 import { Range } from "react-range";
 
@@ -16,7 +15,7 @@ const PropertyFilter = ({ language }) => {
     const [bedroomRange, setBedroomRange] = useState([1, 10]);
     const [activeFilter, setActiveFilter] = useState(null);
     const [timeoutId, setTimeoutId] = useState(null);
-    const [visualRange, setVisualRange] =useState([1, 10]);
+    const [visualRange, setVisualRange] = useState([1, 10]);
 
     const toggleFilter = (filter) => {
         setActiveFilter(activeFilter === filter ? null : filter);
@@ -65,14 +64,10 @@ const PropertyFilter = ({ language }) => {
         fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city);
     };
 
-    const handleCityChange = (e) => {
-        setCity(e.target.value);
-    };
-
     return (
         <div className="filterSection">
             <div className="searchContainer">
-                <h2 className="searchTitle">Search Properties</h2>
+                <h2 className="searchTitle">{t.findYourProperty}</h2>
                 <div className="searchInputs">
                     {/* Search Bar */}
                     <input
@@ -80,13 +75,13 @@ const PropertyFilter = ({ language }) => {
                         type="text"
                         value={searchQuery}
                         onChange={handleSearchChange}
-                        placeholder="Search by address or postcode..."
+                        placeholder={t.search}
                     />
 
                     {/* City Selection */}
                     <div className="cityDropDown">
                         <select value={city} onChange={(e) => setCity(e.target.value)}>
-                            <option value="">Select City</option>
+                            <option value="">{t.selectCity}</option>
                             {cities.map((city) => (
                                 <option key={city.value} value={city.value}>
                                     {city.name}
@@ -97,7 +92,7 @@ const PropertyFilter = ({ language }) => {
 
                     {/* Search Button */}
                     <button className="searchButton" onClick={handleFetchProperties}>
-                        🔍 Search
+                        🔍 {t.findProperties}
                     </button>
                 </div>
             </div>
@@ -107,19 +102,21 @@ const PropertyFilter = ({ language }) => {
                 {/* Property Type Filter */}
                 <div className='buttonContainerFilter'>
                     <button className="filterTitleButton" onClick={() => toggleFilter("propertyType")}>
-                        <strong>Property Type  ⮟</strong>
+                        <strong>{t.propertyTypes} ⮟</strong>
                     </button>
 
                     {/* EPC Rating Filter */}
                     <button className="filterTitleButton" onClick={() => toggleFilter("epcRatings")}>
-                        <strong>EPC Ratings ⮟</strong>
+                        <strong>{t.epcRatings} ⮟</strong>
                     </button>
 
                     {/* Bedroom Range Slider */}
                     <button className="filterTitleButton" onClick={() => toggleFilter("bedrooms")}>
-                        <strong>Number of bedrooms ⮟</strong>
+                        <strong>{t.bedroomRange} ⮟</strong>
                     </button>
                 </div>
+
+                {/* Bedroom Range Filter */}
                 <div className={`filterBox ${activeFilter === "bedrooms" ? "active" : ""}`}>
                     <div className="rangeSliderContainer">
                         <Range
@@ -128,7 +125,7 @@ const PropertyFilter = ({ language }) => {
                             max={10}
                             values={visualRange}
                             onChange={(values) => {
-                                setVisualRange(values)
+                                setVisualRange(values);
                                 if (timeoutId) clearTimeout(timeoutId);
 
                                 const newTimeout = setTimeout(() => {
@@ -154,9 +151,11 @@ const PropertyFilter = ({ language }) => {
                         </div>
                     </div>
                 </div>
+
+                {/* Property Type Filter */}
                 <div className={`filterBox ${activeFilter === "propertyType" ? "active" : ""}`}>
                     <div className="checkboxContainer">
-                        {["House", "Flat", "Maisonette", "Bungalow"].map((type, index) => (
+                        {t.propertyTypeOptions.map((type, index) => (
                             <label key={index} className="checkboxLabel">
                                 <input type="checkbox" value={type} onChange={handlePropertyTypeChange} />
                                 {type}
@@ -164,6 +163,8 @@ const PropertyFilter = ({ language }) => {
                         ))}
                     </div>
                 </div>
+
+                {/* EPC Ratings Filter */}
                 <div className={`filterBox ${activeFilter === "epcRatings" ? "active" : ""}`}>
                     <div className="checkboxContainer">
                         {["A", "B", "C", "D", "E", "F", "G"].map((rating) => (
