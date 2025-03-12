@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TopRatedPropertyCard from '../homePage/TopRatedPropertyCard';
+import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
@@ -89,7 +89,7 @@ const HomePage = ({ user, language }) => {
           </div>
           
           <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
-            <span class="scrollDownArrow"> {"\u2193"} </span>
+            <span className="scrollDownArrow"> {"\u2193"} </span>
           </button>
 
         </div>
@@ -154,7 +154,7 @@ const HomePage = ({ user, language }) => {
         <h2>{t.mostEfficientProperties}</h2>
         <div className="property-grid">
           {topRatedProperties.map((property, index) => (
-            <TopRatedPropertyCard key={index} user={user} property={property} language={language} />
+            <PropertyCard key={index} user={user} property={property} language={language} />
           ))}
         </div>
       </div>

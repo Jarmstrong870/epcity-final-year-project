@@ -20,7 +20,6 @@ import LanguageSelector from './homePage/LanguageSelector';
 import VerifyOtp from './login&register/VerifyOtp';
 import ResetPassword from './login&register/resetPassword';
 import PropertyFinder from './FAQ/PropertyFinder';
-import EICalculator from './FAQ/EICalculator';
 import Checklist from './FAQ/Checklist';
 import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
@@ -143,7 +142,7 @@ function App() {
       <FavouriteProvider user={user}>
         <div className="App">
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
-            <div className="logo-container">
+            <div className={`logo-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
               {isScrolled && (
               <div className="header-navigation-links">
@@ -226,7 +225,6 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
-            <Route path="/faq/budget-calculator" element={<EICalculator language={language} />} />
             <Route path="/faq/checklist" element={<Checklist language={language} />} />
             <Route path="/faq/socialmedia" element={<SocialMedia />} />
             <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
@@ -234,7 +232,7 @@ function App() {
             <Route path="/faq/tutorials" element={<Tutorials language={language} />} />
             <Route path="/favourites" element={<FavouritePage user={user} language={language} />} />
             <Route path="/compare-results" element={<ComparePage language={language} />} />
-            <Route path="/messages" element={<Messages user={user} />} />
+            <Route path="/messages" element={<Messages user={user} language={language} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy language={language} />} />
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

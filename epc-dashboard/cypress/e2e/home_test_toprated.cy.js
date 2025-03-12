@@ -7,10 +7,10 @@ describe('Top Rated Properties Navigation Test', () => {
 
     it('Should navigate to the property page and verify key information', () => {
         // Verify that the Top Rated Properties section is visible
-        cy.contains('Top Rated Properties', { timeout: 10000 }).should('be.visible');
+        cy.contains('Most Efficient Properties', { timeout: 10000 }).should('be.visible');
 
         // Click the first top-rated property card
-        cy.contains('Flat 5, 69 Monton Street').click();
+        cy.contains('40, Ridgeside Avenue').click();
 
         // Verify navigation to the property page
         cy.url().should('match', /\/property\/\d+/);

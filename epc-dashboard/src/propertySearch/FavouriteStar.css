@@ -1,20 +1,17 @@
 .starBase {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-}
-
-.starComponent {
+    /* Possibly width: 100%; */
+    position: relative; /* Only if you want to absolutely position something inside */
+  }
+  .starComponent {
     font-size: 2rem;
     cursor: pointer;
-    transition: color 0.3s ease;
     margin-left: 5px;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
+    /* Remove position: absolute */
+  }
+  
 .starComponent.gold {
     color: gold;
 }
