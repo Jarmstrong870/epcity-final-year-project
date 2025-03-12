@@ -57,7 +57,7 @@ export function classifyRoof(description){
 
         return {efficiencyGroup: "Unspecified", 
                 efficiencyValue: null, 
-                color: "7d7c7c", 
+                color: "#7d7c7c", 
                 transmittanceValue: false};
     }
 

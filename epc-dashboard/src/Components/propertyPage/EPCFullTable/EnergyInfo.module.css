@@ -127,29 +127,28 @@
 
 .efficiencyStarRatings[data-value="very good"] {
   background: #d4edda;
-  color: #155724;
+  color: #00ff3c;
 }
 
 .efficiencyStarRatings[data-value="good"] {
   background: #fff8e1;
-  color: #856404;
+  color: #ffbf00;
 }
 
 .efficiencyStarRatings[data-value="average"] {
   background: #e0e0e0; 
-  color: #444;
+  color: #828282;
 }
 
 .efficiencyStarRatings[data-value="poor"] {
   background: #ffe5e5;
-  color: #a50e0e;
+  color: #ff0000;
 }
 
 .efficiencyStarRatings[data-value="very poor"] {
   background: #f8d7da; 
   color: #721c24;
 }
-
 
 .progressContainer {
   width: 100%;
@@ -166,20 +165,14 @@
 .progressContainer progress {
   width: 100%;
   height: 20px;
-  border-radius: 15px;
+  border-radius: 30px;
   background: #ffffff;
   appearance: none;
 }
 
-.progressContainer progress::-webkit-progress-value {
-  background: linear-gradient(90deg, #2c5f2d, #76b041);
-  border-radius: 15px;
-  transition: width 0.5s ease-in-out;
-}
-
-.progressContainer progress::-moz-progress-bar {
-  background: linear-gradient(90deg, #2c5f2d, #76b041);
-  border-radius: 15px;
+.progressContainer p {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* Icons */

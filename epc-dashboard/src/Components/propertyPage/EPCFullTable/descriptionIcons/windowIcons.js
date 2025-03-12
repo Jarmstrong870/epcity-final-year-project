@@ -7,7 +7,7 @@ export const windowEfficiency = (description) => {
         {"glazingDefinition": [
             "single glazed", "single glazeddobule glazing", "single glazedsecondary glazing", 
             "single glazedSingle glazing", "partial single glazing"
-        ], "rating": "🪟"}, 
+        ], rating: "🪟"}, 
 
         {"glazingDefinition": [
             "double glazed", "fully double glazed", "mostly double glazing", "some double glazing", "partial double glazing", "full secondary glazing",

@@ -1,17 +1,19 @@
 import React from "react";
 import styles from "./EnergyInfo.module.css";
 import { efficiencyRatingToNumber } from "../../Compare_utils/Compare_utils";
-import "../../Compare_utils/HighlightedValue.css"; // Ensure correct CSS import
+import "../../Compare_utils/HighlightedValue.css";
 import translations from "./locales/translations_energyinformation";
 import radiatorIcon from "../../../assets/heating_icons/radiator.png";
 import boilerIcon from "../../../assets/heating_icons/boiler.png";
 import gasCylinderIcon from "../../../assets/heating_icons/gas cylinder.png";
-import gasMeterIcon from "../../../assets/heating_icons/gas meter.png";
 import thermostatIcon from "../../../assets/heating_icons/thermostat.png";
 import valveIcon from "../../../assets/heating_icons/valve.png";
 import unspecifiedIcon from "../../../assets/heating_icons/unspecified.png";
 import heaterIcon from "../../../assets/heating_icons/electric heater.png";
 import electricIcon from "../../../assets/heating_icons/electric.png";
+import heatPumpIcon from "../../../assets/heating_icons/heat pump.png"
+import {mainFuelIcon} from './descriptionIcons/mainFuelIcons';
+import {waterDescriptionIcon} from './descriptionIcons/hotWaterIcons';
 
 const iconGrouping = {
   radiator: {icon: radiatorIcon, label: "Radiator"},
@@ -20,6 +22,7 @@ const iconGrouping = {
   thermostat: {icon: thermostatIcon, label: "Thermostat"},
   valve: {icon: valveIcon, label: "Valve"},
   heater: {icon: heaterIcon, label: "Heater"},
+  heat_pump: {icon: heatPumpIcon, label: "Heat Pump"},
   unspecified: {icon: unspecifiedIcon, label: "Unspecified"},
   gas: {icon: gasCylinderIcon, label: "Gas"},
 }
@@ -89,16 +92,22 @@ const getHeatingIcon = (description) => {
   if(description.toLowerCase().includes("TRVs"))
     icons.push("valve");
 
+  if(description.toLowerCase().includes("heat pump"))
+    icons.push("heat pump");
+
   if(description.toLowerCase().includes("thermostat"))
     icons.push("thermostat");
 
   return icons.length > 0 ? icons.map(icon => iconGrouping[icon]) : [iconGrouping.unspecified];
 };
 
+
+
 const EnergyInformation = ({ properties, maxValues, language }) => {
   const t = translations[language] || translations.en;
   const progressValue = properties["low_energy_lighting"];
   const progressValueColour = getProgressBarColor(progressValue);
+  const hotWaterIcon = waterDescriptionIcon(properties.hotwater_description);
 
   // Highlight conditions for costs
   const isLowestHeatingCost = properties["heating_cost_current"] === maxValues?.minHeatingCostCurrent;
@@ -183,24 +192,28 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
 
               <div>
                 <div className={styles.visualisedDescriptions}>
-                  <h4 className = "mainfuel">{t.mainFuel}:</h4>
-                  <p>{properties["main_fuel"]}</p>
+                  <div className={styles.heatingIcons}>
+                    <h4 className = "mainfuel">{t.mainFuel}:</h4>
+                    <span>{mainFuelIcon(`${properties["main_fuel"]}`)
+                      .map(({icon, label}, index) => (
+                      <img key = {index} src = {icon} alt = {label} title = {label} />
+                    ))}</span>
+                  </div>
                 </div>
 
-                <div className={styles.efficiencyStarRatings}
+              <div className={styles.efficiencyStarRatings}
                     data-value = {properties["mainheat_energy_eff"].toLowerCase()}>
                   <h4>{t.mainheatEnergyEfficiency}:</h4> 
-                  <p className={isHighestMainheatEff ? "highlight-green" : ""}>
+                  <p> {/* className={isHighestMainheatEff ? "highlight-green" : ""}*/}
                     {renderStarRating(properties["mainheat_energy_eff"], t)}
                   </p>
                 </div>
         
                 <div className={styles.efficiencyStarRatings}
                     data-value = {properties["mainheat_energy_eff"].toLowerCase()}>
-                <p className={isHighestMainheatControllerEff ? "highlight-green" : ""}>
+                 {/*className={isHighestMainheatControllerEff ? "highlight-green" : ""}*/}
                   <h4>{t.mainheatControllerEnergyEfficiency}: </h4>
                   <p>{renderStarRating(properties["mainheatc_energy_eff"], t)}</p>
-                </p>
 
                 </div>
               </div>
@@ -311,15 +324,18 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </table>
 
           <div className={styles.visualisedDescriptions}>
-            <div className={styles.hotWaterDescriptionsSection}>
+            <div className={styles.heatingIcons}>
               <h4>{t.hotWaterDescription}:</h4>
-              <p> {properties["hotwater_description"]}</p>
-            </div>
+                <span>{properties.hotwater_description}</span>
+                    {hotWaterIcon.map((icon, index) => (
+                    <span key = {index}>{icon}</span> 
+                    ))}
+              </div>
 
               <div className={styles.efficiencyStarRatings}
                 data-value = {properties["hot_water_energy_eff"].toLowerCase()}>
                   <h4>{t.hotWaterEnergyEfficiency}:</h4>
-                  <p className={isHighestHotWaterEff ? "highlight-green" : ""}>
+                  <p>
                     {renderStarRating(properties["hot_water_energy_eff"], t)}</p>
                 </div>
             </div>
