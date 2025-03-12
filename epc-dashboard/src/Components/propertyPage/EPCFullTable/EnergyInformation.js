@@ -90,6 +90,7 @@ const getHeatingIcon = (description) => {
   if(description.toLowerCase().includes("TRVs"))
     icons.push("valve");
 
+  
   if(description.toLowerCase().includes("thermostat"))
     icons.push("thermostat");
 
@@ -318,15 +319,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                 </tbody>
               </table>
 
-          <div className={styles.visualisedDescriptions}>
-            <div className={styles.heatingIcons}>
-              <h4>{t.hotWaterDescription}:</h4>
-                <span>{properties.hotwater_description}</span>
-                    {hotWaterIcon.map((icon, index) => (
-                    <span key = {index}>{icon}</span> 
-                    ))}
-              </div>
-
+     
               <div className={styles.efficiencyStarRatings}
                 data-value = {properties["hot_water_energy_eff"].toLowerCase()}>
                   <h4>{t.hotWaterEnergyEfficiency}:</h4>
@@ -336,7 +329,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
             </div>
           </div>
         </div>
-    </div>
+
   );
 };
 

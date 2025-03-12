@@ -113,7 +113,7 @@ const PropertyPage = ({ user, property, language }) => {
       {showPopup && <div className="popup-message">{popupMessage}</div>}
 
       <div className="property-header">
-        <h2 className="property-title">Property Details</h2>
+        <h2 className="property-title">{propertyData.address}</h2>
         <div onClick={toggleFavorite} className="starComponent">
           <FavouriteStar user={user} property={property} />
         </div>

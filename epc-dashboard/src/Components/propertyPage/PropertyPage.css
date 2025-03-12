@@ -14,11 +14,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  margin-top: 100px;
+  margin-bottom: 40px;
+  margin-top: 40px;
 }
 
 .property-title {
+  font-size: 3rem; /* Large and eye-catching */
+  font-weight: bold;
+  color: #2c5f2d; /* Darker shade for contrast */
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+  letter-spacing: 1px; /* Slight spacing for readability */
+  padding-bottom: 10px;
+  border-bottom: 3px solid #2c5f2d; /* Underline effect */
+  display: inline-block; /* Makes border only as wide as text */
   margin: 0;
 }
 
