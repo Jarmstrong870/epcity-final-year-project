@@ -25,6 +25,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
     margin-bottom: 2rem; /* Spacing before the grid */
+    text-decoration: none;
     position: relative;
   }
   
@@ -32,6 +33,7 @@
   .uk-cities-title {
     font-size: 2.5rem;
     font-weight: bold;
+    text-decoration: none !important;
     color: #2c3e3d;
     margin: 0; /* Reset margin so we can control spacing precisely */
     text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
