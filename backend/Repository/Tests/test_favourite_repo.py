@@ -1,14 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
-import sys
-import os
-
 import psycopg2
-# Add the parent directory (backend/Repository) to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import favouriteRepo  # Importing from the same Repository directory
+from Repository import favouriteRepo  # Importing from the same Repository directory
 
 class TestFavouriteRepo(unittest.TestCase):
     @patch('favouriteRepo.psycopg2.connect')

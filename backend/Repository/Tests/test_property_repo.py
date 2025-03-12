@@ -4,12 +4,7 @@ from decimal import Decimal
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
-import sys
-import os
-# Add the parent directory (backend/Repository) to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import propertyRepo  # Importing from the same Repository directory
+from Repository import propertyRepo  # Importing from the same Repository directory
 
 class TestPropertyRepo(unittest.TestCase):
 
