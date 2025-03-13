@@ -98,7 +98,6 @@ const PropertyList = ({ user, loading, language }) => {
             <option value="number_bedrooms">Number of bedrooms</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
-            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
           <div className="dropdown-with-tts">

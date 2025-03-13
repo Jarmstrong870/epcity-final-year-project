@@ -4,6 +4,7 @@ from decimal import Decimal
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
+import psycopg2
 from Repository import propertyRepo  # Importing from the same Repository directory
 
 class TestPropertyRepo(unittest.TestCase):
@@ -567,6 +568,94 @@ class TestPropertyRepo(unittest.TestCase):
         self.assertTrue(result.empty)  # Should return an empty DataFrame
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_sql_injection_in_search(self, mock_connect):
+        """Ensure SQL injection attempts in search do not execute."""
+
+        # Mock connection and cursor
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        # Simulated SQL Injection Attempt
+        malicious_input = "'; DROP TABLE properties; --"
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=malicious_input)
+
+        # Ensure the query was executed safely with parameterized input
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        # Ensure input is passed as a parameter, NOT in the SQL string
+        assert malicious_input not in executed_query, "Malicious input found in SQL query string!"
+
+        # Check the correctly formatted parameterized input
+        expected_param = f"%{malicious_input}%"  # Wildcards added for SQL LIKE search
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_special_characters_in_search(self, mock_connect):
+        """Ensure special characters in search do not cause failures."""
+
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        special_input = "!@#$%^&*()_+{}|:\"<>?"
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=special_input)
+
+        # Ensure query executed safely
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        expected_param = f"%{special_input}%"  # Wildcards added for SQL LIKE search
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_excessive_length_input(self, mock_connect):
+        """Ensure excessively long input does not cause database errors."""
+
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        long_input = "A" * 5000  # 5000 characters long
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=long_input)
+
+        # Ensure query executed safely
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        # ✅ Fix: Check that the parameterized version of the string is in executed_params
+        expected_param = f"%{long_input}%"  # Ensure it's wrapped in SQL LIKE wildcards
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_database_error_handling(self, mock_connect):
+        """Ensure database errors are handled properly."""
+
+        # Simulate database connection failure
+        mock_connect.side_effect = psycopg2.Error("Database connection failed")
+
+        # Call function (should handle error gracefully)
+        result = propertyRepo.get_data_from_db(search="Test")
+
+        # Ensure the result is an error message, but **does not expose SQL details**
+        assert "Database error" in result or "An error occurred" in result
+        assert "SELECT" not in result  # Ensure raw SQL is NOT exposed
+
         
 if __name__ == '__main__':
     unittest.main()

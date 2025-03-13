@@ -251,6 +251,103 @@ class TestPropertyController(unittest.TestCase):
         response = self.client.get("/property/graph?postcode=AB1%202CD&num_bedrooms=3")
         self.assertEqual(response.status_code, 500)
         self.assertIn("Database error", response.json["error"])
+        
+    @patch("Service.propertyService.return_properties")
+    def test_controller_prevents_sql_injection(self, mock_service):
+        """Ensure controller does not allow SQL injection-like input"""
+
+        malicious_input = "'; DROP TABLE properties; --"
+
+        response = self.client.get(f"/property/getPage?search={malicious_input}")
+
+        # Ensure service layer was called safely
+        mock_service.assert_called_once_with(
+            property_types=None,
+            energy_ratings=None,
+            search=malicious_input,  # It should be passed as a normal string
+            min_bedrooms=1,
+            max_bedrooms=10,
+            sort_by=None,
+            order=None,
+            page=1,
+            local_authority=None
+        )
+
+        self.assertEqual(response.status_code, 200)  # Request should be handled properly
+        
+    @patch("Service.propertyService.return_properties")
+    def test_controller_handles_special_characters(self, mock_service):
+        """Ensure controller handles special characters in search input"""
+
+        special_input = "!@#$%^&*()_+{}|:\"<>?"
+
+        response = self.client.get(f"/property/getPage?search={special_input}")
+
+        # Ensure special characters are handled correctly
+        mock_service.assert_called_once_with(
+            property_types=None,
+            energy_ratings=None,
+            search=special_input,
+            min_bedrooms=1,
+            max_bedrooms=10,
+            sort_by=None,
+            order=None,
+            page=1,
+            local_authority=None
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    @patch("Service.propertyService.return_properties")
+    def test_controller_handles_excessively_long_input(self, mock_service):
+        """Ensure controller does not crash on long search inputs"""
+
+        long_input = "A" * 5000  # 5000 characters long
+
+        response = self.client.get(f"/property/getPage?search={long_input}")
+
+        # Ensure service safely receives the long input
+        mock_service.assert_called_once_with(
+            property_types=None,
+            energy_ratings=None,
+            search=long_input,
+            min_bedrooms=1,
+            max_bedrooms=10,
+            sort_by=None,
+            order=None,
+            page=1,
+            local_authority=None
+        )
+
+        self.assertEqual(response.status_code, 200)
+        
+    @patch("Service.propertyService.return_properties")
+    def test_controller_rejects_invalid_data_types(self, mock_service):
+        """Ensure controller properly handles invalid data types"""
+
+        invalid_inputs = [
+            ("page", "abc"),  # Should be an integer
+            ("min_bedrooms", "xyz"),  # Should be an integer
+            ("max_bedrooms", "NaN"),  # Should be an integer
+        ]
+
+        for param, value in invalid_inputs:
+            with self.subTest(param=param, value=value):
+                response = self.client.get(f"/property/getPage?{param}={value}")
+
+                self.assertEqual(response.status_code, 400)  # Should return a 400 Bad Request
+                self.assertIn("Invalid input", response.json["error"])
+                
+    @patch("Service.propertyService.return_properties")
+    def test_controller_handles_service_failure(self, mock_service):
+        """Ensure controller properly handles service errors"""
+
+        mock_service.side_effect = Exception("Unexpected service error")
+
+        response = self.client.get("/property/getPage?search=valid")
+
+        self.assertEqual(response.status_code, 500)  # Should return a 500 Internal Server Error
+        self.assertIn("error", response.json)  # Error message should be generic
 
 if __name__ == "__main__":
     unittest.main()

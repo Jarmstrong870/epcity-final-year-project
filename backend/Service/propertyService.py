@@ -1,4 +1,5 @@
 from io import StringIO
+import re
 import urllib.request
 from urllib.parse import urlencode
 import json
@@ -25,6 +26,10 @@ headers = {
     'Accept': 'application/json',
     'Authorization': api_key
 }
+
+# Allowed columns for sorting (prevents SQL injection)
+ALLOWED_SORT_COLUMNS = {"current_energy_efficiency", "number_bedrooms", "current_energy_rating"}
+MAX_SEARCH_LENGTH = 255  # Prevent excessively long inputs
 
 """
 Retrives all valid properties from API and calls the database method to update the property table
@@ -181,12 +186,30 @@ def get_top_rated_properties():
     top6 = repo.get_top_rated_from_db()
     return top6
 
+def is_valid_input(value):
+    """Rejects input if it contains SQL injection risk characters."""
+    return bool(re.match(r"^[a-zA-Z0-9\s,.-]+$", value))  # Allows only safe characters
+
 """
 Method that gets a page of 30 properties from database
 """
-def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page=1, local_authority=None):
-    # get property data from database
+def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms=1, max_bedrooms=10, sort_by=None, order=None, page=1, local_authority=None):
+    # Input validation
+    if search:
+        search = search[:MAX_SEARCH_LENGTH]  # Trim long input
+        search = re.sub(r"[%_]", "", search)  # Remove SQL wildcards
+        if not is_valid_input(search):
+            raise ValueError("Invalid search input: Contains unsafe characters")
+
+    if local_authority and not is_valid_input(local_authority):
+        raise ValueError("Invalid local authority input")
+
+    if sort_by and sort_by not in ALLOWED_SORT_COLUMNS:
+        raise ValueError("Invalid sorting column")
+
+    # Call repo method safely
     thisPage = repo.get_data_from_db(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
+    
     return thisPage
 
 """
