@@ -1,7 +1,7 @@
 const translations = {
   en: {
-    welcomeMessage: "Welcome to Liverpool",
-    subMessage: "Now, time to find somewhere you can call home.",
+    welcomeMessage: "EPCity - Find out about your property",
+    subMessage: "Search for a property you want more information on",
     searchPlaceholder: "Search for properties...",
     searchButton: "Search",
     epcInformation: "What is an EPC?",

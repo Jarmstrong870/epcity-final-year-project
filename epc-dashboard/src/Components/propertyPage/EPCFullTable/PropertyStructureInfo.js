@@ -3,12 +3,21 @@ import './PropertyStructureInfo.css';
 import { efficiencyRatingToNumber } from '../../Compare_utils/Compare_utils';
 import translations from './locales/translations_propertystructureinfo';
 import { classifyWall } from './EfficiencyMeter';
-import WallProgressMeter from './ProgressMeter';
+import {classifyRoof} from './descriptionIcons/roofIcons';
+import ProgressMeter from './ProgressMeter';
+import ProgressDial from './ProgressDial'; //dial gauge
+import InsulationMeter from './InsulationMeter'; // Progress Bar
+import {windowEfficiency} from './descriptionIcons/windowIcons';
+
 
 
 const PropertyStructureInfo = ({ properties, maxValues, language }) => {
   const t = translations[language] || translations.en;
   const [dropdownClick, setDropdownClick] = useState("");
+
+  const {efficiencyGroup, transmittanceStatus} = classifyRoof(properties.roof_description);
+  //const {efficiencyGroup, transmittanceStatus} = classifyRoof("Average thermal transmittance 2 W/m?K");
+
 
   // Utility function to replace variations of NO DATA! with N/A
   const formatValue = (value) => {
@@ -72,8 +81,9 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
         <p><span className="data-headers">{t.headers.glazedArea}: </span> </p>
         <p><span className="data-field"> {formatValue(properties.glazed_area)} </span> </p>
 
+
         <p><span className="data-headers">{t.headers.windowsDescription}: </span> </p>
-        <p><span className="data-field"> {formatValue(properties.windows_description)} </span></p>
+        <p><span className="data-field"> {windowEfficiency(properties.windows_description)} </span></p>
 
         <p className={isHighestEfficiency(properties.windows_energy_eff, maxValues?.maxWindowsEnergyEff)
               ? 'highlight-green' : ''} >
@@ -121,7 +131,15 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
     <button onClick={() => toggleDropdown("roof")}>{t.headers.roofInfo}</button>
     <div className={`infoBox ${dropdownClick === "roof" ? "active" : "inactive"}`}>
         <p><span className="data-headers">{ t.headers.roofDescription}: </span> </p>
-        <p><span className="data-field"> {formatValue(properties.roof_description)} </span> </p>
+
+        {/*<p><span className="data-field"> {formatValue(properties.roof_description)} </span> </p>*/}
+        
+        {transmittanceStatus ? (
+          <ProgressDial group={efficiencyGroup} />
+        ) :(
+          <InsulationMeter valueRange={efficiencyGroup}/>
+        )} 
+
         <p
           className={
             isHighestEfficiency(properties.roof_energy_eff, maxValues?.maxRoofEnergyEff)
@@ -153,18 +171,19 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
           <span className="data-field">{classifyWall(properties.walls_description)}</span>
         </p>
 
-        <WallProgressMeter category={classifyWall(properties.walls_description)} />
+        <ProgressMeter category={classifyWall(properties.walls_description)} />
 
 
-        <p className={isHighestEfficiency(properties.walls_energy_eff, maxValues?.maxWallsEnergyEff)
-              ? 'highlight-green' : '' } >
+          <p className={isHighestEfficiency(properties.walls_energy_eff, maxValues?.maxWallsEnergyEff)
+                ? 'highlight-green' : '' } >
 
-          <span className="data-headers">{t.headers.wallsEnergyEff}: </span> </p>
-        <p><span className="data-field">{renderStarRating(properties.walls_energy_eff)} </span> </p>
+                  <span className="data-headers">{t.headers.wallsEnergyEff}: </span> </p>
+                <p><span className="data-field">{renderStarRating(properties.walls_energy_eff)} </span> </p>
+          </div>
       </div>
   </div>
-</div>
-  );
+);
 };
+
 
 export default PropertyStructureInfo;
