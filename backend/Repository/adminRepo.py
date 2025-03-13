@@ -62,12 +62,7 @@ def delete_user(email):
     try:
         connection = psycopg2.connect(**db_config)
         cursor = connection.cursor()
-        cursor.execute(
-            """
-            DELETE FROM users WHERE email_address = %s;
-            """,
-            (email,),
-        )
+        cursor.execute("DELETE FROM users WHERE email_address = %s;", (email,))  # Fixed formatting
         connection.commit()
         return True
     except Exception as e:
