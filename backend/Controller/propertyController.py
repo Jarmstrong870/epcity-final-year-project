@@ -48,47 +48,54 @@ def get_property_info_route():
     return jsonify(properties.get_property_info(uprn).to_dict(orient='records'))
 
 """
-Route that handles all searching, filtering, sorting and pagination
+Route that handles all searching, filtering, sorting, and pagination.
 """
 @property_blueprint.route('/property/getPage', methods=['GET'])
 def get_properties_page_route():
     try:
-        # Validate and parse query parameters
-        property_types = (
-            request.args.get('pt', '').split(',') if request.args.get('pt') else None
-        )
-        energy_ratings = (
-            request.args.get('epc', '').split(',') if request.args.get('epc') else None
-        )
-        search = request.args.get('search', '').strip()
-        sort_by = request.args.get('sort_by')
-        order = request.args.get('order').lower() if request.args.get('order') in ['asc', 'desc'] else None
-        local_authority = request.args.get('local_authority', '').strip()
+        # Extract request parameters safely
+        property_types = request.args.get('pt')
+        property_types = property_types.split(',') if property_types else None
 
-        # Validate search input
+        energy_ratings = request.args.get('epc')
+        energy_ratings = energy_ratings.split(',') if energy_ratings else None
+
+        search = request.args.get('search', None)  # Allow None if not provided
+        sort_by = request.args.get('sort_by', None)
+        order = request.args.get('order', None)
+        local_authority = request.args.get('local_authority', None)
+
+        # Validate search input only if provided
         MAX_SEARCH_LENGTH = 255
         def is_valid_search(value):
-            """Rejects input if it contains special SQL characters."""
-            return bool(re.match(r"^[a-zA-Z0-9\s,.-]+$", value))  # Allows only safe characters
+            """Rejects input if it contains unsafe SQL characters."""
+            return bool(re.match(r"^[a-zA-Z0-9\s,.\-#\/]+$", value))  # Allows common characters
         
-        if search:
-            search = search[:MAX_SEARCH_LENGTH]  # Trim input
+        if search is not None:
+            search = str(search).strip()
+            
+            # **Reject excessively long searches** (instead of trimming)
+            if len(search) > MAX_SEARCH_LENGTH:
+                return jsonify({"error": f"Search input exceeds maximum length of {MAX_SEARCH_LENGTH} characters"}), 400
+
             search = re.sub(r"[%_]", "", search)  # Remove SQL wildcards
             if not is_valid_search(search):
                 return jsonify({"error": "Invalid search input"}), 400
 
-        # Validate local authority
-        if local_authority and not re.match(r"^[a-zA-Z0-9\s-]+$", local_authority):
-            return jsonify({"error": "Invalid local authority input"}), 400
+        # Validate local authority only if provided
+        if local_authority:
+            local_authority = str(local_authority).strip()
+            if not re.match(r"^[a-zA-Z0-9\s-]+$", local_authority):
+                return jsonify({"error": "Invalid local authority input"}), 400
 
-        # Validate sorting parameter
+        # Validate sorting parameter only if provided
         ALLOWED_SORT_COLUMNS = {"current_energy_efficiency", "number_bedrooms", "current_energy_rating"}
         if sort_by and sort_by not in ALLOWED_SORT_COLUMNS:
             return jsonify({"error": "Invalid sorting parameter"}), 400
 
-        # Validate integer inputs
+        # Validate numeric fields
         try:
-            page = max(1, int(request.args.get('page', 1)))  # Ensure minimum value of 1
+            page = max(1, int(request.args.get('page', 1)))  # Default to 1
             min_bedrooms = max(1, int(request.args.get('min_bedrooms', 1)))
             max_bedrooms = max(min_bedrooms, int(request.args.get('max_bedrooms', 10)))  # Ensure max >= min
         except ValueError:
@@ -104,7 +111,10 @@ def get_properties_page_route():
     except ValueError as ve:
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
+        print(f"DEBUG: Unexpected error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
 
     
 """

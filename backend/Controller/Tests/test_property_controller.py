@@ -1,5 +1,6 @@
 import json
 import unittest
+from unittest import mock
 from unittest.mock import patch
 from flask import Flask
 from Controller.propertyController import property_blueprint
@@ -125,7 +126,7 @@ class TestPropertyController(unittest.TestCase):
         ])
         mock_return_properties.return_value = fake_data
 
-        response = self.client.get("/property/getPage?pt=House&epc=A&page=1&sort_by=price&order=desc")
+        response = self.client.get("/property/getPage?pt=House&epc=A&page=1&sort_by=current_energy_rating&order=desc")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, fake_data.to_dict(orient="records"))
 
@@ -135,7 +136,7 @@ class TestPropertyController(unittest.TestCase):
         
         response = self.client.get("/property/getPage?min_bedrooms=invalid&page=NaN")
         self.assertEqual(response.status_code, 400)
-        self.assertIn("Invalid input", response.json["error"])
+        self.assertIn("Invalid numeric input", response.json["error"])
 
     @patch("Service.propertyService.return_properties")
     def test_get_properties_page_route_internal_error(self, mock_return_properties):
@@ -260,66 +261,46 @@ class TestPropertyController(unittest.TestCase):
 
         response = self.client.get(f"/property/getPage?search={malicious_input}")
 
-        # Ensure service layer was called safely
-        mock_service.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=malicious_input,  # It should be passed as a normal string
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
-        )
+        # Ensure request was blocked at the controller level
+        self.assertEqual(response.status_code, 400)  
+        self.assertIn("Invalid search input", response.json["error"])
 
-        self.assertEqual(response.status_code, 200)  # Request should be handled properly
+        # Ensure service was NEVER called
+        mock_service.assert_not_called()
+
         
     @patch("Service.propertyService.return_properties")
     def test_controller_handles_special_characters(self, mock_service):
         """Ensure controller handles special characters in search input"""
 
-        special_input = "!@#$%^&*()_+{}|:\"<>?"
+        special_input = "!@#$%^&*()_+{}|:\"<>?"  # Invalid characters
 
         response = self.client.get(f"/property/getPage?search={special_input}")
 
-        # Ensure special characters are handled correctly
-        mock_service.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=special_input,
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
-        )
+        # Ensure the controller rejects unsafe input
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Invalid search input", response.json["error"])
 
-        self.assertEqual(response.status_code, 200)
+        # Ensure service was NEVER called
+        mock_service.assert_not_called()
 
     @patch("Service.propertyService.return_properties")
-    def test_controller_handles_excessively_long_input(self, mock_service):
-        """Ensure controller does not crash on long search inputs"""
+    def test_controller_rejects_excessively_long_input(self, mock_service):
+        """Ensure controller rejects excessively long search inputs with a 400 error"""
 
-        long_input = "A" * 5000  # 5000 characters long
+        MAX_SEARCH_LENGTH = 255
+        long_input = "A" * (MAX_SEARCH_LENGTH + 1)  # 256 characters (exceeding limit)
 
         response = self.client.get(f"/property/getPage?search={long_input}")
 
-        # Ensure service safely receives the long input
-        mock_service.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=long_input,
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
-        )
+        # Ensure request is **rejected** (400 Bad Request)
+        self.assertEqual(response.status_code, 400)
 
-        self.assertEqual(response.status_code, 200)
+        # Ensure proper error message is returned
+        self.assertIn("Search input exceeds maximum length", response.json["error"])
+
+        # Ensure the service method **is never called** (request should be blocked at controller level)
+        mock_service.assert_not_called()
         
     @patch("Service.propertyService.return_properties")
     def test_controller_rejects_invalid_data_types(self, mock_service):
@@ -336,7 +317,7 @@ class TestPropertyController(unittest.TestCase):
                 response = self.client.get(f"/property/getPage?{param}={value}")
 
                 self.assertEqual(response.status_code, 400)  # Should return a 400 Bad Request
-                self.assertIn("Invalid input", response.json["error"])
+                self.assertIn("Invalid numeric input", response.json["error"])
                 
     @patch("Service.propertyService.return_properties")
     def test_controller_handles_service_failure(self, mock_service):

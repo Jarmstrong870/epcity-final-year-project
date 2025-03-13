@@ -1,6 +1,7 @@
 from datetime import date
 import datetime
 from decimal import Decimal
+import re
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
@@ -615,7 +616,10 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.execute.assert_called_once()
         executed_query, executed_params = mock_cursor.execute.call_args[0]
 
-        expected_param = f"%{special_input}%"  # Wildcards added for SQL LIKE search
+        # Remove % and _ from expected_param since they are sanitized in the method
+        sanitized_input = re.sub(r"[%_]", "", special_input)
+        expected_param = f"%{sanitized_input}%"
+
         assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
 
         

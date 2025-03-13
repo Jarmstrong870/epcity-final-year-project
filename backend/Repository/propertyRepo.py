@@ -288,7 +288,7 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
             params.append(energy_ratings)
 
         if search:
-            # 🚨 Security Fix: Remove wildcards to prevent abuse
+            # Remove wildcards to prevent abuse
             search = re.sub(r"[%_]", "", search)
             query += " AND (address ILIKE %s OR postcode ILIKE %s)"
             params.extend([f"%{search}%", f"%{search}%"])
@@ -296,8 +296,10 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
         query += " AND number_bedrooms BETWEEN %s AND %s"
         params.extend([min_bedrooms, max_bedrooms])
 
-        # 🚨 Security Fix: Validate `sort_by` before appending
+        # Validate `sort_by` before appending
         if sort_by in ALLOWED_SORT_COLUMNS:
+            if order.lower() not in ["asc", "desc"]:
+                raise ValueError(f"Invalid sort order: {order}")
             query += f" ORDER BY {sort_by} {order.lower()}"
 
         # Pagination

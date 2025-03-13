@@ -735,64 +735,40 @@ Jan-24,04.1 Actual rentals for housing,118.7
 
         malicious_input = "'; DROP TABLE properties; --"
 
-        # Call service function
-        result = propertyService.return_properties(search=malicious_input)
-
-        # Ensure that the repo function was called with the exact malicious input
-        mock_get_data.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=malicious_input,  # It should be passed as a parameterized value
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
-        )
+        # Expect the service to reject the input with a ValueError
+        with self.assertRaises(ValueError, msg="Expected ValueError for SQL injection attempt"):
+            propertyService.return_properties(search=malicious_input)
         
     @patch("Service.propertyService.repo.get_data_from_db")
     def test_service_handles_special_characters_in_search(self, mock_get_data):
-        """Ensure service properly handles special characters in search input."""
+        """Ensure service rejects special characters in search input."""
 
         special_input = "!@#$%^&*()_+{}|:\"<>?"
 
-        # Call service function
-        result = propertyService.return_properties(search=special_input)
-
-        # Ensure special characters are passed correctly
-        mock_get_data.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=special_input,
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
-        )
+        # Expect the service to reject the input with a ValueError
+        with self.assertRaises(ValueError, msg="Expected ValueError for special character filtering"):
+            propertyService.return_properties(search=special_input)
         
     @patch("Service.propertyService.repo.get_data_from_db")
     def test_service_handles_excessively_long_input(self, mock_get_data):
         """Ensure service properly handles excessively long search input."""
+        MAX_SEARCH_LENGTH = 255
 
         long_input = "A" * 5000  # 5000 characters long
+        expected_trimmed_input = long_input[:MAX_SEARCH_LENGTH]  # Only first MAX_SEARCH_LENGTH characters
 
         # Call service function
         result = propertyService.return_properties(search=long_input)
 
-        # Ensure long input is passed safely to repo
-        mock_get_data.assert_called_once_with(
-            property_types=None,
-            energy_ratings=None,
-            search=long_input,
-            min_bedrooms=1,
-            max_bedrooms=10,
-            sort_by=None,
-            order=None,
-            page=1,
-            local_authority=None
+        # Ensure the repository method was called once
+        mock_get_data.assert_called_once()
+
+        # Extract actual call arguments
+        actual_args, actual_kwargs = mock_get_data.call_args
+
+        # Ensure the search input is correctly trimmed before passing to the repository
+        assert actual_args[2] == expected_trimmed_input, (
+            f"Expected trimmed search input: {expected_trimmed_input}, but got: {actual_args[2]}"
         )
         
     @patch("Service.propertyService.repo.get_data_from_db")
@@ -807,20 +783,8 @@ Jan-24,04.1 Actual rentals for housing,118.7
 
         for invalid_input in invalid_inputs:
             with self.subTest(search=invalid_input):
-                result = propertyService.return_properties(search=invalid_input)
-
-                # Ensure service passed correct format to repo (forcing string conversion)
-                mock_get_data.assert_called_with(
-                    property_types=None,
-                    energy_ratings=None,
-                    search=str(invalid_input),  # Should be converted to a string safely
-                    min_bedrooms=1,
-                    max_bedrooms=10,
-                    sort_by=None,
-                    order=None,
-                    page=1,
-                    local_authority=None
-                )
+                with self.assertRaises(ValueError, msg=f"Expected ValueError for input: {invalid_input}"):
+                    propertyService.return_properties(search=invalid_input)
                 
     @patch("Service.propertyService.repo.get_data_from_db")
     def test_service_handles_repository_failure(self, mock_get_data):
@@ -834,8 +798,6 @@ Jan-24,04.1 Actual rentals for housing,118.7
 
         # Ensure error message contains expected text
         self.assertTrue("Database Failure" in str(context.exception))
-
-
         
 if __name__ == "__main__":
     unittest.main()

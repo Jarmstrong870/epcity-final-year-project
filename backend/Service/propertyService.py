@@ -194,23 +194,32 @@ def is_valid_input(value):
 Method that gets a page of 30 properties from database
 """
 def return_properties(property_types=None, energy_ratings=None, search=None, min_bedrooms=1, max_bedrooms=10, sort_by=None, order=None, page=1, local_authority=None):
-    # Input validation
-    if search:
+    # Validate search input
+    if search is not None:
+        if not isinstance(search, str):
+            raise ValueError(f"Search input must be a string, received {type(search).__name__}")
+
         search = search[:MAX_SEARCH_LENGTH]  # Trim long input
         search = re.sub(r"[%_]", "", search)  # Remove SQL wildcards
         if not is_valid_input(search):
             raise ValueError("Invalid search input: Contains unsafe characters")
 
+    # Validate local authority
+    if local_authority is not None and not isinstance(local_authority, str):
+        raise ValueError(f"Local authority input must be a string, received {type(local_authority).__name__}")
+
     if local_authority and not is_valid_input(local_authority):
         raise ValueError("Invalid local authority input")
 
+    # Validate sorting
     if sort_by and sort_by not in ALLOWED_SORT_COLUMNS:
         raise ValueError("Invalid sorting column")
 
     # Call repo method safely
     thisPage = repo.get_data_from_db(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
-    
+
     return thisPage
+
 
 """
 Finds info for when a property is selected by the user
