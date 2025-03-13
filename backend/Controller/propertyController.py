@@ -82,7 +82,7 @@ def get_properties_page_route():
             return jsonify({"error": "Invalid local authority input"}), 400
 
         # Validate sorting parameter
-        ALLOWED_SORT_COLUMNS = {"price", "number_bedrooms", "current_energy_rating"}
+        ALLOWED_SORT_COLUMNS = {"current_energy_efficiency", "number_bedrooms", "current_energy_rating"}
         if sort_by and sort_by not in ALLOWED_SORT_COLUMNS:
             return jsonify({"error": "Invalid sorting parameter"}), 400
 
