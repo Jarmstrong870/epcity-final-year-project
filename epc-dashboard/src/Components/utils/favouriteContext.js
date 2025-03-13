@@ -34,9 +34,7 @@ export function FavouriteProvider ({ children, user }) {
         }
     };
 
-    useEffect(() => {
-        fetchFavouritedProperties();
-    }, [favouriteProperties]);
+    
 
 
     /* 

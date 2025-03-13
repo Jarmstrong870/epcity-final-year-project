@@ -17,7 +17,7 @@ const FavouritePage = ({user, language}) => {
 
     useEffect(() => {
         fetchFavouritedProperties();
-    }, []);
+    }, [user]);
 
     return (
         <div className="favouritedPropertyCards">
