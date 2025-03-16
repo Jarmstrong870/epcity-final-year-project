@@ -9,7 +9,7 @@ import TextToSpeech from '../Components/utils/TextToSpeech';
 import { FavouriteContext } from '../Components/utils/favouriteContext';
 
 const PropertyList = ({ user, loading, language }) => {
-  const [viewMode, setViewMode] = useState('table');
+  const [viewMode, setViewMode] = useState('card');
   const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -20,6 +20,22 @@ const PropertyList = ({ user, loading, language }) => {
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
+
+  useEffect(() => {
+    if (window.innerWidth <= 910) {
+      setViewMode('card');
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth <= 910) {
+        setViewMode('card');
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
 
   if (loading) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
@@ -51,6 +67,7 @@ const PropertyList = ({ user, loading, language }) => {
     );
   };
 
+
   const handleCompareClick = () => {
     if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
       alert("You must select between 2 and 4 properties to compare.");
@@ -68,11 +85,11 @@ const PropertyList = ({ user, loading, language }) => {
         {/* View Mode Toggle (Center) */}
         <div className="view-toggle-container">
           <div className="view-toggle">
-            <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
-              {t.tableView}
-            </button>
             <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
               {t.cardView}
+            </button>
+            <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
+              {t.tableView}
             </button>
           </div>
         </div>
@@ -131,7 +148,7 @@ const PropertyList = ({ user, loading, language }) => {
             {properties.map((property, index) => (
               <tr key={index}>
                 <td>
-                  <Link to={`/property/${property.uprn}`}>{property.address}</Link>
+                  <Link to={`/property/${property.uprn}`}>{property.address.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())}</Link>
                 </td>
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
