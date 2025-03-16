@@ -19,9 +19,7 @@ import AccountOverview from './login&register/AccountOverview';
 import LanguageSelector from './homePage/LanguageSelector';
 import VerifyOtp from './login&register/VerifyOtp';
 import ResetPassword from './login&register/resetPassword';
-import PropertyFinder from './FAQ/PropertyFinder';
 import Checklist from './FAQ/Checklist';
-import SocialMedia from './FAQ/SocialMedia';
 import TutorialMenu from './FAQ/TutorialMenu';
 import Tutorials from './FAQ/Tutorials';
 import translations from './locales/translations_app';
@@ -224,9 +222,7 @@ function App() {
             <Route path="/account-overview" element={<AccountOverview user={user} setUser={setUser} setProfileImage={setProfileImage} language={language} />} />
             <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/faq/property-finder" element={<PropertyFinder language={language} />} />
             <Route path="/faq/checklist" element={<Checklist language={language} />} />
-            <Route path="/faq/socialmedia" element={<SocialMedia />} />
             <Route path="/tutorials/:tutorialCategory" element={<TutorialMenu language={language} />} />
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/faq/tutorials" element={<Tutorials language={language} />} />

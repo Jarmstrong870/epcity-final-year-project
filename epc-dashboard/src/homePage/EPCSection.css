@@ -1,51 +1,79 @@
 .epc-section {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-    max-width: 1200px;
-    margin: 40px auto; /* Center the section and add vertical spacing */
-    padding: 20px;
-    background-color: #f9f9f9; /* Light background for contrast */
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  .epc-section__left,
-  .epc-section__right {
-    flex: 1;
-  }
-  
-  /* Image styling */
-  .epc-section__image {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-  
-  .epc-section__right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  .epc-question-block {
-    margin-bottom: 20px;
-  }
-  
-  .epc-question-block h2 {
-    font-size: 1.6rem;
-    margin-bottom: 10px;
-  }
-  
-  .epc-question-block p {
-    font-size: 1rem;
-    line-height: 1.5;
-    margin: 0;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  max-width: 90%;
+  margin: 40px auto;
+  padding: 2rem 4%;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+}
+
+.epc-section__left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.epc-section__image {
+  width: 100%;
+  height: auto;
+  max-width: 450px; 
+  border-radius: 10px;
+  object-fit: contain;
+  background: transparent;
+  box-shadow: none; 
+}
+
+.epc-section__right {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.epc-section__right h2 {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1e4020;
+  margin-bottom: 1rem;
+}
+
+.epc-section__right p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.epcVideoButton {
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #3a6b36, #2c5f2d);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(44, 95, 45, 0.2);
+  margin-top: 1rem;
+}
+
+.epcVideoButton:hover {
+  background: #4c7c42;
+  transform: scale(1.05);
+  box-shadow: 0 5px 10px rgba(44, 95, 45, 0.3);
+}
+
+
   /* Responsive: stack columns on small screens */
   @media (max-width: 768px) {
     .epc-section {

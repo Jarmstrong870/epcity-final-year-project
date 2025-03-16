@@ -2,7 +2,7 @@
    Global Base Styles
    =========================== */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', 'Open Sans';
   margin: 0;
   padding: 0;
   color: #333;
@@ -226,6 +226,98 @@ body {
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
+.functionality-container {
+  background-color: #ffffff;
+  width: 95%;
+  margin: auto;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.functionality-bar-header {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-decoration: underline;
+}
+
+.functionalityBar {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
+.functionality-column {
+  flex: 1;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 250px; 
+}
+
+.functionality-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.functionality-icon {
+  font-size: 2.5rem;
+  display: block; 
+  margin-bottom: 10px;
+}
+
+.functionality-icon.heart {
+  color: red;
+}
+
+.functionality-title {
+  font-size: 1.4rem; 
+  font-weight: bold;
+  color: #1e4020;
+}
+
+
+.functionality-content {
+  text-align: center;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.functionality-content p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+
+.functionality-button {
+  padding: 10px 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #3a6b36, #1e4020);
+  border-radius: 30px;
+}
+
+.functionality-button:hover {
+  background: #4c7c42;
+  transform: scale(1.05);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
 /* ===========================
    Modern & Sleek About Section
    =========================== */
@@ -381,69 +473,112 @@ body {
   border-bottom: 3px solid #ddd;
 }
 
-/* About Website Section */
-.about-website {
+.about-us-section {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 2rem;
-  margin: 3rem 0;
-  padding: 3rem;
+  width: 100%;
+  max-width: 90%;
+  margin: 40px auto;
+  padding: 2rem 4%;
   background: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* About Image */
-.about-website .about-image {
+
+.about-us-section__left {
   flex: 1;
-  max-width: 50%;
-  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent; /* Removes white background */
+  text-align: center;
+}
+
+.about-us__image {
+  width: 100%; 
+  height: auto; 
+  max-height: 250px; 
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   object-fit: cover;
 }
 
-/* About Content */
-.about-website .content {
+
+.about-us-section__right {
   flex: 1;
+  text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-left: 50px;
 }
 
-.about-website .content h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #2c2c2c;
+
+.about-us-section__right h2 {
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #1e4020;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.about-website .content p {
+.about-us-button-header {
+  margin-top: 20px;
+}
+
+.about-us-section__right p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.about-us-list {
+  padding: 0;
+  margin: 0; 
+  align-items: center;
+}
+
+.about-us-list li {
   font-size: 1rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-  color: #555;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* Hover or subtle transition effects */
-.about-website .about-image,
-.about-website .content h2,
-.about-website .content p {
-  transition: transform 0.3s ease;
+
+.about-us-page-button {
+  background: linear-gradient(135deg, #3a6b36, #2c5f2d);
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  margin-top: 0.5rem; /* Reduce spacing */
 }
 
-.about-website:hover .about-image {
-  transform: scale(1.02);
+.about-us-page-button:hover {
+  background: #4c7c42;
+  transform: scale(1.05);
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
+
 /* Top Rated Properties Section */
 .custom-algorithm-section {
   display: flex;
   width: 100%;
   gap: 30px;
   margin: 60px auto;
-
-  max-width: 1200px;
+  max-width: 1500px;
   padding: 40px;
-  background: #dedede;
+  background: #ffffff;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   align-items: center;
@@ -459,8 +594,9 @@ body {
 
 .custom-algorithm-section .custom-algorithm-icon {
   flex: 1;
-  max-width: 40%;
-  height: auto; /* Maintain the aspect ratio */
+  width: 50%;
+  height: auto;
+
   border-radius: 15px; /* Keep the rounded corners */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
   object-fit: cover; /* Ensures proper scaling for the image */
@@ -655,7 +791,6 @@ body {
 }
 
 
-
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .cities-grid {
@@ -828,8 +963,6 @@ body {
     grid-gap: 15px;
     padding: 0;
   }
-
-
 
   .property-details {
     padding: 15px;
