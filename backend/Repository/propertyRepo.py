@@ -8,6 +8,7 @@ import googlemaps
 import time
 import math
 import csv
+import re
 
 load_dotenv()
 
@@ -19,6 +20,9 @@ DB_PARAMS = {
     "host": os.getenv('DATABASE_HOST'),
     "port": os.getenv('DATABASE_PORT')
 }
+
+ALLOWED_SORT_COLUMNS = {"current_energy_efficiency", "number_bedrooms", "current_energy_rating"}
+
 
 def get_all_properties():
     """
@@ -258,25 +262,23 @@ def get_top_rated_from_db():
 Fetches properties filtered by property_types, energy_ratings, and a search term (address or postcode),
 with optional sorting. Returns the results as a Pandas DataFrame.
 """
-def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_bedrooms = 1, max_bedrooms = 10, sort_by=None, order=None, page = 1, local_authority=None):
+def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_bedrooms=1, max_bedrooms=10, sort_by=None, order=None, page=1, local_authority=None):
     conn = None
     cur = None
     try:
-        # Connect to the PostgreSQL database
+        # Connect to PostgreSQL database
         conn = psycopg2.connect(**DB_PARAMS)
         cur = conn.cursor()
 
         # Base query
-        query = """
-            SELECT * FROM properties WHERE 1 = 1
-        """
+        query = "SELECT * FROM properties WHERE 1 = 1"
         params = []
-        
+
+        # Filters
         if local_authority:
             query += " AND local_authority = %s"
             params.append(local_authority)
 
-        # Dynamically append filters
         if property_types:
             query += " AND property_type = ANY(%s)"
             params.append(property_types)
@@ -286,51 +288,45 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
             params.append(energy_ratings)
 
         if search:
+            # Remove wildcards to prevent abuse
+            search = re.sub(r"[%_]", "", search)
             query += " AND (address ILIKE %s OR postcode ILIKE %s)"
             params.extend([f"%{search}%", f"%{search}%"])
-            
+
         query += " AND number_bedrooms BETWEEN %s AND %s"
-        
         params.extend([min_bedrooms, max_bedrooms])
 
-        # Append sorting
-        if sort_by and order:
-            # Ensure order is valid
-            if order.lower() not in ['asc', 'desc']:
+        # Validate `sort_by` before appending
+        if sort_by in ALLOWED_SORT_COLUMNS:
+            if order.lower() not in ["asc", "desc"]:
                 raise ValueError(f"Invalid sort order: {order}")
-
             query += f" ORDER BY {sort_by} {order.lower()}"
-            
-        # Add pagination using LIMIT and OFFSET
-        per_page = 30  # Fixed number of results per page
+
+        # Pagination
+        per_page = 30
         offset = (page - 1) * per_page
         query += " LIMIT %s OFFSET %s"
         params.extend([per_page, offset])
 
-        # Execute the query
+        # Execute safely
         cur.execute(query, params)
         results = cur.fetchall()
 
-        # Get column names from the cursor
+        # Transform results into DataFrame
         column_names = [desc[0] for desc in cur.description]
-
-        # Transform results into a Pandas DataFrame
         df = pd.DataFrame(results, columns=column_names)
 
         return df
 
     except psycopg2.Error as e:
-        print(f"Database error occurred: {e}")
         return f"An error occurred while fetching properties: {e}"
 
     except ValueError as ve:
-        print(f"Value error: {ve}")
         return f"Invalid input: {ve}"
 
     except Exception as e:
-        print(f"Unexpected error: {e}")
         return f"An unexpected error occurred: {e}"
-    
+
     finally:
         if cur:
             cur.close()
