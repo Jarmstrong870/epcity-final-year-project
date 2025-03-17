@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import PropertyCard from '../homePage/PropertyCard';
 import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
-import TextToSpeech from '../Components/utils/TextToSpeech';
 import { FavouriteContext } from '../Components/utils/favouriteContext';
 
 const PropertyList = ({ user, loading, language }) => {
@@ -59,7 +58,6 @@ const PropertyList = ({ user, loading, language }) => {
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
 
-
   return (
     <div className="property-list">
       {showPopup && <div className="popup-message">{popupMessage}</div>}
@@ -76,35 +74,25 @@ const PropertyList = ({ user, loading, language }) => {
             </button>
           </div>
         </div>
+
         {/* Compare Button (Right) */}
         <div className="compare-button-container">
           <button className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`} onClick={handleCompareClick} disabled={selectedForComparison.length < 2}>
             {t.compare} ({selectedForComparison.length}/4)
           </button>
-          <TextToSpeech text={t.compareSpeech} language={language} />
         </div>
 
         {/* Sort Container (Right) */}
         <div className="sort-container">
-          <div className="dropdown-with-tts">
-            <label>{t.sortBy}</label>
-            <TextToSpeech
-              text={`${t.sortBy}. ${t.address}, ${t.postcode}, ${t.propertyType}, ${t.currentEnergyRating}, ${t.currentEnergyEfficiency}`}
-              language={language}
-            />
-          </div>
+          <label>{t.sortBy}</label>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
             <option value="number_bedrooms">Number of bedrooms</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
-            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
-          <div className="dropdown-with-tts">
-            <label>{t.order}</label>
-            <TextToSpeech text={`${t.order}. ${t.ascending}, ${t.descending}`} language={language} />
-          </div>
+          <label>{t.order}</label>
           <select value={sortOrder} onChange={handleOrderChange}>
             <option value="order">{t.order}</option>
             <option value="asc">{t.ascending}</option>
@@ -112,7 +100,6 @@ const PropertyList = ({ user, loading, language }) => {
           </select>
         </div>
       </div>
-
 
       {viewMode === 'table' ? (
         <table className="table-view">
@@ -176,25 +163,22 @@ const PropertyList = ({ user, loading, language }) => {
         </div>
       )}
 
-      <div>
-        <div className="pagination-container">
-          <button
-            className="paginationPrevious"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            {t.previous}
-          </button>
+      <div className="pagination-container">
+        <button
+          className="paginationPrevious"
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        >
+          {t.previous}
+        </button>
 
-          <button
-            className="paginationNext"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={properties.length < expectedPageSize}
-          >
-            {t.next}
-          </button>
-        </div>
-
+        <button
+          className="paginationNext"
+          onClick={() => handlePageChange(page + 1)}
+          disabled={properties.length < expectedPageSize}
+        >
+          {t.next}
+        </button>
       </div>
     </div>
   );

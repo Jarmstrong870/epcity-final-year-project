@@ -1,91 +1,117 @@
 .propertyInfoContainer {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);  /* Two equal columns for uniform sizing */
-    gap: 20px;  /* Even spacing between boxes */
-    padding: 20px;
-    background-color: #f9f9f9; 
-    border-radius: 10px;
-  }
-  
-  /* Match the style of the energy boxes */
-  .infoBox {
-    background: white;
-    padding: 0;
-    border-radius: 10px;
-    border: none;
-    box-shadow: none;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 0; /* Fixed height to ensure all boxes are the same size */
-    gap: 10px;
-    width: 90%;
-    text-align: left;
-    overflow: hidden;
-  }
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns for uniform sizing */
+  gap: 20px; /* Even spacing between boxes */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
 
-  .infoBox.active {
-    height: auto;
-    padding: 10px;
-    border: 1px solid;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-  }
+/* Match the style of the energy boxes */
+.infoBox {
+  background: white;
+  padding: 0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 0; /* Fixed height to ensure all boxes are the same size */
+  gap: 10px;
+  width: 90%;
+  text-align: left;
+  overflow: hidden;
+}
 
-  .infoBox.inactive {
-    position: relative;
-  }
+.infoBox.active {
+  height: auto;
+  padding: 10px;
+  border: 1px solid;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+}
 
-  .data-headers {
-    font-weight: bold;
-    flex: 1;
-    color: #000;
-  }
+.infoBox.inactive {
+  position: relative;
+}
 
-  .data-field {
-    flex: 2;
-    text-align: right;
-    color: #444;
-  }
-  
-  /* Paragraph style for details */
-  .infoBox p {
-    font-size: 18px;
-    color: #444;
-    margin: 6px 0;
-    line-height: 1.6;
-  }
+.data-headers {
+  font-weight: bold;
+  flex: 1;
+  color: #000; /* Ensures header text remains black */
+  display: inline-flex; /* Make the header and question mark appear inline */
+  align-items: center;
+  gap: 8px; /* Space between header and question mark */
+}
 
-  .info-dropdown {
-    position: relative;
-    width: 100%;
-    margin-bottom: 10px;
-    height: auto;
-  }
+.data-headers .greenQuestionMark {
+  color: green; /* Green color for the question mark only */
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+  display: inline-block;
+  text-decoration: none !important;
+}
 
-  .info-dropdown button{
-    background-color: #ffffff;
-    margin-top: 30px;
-    font-size: 1.8rem; /* Large and eye-catching */
-    font-weight: bold;
-    color: #344c4a; /* Darker shade for contrast */
-    text-align: center;
-    margin-bottom: 20px;
-    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
-    letter-spacing: 1px; /* Slight spacing for readability */
-    border: none;
-    border-bottom: 3px solid #2c5f2d; /* Underline effect */
-    padding: 15px 5px;
-    border-radius: 10px;
-    width: 100%
-  }
+.data-headers .greenQuestionMark::after {
+  content: "?"; /* Adds the question mark */
+}
 
-  .info-dropdown:hover button{
-    background-color: #c5c5c5;
-    border-radius: 10px;
-  }
-  
-  .highlight-green {
-    background-color: rgba(76, 175, 80, 0.1);
-    border-radius: 5px;
-    padding: 5px;
-  }
+.data-headers .greenQuestionMark:hover {
+  color: #2E7D32; /* Darker green on hover */
+}
+
+/* Ensure focus styles for accessibility */
+.data-headers .greenQuestionMark:focus {
+  outline: 2px solid #2E7D32;
+  outline-offset: 4px;
+}
+
+.data-field {
+  flex: 2;
+  text-align: right;
+  color: #444;
+}
+
+/* Paragraph style for details */
+.infoBox p {
+  font-size: 18px;
+  color: #444;
+  margin: 6px 0;
+  line-height: 1.6;
+}
+
+.info-dropdown {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+  height: auto;
+}
+
+.info-dropdown button {
+  background-color: #ffffff;
+  margin-top: 30px;
+  font-size: 1.8rem; /* Large and eye-catching */
+  font-weight: bold;
+  color: #344c4a; /* Darker shade for contrast */
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+  letter-spacing: 1px; /* Slight spacing for readability */
+  border: none;
+  border-bottom: 3px solid #2c5f2d; /* Underline effect */
+  padding: 15px 5px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.info-dropdown:hover button {
+  background-color: #c5c5c5;
+  border-radius: 10px;
+}
+
+.highlight-green {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 5px;
+  padding: 5px;
+}
