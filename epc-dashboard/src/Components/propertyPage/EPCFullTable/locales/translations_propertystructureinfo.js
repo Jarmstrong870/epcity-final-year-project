@@ -38,9 +38,9 @@ const translations = {
   fr: {
     headers: {
       windowsInfo: "Informations sur les fenêtres",
-      multiGlazeProportion: "Proportion de double vitrage",
+      multiGlazeProportion: "Proportion de vitrage multiple",
       glazedType: "Type de vitrage",
-      glazedArea: "Zone vitrée",
+      glazedArea: "Surface vitrée",
       windowsDescription: "Description des fenêtres",
       windowsEnergyEff: "Efficacité énergétique des fenêtres",
 
@@ -74,8 +74,8 @@ const translations = {
   es: {
     headers: {
       windowsInfo: "Información de las ventanas",
-      multiGlazeProportion: "Proporción de doble acristalamiento",
-      glazedType: "Tipo de acristalamiento",
+      multiGlazeProportion: "Proporción de vidrio múltiple",
+      glazedType: "Tipo de vidrio",
       glazedArea: "Área acristalada",
       windowsDescription: "Descripción de las ventanas",
       windowsEnergyEff: "Eficiencia energética de las ventanas",

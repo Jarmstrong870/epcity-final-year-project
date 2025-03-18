@@ -1,7 +1,111 @@
-mark {
-    background-color: yellow;
-    color: black;
-    padding: 2px 4px;
-    border-radius: 3px;
-  }
-  
+/* .mark styles for TextToSpeech button */
+.mark {
+  color: black;
+  padding: 2px 4px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.mark.on {
+  background-color: green;
+}
+
+.mark.off {
+  background-color: red;
+}
+
+.mark:hover {
+  opacity: 0.8; /* Slight opacity change on hover */
+  transform: scale(1.1); /* Slight scaling for interactivity */
+}
+
+/* Toggle switch container styles */
+.tts-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+/* Label styling */
+.tts-label {
+  font-family: 'Poppins', sans-serif; /* Ensure consistent font */
+  font-size: 18px; /* Increased font size */
+  margin-right: 15px;  /* More space between the label and the switch */
+  color: #ffffff; /* Text color */
+  font-weight: bold; /* Make text bold */
+  letter-spacing: 1px; /* Slight letter spacing */
+  text-transform: uppercase; /* Uppercase text for uniformity */
+  line-height: 34px; /* Align vertically with the toggle */
+  transition: color 0.3s ease;
+}
+
+/* React Switch Styles */
+.react-switch {
+  margin-left: 10px;
+}
+
+/* Additional switch styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 70px; /* Increase width for better visibility */
+  height: 40px; /* Increase height for better user interaction */
+  border-radius: 50px; /* More rounded */
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 50px; /* Full rounding for better design */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 30px; /* Bigger circle */
+  width: 30px; /* Bigger circle */
+  border-radius: 50%;
+  left: 5px;
+  bottom: 5px;
+  background-color: white;
+  transition: 0.4s;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+/* On state: green background and moved circle */
+input:checked + .slider {
+  background-color: #4CAF50; /* Green for ON state */
+}
+
+input:checked + .slider:before {
+  transform: translateX(30px); /* Move circle to the right */
+}
+
+/* Off state: gray background */
+input:disabled + .slider {
+  background-color: #d3d3d3; /* Gray when disabled */
+}
+
+/* Smooth hover transition */
+input:hover + .slider {
+  background-color: #555; /* Darker gray when hovering over the switch */
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #4CAF50; /* Add a slight glow effect on focus */
+}
