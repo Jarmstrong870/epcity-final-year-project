@@ -58,7 +58,7 @@ const translations = {
       walls: "Paredes",
       multiGlazeProportion: "Proporción de vidrio múltiple",
       glazedType: "Tipo de vidrio",
-      glazedArea: "Área vidriada",
+      glazedArea: "Área acristalada",
       windowsDescription: "Descripción de las ventanas",
       windowsEnergyEfficiency: "Eficiencia energética de las ventanas",
       totalFloorArea: "Área total del piso",
