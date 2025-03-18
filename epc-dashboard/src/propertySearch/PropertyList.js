@@ -19,8 +19,9 @@ const PropertyList = ({ user, loading, language }) => {
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
-
+  
   useEffect(() => {
+
     if (window.innerWidth <= 910) {
       setViewMode('card');
     }
@@ -34,9 +35,8 @@ const PropertyList = ({ user, loading, language }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
 
-  if (loading) return <p>{t.loading}</p>;
+  if (loading===true) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
 
   const handlePageChange = (newPage) => {
