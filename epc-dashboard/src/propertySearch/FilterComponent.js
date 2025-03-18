@@ -1,9 +1,25 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import Select, { components } from 'react-select';
 import './FilterComponent.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_filtercomponent';
 import { Range } from "react-range";
+
+const Option = (props) => {
+    return (
+        <div>
+            <components.Option {...props}>
+                <input
+                    type="checkbox"
+                    checked={props.isSelected}
+                    onChange={() => null}
+                />{" "}
+                <label>{props.label}</label>
+            </components.Option>
+        </div>
+    );
+};
 
 const PropertyFilter = ({ language }) => {
     const location = useLocation();
@@ -13,12 +29,13 @@ const PropertyFilter = ({ language }) => {
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [epcRatings, setEpcRatings] = useState([]);
     const [bedroomRange, setBedroomRange] = useState([1, 10]);
-    const [activeFilter, setActiveFilter] = useState(null);
     const [timeoutId, setTimeoutId] = useState(null);
     const [visualRange, setVisualRange] = useState([1, 10]);
+    const [dropdownOpen, setDropdownOpen] = useState(null);
 
-    const toggleFilter = (filter) => {
-        setActiveFilter(activeFilter === filter ? null : filter);
+    // Toggle Dropdowns
+    const toggleDropdown = (dropdown) => {
+        setDropdownOpen(dropdownOpen === dropdown ? null : dropdown);
     };
 
     const cities = [
@@ -45,24 +62,21 @@ const PropertyFilter = ({ language }) => {
         setSearchQuery(e.target.value);
     };
 
-    const handlePropertyTypeChange = (e) => {
-        const { value, checked } = e.target;
-        setPropertyTypes((prev) =>
-            checked ? [...prev, value] : prev.filter((type) => type !== value)
-        );
+    const handlePropertyTypeChange = (selectedOptions) => {
+        setPropertyTypes(selectedOptions ? selectedOptions.map(option => option.value) : []);
     };
-
-    const handleEpcRatingChange = (e) => {
-        const { value, checked } = e.target;
-        setEpcRatings((prev) =>
-            checked ? [...prev, value] : prev.filter((rating) => rating !== value)
-        );
+    
+    const handleEpcRatingChange = (selectedOptions) => {
+        setEpcRatings(selectedOptions ? selectedOptions.map(option => option.value) : []);
     };
 
     const handleFetchProperties = (e) => {
         e.preventDefault();
         fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city);
     };
+
+    const propertyTypeOptions = t.propertyTypeOptions.map(type => ({ value: type, label: type }));
+    const epcRatingOptions = ["A", "B", "C", "D", "E", "F", "G"].map(rating => ({ value: rating, label: rating }));
 
     return (
         <div className="filterSection">
@@ -99,81 +113,54 @@ const PropertyFilter = ({ language }) => {
 
             {/* Filters Section */}
             <div className="filtersContainer">
-                {/* Property Type Filter */}
-                <div className='buttonContainerFilter'>
-                    <button className="filterTitleButton" onClick={() => toggleFilter("propertyType")}>
-                        <strong>{t.propertyTypes} ⮟</strong>
-                    </button>
+                <Select className="dropdown"
+                    isMulti
+                    options={propertyTypeOptions}
+                    value={propertyTypeOptions.filter(option => propertyTypes.includes(option.value))}
+                    onChange={handlePropertyTypeChange}
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    components={{ Option }}
+                    placeholder={t.propertyTypes}
+                />
 
-                    {/* EPC Rating Filter */}
-                    <button className="filterTitleButton" onClick={() => toggleFilter("epcRatings")}>
-                        <strong>{t.epcRatings} ⮟</strong>
-                    </button>
+                <Select className="dropdown"
+                    isMulti
+                    options={epcRatingOptions}
+                    value={epcRatingOptions.filter(option => epcRatings.includes(option.value))}
+                    onChange={handleEpcRatingChange}
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    components={{ Option }}
+                    placeholder={t.epcRatings}
+                />
 
-                    {/* Bedroom Range Slider */}
-                    <button className="filterTitleButton" onClick={() => toggleFilter("bedrooms")}>
-                        <strong>{t.bedroomRange} ⮟</strong>
-                    </button>
-                </div>
-
-                {/* Bedroom Range Filter */}
-                <div className={`filterBox ${activeFilter === "bedrooms" ? "active" : ""}`}>
-                    <div className="rangeSliderContainer">
-                        <Range
-                            step={1}
-                            min={1}
-                            max={10}
-                            values={visualRange}
-                            onChange={(values) => {
-                                setVisualRange(values);
-                                if (timeoutId) clearTimeout(timeoutId);
-
-                                const newTimeout = setTimeout(() => {
-                                    setBedroomRange(values);
-                                }, 250);
-
-                                setTimeoutId(newTimeout);
-                            }}
-                            renderTrack={({ props, children }) => (
-                                <div {...props} className="rangeTrack">
-                                    {children}
-                                </div>
-                            )}
-                            renderThumb={({ props, index }) => (
-                                <div {...props} className="rangeThumb">
-                                    {visualRange[index]}
-                                </div>
-                            )}
-                        />
-                        <div className="rangeValues">
-                            <span>1 Min</span>
-                            <span>10 Max</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Property Type Filter */}
-                <div className={`filterBox ${activeFilter === "propertyType" ? "active" : ""}`}>
-                    <div className="checkboxContainer">
-                        {t.propertyTypeOptions.map((type, index) => (
-                            <label key={index} className="checkboxLabel">
-                                <input type="checkbox" value={type} onChange={handlePropertyTypeChange} />
-                                {type}
-                            </label>
-                        ))}
-                    </div>
-                </div>
-
-                {/* EPC Ratings Filter */}
-                <div className={`filterBox ${activeFilter === "epcRatings" ? "active" : ""}`}>
-                    <div className="checkboxContainer">
-                        {["A", "B", "C", "D", "E", "F", "G"].map((rating) => (
-                            <label key={rating} className="checkboxLabel">
-                                <input type="checkbox" value={rating} onChange={handleEpcRatingChange} />
-                                {rating}
-                            </label>
-                        ))}
-                    </div>
+                <div className="bedroomSliderContainer">
+                    <p className="bedroomRangeLabel">{t.bedroomRange}: {bedroomRange[0]} - {bedroomRange[1]}</p>
+                    <Range
+                        step={1}
+                        min={1}
+                        max={10}
+                        values={visualRange}
+                        onChange={(values) => {
+                            setVisualRange(values);
+                            if (timeoutId) clearTimeout(timeoutId);
+                            const newTimeout = setTimeout(() => {
+                                setBedroomRange(values);
+                            }, 250);
+                            setTimeoutId(newTimeout);
+                        }}
+                        renderTrack={({ props, children }) => (
+                            <div {...props} className="rangeTrack">
+                                {children}
+                            </div>
+                        )}
+                        renderThumb={({ props, index }) => (
+                            <div {...props} className="rangeThumb">
+                                {visualRange[index]}
+                            </div>
+                        )}
+                    />
                 </div>
             </div>
         </div>
