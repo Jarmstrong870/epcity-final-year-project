@@ -21,7 +21,7 @@ const Option = (props) => {
     );
 };
 
-const PropertyFilter = ({ language }) => {
+const PropertyFilter = ({ language, setLoading  }) => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const searchTerm = searchParams.get("search") || '';
@@ -54,7 +54,10 @@ const PropertyFilter = ({ language }) => {
     const { fetchProperties, city, setCity } = useContext(PropertyContext);
 
     useEffect(() => {
-        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city);
+        setLoading(true)
+        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange)
+            .finally(() => setLoading(false));
+
     }, [propertyTypes, epcRatings, bedroomRange, city]);
 
     // Handle search query change
@@ -65,7 +68,7 @@ const PropertyFilter = ({ language }) => {
     const handlePropertyTypeChange = (selectedOptions) => {
         setPropertyTypes(selectedOptions ? selectedOptions.map(option => option.value) : []);
     };
-    
+
     const handleEpcRatingChange = (selectedOptions) => {
         setEpcRatings(selectedOptions ? selectedOptions.map(option => option.value) : []);
     };

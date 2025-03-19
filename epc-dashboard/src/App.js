@@ -43,7 +43,7 @@ function App() {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
@@ -78,28 +78,6 @@ function App() {
 
   const cancelLogout = () => {
     setLogoutConfirmVisible(false);
-  };
-
-  const fetchProperties = async (query = '', propertyTypes = [], epcRatings = [], pageNumber, sortValue) => {
-    setLoading(true);
-    try {
-      let url = query || propertyTypes.length || epcRatings.length
-        ? `http://127.0.0.1:5000/api/property/alter?`
-        : `http://127.0.0.1:5000/api/property/loadDB`;
-
-      if (query) url += `search=${query}&`;
-      if (propertyTypes.length > 0) url += `pt=${propertyTypes.join(',')}&`;
-      if (epcRatings.length > 0) url += `epc=${epcRatings.join(',')}&`;
-
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Failed to fetch property data');
-      const data = await response.json();
-      setProperties(data);
-    } catch (error) {
-      console.error('There was an error fetching the property data!', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -196,7 +174,7 @@ function App() {
             <Route path="/" element={<HomePage user={user} language={language} />} />
             <Route path="/propertylist" element={
               <>
-                <PropertyFilter onFilterChange={fetchProperties} language={language} />
+                <PropertyFilter language={language} setLoading={setLoading} />
                 <PropertyList user={user} properties={properties} loading={loading} language={language} />
               </>
             } />
