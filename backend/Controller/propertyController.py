@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS
 import pandas as pd
@@ -12,14 +13,21 @@ Route to update properties in the database
 """
 @property_blueprint.route('/property/updateDB', methods=['GET'])
 def update_properties_route():
-    return jsonify(properties.update_properties())
+    success = properties.update_properties()
+    
+    # Ensure a JSON response with a key-value pair
+    return jsonify({"success": success}), 200
+
 
 """
 Route to update properties in the database
 """
 @property_blueprint.route('/property/inflationDB', methods=['GET'])
 def update_inflation_data_route():
-    return jsonify(properties.fetch_cpih_data())
+    success = properties.fetch_cpih_data()
+    
+    # Ensure a JSON response with a key-value pair
+    return jsonify({"success": success}), 200
 
 """
 Route to load top 6 properties from DB for Home Page
@@ -40,34 +48,74 @@ def get_property_info_route():
     return jsonify(properties.get_property_info(uprn).to_dict(orient='records'))
 
 """
-Route that handles all searching, filtering, sorting and pagination
+Route that handles all searching, filtering, sorting, and pagination.
 """
 @property_blueprint.route('/property/getPage', methods=['GET'])
 def get_properties_page_route():
     try:
-        # Validate and parse query parameters
-        property_types = (
-            request.args.get('pt', '').split(',') if request.args.get('pt') else None
-        )
-        energy_ratings = (
-            request.args.get('epc', '').split(',') if request.args.get('epc') else None
-        )
-        search = request.args.get('search', '').strip()
-        sort_by = request.args.get('sort_by')
-        order = request.args.get('order').lower() if request.args.get('order') in ['asc', 'desc'] else None
-        page = int(request.args.get('page', 1))  # Defaults to 1
-        local_authority = request.args.get('local_authority', '').strip()
-        min_bedrooms = int(request.args.get('min_bedrooms', 1))
-        max_bedrooms = int(request.args.get('max_bedrooms', 10))
+        # Extract request parameters safely
+        property_types = request.args.get('pt')
+        property_types = property_types.split(',') if property_types else None
+
+        energy_ratings = request.args.get('epc')
+        energy_ratings = energy_ratings.split(',') if energy_ratings else None
+
+        search = request.args.get('search', None)  # Allow None if not provided
+        sort_by = request.args.get('sort_by', None)
+        order = request.args.get('order', None)
+        local_authority = request.args.get('local_authority', None)
+
+        # Validate search input only if provided
+        MAX_SEARCH_LENGTH = 255
+        def is_valid_search(value):
+            """Rejects input if it contains unsafe SQL characters."""
+            return bool(re.match(r"^[a-zA-Z0-9\s,.\-#\/]+$", value))  # Allows common characters
+        
+        if search is not None:
+            search = str(search).strip()
+            
+            # **Reject excessively long searches** (instead of trimming)
+            if len(search) > MAX_SEARCH_LENGTH:
+                return jsonify({"error": f"Search input exceeds maximum length of {MAX_SEARCH_LENGTH} characters"}), 400
+
+            search = re.sub(r"[%_]", "", search)  # Remove SQL wildcards
+            if not is_valid_search(search):
+                return jsonify({"error": "Invalid search input"}), 400
+
+        # Validate local authority only if provided
+        if local_authority:
+            local_authority = str(local_authority).strip()
+            if not re.match(r"^[a-zA-Z0-9\s-]+$", local_authority):
+                return jsonify({"error": "Invalid local authority input"}), 400
+
+        # Validate sorting parameter only if provided
+        ALLOWED_SORT_COLUMNS = {"current_energy_efficiency", "number_bedrooms", "current_energy_rating"}
+        if sort_by and sort_by not in ALLOWED_SORT_COLUMNS:
+            return jsonify({"error": "Invalid sorting parameter"}), 400
+
+        # Validate numeric fields
+        try:
+            page = max(1, int(request.args.get('page', 1)))  # Default to 1
+            min_bedrooms = max(1, int(request.args.get('min_bedrooms', 1)))
+            max_bedrooms = max(min_bedrooms, int(request.args.get('max_bedrooms', 10)))  # Ensure max >= min
+        except ValueError:
+            return jsonify({"error": "Invalid numeric input"}), 400
+
         # Call service layer
-        result = properties.return_properties(property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority)
+        result = properties.return_properties(
+            property_types, energy_ratings, search, min_bedrooms, max_bedrooms, sort_by, order, page, local_authority
+        )
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200
     except ValueError as ve:
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
+        print(f"DEBUG: Unexpected error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+
     
 """
 Route: /property/compare
@@ -82,6 +130,9 @@ Response: JSON list containing comparison data for selected properties.
 def compare_properties_route():
     try:
         # Extract request data
+        if not request.is_json:
+            return jsonify({"error": "Invalid or missing JSON body"}), 400
+        
         data = request.get_json()
         print("Received Data:", data)  # Debugging
 
@@ -99,7 +150,7 @@ def compare_properties_route():
         # Fetch comparison data from the service layer
         comparison_data = properties.compare_properties(uprns)
 
-        #  Convert DataFrame to JSON format
+        # Convert DataFrame to JSON format
         if isinstance(comparison_data, pd.DataFrame):
             comparison_data = comparison_data.to_dict(orient="records")
 
@@ -109,6 +160,7 @@ def compare_properties_route():
         print("Error in compare_properties_route:", str(e))  # Debugging
         return jsonify({"error": str(e)}), 500
 
+
 """
 Route method that returns property data for properties within the same postcode and have the same number of bedrooms as a given property
 """
@@ -117,10 +169,16 @@ def get_graph_data_route():
     try:
         # Get params from argument
         postcode = request.args.get('postcode', '').strip()
-        number_bedrooms = request.args.get('num_bedrooms')
+        num_bedrooms = request.args.get('num_bedrooms')
+
+        # Validate `num_bedrooms`
+        if not num_bedrooms or not num_bedrooms.isdigit():
+            return jsonify({"error": "Invalid or missing 'num_bedrooms' parameter"}), 400
+
+        num_bedrooms = int(num_bedrooms)  # Convert to integer
 
         # Call service layer
-        result = properties.get_properties_from_area(postcode, number_bedrooms)
+        result = properties.get_properties_from_area(postcode, num_bedrooms)
 
         # Return results
         return jsonify(result.to_dict(orient='records')), 200
@@ -128,6 +186,7 @@ def get_graph_data_route():
         return jsonify({"error": f"Invalid input: {str(ve)}"}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @property_blueprint.route('/property/knnSearch', methods=['POST'])
 def knn_search():

@@ -1,29 +1,38 @@
-/* General Property Page Styling */
+
 .property-page {
   display: flex;
   flex-direction: column;
   padding: 20px;
   background-color: #f9f9f9;
-  min-height: 100vh; /* Ensure full height */
+  min-height: 100vh;
   margin: 0;
   box-sizing: border-box;
 }
 
-/* Header Styling */
+
 .property-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  margin-top: 100px;
+  margin-bottom: 40px;
+  margin-top: 40px;
 }
 
 .property-title {
+  font-size: 3rem; /* Large and eye-catching */
+  font-weight: bold;
+  color: #2c5f2d; /* Darker shade for contrast */
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+  letter-spacing: 1px; /* Slight spacing for readability */
+  padding-bottom: 10px;
+  border-bottom: 3px solid #2c5f2d; /* Underline effect */
+  display: inline-block; /* Makes border only as wide as text */
   margin: 0;
 }
 
 .property-header h3 {
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,7 +40,7 @@
 }
 
 .send-to-group-btn {
-  background-color: #2c5f2d; /* Dark green */
+  background-color: #2c5f2d; /* base colour */
   color: white;
   padding: 12px 18px;
   font-size: 16px;
@@ -49,13 +58,13 @@
   transform: scale(1.05);
 }
 
-/* Favorite Star Component */
+
 .starComponent {
   display: flex;
   align-items: center;
 }
 
-/* Image and Map Section */
+
 .image-and-map-section {
   display: flex;
   justify-content: space-between;
@@ -65,11 +74,11 @@
   flex: 1;
 }
 
-/* Street View and Map View */
+
 .street-view,
 .map-view {
   flex: 1;
-  height: 500px; /* Ensure both views are the same height */
+  height: 500px; /* keeping map and street view same height */
   display: flex;
   flex-direction: column;
   border-radius: 10px;
@@ -87,7 +96,7 @@
   height: 500px;
 }
 
-/* Map Container - Ensure full height */
+
 .map-container {
   height: 100%;
   width: 100%;
@@ -100,7 +109,7 @@
   flex-grow: 1;
 }
 
-/* Extra Container for Map Journey */
+
 .extra-container {
   padding: 20px;
   background-color: #1f2e2d;
@@ -113,7 +122,7 @@
   flex-grow: 1;
 }
 
-/* Sidebar - Ensure Full Height */
+/* map sidebar */
 .map-sidebar {
   display: flex;
   flex-direction: column;
@@ -129,7 +138,7 @@
   flex-grow: 1;
 }
 
-/* Footer Styling */
+
 footer {
   position: relative;
   bottom: 0;
@@ -143,7 +152,6 @@ footer {
   box-sizing: border-box;
 }
 
-/* Ensure Map and Sidebar Full Height */
 .map-wrapper {
   display: flex;
   align-items: stretch;
@@ -154,7 +162,6 @@ footer {
   box-sizing: border-box;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 900px) {
   .image-and-map-section {
     flex-direction: column;

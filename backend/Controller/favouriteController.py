@@ -31,7 +31,11 @@ Service layer is called and returns a jsonified True or False to indicate if the
 def add_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.add_favourite_property(email, uprn))
+    
+    result = favourites.add_favourite_property(email, uprn)
+    
+    # Ensure the response is always True or False
+    return jsonify(result if isinstance(result, bool) else False)
 
 """
 Route method that removes a property from a user's favourites
@@ -43,4 +47,8 @@ Service layer is called and returns a jsonified True or False to indicate if the
 def remove_favourite():
     email = request.args.get('email', '').lower()
     uprn = request.args.get('uprn', '').lower()
-    return jsonify(favourites.remove_favourite_property(email, uprn))
+    
+    result = favourites.remove_favourite_property(email, uprn)
+    
+    # Ensure the response is always True or False
+    return jsonify(result if isinstance(result, bool) else False)

@@ -4,11 +4,12 @@ import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
 import translations from '../locales/translations_homepage';
-import CitySection from "../homePage/CitySection"; 
+import CitySection from "./CitySection"; 
 import liverpoolVideo from '../assets/liverpool.mp4'; 
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
-import TextToSpeech from '../Components/utils/TextToSpeech';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
+import PropertyCarousel from '../homePage/PropertyCarousel';
+import EPCSection from './EPCSection';
 
 const HomePage = ({ user, language }) => {
   const [customAlgorithmPopUp, setCustomAlgorithmPopUp] = useState(false);
@@ -66,12 +67,8 @@ const HomePage = ({ user, language }) => {
         {/* 🔹 Dark Overlay */}
         <div className="hero-overlay">
           <div className="welcomeText">
-            <h1 className="mainMessage">
-              {t.welcomeMessage}
-            </h1>
-            <p className="subMessage">
-              {t.subMessage}
-            </p>
+            <h1 className="mainMessage">{t.welcomeMessage}</h1>
+            <p className="subMessage">{t.subMessage}</p>
           </div>
 
           {/* 🔍 Search Bar */}
@@ -83,46 +80,23 @@ const HomePage = ({ user, language }) => {
               onChange={handleInputChange}
               placeholder={t.searchPlaceholder}
             />
-            <button className="stylingSearchButton" onClick={handleSearch}>
-              {t.searchButton}
-            </button>
           </div>
-          
-          <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
-            <span className="scrollDownArrow"> {"\u2193"} </span>
+          <button className="stylingSearchButton" onClick={handleSearch}>
+            {t.searchButton}
           </button>
 
+          <button className="scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
+            <span className="scrollDownArrow"> {"\u2193"} </span>
+          </button>
         </div>
       </div>
 
-{/* About Website Section */}
-<div className="about-website">
-        <img 
-          src={require('../assets/liverpool-houses.jpg')} 
-          alt="Liverpool" 
-          className="about-image" 
-        />
-        <div className="content">
-          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.epcInformation}
-            </h2>
-            <TextToSpeech 
-              text={`${t.epcInformation}. ${t.epcInformationDescription1} ${t.epcInformationDescription2}`} 
-              language={language} 
-            />
-          </div>
-          <p>{t.epcInformationDescription1}</p>
-          <p>{t.epcInformationDescription2}</p>
-          </div>
-        </div>
-      <div>
-    </div>
+      {/* About Website Section */}
+      <EPCSection />
 
-
-      <pageSection id ="cityGrid">
-      {/* City Section */}
-      <CitySection language={language} />
+      <pageSection id="cityGrid">
+        {/* City Section */}
+        <CitySection language={language} />
       </pageSection>
 
       {/* Custom Algorithm Section */}
@@ -130,34 +104,18 @@ const HomePage = ({ user, language }) => {
         <img src={require('../assets/dream property.jpg')} alt="dream-property" className="custom-algorithm-icon" />
         <div className="custm-algorithm-description">
           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.customAlgorithmTitle}
-            </h2>
-            <TextToSpeech 
-              text={`${t.customAlgorithmTitle}. ${t.customAlgorithmDescription}`} 
-              language={language} 
-            />
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>{t.customAlgorithmTitle}</h2>
           </div>
           <p>{t.customAlgorithmDescription}</p>
-        
           <div>
-              <button className="custom-algorithm-button" onClick={togglePopUp}> Go to Custom Algorithm </button>
-                {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp}/>}
+            <button className="custom-algorithm-button" onClick={togglePopUp}> Go to Custom Algorithm </button>
+            {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp} />}
           </div>
-          </div>
-        </div>
-
-
-      
-      {/* Top Rated Properties Section */}
-      <div className="most-efficient-properties">
-        <h2>{t.mostEfficientProperties}</h2>
-        <div className="property-grid">
-          {topRatedProperties.map((property, index) => (
-            <PropertyCard key={index} user={user} property={property} language={language} />
-          ))}
         </div>
       </div>
+
+      {/* Top Rated Properties Section */}
+      <PropertyCarousel topRatedProperties={topRatedProperties} user={user} language={language} />
 
       {/* About Website Section */}
       <div className="about-website">
@@ -168,21 +126,13 @@ const HomePage = ({ user, language }) => {
         />
         <div className="content">
           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.aboutUsTitle}
-            </h2>
-            <TextToSpeech 
-              text={`${t.aboutUsTitle}. ${t.aboutUsDescription1} ${t.aboutUsDescription2}`} 
-              language={language} 
-            />
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>{t.aboutUsTitle}</h2>
           </div>
           <p>{t.aboutUsDescription1}</p>
           <p>{t.aboutUsDescription2}</p>
-          </div>
         </div>
-      <div>
-    </div>
-  </>
+      </div>
+    </>
   );
 };
 

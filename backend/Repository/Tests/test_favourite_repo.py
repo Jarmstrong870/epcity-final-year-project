@@ -1,17 +1,11 @@
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
-import sys
-import os
-
 import psycopg2
-# Add the parent directory (backend/Repository) to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import favouriteRepo  # Importing from the same Repository directory
+from Repository import favouriteRepo  # Importing from the same Repository directory
 
 class TestFavouriteRepo(unittest.TestCase):
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_get_favourite_properties_from_db_success(self, mock_connect):
         """Test successful retrieval of favourite properties"""
 
@@ -49,7 +43,7 @@ class TestFavouriteRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_get_favourite_properties_from_db_no_results(self, mock_connect):
         """Test when database returns no results"""
 
@@ -76,7 +70,7 @@ class TestFavouriteRepo(unittest.TestCase):
         expected_query = "SELECT * FROM getFavourites(%s)"
         mock_cursor.execute.assert_called_once_with(expected_query, ("test@example.com",))
 
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_get_favourite_properties_from_db_database_error(self, mock_connect):
         """Test when a database error occurs"""
 
@@ -91,7 +85,7 @@ class TestFavouriteRepo(unittest.TestCase):
         # Assertions
         pd.testing.assert_frame_equal(result, expected_output)
         
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_add_favourite_to_db_success(self, mock_connect):
         """Test successful addition of a favourite property"""
 
@@ -118,7 +112,7 @@ class TestFavouriteRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_add_favourite_to_db_database_error(self, mock_connect):
         """Test when a database error occurs"""
 
@@ -131,7 +125,7 @@ class TestFavouriteRepo(unittest.TestCase):
         # Assertions
         assert result is False
         
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_remove_favourite_from_db_success(self, mock_connect):
         """Test successful removal of a favourite property"""
 
@@ -161,7 +155,7 @@ class TestFavouriteRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_remove_favourite_from_db_no_match(self, mock_connect):
         """Test when no matching row is found"""
 
@@ -191,7 +185,7 @@ class TestFavouriteRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('favouriteRepo.psycopg2.connect')
+    @patch('Repository.favouriteRepo.psycopg2.connect')
     def test_remove_favourite_from_db_database_error(self, mock_connect):
         """Test when a database error occurs"""
 

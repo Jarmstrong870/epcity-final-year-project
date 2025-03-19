@@ -10,7 +10,7 @@ const translations = {
       mainheatDescription: "Mainheat Description",
       mainheatEnergyEfficiency: "Mainheat Energy Efficiency",
       mainheatControllerDescription: "Mainheat Controller Description",
-      mainheatControllerEnergyEfficiency: "Mainheat Controller Energy Efficiency",
+      mainheatControllerEnergyEfficiency: "Main Heating Control Efficiency",
   
       lighting: "Lighting Costs",
       lowEnergyLighting: "Low Energy Lighting",
@@ -40,7 +40,7 @@ const translations = {
       mainheatDescription: "Description du chauffage principal",
       mainheatEnergyEfficiency: "Efficacité énergétique du chauffage principal",
       mainheatControllerDescription: "Description du contrôleur principal",
-      mainheatControllerEnergyEfficiency: "Efficacité énergétique du contrôleur principal",
+      mainheatControllerEnergyEfficiency: "Efficacité du contrôle du chauffage principal",
   
       lighting: "Éclairage",
       lowEnergyLighting: "Éclairage basse consommation",
@@ -70,7 +70,7 @@ const translations = {
       mainheatDescription: "Descripción de calefacción principal",
       mainheatEnergyEfficiency: "Eficiencia energética de calefacción principal",
       mainheatControllerDescription: "Descripción del controlador principal",
-      mainheatControllerEnergyEfficiency: "Eficiencia del controlador principal",
+      mainheatControllerEnergyEfficiency: "Eficiencia del control de calefacción principal",
   
       lighting: "Iluminación",
       lowEnergyLighting: "Iluminación de bajo consumo",
@@ -100,7 +100,7 @@ const translations = {
       mainheatDescription: "Opis ogrzewania głównego",
       mainheatEnergyEfficiency: "Efektywność energetyczna ogrzewania",
       mainheatControllerDescription: "Opis sterownika ogrzewania",
-      mainheatControllerEnergyEfficiency: "Efektywność energetyczna sterownika",
+      mainheatControllerEnergyEfficiency: "Wydajność głównego sterowania ogrzewaniem",
   
       lighting: "Oświetlenie",
       lowEnergyLighting: "Oświetlenie energooszczędne",
@@ -130,7 +130,7 @@ const translations = {
       mainheatDescription: "主要供暖描述",
       mainheatEnergyEfficiency: "主要供暖能效",
       mainheatControllerDescription: "主要控制器描述",
-      mainheatControllerEnergyEfficiency: "主要控制器能效",
+      mainheatControllerEnergyEfficiency: "主要供暖控制效率",
   
       lighting: "照明",
       lowEnergyLighting: "低能耗照明",

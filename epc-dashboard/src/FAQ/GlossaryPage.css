@@ -10,7 +10,7 @@
 /* Sticky Search Bar & Options */
 .search-bar-container {
   position: sticky;
-  top: 200px; /* Adjusted to make sure it starts below the title and doesn't overlap */
+  top: 100px; /* Adjusted to ensure it starts below the title and doesn't overlap */
   background: white;
   padding: 15px;
   z-index: 10;

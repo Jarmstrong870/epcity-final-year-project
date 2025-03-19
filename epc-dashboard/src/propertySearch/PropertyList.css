@@ -107,6 +107,20 @@ body {
   background-color: #3a5f41;
 }
 
+.table-view th {
+  white-space: normal;
+  /* Allow text to wrap */
+  word-wrap: break-word;
+  /* Ensure wrapping occurs at spaces */
+  text-align: center;
+  /* Keep headers centered */
+  max-width: 120px;
+  /* Adjust as needed */
+  padding: 8px;
+  /* Add padding for readability */
+}
+
+
 /* View Toggle and Compare Button Container */
 .view-toggle-container {
   display: flex;
@@ -152,6 +166,7 @@ body {
   text-align: center;
   border: none;
 }
+
 .compare-checkbox {
   margin: 2%;
 }
@@ -201,8 +216,6 @@ body {
   margin: 0;
   padding: 10px 0;
   width: 100%;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
 }
 
 /* Pagination Buttons */
@@ -265,3 +278,13 @@ body {
     justify-content: center;
   }
 }
+
+@media (max-width: 910px) {
+  .view-toggle button:last-child { 
+    display: none;
+  }
+  .view-toggle-container{
+    margin-left: 0;
+  }
+}
+

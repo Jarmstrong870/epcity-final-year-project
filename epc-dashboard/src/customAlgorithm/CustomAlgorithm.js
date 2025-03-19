@@ -127,6 +127,7 @@ function CustomAlgorithm({ closePopUp }) {
 
   const handlePropertyType = (propertyKey) => {
     setSelectedProperty(propertyKey);
+    setHouseType(propertyKey);
   };
 
   const handleEPCRating = (ratingKey) => {
@@ -249,16 +250,16 @@ function CustomAlgorithm({ closePopUp }) {
                 {["A", "B", "C", "D", "E", "F", "G"].map((rating) => (
                   <div
                     key={rating}
+                    data-rating={rating}
                     className={`epc-rating-card ${selectedRating === rating ? "selected" : ""}`}
                     onClick={() => handleEPCRating(rating)}
                   >
-                    <div className={`epc-rating-house ${selectedRating === rating ? "selected" : ""}`}>
-                      <span className="epc-rating-letter">{rating}</span>
-                    </div>
+                    <span className="rating-label">{rating}</span>
                   </div>
                 ))}
               </div>
             </div>
+
 
             {/* Property Type Selection */}
             <div className="property-type-selection">
@@ -344,3 +345,4 @@ function CustomAlgorithm({ closePopUp }) {
 }
 
 export default CustomAlgorithm;
+
