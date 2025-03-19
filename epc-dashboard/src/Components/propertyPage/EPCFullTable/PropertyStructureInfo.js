@@ -15,8 +15,8 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
   const t = translations[language] || translations.en;
   const [dropdownClick, setDropdownClick] = useState("");
 
-  const {efficiencyGroup, transmittanceStatus} = classifyRoof(properties.roof_description);
-  //const {efficiencyGroup, transmittanceStatus} = classifyRoof("Average thermal transmittance 2 W/m?K");
+  //const {efficiencyGroup, transmittanceStatus} = classifyRoof(properties.roof_description);
+  const {efficiencyGroup, transmittanceStatus} = classifyRoof("Average thermal transmittance 0.15 W/m?K");
 
 
   // Utility function to replace variations of NO DATA! with N/A
@@ -137,7 +137,7 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
         {transmittanceStatus ? (
           <ProgressDial group={efficiencyGroup} />
         ) :(
-          <InsulationMeter valueRange={efficiencyGroup}/>
+          <ProgressDial valueRange={efficiencyGroup}/>
         )} 
 
         <p

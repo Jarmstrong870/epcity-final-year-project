@@ -1,59 +1,25 @@
-.energyInfoContainer {
+/* Container for the whole component */
+.EnergyInfo_energyInfoContainer {
   background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
   width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: block;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.energyHeader {
+/* Main header at the top */
+.EnergyInfo_energyHeader {
   text-align: center;
   font-size: 32px;
   font-weight: bold;
   padding: 20px;
   border-radius: 10px;
-  color: #2c5f2d;
+  color: #000;
   text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1px;
-  border-bottom: 3px solid #2c5f2d;
   margin-bottom: 20px;
 }
 
-.energySection {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  align-items: stretch;
-}
-
-
-.energyBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 25px;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  min-height: 400px; 
-  width: 100%;
-  flex-grow: 1;
-  transition: transform 0.3s ease-in-out;
-}
-
-.energyBox:hover {
-  transform: scale(1.02);
-}
-
-.sectionHeader {
+/* Section headers (for each box) */
+.EnergyInfo_sectionHeader {
   font-size: 1.8rem;
   font-weight: bold;
   color: #2c5f2d;
@@ -62,162 +28,336 @@
   letter-spacing: 1px;
 }
 
+/* ======================================== */
+/* GRID LAYOUT FOR HEATING / LIGHTING / HOT WATER */
+.EnergyInfo_energySection {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;  /* 3 equal columns */
+  grid-template-rows: auto 1fr;       /* row 1: auto-sized; row 2: takes remaining space */
+  gap: 1rem;
+  width: 90%;
+  margin: 0 auto;
+  /* This ensures all items in the same row stretch to match the tallest cell */
+  align-items: stretch;
+}
 
-.energyBox table {
-  width: 100%;
-  border-collapse: collapse;
+/* Left Column: Heating spans 2 rows */
+
+
+/* Key Insights: if you have a second row, columns 2-3 */
+
+.EnergyInfo_leftColumn {
+  grid-column: 1 / 2; /* covers column 1 */
+  grid-row: 1 / 3;    /* covers row 1 and row 2 */
+}
+
+/* Middle Column: Lighting is row 1 only */
+.EnergyInfo_middleColumn {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  /* Removed any forced height so grid can stretch it */
+  min-height: 98%;
+}
+
+/* Right Column: Hot Water is row 1 only */
+.EnergyInfo_rightColumn {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  /* Removed any forced min-height so grid can stretch it */
+  min-height: 98%;
+}
+
+.EnergyInfo_keyInsights {
+  grid-column: 2 / 4;  /* spans columns 2 to 3 */
+  grid-row: 2 / 3;     /* placed in second row */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  width: 98%;
+  /* No forced height so it expands as needed */
+}
+
+/* ======================================== */
+/* Box style used for each cost section */
+.EnergyInfo_energyBox {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-top: 10px;
+  padding: 5px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  margin: 10px auto;
+  flex-grow: 1;
+  transition: transform 0.3s ease-in-out;
+  border: 1px solid #000;
+  /* Keep a fixed minimum height if desired, but remove min-height: 98% */
+  min-height: 80%;
 }
 
-.energyBox th, 
-.energyBox td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
+/* ======================================== */
+/* Styling for cost tables */
+.EnergyInfo_costTable {
+  width: 90%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 10px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.EnergyInfo_costTable th,
+.EnergyInfo_costTable td {
+  border: 2px solid #000;
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
   word-wrap: break-word;
+  font: bold 18px "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
-.visualisedDescriptions {
-  margin-top: 25px;
-  padding-top: 15px;
-  border-top: 2px solid #ddd; 
+.EnergyInfo_costTable thead th {
+  background-color: #fafafa;
+  font: bold 24px "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
-.visualisedDescriptions h4 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-  margin-top: 10px;
+.EnergyInfo_costTable tbody tr:hover {
+  background-color: #fafafa;
 }
 
+/* ======================================== */
+/* Key information cards under the cost table */
+.EnergyInfo_visualisedDescriptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 1rem 0;
+}
 
-.efficiencyStarRatings {
+.EnergyInfo_heatingItem {
+  flex: 1 1 200px;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.EnergyInfo_heatingItem h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.EnergyInfo_heatingItem p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Row container for icons */
+.EnergyInfo_iconsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* Individual icon + label pair */
+.EnergyInfo_iconWithLabel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  text-align: center;
+}
+
+.EnergyInfo_iconWithLabel img {
+  max-width: 48px;
+  height: auto;
+  margin-bottom: 0.25rem;
+}
+
+.EnergyInfo_iconWithLabel p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Efficiency star ratings styling */
+.EnergyInfo_efficiencyStarRatings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
   max-width: 500px;
   padding: 20px;
   border-radius: 15px;
-  background: #f8f9fa; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); 
-  margin-top: 20px; 
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  background: #f8f9fa;
+  margin: 0 auto 10px;
 }
 
-.efficiencyStarRatings:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+.EnergyInfo_efficiencyStarRatingsWater {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #f8f9fa;
+  margin-bottom: 20.5%;
 }
 
-.efficiencyStarRatings h4 {
+.EnergyInfo_efficiencyStarRatings h4 {
   font-size: 1.4rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
 }
 
-.efficiencyStarRatings p {
+.EnergyInfo_efficiencyStarRatings p {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 5px;
   color: #555;
 }
 
-.efficiencyStarRatings[data-value="very good"] {
-  background: #d4edda;
-  color: #00ff3c;
-}
-
-.efficiencyStarRatings[data-value="good"] {
-  background: #fff8e1;
-  color: #ffbf00;
-}
-
-.efficiencyStarRatings[data-value="average"] {
-  background: #e0e0e0; 
-  color: #828282;
-}
-
-.efficiencyStarRatings[data-value="poor"] {
-  background: #ffe5e5;
-  color: #ff0000;
-}
-
-.efficiencyStarRatings[data-value="very poor"] {
-  background: #f8d7da; 
-  color: #721c24;
-}
-
-.progressContainer {
-  width: 100%;
+/* Progress container styling */
+.EnergyInfo_progressContainer {
   max-width: 500px;
-  background: white;
+  background: #fff;
   border-radius: 15px;
   padding: 15px;
   text-align: center;
   align-items: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-.progressContainer progress {
+.EnergyInfo_progressContainer progress {
   width: 100%;
   height: 20px;
   border-radius: 30px;
-  background: #ffffff;
+  background: #fff;
   appearance: none;
 }
 
-.progressContainer p {
+.EnergyInfo_progressContainer p {
   font-size: 20px;
   font-weight: bold;
 }
 
-/* Icons */
-.heatingIcons {
+/* Icons container for sections like Main Heating Sources / Extra Controls */
+.EnergyInfo_iconSection {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.EnergyInfo_heatingIcons {
   display: flex;
   justify-content: center;
   gap: 15px;
   width: 100%;
-  margin-top: 20px;
   flex-wrap: wrap;
 }
 
-.heatingIcons img {
+.EnergyInfo_heatingIcons img {
   width: 60px;
   height: 60px;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
 }
 
-.heatingIcons img:hover {
+.EnergyInfo_heatingIcons img:hover {
   transform: scale(1.1);
 }
 
+/* Key Info row (Fuel, Gas Flag, CO2) */
+.EnergyInfo_keyInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.EnergyInfo_keyInfoItem {
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.EnergyInfo_keyInfoItem h4 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.EnergyInfo_keyInfoItem p {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.EnergyInfo_divider {
+  width: 1px;
+  background-color: #ccc;
+  height: 60px;
+  margin: 0 15px;
+}
+
+.EnergyInfo_keyIconsRow {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.EnergyInfo_iconItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.EnergyInfo_iconItem img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.EnergyInfo_iconItem span {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: #777;
+}
+
+/* ======================================== */
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .energyHeader {
+  .EnergyInfo_energyHeader {
     font-size: 26px;
   }
-  .energySection {
+  .EnergyInfo_energySection {
     grid-template-columns: 1fr;
+    grid-template-rows: auto; /* single column layout on smaller screens */
   }
 }
 
 @media (max-width: 768px) {
-  .energyHeader {
+  .EnergyInfo_energyHeader {
     font-size: 22px;
     padding: 10px;
   }
-
-  .energyBox {
+  .EnergyInfo_energyBox {
     width: 100%;
     margin: 0 auto;
+    /* no forced min-height here either */
   }
-
-  .efficiencyStarRatings {
+  .EnergyInfo_efficiencyStarRatings {
     width: 100%;
   }
 }

@@ -68,7 +68,7 @@ export const fetchGraphData = async (numberOfBedrooms, postcode, setGraphData, s
     const response = await fetch(`http://127.0.0.1:5000/api/property/graph?num_bedrooms=${numberOfBedrooms}&postcode=${postcode}`);
   
     const data = await response.json();
-    console.log("Graph Data:", data);
+
 
     if(data && data.length > 0){
       setGraphData(data);

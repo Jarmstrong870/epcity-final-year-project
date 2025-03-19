@@ -12,6 +12,8 @@ import './PropertyPage.css';
 import axios from "axios";
 import { FavouriteContext } from '../utils/favouriteContext';
 
+
+
 const PropertyPage = ({ user, property, language }) => {
   const { uprn } = useParams();
   const [propertyData, setPropertyData] = useState(null);
@@ -110,15 +112,30 @@ const PropertyPage = ({ user, property, language }) => {
 
   return (
     <div className="property-page">
+      
+
       {showPopup && <div className="popup-message">{popupMessage}</div>}
 
       <div className="property-header">
-        <h2 className="property-title">{propertyData.address}</h2>
-        <div onClick={toggleFavorite} className="starComponent">
-          <FavouriteStar user={user} property={property} />
-        </div>
-        <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
-          📩 Send to Group Chat
+        <div className='property-header-content'>
+          <div className="property-text">
+            <div className='property-header-top'>
+              <h2 className="property-title">
+                <span>{propertyData.address}, {propertyData.local_authority_label}, {propertyData.postcode}</span> <FavouriteStar user={user} property={propertyData} />
+              </h2>
+                <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
+                📩 Send to Group Chat
+                </div>
+            </div>
+                <div className="property-details">
+                  <span>🏠 {propertyData.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
+                  <span>🛏️ {propertyData.number_bedrooms || "N/A"} Bedrooms</span> {/* 5 Bedrooms */}
+                  <span>⚡ {propertyData.current_energy_rating || "N/A"} EPC Rating</span> {/* Energy Rating */}
+                </div>
+
+            
+          </div>
+          
         </div>
       </div>
 
