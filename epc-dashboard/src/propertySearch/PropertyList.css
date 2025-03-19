@@ -30,6 +30,11 @@ body {
   margin-bottom: 20px
 }
 
+.table-view {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
 .property-card {
   background-color: white;
