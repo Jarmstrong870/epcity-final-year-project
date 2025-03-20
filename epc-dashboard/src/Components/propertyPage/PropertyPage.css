@@ -321,3 +321,7 @@ footer {
 .modal-close-button:hover {
   background-color: #c82333;
 }
+
+.Recommendation-Table{
+  margin-top: 20px;
+}

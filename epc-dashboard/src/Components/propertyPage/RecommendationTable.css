@@ -1,0 +1,13 @@
+.RecommendationTable{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.RecommendationTableStyling{
+    width:80%;
+    max-width: 1000px;
+    
+}
