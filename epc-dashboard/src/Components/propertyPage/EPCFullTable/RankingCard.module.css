@@ -1,0 +1,24 @@
+/* RankingCard.module.css - these styles are scoped to RankingCard.js */
+
+.RankingCard {
+    padding: 0.4rem;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+    /* Optional: set a minimum height */
+    min-height: 100px;
+  }
+  
+  .RankingCard h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    color: #444;
+  }
+  
+  .RankingCard p {
+    margin: 0;
+    font-size: 1rem;
+    color: #2c5f2d;
+  }
+  

@@ -13,6 +13,7 @@ import unspecifiedIcon from "../../../assets/heating_icons/unspecified.png";
 import heaterIcon from "../../../assets/heating_icons/electric heater.png";
 import electricIcon from "../../../assets/heating_icons/electric.png";
 import programmerIcon from "../../../assets/heating_icons/programmer.png";
+import RankingCard from "./RankingCard";
 import { mainFuelIcon } from "./descriptionIcons/mainFuelIcons";
 import { waterDescriptionIcon } from "./descriptionIcons/hotWaterIcons";
 import { fetchGraphData } from "../propertyUtils";
@@ -141,14 +142,23 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
   
       const computeRank = (metric) => {
         if (!chartData || chartData.length === 0) return null;
-        const sorted = [...chartData].sort((a, b) => a[metric] - b[metric]);
+        let sorted;
+        if (metric === "Total Floor Area") {
+          // For floor area, higher is better so sort in descending order
+          sorted = [...chartData].sort((a, b) => b[metric] - a[metric]);
+        } else {
+          // For other metrics, lower is better so sort in ascending order
+          sorted = [...chartData].sort((a, b) => a[metric] - b[metric]);
+        }
         const rank = sorted.findIndex((item) => item.uprn === properties.uprn) + 1;
         return { rank, total: sorted.length };
       };
+      
 
       const heatingRankData = computeRank("Heating");
       const hotWaterRankData = computeRank("Hot Water");
       const lightingRankData = computeRank("Lighting");
+      const totalFloorAreaRankData = computeRank("Total Floor Area");
 
   
 
@@ -192,15 +202,29 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
   const yearlyHotWaterCostPerPerson = (yearlyHotWaterCost / bedrooms).toFixed(2);
 
   // Key Insights
+    const billsPerSquareMeter = (yearlyHeatingCost+yearlyHotWaterCost+yearlyLightingCost) / parseInt(properties.total_floor_area);
+    const areaPerPerson = properties.total_floor_area / properties.number_bedrooms;
+    const areaLabel = getAreaRating(areaPerPerson);
 
-  const estimatedAnnualBill = 
-      parseInt(properties.energy_consumption_current) * 
-      parseInt(properties.total_floor_area) * (0.8 * 0.07 + 0.02 * 0.3);
-    const billsPerSquareMeter = estimatedAnnualBill / parseInt(properties.total_floor_area);
-    console.log("total floor area",properties.total_floor_area);
-    console.log(properties.energy_consumption_current);
+    function getAreaRating(areaValue) {
+      if (areaValue < 15) return "Very Poor";
+      if (areaValue < 20) return "Poor";
+      if (areaValue < 25) return "Average";
+      if (areaValue < 30) return "Good";
+      return "Very Good";
+    }
 
-  const squareMetersPerBedroom = properties["total_floor_area"] / properties["number_bedrooms"];
+    function getBillsRating(bills) {
+      // These thresholds are examples – adjust them based on your market data:
+      if (bills < 10.0) return "Very Good";
+      if (bills < 15.0) return "Good";
+      if (bills < 29.0) return "Average";
+      if (bills < 25.0) return "Poor";
+      return "Very Poor";
+    }
+    
+
+
   
 
   // Star rating conditions
@@ -453,55 +477,66 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
           </div>
     
           {/* KEY INSIGHTS (optional) - row 2 columns 2 & 3 */}
-          <div className={`${styles.EnergyInfo_keyInsights} ${styles.EnergyInfo_energyBox}`}>
+          <div className={styles.EnergyInfo_keyInsights}>
           <div className={styles.KeyInsights_container}>
-              <h4 className={styles.KeyInsights_header}>Key Insights</h4>
-              <div className={styles.KeyInsights_grid}>
-                <div className={styles.KeyInsightCard}>
-                  <h4>Bills per m²</h4>
-                  <p>£{billsPerSquareMeter.toFixed(2)}/m²</p>
-                  <span className={styles.insightRating}>Below Average</span>
-                </div>
-                <div className={styles.KeyInsightCard}>
-                  <h4>Estimated Average Annual Bill</h4>
-                  <p>£{estimatedAnnualBill.toFixed(2)}/yr</p>
-                  <small>(80/20 gas-electric)</small>
-                </div>
-                <div className={styles.KeyInsightCard}>
-                  <h4>Area per person</h4>
-                  <p>{(properties["total_floor_area"]/properties["number_bedrooms"]).toFixed(1)} m²/bedroom</p>
-                  <span className={styles.insightRating}>Excellent</span>
-                </div>
+          <div className={styles.KeyInsights_twoColumn}>
+
+            {/* LEFT COLUMN: Title + Insight Boxes */}
+            <div className={styles.KeyInsights_left}>
+              <h2 className={styles.KeyInsights_header}>Key Insights</h2>
+              
+              <div className={styles.KeyInsightCard}>
+                <h4>Bills per m² of Property</h4>
+                <p>£{billsPerSquareMeter.toFixed(2)}/m²</p>
+                <span className={styles.insightRating}>{getBillsRating(billsPerSquareMeter)}</span>
               </div>
-              <div className={styles.KeyInsights_rankings}>
-                <div>
-                  <h5>Heating Rank</h5>
-                  {heatingRankData ? (
-                      <p>{heatingRankData.rank} / {heatingRankData.total}</p>
-                    ) : (
-                      <p>Loading ranking...</p>
-                    )}
-                </div>
-                <div>
-                  <h5>Water Rank</h5>
-                  {hotWaterRankData ? (
-                      <p>{hotWaterRankData.rank} / {hotWaterRankData.total}</p>
-                    ) : (
-                      <p>Loading ranking...</p>
-                    )}
-                </div>
-                <div>
-                  <h5>Lighting Rank</h5>
-                  {lightingRankData ? (
-                      <p>{lightingRankData.rank} / {lightingRankData.total}</p>
-                    ) : (
-                      <p>Loading ranking...</p>
-                    )}
-                </div>
+
+              <div className={styles.KeyInsightCard}>
+                <h4>Total Estimated Heat, Water and Lighting bills</h4>
+                <p>£{(yearlyHeatingCost + yearlyHotWaterCost + yearlyLightingCost).toFixed(2)}/yr</p>
+                
+              </div>
+
+              <div className={styles.KeyInsightCard}>
+                <h4>Area per Person</h4>
+                <p>{(properties.total_floor_area / properties.number_bedrooms).toFixed(1)} m²/bedroom</p>
+                <span className={styles.insightRating}>{areaLabel}</span>
               </div>
             </div>
 
+            {/* RIGHT COLUMN: Ranking Cards (stacked vertically) */}
+            <div className={styles.KeyInsights_right}>
+              {heatingRankData ? (
+                <RankingCard title="Heating Rank" metricName="Heating" rankData={heatingRankData} />
+              ) : (
+                <p>Loading ranking...</p>
+              )}
+
+              {hotWaterRankData ? (
+                <RankingCard title="Hot Water Rank" metricName="Hot Water" rankData={hotWaterRankData} />
+              ) : (
+                <p>Loading ranking...</p>
+              )}
+
+              {lightingRankData ? (
+                <RankingCard title="Lighting Rank" metricName="Lighting" rankData={lightingRankData} />
+              ) : (
+                <p>Loading ranking...</p>
+              )}
+
+              {totalFloorAreaRankData ? (
+                <RankingCard title="Total Floor Area Rank" metricName="Total Floor Area" rankData={totalFloorAreaRankData} />
+              ) : (
+                <p>Loading ranking...</p>
+              )}
+            </div>
+
           </div>
+        </div>
+      </div>
+
+              
+          
     
         </div>
       </div>
