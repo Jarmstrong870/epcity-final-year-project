@@ -373,9 +373,32 @@ def get_property_info(uprn):
     df['energy_consumption_cost_formatted'] = df['energy_consumption_cost'].apply(
         lambda x: locale.currency(x, grouping=True) if pd.notna(x) else None
     )
-        
-    return df
+    
+    # Fetch recommendations
+    lmk_key = df['lmk_key'].iloc[0] if 'lmk_key' in df.columns else None
+    if lmk_key:
+        rec_url = f"https://epc.opendatacommunities.org/api/v1/domestic/recommendations/{lmk_key}"
+        try:
+            with urllib.request.urlopen(urllib.request.Request(rec_url, headers=headers)) as response:
+                rec_data = json.loads(response.read().decode())
+        except Exception as e:
+            print(f"Error fetching recommendations: {e}")
+            rec_data = {}
 
+        if 'rows' in rec_data and rec_data['rows']:
+            rec_df = pd.DataFrame(rec_data['rows'])
+            rec_df = rec_df.rename(columns={col: col.replace('-', '_') for col in rec_df.columns})
+
+            # Select only needed columns
+            rec_columns = ["improvement_summary_text", "indicative_cost"]
+            rec_df = rec_df[rec_columns]
+
+            # Store recommendations as lists in `df`
+            for col in rec_columns:
+                df[col] = [rec_df[col].tolist()]
+
+    return df
+        
 
 """
 Fetches CPI data for Actual Rentals for housing from the Office of National Statistics
