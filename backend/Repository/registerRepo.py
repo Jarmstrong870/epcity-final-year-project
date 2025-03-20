@@ -98,7 +98,7 @@ class RegisterRepo:
             # Execute the SQL query to insert a new user record
             cursor.execute(
                 """
-                INSERT INTO users (user_id, firstname, lastname, email_address, password_hash, "userType")
+                INSERT INTO users (user_id, firstname, lastname, email_address, password_hash, user_type)
                 VALUES (%s, %s, %s, %s, %s, %s);
                 """,
                 (user_id, firstname, lastname, email, password_hash, user_type)

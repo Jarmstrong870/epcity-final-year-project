@@ -35,6 +35,7 @@ import { useLocation } from "react-router-dom"; // Import to detect current page
 import Aboutus from './aboutUs/aboutus';
 import TermsAndConditions from './Components/TermsAndConditions';
 import AboutUs from './aboutUs/aboutus';
+import LandlordDashboard from './login&register/LandlordDashboard';
 import TextToSpeech from './Components/utils/TextToSpeech'; // Import the TextToSpeech component
 
 function App() {
@@ -66,6 +67,7 @@ function App() {
 
   const showLogoutConfirmation = () => {
     setLogoutConfirmVisible(true);
+    console.log("button displayed");
   };
 
   const handleLogout = () => {
@@ -73,7 +75,10 @@ function App() {
     setProfileImage(profileIcon);
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
-    navigate('/');
+    setTimeout(() => {
+      window.alert("Logout successful!");
+      navigate('/');
+    }, 1000);
   };
 
   const cancelLogout = () => {
@@ -117,6 +122,17 @@ function App() {
     <PropertyProvider>
       <FavouriteProvider user={user}>
         <div className="App">
+        {logoutConfirmVisible && (
+            <div className="logout-confirmation-modal">
+              <div className="logout-modal-content">
+                <p>Are you sure you want to log out?</p>
+                <div className="modal-buttons">
+                  <button onClick={handleLogout} className="confirm-button">Yes, Logout</button>
+                  <button onClick={cancelLogout} className="cancel-button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          )}
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className={`logo-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
@@ -145,17 +161,39 @@ function App() {
                   <div className="dropdown-menu">
                     {user ? (
                       <>
-                        <p className="welcome-message">Welcome, {user.firstname}</p>
-                        {user.isAdmin === true && (
-                          <Link to="/admin-dashboard">Admin Dashboard</Link>
+                        <p className="welcome-message">Welcome, {user.firstname}</p>                     
+                        {user.typeUser === "landlord" && (
+                          <Link to="/landlord-dashboard">Landlord View</Link>
                         )}
+
                         <Link to="/account-overview">{t.accountOverview}</Link>
-                        <Link to="/property">{t.myProperties}</Link>
+                        {user.typeUser === "landlord" && (
+                          <Link to="/favourites">Saved Properties</Link>
+                        )}
+                        {user.typeUser != "landlord" && (
+                          <Link to="/favourites">Favourited Properties</Link>
+                        )}
                         <Link to="/messages">{t.messages}</Link>
 
                         <button onClick={showLogoutConfirmation} className="logout-button">
                           {t.logout}
                         </button>
+                        <p 
+                            className={`user-role-label ${
+                              user.isAdmin 
+                                ? 'user-role-label-admin'
+                                : user.user_type === 'landlord'
+                                ? 'user-role-label-landlord'
+                                : 'user-role-label-student'
+                            }`}
+                          >
+                            {user.isAdmin 
+                              ? 'Admin User' 
+                              : user.typeUser === 'landlord' 
+                                ? 'Landlord User' 
+                                : 'Student User'}
+                          </p>
+
                       </>
                     ) : (
                       <>
@@ -199,6 +237,7 @@ function App() {
             <Route path="/admin-dashboard" element={<AdminDashboard user={user} />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/landlord-dashboard" element={<LandlordDashboard user={user}/>} />
             <Route path="/terms" element={<TermsAndConditions />} />
           </Routes>
 
