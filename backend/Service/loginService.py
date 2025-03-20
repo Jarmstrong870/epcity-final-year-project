@@ -20,11 +20,12 @@ def login_user_service(data):
         if not user:
             return {"message": "No account has been found with this email. Please register first."}, 404
 
-        firstname, lastname, stored_password_hash, is_admin = (
+        firstname, lastname, stored_password_hash, is_admin, user_type = (
             user["firstname"], 
             user["lastname"], 
             user["password_hash"], 
-            user["is_admin"]
+            user["is_admin"],
+            user["user_type"]
         )
 
         # Ensure the password hash is properly formatted
@@ -40,7 +41,8 @@ def login_user_service(data):
                 "message": f"Welcome back to EPCity, {firstname}!",
                 "lastname": lastname,
                 "firstname": firstname,
-                "is_admin": is_admin  # Return admin status
+                "is_admin": is_admin,  # Return admin status
+                "user_type": user_type
             }, 200
         else:
             return {"message": "Incorrect password. Please try again."}, 401

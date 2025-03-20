@@ -21,27 +21,36 @@ function Login({ setUser, language }) {
         const response = await axios.post('http://localhost:5000/login', { email, password });
 
         if (response.status === 200) {
-            const { firstname, lastname, is_admin } = response.data;
+            const { firstname, lastname, is_admin, user_type } = response.data;
 
             setUser({
                 firstname,
                 lastname,
                 email,
-                isAdmin: is_admin,  // Store admin status
+                isAdmin: is_admin, 
+                typeUser: user_type 
             });
 
             // Set different messages based on user type
             if (is_admin) {
                 setMessage('Login successful, welcome back, Admin!');
-            } else {
+            } else if (user_type === 'landlord') {
+              setMessage('Login successful, welcome back, Landlord!');
+            }
+            else {
                 setMessage('Login successful, welcome back!');
             }
 
             setSuccess(true); // Set success state to true
 
             setTimeout(() => {
-                // Redirect based on user type
-                navigate(is_admin ? '/admin-dashboard' : '/');
+              if (is_admin) {
+                navigate('/admin-dashboard');
+              } else if (user_type === 'landlord') {
+                navigate('/landlord-dashboard');  // Redirect landlords to landlord dashboard
+              } else {
+                navigate('/'); // Redirect other users to the homepage
+              }
             }, 1000);
         }
     } catch (error) {

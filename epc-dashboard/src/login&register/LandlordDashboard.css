@@ -1,0 +1,175 @@
+.landlord-dashboard {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #333;
+  }
+  
+  .dashboard-header {
+    background: linear-gradient(135deg, #2c3e50, #1e3c72);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .epc-info-section {
+    background: #fdf6b2; /* Light yellow background */
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .epc-info-section h3 {
+    color: #b8860b; 
+    font-size: 1.5rem;
+  }
+  
+  .epc-info-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .epc-info-button {
+    background: #ffa500; 
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .epc-info-button:hover {
+    background: #ff8c00;
+    transform: scale(1.05);
+  }
+  
+  /* EPC Information Section */
+.epc-info-section {
+    background: #fdf6b2; 
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .epc-info-section h3 {
+    color: #b8860b; 
+    font-size: 1.5rem;
+  }
+  
+  .epc-info-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .epc-info-button {
+    background: #ffa500; 
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .epc-info-button:hover {
+    background: #ff8c00; 
+    transform: scale(1.05);
+  }
+  
+  /* EPC Recommendations Section */
+  .epc-recommendations-section {
+    background: #d1f2eb;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .epc-recommendations-section h3 {
+    color: #117a65;
+    font-size: 1.5rem;
+  }
+  
+  .epc-recommendations-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 15px;
+  }
+  
+  .epc-recommendations-button {
+    background: #1abc9c; 
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .epc-recommendations-button:hover {
+    background: #16a085;
+    transform: scale(1.05);
+  }  
+  
+  .stat-card {
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+  }
+  
+  .properties { background: #34495e; }
+  .active-listings { background: #2980b9; }
+  .applications { background: #f39c12; }
+  .rental-income { background: #2c5f2d; }
+  
+  .property-management, .tenant-applications, .messages {
+    margin-top: 40px;
+  }
+  
+  .property-table, .applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  
+  th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
+  
+  .approve-btn { background: #27ae60; color: white; }
+  .reject-btn { background: #e74c3c; color: white; }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+  }
+  
