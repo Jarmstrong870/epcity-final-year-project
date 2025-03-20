@@ -25,8 +25,8 @@
   }
 
   .epc-logo {
-    width: 200px;               /* Adjust the width as needed */
-    margin: 20px auto;          /* Center the logo horizontally */
-    display: block;             /* Ensures the image is treated as a block element */
+    width: 200px;               
+    margin: 20px auto;         
+    display: block;             
   }
   

@@ -1,4 +1,7 @@
-from Repository.accountOverviewRepo import AccountOverviewRepo  # Import repository layer
+try:
+    from Repository.accountOverviewRepo import AccountOverviewRepo  # Works when running backend
+except ModuleNotFoundError:
+    from backend.Repository.accountOverviewRepo import AccountOverviewRepo  # Works when running tests
 from bcrypt import hashpw, checkpw, gensalt
 from supabase import create_client
 import os
