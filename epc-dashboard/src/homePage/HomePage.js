@@ -7,7 +7,6 @@ import translations from '../locales/translations_homepage';
 import CitySection from "./CitySection"; 
 import liverpoolVideo from '../assets/liverpool.mp4'; 
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
-import TextToSpeech from '../Components/utils/TextToSpeech';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
 import PropertyCarousel from '../homePage/PropertyCarousel';
 import EPCSection from './EPCSection';
@@ -68,12 +67,8 @@ const HomePage = ({ user, language }) => {
         {/* 🔹 Dark Overlay */}
         <div className="hero-overlay">
           <div className="welcomeText">
-            <h1 className="mainMessage">
-              {t.welcomeMessage}
-            </h1>
-            <p className="subMessage">
-              {t.subMessage}
-            </p>
+            <h1 className="mainMessage">{t.welcomeMessage}</h1>
+            <p className="subMessage">{t.subMessage}</p>
           </div>
 
           {/* 🔍 Search Bar */}
@@ -86,27 +81,22 @@ const HomePage = ({ user, language }) => {
               placeholder={t.searchPlaceholder}
             />
           </div>
-            <button className="stylingSearchButton" onClick={handleSearch}>
-              {t.searchButton}
-            </button>
-          
-          
-          <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
-            <span className="scrollDownArrow"> {"\u2193"} </span>
+          <button className="stylingSearchButton" onClick={handleSearch}>
+            {t.searchButton}
           </button>
 
+          <button className="scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
+            <span className="scrollDownArrow"> {"\u2193"} </span>
+          </button>
         </div>
       </div>
 
-{/* About Website Section */}
-      <EPCSection  />
-      
-      
+      {/* About Website Section */}
+      <EPCSection />
 
-
-      <pageSection id ="cityGrid">
-      {/* City Section */}
-      <CitySection language={language} />
+      <pageSection id="cityGrid">
+        {/* City Section */}
+        <CitySection language={language} />
       </pageSection>
 
       {/* Custom Algorithm Section */}
@@ -114,25 +104,16 @@ const HomePage = ({ user, language }) => {
         <img src={require('../assets/dream property.jpg')} alt="dream-property" className="custom-algorithm-icon" />
         <div className="custm-algorithm-description">
           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.customAlgorithmTitle}
-            </h2>
-            <TextToSpeech 
-              text={`${t.customAlgorithmTitle}. ${t.customAlgorithmDescription}`} 
-              language={language} 
-            />
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>{t.customAlgorithmTitle}</h2>
           </div>
           <p>{t.customAlgorithmDescription}</p>
-        
           <div>
-              <button className="custom-algorithm-button" onClick={togglePopUp}> Go to Custom Algorithm </button>
-                {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp}/>}
-          </div>
+            <button className="custom-algorithm-button" onClick={togglePopUp}> Go to Custom Algorithm </button>
+            {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp} />}
           </div>
         </div>
+      </div>
 
-
-      
       {/* Top Rated Properties Section */}
       <PropertyCarousel topRatedProperties={topRatedProperties} user={user} language={language} />
 
@@ -145,21 +126,13 @@ const HomePage = ({ user, language }) => {
         />
         <div className="content">
           <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
-              {t.aboutUsTitle}
-            </h2>
-            <TextToSpeech 
-              text={`${t.aboutUsTitle}. ${t.aboutUsDescription1} ${t.aboutUsDescription2}`} 
-              language={language} 
-            />
+            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>{t.aboutUsTitle}</h2>
           </div>
           <p>{t.aboutUsDescription1}</p>
           <p>{t.aboutUsDescription2}</p>
-          </div>
         </div>
-      <div>
-    </div>
-  </>
+      </div>
+    </>
   );
 };
 

@@ -212,6 +212,8 @@ footer {
     height: auto;
   }
 
+}
+
   /* 📩 Send to Group Chat Section */
 .send-group-container {
   display: flex;
@@ -318,5 +320,4 @@ footer {
 
 .modal-close-button:hover {
   background-color: #c82333;
-}
 }

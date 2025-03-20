@@ -39,7 +39,7 @@ const PropertyCard = ({ user, property, language }) => {
       {/* Image Container */}
       <div className="property-card__image-container">
         <StreetViewComponent 
-          address={property.address} 
+          address={property.address.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())} 
           postcode={property.postcode} 
           propertyType={property.property_type}
         />
@@ -48,7 +48,7 @@ const PropertyCard = ({ user, property, language }) => {
       {/* Information Section */}
       <div className="property-card__info">
         <div >
-          <h4 >{property.address}</h4>
+          <h4 >{property.address.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())}</h4>
         </div>
         
         <div className="property-card__postcode-star-line">

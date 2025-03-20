@@ -1,19 +1,16 @@
 from datetime import date
 import datetime
 from decimal import Decimal
+import re
 import unittest
 from unittest.mock import patch, MagicMock
 import pandas as pd
-import sys
-import os
-# Add the parent directory (backend/Repository) to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-import propertyRepo  # Importing from the same Repository directory
+import psycopg2
+from Repository import propertyRepo  # Importing from the same Repository directory
 
 class TestPropertyRepo(unittest.TestCase):
 
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_all_properties_success(self, mock_connect):
         """Test successful retrieval of properties"""
 
@@ -46,7 +43,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_all_properties_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -59,8 +56,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertEqual(result, [])  # Should return an empty list on failure
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
-    @patch('propertyRepo.execute_values')  # Mock bulk insert
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.execute_values')  # Mock bulk insert
     def test_update_properties_in_db_success(self, mock_execute_values, mock_connect):
         """Test successful update of the properties table"""
 
@@ -107,7 +104,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_update_properties_in_db_failure(self, mock_connect):
         """Test error handling when database update fails"""
 
@@ -123,8 +120,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertFalse(result)  # Should return False on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_properties_in_db_partial_failure(self, mock_execute_values, mock_connect):
         """Test rollback when insert fails"""
 
@@ -152,8 +149,8 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
-    @patch('propertyRepo.execute_values')  # Mock bulk insert
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.execute_values')  # Mock bulk insert
     def test_update_inflation_data_in_db_success(self, mock_execute_values, mock_connect):
         """Test successful update of the inflation table"""
 
@@ -180,7 +177,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_update_inflation_data_in_db_failure(self, mock_connect):
         """Test error handling when database update fails"""
 
@@ -196,8 +193,8 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertFalse(result)  # Should return False on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_inflation_data_in_db_partial_failure(self, mock_execute_values, mock_connect):
         """Test rollback when insert fails"""
 
@@ -222,8 +219,8 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
-    @patch('propertyRepo.execute_values')
+    @patch('Repository.propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.execute_values')
     def test_update_inflation_data_in_db_empty_dataframe(self, mock_execute_values, mock_connect):
         """Test handling of empty DataFrame"""
 
@@ -247,7 +244,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_top_rated_from_db_success(self, mock_connect):
         """Test successful retrieval of top 6 rated energy-efficient properties"""
 
@@ -286,7 +283,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_top_rated_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -299,7 +296,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsNone(result)  # Should return None on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_top_rated_from_db_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
@@ -321,7 +318,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_data_from_db_success(self, mock_connect):
         """Test successful retrieval of filtered properties"""
 
@@ -354,7 +351,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -367,7 +364,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsInstance(result, str)  # Should return an error message
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_invalid_sort_order(self, mock_connect):
         """Test ValueError when an invalid sort order is provided"""
 
@@ -384,7 +381,7 @@ class TestPropertyRepo(unittest.TestCase):
         self.assertIsInstance(result, str)
         self.assertIn("Invalid input", result)
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_data_from_db_empty_filtering(self, mock_connect):
         """Test function with no filters applied"""
 
@@ -417,7 +414,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')  # Mock DB connection
+    @patch('Repository.propertyRepo.psycopg2.connect')  # Mock DB connection
     def test_get_area_data_from_db_success(self, mock_connect):
         """Test successful retrieval of properties in a given postcode and bedroom count"""
 
@@ -453,7 +450,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_area_data_from_db_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -466,7 +463,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertIsNone(result)  # Should return None on failure
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_area_data_from_db_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
@@ -488,7 +485,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
         
-    @patch('propertyRepo.psycopg2.connect')
+    @patch('Repository.propertyRepo.psycopg2.connect')
     def test_get_latest_and_lodgement_cpih_success(self, mock_connect):
         """Test successful retrieval of latest and lodgement date CPIH values"""
 
@@ -539,7 +536,7 @@ class TestPropertyRepo(unittest.TestCase):
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_latest_and_lodgement_cpih_connection_failure(self, mock_connect):
         """Test error handling when database connection fails"""
 
@@ -552,7 +549,7 @@ class TestPropertyRepo(unittest.TestCase):
         # Assertions
         self.assertTrue(result.empty)  # Should return an empty DataFrame
 
-    @patch('propertyRepo.psycopg2.connect')  
+    @patch('Repository.propertyRepo.psycopg2.connect')  
     def test_get_latest_and_lodgement_cpih_query_failure(self, mock_connect):
         """Test error handling when query execution fails"""
 
@@ -572,6 +569,97 @@ class TestPropertyRepo(unittest.TestCase):
         self.assertTrue(result.empty)  # Should return an empty DataFrame
         mock_cursor.close.assert_called_once()
         mock_conn.close.assert_called_once()
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_sql_injection_in_search(self, mock_connect):
+        """Ensure SQL injection attempts in search do not execute."""
+
+        # Mock connection and cursor
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        # Simulated SQL Injection Attempt
+        malicious_input = "'; DROP TABLE properties; --"
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=malicious_input)
+
+        # Ensure the query was executed safely with parameterized input
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        # Ensure input is passed as a parameter, NOT in the SQL string
+        assert malicious_input not in executed_query, "Malicious input found in SQL query string!"
+
+        # Check the correctly formatted parameterized input
+        expected_param = f"%{malicious_input}%"  # Wildcards added for SQL LIKE search
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_special_characters_in_search(self, mock_connect):
+        """Ensure special characters in search do not cause failures."""
+
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        special_input = "!@#$%^&*()_+{}|:\"<>?"
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=special_input)
+
+        # Ensure query executed safely
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        # Remove % and _ from expected_param since they are sanitized in the method
+        sanitized_input = re.sub(r"[%_]", "", special_input)
+        expected_param = f"%{sanitized_input}%"
+
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+        
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_excessive_length_input(self, mock_connect):
+        """Ensure excessively long input does not cause database errors."""
+
+        mock_conn = MagicMock()
+        mock_cursor = MagicMock()
+        mock_connect.return_value = mock_conn
+        mock_conn.cursor.return_value = mock_cursor
+
+        long_input = "A" * 5000  # 5000 characters long
+
+        # Call function
+        result = propertyRepo.get_data_from_db(search=long_input)
+
+        # Ensure query executed safely
+        mock_cursor.execute.assert_called_once()
+        executed_query, executed_params = mock_cursor.execute.call_args[0]
+
+        # ✅ Fix: Check that the parameterized version of the string is in executed_params
+        expected_param = f"%{long_input}%"  # Ensure it's wrapped in SQL LIKE wildcards
+        assert expected_param in executed_params, f"Expected {expected_param} in {executed_params}"
+
+
+    @patch('Repository.propertyRepo.psycopg2.connect')
+    def test_database_error_handling(self, mock_connect):
+        """Ensure database errors are handled properly."""
+
+        # Simulate database connection failure
+        mock_connect.side_effect = psycopg2.Error("Database connection failed")
+
+        # Call function (should handle error gracefully)
+        result = propertyRepo.get_data_from_db(search="Test")
+
+        # Ensure the result is an error message, but **does not expose SQL details**
+        assert "Database error" in result or "An error occurred" in result
+        assert "SELECT" not in result  # Ensure raw SQL is NOT exposed
+
         
 if __name__ == '__main__':
     unittest.main()

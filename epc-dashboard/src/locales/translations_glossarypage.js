@@ -48,7 +48,6 @@ const translations = {
         },
         'Property Details': {
           'construction-age-band': { label: 'CONSTRUCTION AGE BAND', description: 'Age band when building part constructed.' },
-          'total-floor-area': { label: 'TOTAL FLOOR AREA', description: 'The total useful floor area of all enclosed spaces (m²).' },
           'number-heated-rooms': { label: 'NUMBER OF HEATED ROOMS', description: 'Number of heated rooms if more than half of habitable rooms are not heated.' },
           tenure: { label: 'TENURE', description: 'Describes the tenure type: Owner-occupied; Rented (social); Rented (private).' },
           'Built form': { label: 'BUILT FORM', description: 'The building type of the Property e.g. Detached, Semi-Detached, Terrace etc. Together with the Property Type, the Build Form produces a structured description of the property.' },
@@ -129,7 +128,6 @@ const translations = {
 
         'Détails de la propriété': {  // Translated "Property Details"
           'construction-age-band': { label: 'TRANCHE D\'ÂGE DE CONSTRUCTION', description: 'Tranche d\'âge lorsque la partie du bâtiment a été construite.' },
-          'total-floor-area': { label: 'SUPERFICIE TOTALE DU SOL', description: 'La superficie utile totale de tous les espaces fermés (m²).' },
           'number-heated-rooms': { label: 'NOMBRE DE CHAMBRES CHAUFFÉES', description: 'Nombre de chambres chauffées si plus de la moitié des chambres habitables ne sont pas chauffées.' },
           tenure: { label: 'STATUT', description: 'Décrit le type de statut : Propriétaire occupant ; Loué (social) ; Loué (privé).' },
           'Built form': { label: 'FORME DU BÂTIMENT', description: 'Le type de bâtiment de la propriété : Détaché, Semi-détaché, Terrasse, etc. En combinaison avec le type de propriété, la forme du bâtiment permet de produire une description structurée de la propriété.' },
@@ -207,7 +205,6 @@ const translations = {
         },
         'Detalles de la propiedad': {  // Translated "Property Details"
           'construction-age-band': { label: 'RANGO DE EDAD DE CONSTRUCCIÓN', description: 'Rango de edad cuando se construyó la parte del edificio.' },
-          'total-floor-area': { label: 'ÁREA TOTAL DEL PISO', description: 'El área útil total de todos los espacios cerrados (m²).' },
           'number-heated-rooms': { label: 'NÚMERO DE HABITACIONES CALENTADAS', description: 'Número de habitaciones calefaccionadas si más de la mitad de las habitaciones habitables no están calefaccionadas.' },
           tenure: { label: 'ESTADO', description: 'Describe el tipo de estado: Propietario ocupante; Alquilado (social); Alquilado (privado).' },
           'Built form': { label: 'FORMA DE CONSTRUCCIÓN', description: 'El tipo de construcción de la propiedad: Independiente, Semi-independiente, Adosada, etc. Junto con el tipo de propiedad, la forma de construcción produce una descripción estructurada de la propiedad.' },
@@ -218,8 +215,8 @@ const translations = {
           'Main Heating Controls': { label: 'CONTROLES DE CALEFACCIÓN PRINCIPALES', description: 'Tipo de controles principales de calefacción. Incluye ambos sistemas principales de calefacción si hay dos.' },
           'Mainheat Description': { label: 'DESCRIPCIÓN DE LA CALEFACCIÓN PRINCIPAL', description: 'Descripción general de la característica de calefacción.' },
           'Mainheat Controller Description': { label: 'DESCRIPCIÓN DEL CONTROLADOR DE CALEFACCIÓN PRINCIPAL', description: 'Descripción general del controlador de calefacción principal.' },
-          'Multi Glaze Proportion': { label: 'PROPORCIÓN DE CRISTAL MULTIPLE', description: 'La proporción estimada del área total acristalada de la propiedad que está doblemente acristalada.' },
-          'Glazed Type': { label: 'TIPO DE CRISTAL', description: 'El tipo de cristal. Según el British Fenestration Rating Council o la declaración del fabricante.' },
+          'Multi Glaze Proportion': { label: 'PROPORCIÓN DE VIDRIO MÚLTIPLE', description: 'La proporción estimada del área total acristalada de la propiedad que está doblemente acristalada.' },
+          'Glazed Type': { label: 'TIPO DE VIDRIO', description: 'El tipo de cristal. Según el British Fenestration Rating Council o la declaración del fabricante.' },
           'Glazed Area': { label: 'ÁREA ACRISTALADA', description: 'Estimación del área total acristalada del Área Habitable.' },
           'Windows Description': { label: 'DESCRIPCIÓN DE LAS VENTANAS', description: 'Descripción general de las ventanas de la propiedad.' },
           'Total Floor Area': { label: 'ÁREA TOTAL DEL PISO', description: 'El área total útil es el total de todos los espacios cerrados medidos hasta la cara interna de las paredes exteriores.' },
@@ -284,7 +281,6 @@ const translations = {
         },
         'Szczegóły nieruchomości': {  // Translated "Property Details"
       'construction-age-band': { label: 'PASMO WIEKOWE BUDOWLI', description: 'Zakres wiekowy, kiedy część budynku została zbudowana.' },
-      'total-floor-area': { label: 'CAŁKOWITA POWIERZCHNIA PODŁOGI', description: 'Całkowita powierzchnia użytkowa wszystkich zamkniętych przestrzeni (m²).' },
       'number-heated-rooms': { label: 'LICZBA OGRZEWANYCH POMIESZCZEŃ', description: 'Liczba ogrzewanych pomieszczeń, jeśli więcej niż połowa pomieszczeń nadających się do zamieszkania nie jest ogrzewana.' },
       tenure: { label: 'STATUS', description: 'Opisuje rodzaj statusu: Właściciel zamieszkujący; Wynajmowane (społeczne); Wynajmowane (prywatne).' },
       'Built form': { label: 'FORMA BUDOWLI', description: 'Rodzaj budynku nieruchomości: Oddzielny, Półoddzielny, Segmentowy, itp. Razem z rodzajem nieruchomości, forma budowli pozwala na stworzenie strukturalnego opisu nieruchomości.' },
@@ -361,7 +357,6 @@ const translations = {
         },
         '房产详情': {  // Translated "Property Details"
           'construction-age-band': { label: '建筑年龄范围', description: '建筑部分建造的年龄范围' },
-          'total-floor-area': { label: '总楼面面积', description: '所有封闭空间的总有效面积（平方米）' },
           'number-heated-rooms': { label: '加热房间数', description: '加热房间的数量，如果超过一半的可居住房间没有加热' },
           tenure: { label: '居住状况', description: '描述居住类型：自有住宅；社会租赁；私人租赁' },
           'Built form': { label: '建筑形式', description: '房产的建筑类型，如独立式、半独立式、联排别墅等。与房产类型结合，建筑形式提供了房产的结构描述' },

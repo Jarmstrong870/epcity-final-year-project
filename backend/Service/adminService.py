@@ -1,5 +1,15 @@
-from Repository.adminRepo import fetch_users_from_db, update_user_block_status, delete_user, fetch_active_users_count, fetch_total_properties_count, fetch_messages_last_24_hours
-
+try:
+    from Repository.adminRepo import (
+        fetch_users_from_db, update_user_block_status, delete_user, 
+        fetch_active_users_count, fetch_total_properties_count, fetch_messages_last_24_hours
+    )
+# If that fails (e.g., during testing), import with the full package path
+except ModuleNotFoundError:
+    from backend.Repository.adminRepo import (
+        fetch_users_from_db, update_user_block_status, delete_user, 
+        fetch_active_users_count, fetch_total_properties_count, fetch_messages_last_24_hours
+    )
+    
 def get_all_users():
     return fetch_users_from_db()
 

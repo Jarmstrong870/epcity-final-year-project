@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./EnergyInfo.module.css";
+import { Link } from 'react-router-dom';
 import { efficiencyRatingToNumber } from "../../Compare_utils/Compare_utils";
 import "../../Compare_utils/HighlightedValue.css";
 import translations from "./locales/translations_energyinformation";
