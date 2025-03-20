@@ -41,7 +41,10 @@ def find_user_by_email(email):
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 
                 cursor.execute(
-                    "SELECT firstname, lastname, password_hash, is_admin, is_blocked FROM users WHERE email_address = %s;",
+                    """
+                    SELECT firstname, lastname, password_hash, is_admin, is_blocked, user_type 
+                    FROM users WHERE email_address = %s;
+                    """,
                     (email,)
                 )
                 user = cursor.fetchone()
@@ -56,7 +59,8 @@ def find_user_by_email(email):
                     "firstname": user["firstname"],
                     "lastname": user["lastname"],
                     "password_hash": user["password_hash"],
-                    "is_admin": user["is_admin"]
+                    "is_admin": user["is_admin"],
+                    "user_type": user["user_type"]
                 }
     except Exception as e:
         print(f"Error finding user by email: {e}")
