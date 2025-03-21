@@ -408,7 +408,6 @@ return (
 
 
       </div>
-      <TextToSpeech text={t.groupChats} language={language} />
     </div>
 
 
