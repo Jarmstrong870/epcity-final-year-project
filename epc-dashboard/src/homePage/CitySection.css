@@ -18,6 +18,45 @@
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.about-us-button-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-us-button-header {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.about-us-paragraph {
+  font-size: 1rem;
+}
+
+.about-us-page-button {
+  padding: 16px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #3a6b36, #1e4020);
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(44, 95, 45, 0.3);
+  text-align: center;
+  display: flex;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.about-us-page-button:hover {
+  background: #50bc3b;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+}
+
   /*******************************************************
     ANIMATION KEYFRAMES (UNCHANGED)
   ********************************************************/

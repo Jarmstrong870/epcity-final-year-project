@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
@@ -13,6 +13,7 @@ import PropertyCarousel from '../homePage/PropertyCarousel';
 import EPCSection from './EPCSection';
 import FavouritePage from '../Components/FavouritePage';
 import GroupChats from '../login&register/messages';
+import AboutUs from '../aboutUs/aboutus';
 //import FAQs from '../FAQ/FAQ';
 
 const HomePage = ({ user, language }) => {
@@ -40,6 +41,14 @@ const HomePage = ({ user, language }) => {
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  const handleFavouritesCheck = () => {
+    navigate(user ? "/favourites" : "/login");
+  };
+
+  const handleGroupChatsCheck = () => {
+    navigate(user ? "/messages" : "/login");
   };
 
   const togglePopUp = () => {
@@ -128,7 +137,9 @@ const HomePage = ({ user, language }) => {
               <p>{"\u{2B50}"} Never lose track of an amazing, highly efficient property!</p>
               <p>{"\u{1F3E0}"} Add properties to your 'Favourites' and access them with just one click at any time</p>
             </div>
-            <a href="#" className="functionality-button">Visit Favourites Page</a>
+            <button className="functionality-button" onClick={handleFavouritesCheck}>
+              Visit Favourites Page
+            </button>
           </div>
 
           {/* Group Chat Section */}
@@ -141,7 +152,9 @@ const HomePage = ({ user, language }) => {
               <p>{"\u{1F4E2}"} Saved and Share to stay connected!</p>
               <p>{"\u{1F4CC}"} Share properties, discuss options and plan your next 'humble abode' with your friends!</p>
             </div>
-            <a href="#" className="functionality-button">Visit Group Chats</a>
+            <button className="functionality-button" onClick={handleGroupChatsCheck}>
+              Visit Group Chats
+            </button>
           </div>
 
           {/* FAQ Section */}
@@ -154,7 +167,9 @@ const HomePage = ({ user, language }) => {
               <p>{"\u{1F92F}"} Don't let the professional 'property' jargon stop you from getting your dream property!</p>
               <p>{"\u{1F4DA}"} Learn about property efficiency by visiting our Glossary of Terms, FAQs with tutorials!</p>
             </div>
-            <a href="#" className="functionality-button">Visit FAQs</a>
+            <button className="functionality-button" onClick={() => navigate("/FAQs")}>
+              Visit FAQs Page
+            </button>
           </div>
         </div>
       </div>
@@ -247,9 +262,9 @@ const HomePage = ({ user, language }) => {
           <div className="about-us-button-block">
             <h2 className="about-us-button-header"> {"\u{1F4A1}"} Want to find out more?</h2>
             <p> 
-              <button className="about-us-page-button">
-                Visit our About Us Page
-              </button>
+            <button className="about-us-page-button" onClick={() => navigate("/about-us")}>
+              Visit Our About Us Page
+            </button>
             </p>
           </div>
           
