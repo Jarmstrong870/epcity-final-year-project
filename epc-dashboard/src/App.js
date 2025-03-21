@@ -145,63 +145,68 @@ function App() {
           
             <div className="header-right">
               {/* Add TextToSpeech toggle button here before language selector */}
-              <div className="tts-toggle-container">
-                <TextToSpeech text={t.epcInformation} language={language} />
-              </div>
+              
 
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
 
               <div className="profile-icon" onClick={toggleDropdown}>
-                <img src={profileImage} alt="Profile" className="profile-img" />
-                {dropdownVisible && (
-                  <div className="dropdown-menu">
-                    {user ? (
-                      <>
-                        <p className="welcome-message">Welcome, {user.firstname}</p>                     
-                        {user.typeUser === "landlord" && (
-                          <Link to="/landlord-dashboard">Landlord View</Link>
-                        )}
+  <img src={profileImage} alt="Profile" className="profile-img" />
+  {dropdownVisible && (
+    <div className="dropdown-menu">
+      {user ? (
+        <>
+          <p className="welcome-message">Welcome, {user.firstname}</p>
+          {user.typeUser === "landlord" && (
+            <Link to="/landlord-dashboard">Landlord View</Link>
+          )}
+          <Link to="/account-overview">{t.accountOverview}</Link>
+          {user.typeUser === "landlord" && (
+            <Link to="/favourites">Saved Properties</Link>
+          )}
+          {user.typeUser !== "landlord" && (
+            <Link to="/favourites">Favourited Properties</Link>
+          )}
+          <Link to="/messages">{t.messages}</Link>
+          
+          {/* Add TextToSpeech toggle just above Logout */}
+          <div className="tts-toggle-container" onClick={(e) => e.stopPropagation()}>
+            <TextToSpeech text={t.epcInformation} language={language} />
+          </div>
 
-                        <Link to="/account-overview">{t.accountOverview}</Link>
-                        {user.typeUser === "landlord" && (
-                          <Link to="/favourites">Saved Properties</Link>
-                        )}
-                        {user.typeUser != "landlord" && (
-                          <Link to="/favourites">Favourited Properties</Link>
-                        )}
-                        <Link to="/messages">{t.messages}</Link>
+          <button onClick={showLogoutConfirmation} className="logout-button">
+            {t.logout}
+          </button>
+          <p 
+            className={`user-role-label ${
+              user.isAdmin 
+                ? 'user-role-label-admin' 
+                : user.typeUser === 'landlord' 
+                  ? 'user-role-label-landlord' 
+                  : 'user-role-label-student'
+            }`}
+          >
+            {user.isAdmin 
+              ? 'Admin User' 
+              : user.typeUser === 'landlord' 
+                ? 'Landlord User' 
+                : 'Student User'
+            }
+          </p>
+        </>
+      ) : (
+        <>
+          <Link to="/login">{t.login}</Link>
+          <Link to="/register">{t.register}</Link>
+        </>
+      )}
+    </div>
+  )}
+</div>
 
-                        <button onClick={showLogoutConfirmation} className="logout-button">
-                          {t.logout}
-                        </button>
-                        <p 
-                            className={`user-role-label ${
-                              user.isAdmin 
-                                ? 'user-role-label-admin'
-                                : user.user_type === 'landlord'
-                                ? 'user-role-label-landlord'
-                                : 'user-role-label-student'
-                            }`}
-                          >
-                            {user.isAdmin 
-                              ? 'Admin User' 
-                              : user.typeUser === 'landlord' 
-                                ? 'Landlord User' 
-                                : 'Student User'}
-                          </p>
 
-                      </>
-                    ) : (
-                      <>
-                        <Link to="/login">{t.login}</Link>
-                        <Link to="/register">{t.register}</Link>
-                      </>
-                    )}
-                  </div>
-                )}
-              </div>
+
             </div>
           </div>
 

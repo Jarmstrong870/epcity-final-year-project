@@ -15,7 +15,7 @@ const translations = {
     tableView: 'Table View',
     cardView: 'Card View',
     compare: 'Compare',
-    favorite: 'Favorite',
+    favorite: 'Favourite',
     compareSpeech: 'Pick 2 or more properties to compare',
     previous: 'Previous',    
     next: 'Next'             

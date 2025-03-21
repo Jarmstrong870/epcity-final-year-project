@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Switch from "react-switch";
 import "./TextToSpeech.css";
 
-// Mapping language codes to Web Speech API-supported codes
 const languageMap = {
   en: "en-GB",
   fr: "fr-FR",
@@ -11,7 +10,6 @@ const languageMap = {
   zh: "zh-CN",
 };
 
-// Function to remove emojis from text
 const removeEmojis = (text) => {
   return text.replace(/[\uD800-\uDFFF]/g, "");
 };
@@ -21,8 +19,8 @@ const TextToSpeech = ({ language }) => {
   const [utterance, setUtterance] = useState(null);
   const [currentVoice, setCurrentVoice] = useState(null);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
+  const [showSpeechBubble, setShowSpeechBubble] = useState(false);
 
-  // Function to get and update available voices
   const updateVoices = () => {
     const voices = window.speechSynthesis.getVoices();
 
@@ -36,7 +34,6 @@ const TextToSpeech = ({ language }) => {
     const selectedLanguage = languageMap[language] || "en-GB";
     let preferredVoices = voices.filter((v) => v.lang === selectedLanguage);
 
-    // Prioritize high-quality English voices
     if (language === "en") {
       preferredVoices = voices.filter(
         (v) =>
@@ -48,7 +45,6 @@ const TextToSpeech = ({ language }) => {
       );
     }
 
-    // Pick the best available voice
     const bestVoice =
       preferredVoices[0] ||
       voices.find((v) => v.lang.startsWith("en")) ||
@@ -57,25 +53,20 @@ const TextToSpeech = ({ language }) => {
     setCurrentVoice(bestVoice);
   };
 
-  // Load voices initially
   useEffect(() => {
     if (window.speechSynthesis.onvoiceschanged !== undefined) {
       window.speechSynthesis.onvoiceschanged = updateVoices;
     }
-
     updateVoices();
   }, []);
 
-  // Handle language change: update the voice, reset toggle, and refresh voices
   useEffect(() => {
-    window.speechSynthesis.cancel(); // Stop current speech
-    setIsToggledOn(false); // Auto-turn off toggle
-    setVoicesLoaded(false); // Force voice reload
-
-    setTimeout(updateVoices, 200); // Ensure voices update
+    window.speechSynthesis.cancel();
+    setIsToggledOn(false);
+    setVoicesLoaded(false);
+    setTimeout(updateVoices, 200);
   }, [language]);
 
-  // Function to speak text with the best voice
   const speakText = (text) => {
     if (!voicesLoaded) return;
 
@@ -95,63 +86,21 @@ const TextToSpeech = ({ language }) => {
     setUtterance(newUtterance);
   };
 
-  // Handle dropdown hover (since `option` does not support hover events)
-  const handleDropdownHover = (event) => {
-    if (isToggledOn) {
-      const selectedIndex = event.target.selectedIndex;
-      const selectedOption = event.target.options[selectedIndex];
-      speakText(selectedOption.textContent);
-    }
-  };
-
-  // Handle text selection (highlight)
-  const handleHighlightText = () => {
-    const selectedText = window.getSelection().toString();
-    if (selectedText) {
-      speakText(selectedText);
-    }
-  };
-
-  // Handle hover for buttons, links, and other interactive elements
-  const handleHover = (event) => {
-    if (isToggledOn) {
-      const target = event.target;
-      if (target.matches("button, a")) {
-        speakText(target.textContent);
-      }
-    }
-  };
-
-  // Attach event listeners
-  useEffect(() => {
-    if (isToggledOn) {
-      document.addEventListener("mouseup", handleHighlightText);
-      document.addEventListener("mouseover", handleHover);
-
-      // Add hover event to all dropdowns
-      const dropdowns = document.querySelectorAll("select");
-      dropdowns.forEach((dropdown) => {
-        dropdown.addEventListener("mouseover", handleDropdownHover);
-      });
-
-      return () => {
-        document.removeEventListener("mouseup", handleHighlightText);
-        document.removeEventListener("mouseover", handleHover);
-        dropdowns.forEach((dropdown) => {
-          dropdown.removeEventListener("mouseover", handleDropdownHover);
-        });
-      };
-    }
-  }, [isToggledOn]);
-
-  // Toggle function
   const toggleSpeech = () => {
     setIsToggledOn(!isToggledOn);
+    setShowSpeechBubble(!isToggledOn); // Only show speech bubble if toggle is on
+  };
+
+  // Close speech bubble
+  const closeSpeechBubble = () => {
+    setShowSpeechBubble(false);
   };
 
   return (
     <div className="tts-toggle-container">
-      <label className="tts-label">TEXT TO SPEECH</label>
+      <label className="tts-label">Text To Speech</label>
+
+      {/* Toggle switch */}
       <Switch
         onChange={toggleSpeech}
         checked={isToggledOn}
@@ -164,6 +113,22 @@ const TextToSpeech = ({ language }) => {
         checkedIcon={false}
         className="react-switch"
       />
+
+      {/* Speech Bubble with instructions */}
+      {showSpeechBubble && (
+        <div className="speech-bubble">
+          {/* Close bubble div */}
+          <div className="close-bubble" onClick={closeSpeechBubble}>
+            X
+          </div>
+          <ol>
+            <li>You can trigger text to speech in 3 ways:</li>
+            <li>1. Hover over buttons or links.</li>
+            <li>2. Highlight text with your cursor and it will be read aloud.</li>
+            <li>3. Select a dropdown option to hear it spoken.</li>
+          </ol>
+        </div>
+      )}
     </div>
   );
 };
