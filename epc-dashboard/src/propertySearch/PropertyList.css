@@ -119,10 +119,11 @@ body {
   /* Ensure wrapping occurs at spaces */
   text-align: center;
   /* Keep headers centered */
-  max-width: 120px;
+  max-width: 100px;
   /* Adjust as needed */
   padding: 8px;
   /* Add padding for readability */
+  background-color: #16471F;
 }
 
 
@@ -145,6 +146,7 @@ body {
   border-radius: 25px;
   font-weight: bold;
   transition: all 0.3s ease;
+  border-color: #3a5f41;
 }
 
 .view-toggle button.active {
@@ -216,8 +218,9 @@ body {
 /* Pagination Container */
 .pagination-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 5px; /* Space between buttons */
   margin: 0;
   padding: 10px 0;
   width: 100%;
@@ -230,7 +233,7 @@ body {
   font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: #1a2e2d;
+  background-color: #16471F;
   border: none;
   border-radius: 8px;
   cursor: pointer;

@@ -1,7 +1,7 @@
 const translations = {
   en: {
     findYourProperty: 'Find Your Property',
-    search: 'Search by address...',
+    search: 'Search by address or postcode...',
     findProperties: 'Find Properties',
     propertyTypes: 'Property Types',
     epcRatings: 'EPC Ratings',

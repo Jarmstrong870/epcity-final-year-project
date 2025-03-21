@@ -253,6 +253,13 @@ def get_property_info(uprn):
     # Convert the data to a DataFrame
     df = pd.DataFrame(data['rows'])
     
+    for col in df.columns:
+        df[col] = df[col].apply(
+            lambda val: 'Data Unavailable'
+            if pd.isna(val) or str(val).strip().upper() in ['N/A', 'NO DATA!', 'NODATA!', '', None]
+            else val
+    )
+    
     df['uprn'] = pd.to_numeric(df['uprn'], errors='coerce')
 
     # Convert 'lodgement-datetime' to datetime for sorting
