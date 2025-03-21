@@ -388,6 +388,10 @@ return (
         <TextToSpeech text={t.groupChats} language={language} />
       </h2>
 
+      <button className="create-group-button" onClick={() => confirmationPopUp("create")}>
+        {t.createNewGroup}
+      </button>
+
       <div className="groups-list">
         {groups.length === 0 ? (
           <p className="no-groups-message">{t.noGroupsFound}</p>
@@ -403,9 +407,6 @@ return (
           ))
         )}
 
-      <button className="create-group-button" onClick={() => confirmationPopUp("create")}>
-        {t.createNewGroup}
-      </button>
 
       </div>
     </div>
