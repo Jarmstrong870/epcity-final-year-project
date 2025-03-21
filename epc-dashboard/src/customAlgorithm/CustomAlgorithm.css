@@ -26,6 +26,36 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
+.custom-algorithm-progress-container {
+  text-align: center;
+  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  background-color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.custom-algorithm-progress {
+  width: 100%;
+  max-width: 500px;
+  background-color: #e0e0e0;
+  border-radius: 15px;
+  height: 10px;
+  overflow: hidden;
+  align-items: center;
+  margin: auto;
+}
+
+.custom-algorithm-progress-bar {
+  height: 100%;
+  background-color: #3a6b36;
+  transition: width 0.3s ease-in-out;
+  align-items: center;
+}
+
 /* Inner Content Wrapping */
 .custom-algorithm-base {
   flex: 1;
@@ -48,12 +78,20 @@
   cursor: pointer;
   border-radius: 0.5rem;
   padding: 0.25rem 0.5rem;
+  z-index: 1100;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s;
 }
 
 .custom-algorithm-close .cancel-button:hover {
   background-color: #f0f0f0;
   border-color: #000;
+}
+
+.custom-algorithm-progress-container p {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #1b3b1a;
+  margin-bottom: 10px;
 }
 
 /* Labels + Inputs */

@@ -33,11 +33,11 @@ const CitySection = ({ language }) => {
     <div className="uk-cities-section">
       {/* Title with Microphone */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
-        <h2 className="uk-cities-title">{t.ukCitiesTitle}</h2>
+        <h2 className="uk-cities-title">{"\u{1F30D}"}{t.ukCitiesTitle}</h2>
         <TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />
       </div>
 
-      <p className="uk-cities-subtitle">{t.ukCitiesSubtitle}</p>
+      <h4 className="uk-cities-subtitle">{t.ukCitiesSubtitle}</h4>
 
       {/* City Cards */}
       <div className="cities-grid">

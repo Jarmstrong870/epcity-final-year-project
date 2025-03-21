@@ -8,6 +8,20 @@ body {
   color: #333;
 }
 
+section {
+  padding: 60px 10%;
+}
+
+.background-section1 {
+  background: #f9f9f9; /* Light grey */
+  padding: 60px 10%;
+}
+
+.background-section2 {
+  background: #e6e6e6; /* Medium-light grey */
+  padding: 60px 10%;
+}
+
 /* ===========================
    Background Image Section with Overlay
    =========================== */
@@ -26,6 +40,9 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* ===========================
+   Welcome Text
+   =========================== */
 .backgroundImageStyling::before {
   content: '';
   position: absolute;
@@ -35,6 +52,46 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
   z-index: 1;
+}
+
+/* Welcome Text Styling */
+.welcomeText {
+  z-index: 2;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.welcomeText .mainMessage {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;  
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  margin-top: 200px;
+  line-height: 1.2;
+  background: none; 
+  padding: 0;
+  border:none;
+}
+
+.welcomeText .subMessage {
+  font-size: 1.5rem; /* Slightly larger for better readability */
+  font-weight: 500; /* Medium weight for a refined look */
+  margin-top: 15px;
+  color: #ffffff; /* Pure white for contrast */
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
+  letter-spacing: 0.5px; /* Slight spacing for a clean look */
+  text-align: center;
+  max-width: 700px; /* Restrict width for better readability */
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6; /* Improved spacing between lines */
+  opacity: 0.9; /* Subtle fade effect */
+}
+
+
+.welcomeText span {
+  display: block;
 }
 
 /* ===========================
@@ -110,44 +167,6 @@ body {
   z-index: 2;
 }
 
-/* ===========================
-   Welcome Text (Hero)
-   =========================== */
-.welcomeText {
-  z-index: 2;
-  color: white;
-}
-
-.welcomeText .mainMessage {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;  
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  margin: 0;
-  line-height: 1.2;
-  background: none; 
-  padding: 0;
-  border: none;
-}
-
-.welcomeText .subMessage {
-  font-size: 1.5rem; /* Slightly larger for better readability */
-  font-weight: 500; /* Medium weight for a refined look */
-  margin-top: 15px;
-  color: #ffffff; /* Pure white for contrast */
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
-  letter-spacing: 0.5px; /* Slight spacing for a clean look */
-  text-align: center;
-  max-width: 700px; /* Restrict width for better readability */
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6; /* Improved spacing between lines */
-  opacity: 0.9; /* Subtle fade effect */
-}
-
-.welcomeText span {
-  display: block;
-}
 
 /* ===========================
    Search Bar - Modern & Enhanced
@@ -226,20 +245,27 @@ body {
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
+/* ===========================
+   Functionality Bar
+   =========================== */
+
 .functionality-container {
-  background-color: #ffffff;
+  background: #f9f9f9ab; /* Subtle background */
   width: 95%;
-  margin: auto;
-  padding: 20px;
+  margin-bottom: 2%;
+  padding: 50px;
   border-radius: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); 
 }
 
 .functionality-bar-header {
-  text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: bold;
-  margin-bottom: 30px;
-  text-decoration: underline;
+  color: #2c3e3d;
+  text-align: center;
+  margin-bottom: 45px;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .functionalityBar {
@@ -254,7 +280,7 @@ body {
   background: #ffffff;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5); 
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -267,22 +293,15 @@ body {
   flex-direction: column;
   align-items: center;
   margin-bottom: 25px;
+  font-size: 1.6rem; 
+  font-weight: bold;
+  color: #1e4020;
 }
 
 .functionality-icon {
   font-size: 2.5rem;
   display: block; 
   margin-bottom: 10px;
-}
-
-.functionality-icon.heart {
-  color: red;
-}
-
-.functionality-title {
-  font-size: 1.4rem; 
-  font-weight: bold;
-  color: #1e4020;
 }
 
 
@@ -299,7 +318,7 @@ body {
   justify-content: center;
   gap: 8px;
   margin-bottom: 10px;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 
@@ -319,117 +338,9 @@ body {
 }
 
 /* ===========================
-   Modern & Sleek About Section
+   Most Efficient Properties
    =========================== */
-/* 📱 Responsive Tweaks */
-@media (max-width: 768px) {
-  .stylingSearchBar {
-    flex-direction: row;
-    width: 100%;
-    max-width: 600px;
-    padding: 15px;
-  }
 
-  .stylingSearchInput {
-    font-size: 16px;
-    padding: 12px 15px;
-  }
-
-  .stylingSearchButton {
-    width: 100%;
-    justify-content: center;
-    font-size: 16px;
-    padding: 12px;
-  }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-logo {
-    width: 120px;
-  }
-
-  .welcomeText .mainMessage {
-    font-size: 2.5rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 1rem;
-  }
-
-  .stylingSearchBar {
-    flex-direction: row;
-    padding: 10px;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .welcomeText .mainMessage {
-    font-size: 2rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 0.9rem;
-  }
-
-  .stylingSearchBar {
-    padding: 10px;
-  }
-}
-
-.backgroundImageStyling::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4); /* Dark overlay for readability */
-  z-index: 1;
-}
-
-/* Welcome Text Styling */
-.welcomeText {
-  z-index: 2;
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.welcomeText .mainMessage {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;  
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  margin-top: 200px;
-  line-height: 1.2;
-  background: none; 
-  padding: 0;
-  border:none;
-}
-
-.welcomeText .subMessage {
-  font-size: 1.5rem; /* Slightly larger for better readability */
-  font-weight: 500; /* Medium weight for a refined look */
-  margin-top: 15px;
-  color: #ffffff; /* Pure white for contrast */
-  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
-  letter-spacing: 0.5px; /* Slight spacing for a clean look */
-  text-align: center;
-  max-width: 700px; /* Restrict width for better readability */
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6; /* Improved spacing between lines */
-  opacity: 0.9; /* Subtle fade effect */
-}
-
-
-.welcomeText span {
-  display: block;
-}
-
-/* Top Rated Properties Section */
 .most-efficient-properties {
   margin: 20px auto;
   padding: 20px 20px;
@@ -473,20 +384,23 @@ body {
   border-bottom: 3px solid #ddd;
 }
 
+/* ===========================
+   About Us Section
+   =========================== */
+
 .about-us-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   width: 100%;
-  max-width: 90%;
+  max-width: 95%;
   margin: 40px auto;
   padding: 2rem 4%;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
-
 
 .about-us-section__left {
   flex: 1;
@@ -498,14 +412,12 @@ body {
 }
 
 .about-us__image {
-  width: 100%; 
-  height: auto; 
-  max-height: 250px; 
+  width: 80%; 
+  max-height: 350px; 
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   object-fit: cover;
 }
-
 
 .about-us-section__right {
   flex: 1;
@@ -513,12 +425,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 50px;
+  margin-left: 40px;
 }
 
-
 .about-us-section__right h2 {
-  font-size: 1.7rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #1e4020;
   margin-bottom: 1rem;
@@ -530,7 +441,7 @@ body {
 }
 
 .about-us-section__right p {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   color: #333;
   line-height: 1.6;
   margin-bottom: 1rem;
@@ -540,108 +451,208 @@ body {
   padding: 0;
   margin: 0; 
   align-items: center;
+  line-height: 1.8;
 }
 
 .about-us-list li {
-  font-size: 1rem;
+  font-size: 1.3rem;
   margin-bottom: 8px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
+.about-us-button-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.about-us-button-header {
+  text-align: left;
+  margin-top: 20px;
+  
+}
 
 .about-us-page-button {
   background: linear-gradient(135deg, #3a6b36, #2c5f2d);
-  font-size: 16px;
+  font-size: 22px;
   font-weight: bold;
   color: white;
   border-radius: 30px;
   padding: 10px 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
   border: none;
-  margin-top: 0.5rem; /* Reduce spacing */
+  margin-top: 0.2rem; /* Reduce spacing */
 }
 
 .about-us-page-button:hover {
-  background: #4c7c42;
-  transform: scale(1.05);
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+  background: #50bc3b;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
 }
 
-/* Top Rated Properties Section */
+/* ===========================
+   Custom Algorithm Section
+   =========================== */
+
 .custom-algorithm-section {
   display: flex;
-  width: 100%;
-  gap: 30px;
-  margin: 60px auto;
-  max-width: 1500px;
-  padding: 40px;
-  background: #ffffff;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 90%;
+  margin: 50px auto;
+  padding: 2.5rem 3%;
+  background: #f9f9f9ab; /* Subtle background */
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.custom-algorithm-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.custom-algorithm-section h2 {
-  font-size: 2.5rem;
+.custom-algorithm-icon {
+  width: 100%;
+  width: 80%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.custom-algorithm-icon:hover {
+  transform: scale(1.03);
+}
+
+.custom-algorithm-right {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  line-height: 1.9;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.custom-algorithm-title {
+  font-size: 2.2rem;
   font-weight: bold;
   color: #2c3e3d;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.custom-algorithm-section .custom-algorithm-icon {
-  flex: 1;
-  width: 50%;
-  height: auto;
-
-  border-radius: 15px; /* Keep the rounded corners */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-  object-fit: cover; /* Ensures proper scaling for the image */
-}
-
-.custom-algorithm-button {
-  background-color: #0a2e15;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 25px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  width: 400px;
+  text-align: center;
+  margin-bottom: 15px;
   text-transform: uppercase;
-  box-shadow: 0 5px 15px rgba(44, 95, 45, 0.3);
-  border-radius: 15px;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.custom-algorithm-button:hover {
-  background-color: #183d25;
+.custom-algorithm-subtitle {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  text-align: center;
+  margin-top: 10px;
+  text-transform: capitalize;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.about-website:hover .content h2,
-.about-website:hover .content p {
-  transform: translateX(2px);
+.property-type-sublist,
+.custom-algorithm-summary {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-algorithm-list,
+.properties-list {
+  list-style: none;
+  padding: 0;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.property {
+  margin-left: 50px;
+}
+
+.ca-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.custom-algorithm-list li,
+.properties-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.button {
+  padding: 16px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #3a6b36, #1e4020);
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(44, 95, 45, 0.3);
+  text-align: center;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.button:hover {
+  background: linear-gradient(135deg, #1e4020, #163017);
+  transform: scale(1.06);
+  box-shadow: 0 8px 18px rgba(44, 95, 45, 0.4);
+}
+
+.button:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
 /* ===========================
    UK Cities Section
    =========================== */
 .uk-cities-section {
-  margin: 60px auto;
-  max-width: 1200px;
+  margin: 40px auto;
+  padding: 60px 20px;
+  max-width: 1800px;
   text-align: center;
+
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  
+  position: relative;
+  overflow: hidden;
 }
 
-.section-title {
-  font-size: 2.5rem;
+.uk-cities-section {
+  font-size: 2.2rem;
   font-weight: bold;
   color: #2c3e3d;
-  margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
   text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 
 /* 3x3 Grid Layout for cities */
 .cities-grid {
@@ -739,15 +750,7 @@ body {
 /* ===========================
    Top Rated Properties Section (Updated)
    =========================== */
-.top-rated-properties {
-  margin: 60px auto;
-  padding: 60px 20px;
-  max-width: 1200px;
-  background: #f5f5f5; /* Subtle light background */
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
+
 .scrollDownMessage {
   font-size: 20px;
   font-weight: bold;
@@ -790,30 +793,24 @@ body {
   opacity: 0.8;
 }
 
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .cities-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns instead of 3 */
-    gap: 15px;
-  }
-
-  .city-card {
-    height: 200px;
-  }
-
-  .city-name {
-    font-size: 1.5rem;
-  }
+.top-rated-properties {
+  margin: 60px auto;
+  padding: 60px 20px;
+  max-width: 1200px;
+  background: #f5f5f5; /* Subtle light background */
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .top-rated-properties h2 {
-  font-size: 2.4rem;
-  font-weight: 700;
+    font-size: 2.2rem;
+  font-weight: bold;
   color: #2c3e3d;
-  margin-bottom: 40px;
-  text-transform: capitalize;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Grid uses auto-fill so it wraps into however many columns fit */
@@ -902,139 +899,15 @@ body {
   transform: scale(1.03);
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
-  .hero-logo {
-    width: 120px;
-  }
-}
-  .backgroundImageStyling {
-    height: 400px;
-  }
-
-  .welcomeText .mainMessage {
-    font-size: 2.5rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 1rem;
-  }
-
-  .stylingSearchBar {
-    flex-direction: row;
-    padding: 10px;
-    gap: 10px;
-  }
-
-  .about-website {
+  .functionalityBar, .about-us-section {
     flex-direction: column;
-    text-align: center;
-  }
-
-  .about-website img {
-    width: 100%;
-    max-height: 300px;
-  }
-
-  .cities-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-  }
-
-  .city-card {
-    height: 200px;
-  }
-
-  .city-name {
-    font-size: 1.5rem;
-  }
-
-  /* Top Rated Properties */
-  .top-rated-properties {
-    padding: 40px 20px;
-  }
-
-  .top-rated-properties h2 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-  }
-
-  .property-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-gap: 15px;
-    padding: 0;
-  }
-
-  .property-details {
-    padding: 15px;
-  .custom-algorithm-section img {
-    width: 100%;
-    max-height: 300px;
   }
 }
 
 @media (max-width: 480px) {
-  .backgroundImageStyling {
-    height: 300px;
-  }
-
-  .welcomeText .mainMessage {
-    font-size: 2rem;
-  }
-
-  .welcomeText .subMessage {
-    font-size: 0.9rem;
-  }
-
-  .stylingSearchBar {
-    padding: 10px;
-  }
-
-  .cities-grid {
-    grid-template-columns: 1fr; /* 1 column for mobile */
-  }
-
-  .city-card {
-    height: 180px;
-  }
-
-  .city-name {
-    font-size: 1.3rem;
-  }
-
-  /* Top Rated Properties on mobile */
-  .top-rated-properties {
-    margin: 40px auto;
-    padding: 30px 10px;
-  }
-
-  .top-rated-properties h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-  }
-
-  .property-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .property-grid {
-    grid-gap: 15px;
-    padding: 0;
-  }
-
-  .property-card img {
-    height: 150px;
-  }
-
-  .property-details {
-    padding: 15px;
-  }
-
-  .property-details h3 {
-    font-size: 1.2rem;
-  }
-
-  .property-details .cta-button {
-    font-size: 0.9rem;
-    padding: 8px 14px;
-  }
+  .welcomeText .mainMessage { font-size: 2rem; }
+  .welcomeText .subMessage { font-size: 0.9rem; }
 }
+

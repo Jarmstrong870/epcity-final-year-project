@@ -11,7 +11,9 @@ import TextToSpeech from '../Components/utils/TextToSpeech';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
 import PropertyCarousel from '../homePage/PropertyCarousel';
 import EPCSection from './EPCSection';
-import {FaArrowRight} from 'react-icons/fa';
+import FavouritePage from '../Components/FavouritePage';
+import GroupChats from '../login&register/messages';
+//import FAQs from '../FAQ/FAQ';
 
 const HomePage = ({ user, language }) => {
   const [customAlgorithmPopUp, setCustomAlgorithmPopUp] = useState(false);
@@ -100,25 +102,27 @@ const HomePage = ({ user, language }) => {
       </div>
 
 {/* About Website Section */}
+    <section className="background-section1">
       <EPCSection  />
-      
+    </section>  
       
 
 
-      <pageSection id ="cityGrid">
+      <section id ="cityGrid" className="background-section2">
       {/* City Section */}
       <CitySection language={language} />
-      </pageSection>
+      </section>
 
+    <section className="background-section1">
       <div className="functionality-container">
-      <h1 className="functionality-bar-header">Your Essential Property Resources</h1>
+      <h1 className="functionality-bar-header">{"\u26A0"}Your Essential Property Resources</h1>
 
       <div className="functionalityBar">
-          {/* Column 1 */}
+          {/* Favouriting Section */}
           <div className="functionality-column">
             <div className="functionality-header">
-              <span className="functionality-icon heart">{"\u2764"}</span>
-              <span className="functionality-title">Want a place to keep your Favourite properties?</span>
+              <span className="functionality-icon heart">{"\u2764\uFE0F"}</span>
+              <span>Want a place to keep your Favourite properties?</span>
             </div>
             <div className="functionality-content">
               <p>{"\u{2B50}"} Never lose track of an amazing, highly efficient property!</p>
@@ -127,11 +131,11 @@ const HomePage = ({ user, language }) => {
             <a href="#" className="functionality-button">Visit Favourites Page</a>
           </div>
 
-          {/* Column 2 */}
+          {/* Group Chat Section */}
           <div className="functionality-column">
             <div className="functionality-header">
               <span className="functionality-icon">{"\u2709"}</span>
-              <span className="functionality-title">Fancy checking out our Group Chats?</span>
+              <span>Fancy checking out our Group Chats?</span>
             </div>
             <div className="functionality-content">
               <p>{"\u{1F4E2}"} Saved and Share to stay connected!</p>
@@ -140,11 +144,11 @@ const HomePage = ({ user, language }) => {
             <a href="#" className="functionality-button">Visit Group Chats</a>
           </div>
 
-          {/* Column 3 */}
+          {/* FAQ Section */}
           <div className="functionality-column">
             <div className="functionality-header">
               <span className="functionality-icon">{"\u2754"}</span>
-              <span className="functionality-title">Need help understanding the 'Property Lingo'?</span>
+              <span>Need help understanding the 'Property Lingo'?</span>
             </div>
             <div className="functionality-content">
               <p>{"\u{1F92F}"} Don't let the professional 'property' jargon stop you from getting your dream property!</p>
@@ -152,38 +156,68 @@ const HomePage = ({ user, language }) => {
             </div>
             <a href="#" className="functionality-button">Visit FAQs</a>
           </div>
+        </div>
       </div>
-    </div>
+    </section>  
 
       {/* Custom Algorithm Section */}
+    <section className="background-section2">
       <div className="custom-algorithm-section">
-        <img src={require('../assets/property.jpg')} alt="dream-property" className="custom-algorithm-icon" />
-        <div className="custm-algorithm-description">
-          <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-            <h2 style={{ display: 'inline-block', marginRight: '10px' }}>
+        <div className="custom-algorithm-left">
+          <img src={require('../assets/property.jpg')} alt="dream-property" className="custom-algorithm-icon" />
+        </div>
+
+      <div className="custom-algorithm-right">
+            <h2 className="custom-algorithm-title">{"\u2764\uFE0F"}
               {t.customAlgorithmTitle}
+
+              <div className="custom-algorithm-subtitle">
+                Tells us what matters most to you, and let our smart algorithm match you with your Perfect Property!
+              </div>
+
             </h2>
-            <TextToSpeech 
-              text={`${t.customAlgorithmTitle}. ${t.customAlgorithmDescription}`} 
-              language={language} 
-            />
-          </div>
-          <p>{t.customAlgorithmDescription1}</p>
-          <p>{t.customAlgorithmDescription2}</p>
-        
-          <div>
-              <button className="custom-algorithm-button" onClick={togglePopUp}> Take the quiz now!! </button>
+
+            <div className="property-type-sublist"> 
+              {"\u{1F446}"} What type of property are you looking for?  
+            </div>
+
+                <ul className="properties-list">
+                  <li className="property"><span className="ca-icon">{"\u{1F3E0}"}</span> House </li>
+                  <li className="property"><span className="ca-icon">{"\u{1F3E0}"}</span> Apartment </li>
+                  <li className="property"><span className="ca-icon">{"\u{1F3E0}"}</span> Bungalow </li>   
+                  <li className="property"><span className="ca-icon">{"\u{1F3E0}"}</span> Maisonette</li>   
+                </ul>
+
+              <ul className="custom-algorithm-list">
+                <li> <strong> {"\u{1F331}"}  How important to you is a property's energy efficiency? </strong> </li>
+                <li> <strong> {"\u{1F6CC}"}  How many bedrooms do you need? </strong> </li>
+                <li> <strong> {"\u{1F686}"} How far do you want to travel for university? </strong> </li>
+              </ul>
+
+            <div className="custom-algorithm-subtitle">
+              {"\u{1F3AF}"} Start Now and discover your perfect property - it is that quick and easy!
+
+            <div className="custom-algorithm-button">
+              <button className="button" onClick={togglePopUp}> 
+                Start Now and Find Your Match!
+              </button>
+
                 {customAlgorithmPopUp && <CustomAlgorithm closePopUp={togglePopUp}/>}
+                </div>
           </div>
           </div>
         </div>
+      </section>
 
 
       
       {/* Top Rated Properties Section */}
+    <section className="background-section1">
       <PropertyCarousel topRatedProperties={topRatedProperties} user={user} language={language} />
+    </section>
 
       {/* About Website Section */}
+    <section className="background-section2">
       <div className="about-us-section">
         <div className="about-us-section__left">
           <img 
@@ -210,17 +244,18 @@ const HomePage = ({ user, language }) => {
             </ul>
           </div>
 
-          <div className="about-us-block">
+          <div className="about-us-button-block">
             <h2 className="about-us-button-header"> {"\u{1F4A1}"} Want to find out more?</h2>
             <p> 
               <button className="about-us-page-button">
-                Learn More About EPCity
+                Visit our About Us Page
               </button>
             </p>
           </div>
           
         </div>
       </div>    
+    </section>
   </>
   );
 };
