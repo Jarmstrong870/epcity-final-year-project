@@ -432,6 +432,7 @@ td a:hover {
   height: 5%; /* Ensures it's high enough when scrolling */
   padding: 15px 30px;
   justify-content: space-between;
+  animation: slideInFromTop 0.6s ease-out forwards;
 }
 
 .logo-container {
@@ -455,10 +456,26 @@ td a:hover {
   padding: 0;
 }
 
+.header-container.scrolled .logo-img {
+  width: 90px; /* Shrinks smoothly */
+}
+
 .logo-img {
   width: 140px; /* Increased size */
   height: auto;
-  transition: all 0.3s ease-in-out;
+  
+  transition: transform 0.4s ease-in-out, width 0.4s ease-in-out;
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .logo-img:hover {
@@ -472,12 +489,14 @@ td a:hover {
   flex-grow: 1;
   justify-content: center;
   padding-top: 10px;
+  transition: all 0.6s ease-in-out;
 }
 
 /* Logo Moves Inside the Header When Scrolling */
 .header-container.scrolled .header-navigation-links {
   justify-content: center;
   padding: 15px;
+  
 }
 
 
