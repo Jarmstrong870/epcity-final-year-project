@@ -142,10 +142,7 @@ h3.glossary {
   margin-top: 80px; /* Added margin to separate the title from the top */
 }
 
-h3:hover {
-  background: #e9ecef;
-  transform: scale(1.02);
-}
+
 
 /* Glossary Section */
 .glossary-section {
