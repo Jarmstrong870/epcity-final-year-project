@@ -32,7 +32,7 @@ const CitySection = ({ language }) => {
       {}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
         <h2 className="uk-cities-title">{"\u{1F30D}"}{t.ukCitiesTitle}</h2>
-        <TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />
+        {/*<TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />*/}
       </div>
 
       <h4 className="uk-cities-subtitle">{t.ukCitiesSubtitle}</h4>
