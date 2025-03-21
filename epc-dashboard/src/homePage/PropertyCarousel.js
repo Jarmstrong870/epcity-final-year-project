@@ -21,7 +21,7 @@ const PropertyCarousel = ({ topRatedProperties, user, language }) => {
 
   return (
     <div className="property-carousel">
-      <h2 className="carousel-title">Top Rated Properties</h2>
+      <h2 className="carousel-title">Most Energy Efficient Properties</h2>
       <div className="carousel-wrapper">
         <button 
           className="carousel-button prev" 
