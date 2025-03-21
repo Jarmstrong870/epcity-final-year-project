@@ -197,17 +197,22 @@ const PropertyPage = ({ user, property, language }) => {
       </div>
 
       {isLandlord ? (
-        <div className='Recommendation-Table'>
-          <h3>Efficiency Recommendations</h3>
-          <RecommendationTable property={propertyData}></RecommendationTable>
-        </div>
-      ) : (<></>)}
+  <div className="Recommendation-Table">
+    <h3>Efficiency Recommendations</h3>
+    <RecommendationTable property={propertyData} />
+  </div>
+) : (
+  <></>
+)}
 
-      {/* Added space before MapView */}
-      <div className="map-view-section">
-        <h3>Nearby Locations</h3>
-        <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} language={language} />
-      </div>
+{/* Added space before MapView */}
+<div className="map-view-section">
+  <div className="map-view-header">
+    <h3>Nearby Locations</h3>
+  </div>
+  <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} language={language} />
+</div>
+
     </div>
   );
 };
