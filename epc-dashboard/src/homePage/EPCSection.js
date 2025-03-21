@@ -1,9 +1,18 @@
 import React from 'react';
 import './EPCSection.css';
 // Replace with your own EPC image
-import epcGraphImg from '../assets/EPC-graph.jpg';
+import epcGraphImg from '../assets/epc-image.jpg';
+
 
 const EPCSection = () => {
+
+  const epcInformationVideo = (videoId) => {
+      window.open(`https://www.youtube.com/embed/${videoId}`,
+        "EPC Information Youtube Video",
+        "width = 600, height = 400, scrollbars = no"
+      )  
+  };
+  
   return (
     <div className="epc-section">
       <div className="epc-section__left">
@@ -22,6 +31,7 @@ const EPCSection = () => {
             how to improve its overall efficiency.
           </p>
         </div>
+
         <div className="epc-question-block">
           <h2>What do we do at EPcity?</h2>
           <p>
@@ -30,6 +40,16 @@ const EPCSection = () => {
             and other factors, making it easier for you to choose the perfect fit.
           </p>
         </div>
+
+        <div className="epc-question-block">
+          <h2>Want to learn more about EPCs?</h2>
+          <p>
+            <button className="epcVideoButton" onClick= {() => epcInformationVideo("4JuAytTMO-Q")}>
+              Find out more about an EPC
+            </button>
+          </p>
+        </div>
+
       </div>
     </div>
   );

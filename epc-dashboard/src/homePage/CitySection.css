@@ -1,141 +1,62 @@
-/*******************************************************
-  CITY SECTION - Main Container
-********************************************************/
-.uk-cities-section {
-    margin: 40px auto;
-    padding: 60px 20px;
-    max-width: 1200px;
-    text-align: center;
-  
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    
-    position: relative;
-    overflow: hidden;
-  }
-  
-  /*******************************************************
-    STYLED HEADER (NEW)
-  ********************************************************/
-  .uk-cities-header {
-    /* Let’s give this heading area a “hero” feel */
-    padding: 2rem 1rem;
-    background: #fafafa;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    margin-bottom: 2rem; /* Spacing before the grid */
-    text-decoration: none;
-    position: relative;
-  }
-  
-  /* Title */
-  .uk-cities-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-decoration: none !important;
-    color: #2c3e3d;
-    margin: 0; /* Reset margin so we can control spacing precisely */
-    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Decorative divider bar under the heading */
-  .uk-cities-divider {
-    width: 60px;
-    height: 3px;
-    background: #2c5f2d;
-    margin: 15px auto;
-    border-radius: 2px;
-  }
-  
-  /* Subtitle */
-  .uk-cities-subtitle {
-    font-size: 1.2rem;
-    color: #555;
-    max-width: 700px;
-    margin: 0 auto; /* Center the text block */
-    margin-top: 1rem;
-    line-height: 1.6;
-    opacity: 0.9;
-  }
-  
-  /*******************************************************
-    GRID & CITY CARDS (UNCHANGED)
-  ********************************************************/
-  .cities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    grid-gap: 20px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .city-card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    height: 240px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07);
-  
-    transform: translateY(20px);
-    opacity: 0;
-    animation: fadeInUp 0.8s ease forwards;
-  }
-  
-  .city-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-  
-  /*******************************************************
-    OVERLAY & HOVER EFFECTS (UNCHANGED)
-  ********************************************************/
-  .city-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.6));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  
-  .city-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  
-  .city-name {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  }
-  
-  .city-count {
-    font-size: 1rem;
-    font-weight: normal;
-    color: #f0f0f0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-  }
-  
-  /* Hover Zoom & Overlay Fade-in */
-  .city-card:hover .city-image {
-    transform: scale(1.08);
-  }
-  
-  .city-card:hover .city-overlay {
-    opacity: 1;
-  }
-  
+.section-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.uk-cities-subtitle {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2c3e3d;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: capitalize;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-us-button-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-us-button-header {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 2rem;
+}
+
+.about-us-paragraph {
+  font-size: 1rem;
+}
+
+.about-us-page-button {
+  padding: 16px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #3a6b36, #1e4020);
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  box-shadow: 0 6px 14px rgba(44, 95, 45, 0.3);
+  text-align: center;
+  display: flex;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.about-us-page-button:hover {
+  background: #50bc3b;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.7);
+}
+
   /*******************************************************
     ANIMATION KEYFRAMES (UNCHANGED)
   ********************************************************/

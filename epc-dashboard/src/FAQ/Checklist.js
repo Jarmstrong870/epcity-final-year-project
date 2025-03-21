@@ -55,7 +55,7 @@ const Checklist = ({ language }) => {
 
   return (
     <div className="checklist-main">
-      <h1>{t.title}</h1>
+      <h1 className="checklist-header">{t.title}</h1>
       <p>{t.description}</p>
 
       <div className="checklist-groupings">

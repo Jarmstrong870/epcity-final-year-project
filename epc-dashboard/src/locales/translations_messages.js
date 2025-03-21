@@ -8,6 +8,8 @@ const translations = {
     selectGroupToChat: "Select a group to start chatting",
     typeMessagePlaceholder: "Type your message...",
     sendButton: "Send",
+    yesButton: "Yes",
+    noButton: "No",
     messageEmptyError: "Message cannot be empty.",
     messageProfanityError: "Your message contains inappropriate language.",
     messageSendError: "Failed to send message. Please try again.",

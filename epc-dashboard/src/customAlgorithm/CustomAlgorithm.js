@@ -43,6 +43,7 @@ import apartmentImg from "../assets/property types/apartment.png";
 import bungalowImg from "../assets/property types/bungalow.png";
 import houseImg from "../assets/property types/house.png";
 import maisonetteImg from "../assets/property types/maisonette.png";
+import { Maximize } from "lucide-react";
 
 function CustomAlgorithm({ closePopUp }) {
   // Form states
@@ -58,6 +59,35 @@ function CustomAlgorithm({ closePopUp }) {
   const [recommendations, setRecommendations] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const totalSteps = 6;
+  const [currentStep, setCurrentStep] = useState(0);
+  const progress = (currentStep / totalSteps) * 100;
+
+  // Updates Progress on Loaded
+  useEffect(() => {
+    let stepCount = 0;
+
+    if(selectedLocalAuthority)
+      stepCount = 1;
+  
+    if(number_bedrooms > 0)
+      stepCount = Math.max(stepCount, 2);
+  
+    if(current_energy_rating && current_energy_rating !== "C")
+      stepCount = Math.max(stepCount, 3);
+
+    if(property_type && property_type !== "HOUSE")
+      stepCount = Math.max(stepCount, 4);
+
+    if(selectedUniversity)
+      stepCount = Math.max(stepCount, 5);
+
+    if(maxDistance > 0 && maxDistance !== 10)
+      stepCount = Math.max(stepCount, 6);
+
+    setCurrentStep(stepCount);
+  }, [selectedLocalAuthority, selectedUniversity, number_bedrooms, current_energy_rating, property_type, maxDistance]);
 
   // Define your local authorities.
   const localAuthorities = [
@@ -119,21 +149,37 @@ function CustomAlgorithm({ closePopUp }) {
   const handleLocalAuthorityChange = (e) => {
     setSelectedLocalAuthority(e.target.value);
     setSelectedUniversity(null);
+    setCurrentStep((prevStep) => Math.max(prevStep, 1));
   };
 
-  const handleUniversitySelect = (uniKey) => {
-    setSelectedUniversity(uniKey);
-  };
-
-  const handlePropertyType = (propertyKey) => {
-    setSelectedProperty(propertyKey);
-    setHouseType(propertyKey);
+  const handleBedrooms = (bedroom) => {
+      setBedrooms(bedroom);
+      setCurrentStep((prevStep) => Math.max(prevStep, 2));
   };
 
   const handleEPCRating = (ratingKey) => {
     setEpcRating(ratingKey);
     setSelectedEPCRating(ratingKey);
+    setCurrentStep((prevStep) => Math.max(prevStep, 3));
   };
+
+  const handlePropertyType = (propertyKey) => {
+    setSelectedProperty(propertyKey);
+    setHouseType(propertyKey);
+    setCurrentStep((prevStep) => Math.max(prevStep, 4));
+  };
+
+  const handleUniversitySelect = (uniKey) => {
+    setSelectedUniversity(uniKey);
+    setCurrentStep((prevStep) => Math.max(prevStep, 5));
+  };
+
+  const handleMaxDistance = (e) => {
+    setMaxDistance(e.target.value);
+    setCurrentStep((prevStep) => Math.max(prevStep, 6));
+  };
+
+
 
   const reverseEPCMapping = {
     1: 'A',
@@ -200,7 +246,19 @@ function CustomAlgorithm({ closePopUp }) {
               {"\u2716"}
             </button>
           </div>
+
           <form onSubmit={handleSubmit}>
+
+          <div className="custom-algorithm-progress-container">
+            <p>Step {currentStep} of {totalSteps} - Find your best area!</p>
+          <div className="custom-algorithm-progress">
+            <div 
+              className="custom-algorithm-progress-bar"
+              style = {{width: `${progress}%`}}
+              ></div>
+            </div>
+          </div>
+
             {/* Local Authority Dropdown */}
             <div className="local-authority-dropdown">
               <label htmlFor="local-authority">Select your city:</label>
@@ -235,7 +293,7 @@ function CustomAlgorithm({ closePopUp }) {
                   <div
                     key={bedroom.key}
                     className={`number-of-bedrooms-card ${number_bedrooms === bedroom.name ? "selected" : ""}`}
-                    onClick={() => setBedrooms(bedroom.name)}
+                    onClick={() => handleBedrooms(bedroom.name)}
                   >
                     <div className="number-of-bedrooms-image">{bedroom.name}</div>
                   </div>
@@ -315,7 +373,7 @@ function CustomAlgorithm({ closePopUp }) {
                 min="0"
                 max="20"
                 value={maxDistance}
-                onChange={(e) => setMaxDistance(e.target.value)}
+                onChange={handleMaxDistance}
               />
             </div>
 

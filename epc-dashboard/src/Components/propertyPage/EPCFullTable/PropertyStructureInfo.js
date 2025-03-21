@@ -15,6 +15,8 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
   const [dropdownClick, setDropdownClick] = useState("");
 
   const {efficiencyGroup, transmittanceStatus} = classifyRoof(properties.roof_description);
+  //const {efficiencyGroup, transmittanceStatus} = classifyRoof("Average thermal transmittance 0.001 W/m?K");
+
 
   // Utility function to replace variations of NO DATA! with N/A
   const formatValue = (value) => {

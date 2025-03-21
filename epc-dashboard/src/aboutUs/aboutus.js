@@ -27,10 +27,10 @@ const AboutUs = () => {
 
           <h2>Why Choose Us?</h2>
           <ul className="about-list">
-            <li><i className="fas fa-check-circle"></i> Comprehensive EPC ratings and property details</li>
-            <li><i className="fas fa-check-circle"></i> User-friendly search and filter options</li>
-            <li><i className="fas fa-check-circle"></i> Guidance on picking your new property</li>
-            <li><i className="fas fa-check-circle"></i> Commitment to sustainabile housing</li>
+            <li>{"\u{21D2}"} Comprehensive EPC ratings and property details</li>
+            <li>{"\u{21D2}"} User-friendly search and filter options</li>
+            <li>{"\u{21D2}"} Dedicated support and guidance</li>
+            <li>{"\u{21D2}"} Commitment to sustainability</li>
           </ul>
         </div>
 
