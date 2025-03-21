@@ -50,7 +50,7 @@ export function FavouriteProvider ({ children, user }) {
         updatedFavourites is the newly refreshed array once a property has been added successfully
     */
 
-    const addFavourite = async (property) => {
+    const addFavourite = async (user ,property) => {
         if(!user?.email)
             return;
 

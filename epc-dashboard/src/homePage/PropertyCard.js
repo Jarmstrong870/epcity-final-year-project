@@ -27,9 +27,10 @@ const PropertyCard = ({ user, property, language }) => {
       state: { uprn: property.uprn, address: property.address, postcode: property.postcode },
     });
   };
+  
 
-  // Prevent navigation when clicking on the star
-  const handleStarClick = (e) => e.stopPropagation();
+  
+  
 
   return (
     <div className="property-card" onClick={handleClick}>
@@ -54,7 +55,7 @@ const PropertyCard = ({ user, property, language }) => {
           <p className="property-card__postcode">
             {t.postcode}: {property.postcode}
           </p>
-          <div className="property-card__star" onClick={handleStarClick}>
+          <div className="property-card__star" >
             <FavouriteStar user={user} property={property} key={favouriteProperties.length} />
           </div>
         </div>

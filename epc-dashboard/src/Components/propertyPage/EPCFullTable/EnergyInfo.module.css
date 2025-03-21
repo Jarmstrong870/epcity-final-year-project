@@ -1,202 +1,433 @@
-.energyInfoContainer {
+/* Container for the whole component */
+.EnergyInfo_energyInfoContainer {
   background-color: #ffffff;
-  border-radius: 10px;
-  padding: 20px;
   width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: block;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.energyInfoContainer .energyHeader {
+/* Main header at the top */
+.EnergyInfo_energyHeader {
   text-align: center;
   font-size: 32px;
   font-weight: bold;
   padding: 20px;
   border-radius: 10px;
-  color: #2c5f2d;
+  color: #000;
   text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-  letter-spacing: 1px;
-  border-bottom: 3px solid #2c5f2d;
   margin-bottom: 20px;
 }
 
-.energyInfoContainer .energySection {
+/* Section headers (for each box) */
+.EnergyInfo_sectionHeader {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2c5f2d;
+  margin-bottom: 15px;
+  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+  letter-spacing: 1px;
+}
+
+/* ======================================== */
+/* GRID LAYOUT FOR HEATING / LIGHTING / HOT WATER */
+.EnergyInfo_energySection {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  
-  width: 100%;
-  max-width: 1400px;
+  grid-template-columns: 1fr 1fr 1fr;  /* 3 equal columns */
+  grid-template-rows: auto 1fr;       /* row 1: auto-sized; row 2: takes remaining space */
+  gap: 1rem;
+  width: 90%;
   margin: 0 auto;
+  /* This ensures all items in the same row stretch to match the tallest cell */
   align-items: stretch;
 }
 
-.energyInfoContainer .energyBox {
+/* Left Column: Heating spans 2 rows */
+
+
+/* Key Insights: if you have a second row, columns 2-3 */
+
+.EnergyInfo_leftColumn {
+  grid-column: 1 / 2; /* covers column 1 */
+  grid-row: 1 / 3;    /* covers row 1 and row 2 */
+}
+
+/* Middle Column: Lighting is row 1 only */
+.EnergyInfo_middleColumn {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  /* Removed any forced height so grid can stretch it */
+  min-height: 98%;
+}
+
+/* Right Column: Hot Water is row 1 only */
+.EnergyInfo_rightColumn {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+  /* Removed any forced min-height so grid can stretch it */
+  min-height: 98%;
+}
+
+.EnergyInfo_keyInsights {
+  grid-column: 2 / 4;  /* spans columns 2 to 3 */
+  grid-row: 2 / 3;     /* placed in second row */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  width: 98%;
+  /* No forced height so it expands as needed */
+  margin-bottom: 10px;
+}
+
+.KeyInsights_container {
+  /* A parent container for the entire Key Insights section */
+  background: #fff;
+  border-radius: 8px;
+  border: #000 1px solid;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  
+}
+
+.KeyInsights_twoColumn {
   display: flex;
+  gap: 2rem;
+  /* ensures both columns stretch to the same height if needed */
+  align-items: stretch;
+}
+
+/* LEFT COLUMN: narrower, for title + insight boxes */
+.KeyInsights_left {
+  flex: 1; /* narrower portion */
+  max-width: 300px; /* optional: fix a maximum width to keep it narrower */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.KeyInsights_header {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #2c5f2d;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  /* no special alignment so it stays top-left */
+}
+
+/* RIGHT COLUMN: ranking cards stacked vertically */
+.KeyInsights_right {
+  flex: 2; /* bigger portion for the rank cards */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Generic styling for insight boxes */
+.KeyInsightCard {
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 0.25rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+/* Example styling for insight card content */
+.KeyInsightCard h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #444;
+}
+.KeyInsightCard p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2c5f2d;
+}
+
+.insightRating {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* If your RankingCard has its own module, it won't conflict here */
+
+
+/* ======================================== */
+/* Box style used for each cost section */
+.EnergyInfo_energyBox {
+  display: flex;
+  width: 90%;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 25px;
-  background: white;
+  padding: 5px;
+  background: #fff;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  min-height: 400px;
-  width: 100%;
+  margin: 10px auto;
   flex-grow: 1;
   transition: transform 0.3s ease-in-out;
+  border: 1px solid #000;
+  /* Keep a fixed minimum height if desired, but remove min-height: 98% */
+  min-height: 80%;
 }
 
-.energyInfoContainer .energyBox:hover {
-  transform: scale(1.02);
-}
-
-/* Section Header with specific styling for h4 elements */
-.energyInfoContainer .energyBox .energyH4,
-.energyInfoContainer .efficiencyStarRatings .energyH4 {
-  font-size: 1.4rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Ensure the content is centered */
-  gap: 15px;  /* Space between the text and question mark */
-  text-align: center;  /* Center the text */
-  width: 100%;
-}
-
-.energyInfoContainer .energyBox .greenQuestionMark,
-.energyInfoContainer .efficiencyStarRatings .greenQuestionMark {
-  color: green;
-  cursor: pointer;
-  font-size: 22px;
-  font-weight: bold;
- 
-  display: inline-block;
-  text-decoration: none !important;
-  vertical-align: middle;
-}
-
-.energyInfoContainer .greenQuestionMark::after {
-  content: "?"; /* Ensures question mark appears */
-}
-
-.energyInfoContainer .greenQuestionMark:hover {
-  color: #2E7D32; /* Darker green on hover */
-}
-
-/* Tables */
-.energyInfoContainer .energyBox table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
+/* ======================================== */
+/* Styling for cost tables */
+.EnergyInfo_costTable {
+  width: 90%;
+  border-collapse: separate;
+  border-spacing: 0;
   margin-top: 10px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
 }
 
-.energyInfoContainer .energyBox th,
-.energyInfoContainer .energyBox td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
+.EnergyInfo_costTable th,
+.EnergyInfo_costTable td {
+  border: 2px solid #000;
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: middle;
   word-wrap: break-word;
+  font: bold 18px "Trebuchet MS", Verdana, Arial, sans-serif;
 }
 
-/* Efficiency Star Ratings */
-.energyInfoContainer .efficiencyStarRatings {
+.EnergyInfo_costTable thead th {
+  background-color: #fafafa;
+  font: bold 24px "Trebuchet MS", Verdana, Arial, sans-serif;
+}
+
+.EnergyInfo_costTable tbody tr:hover {
+  background-color: #fafafa;
+}
+
+/* ======================================== */
+/* Key information cards under the cost table */
+.EnergyInfo_visualisedDescriptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.EnergyInfo_heatingItem {
+  flex: 1 1 200px;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.EnergyInfo_heatingItem h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.EnergyInfo_heatingItem p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Row container for icons */
+.EnergyInfo_iconsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+/* Individual icon + label pair */
+.EnergyInfo_iconWithLabel {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  text-align: center;
+}
+
+.EnergyInfo_iconWithLabel img {
+  max-width: 48px;
+  height: auto;
+  margin-bottom: 0.25rem;
+}
+
+.EnergyInfo_iconWithLabel p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Efficiency star ratings styling */
+.EnergyInfo_efficiencyStarRatings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
   max-width: 500px;
   padding: 20px;
   border-radius: 15px;
   background: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  margin-top: 20px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  margin: 0 auto 10px;
 }
 
-.energyInfoContainer .efficiencyStarRatings:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+.EnergyInfo_efficiencyStarRatingsWater {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #f8f9fa;
+  margin-bottom: 20.5%;
 }
 
-.energyInfoContainer .efficiencyStarRatings .energyH4 {
+.EnergyInfo_efficiencyStarRatings h4 {
   font-size: 1.4rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
 }
 
-/* Progress Bar */
-.energyInfoContainer .progressContainer {
-  width: 100%;
+.EnergyInfo_efficiencyStarRatings p {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+/* Progress container styling */
+.EnergyInfo_progressContainer {
   max-width: 500px;
-  background: white;
+  background: #fff;
   border-radius: 15px;
   padding: 15px;
   text-align: center;
   align-items: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-.energyInfoContainer .progressContainer progress {
+.EnergyInfo_progressContainer progress {
   width: 100%;
   height: 20px;
   border-radius: 30px;
-  background: #ffffff;
+  background: #fff;
   appearance: none;
 }
 
-/* Heating Icons */
-.energyInfoContainer .heatingIcons {
+.EnergyInfo_progressContainer p {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Icons container for sections like Main Heating Sources / Extra Controls */
+.EnergyInfo_iconSection {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.EnergyInfo_heatingIcons {
   display: flex;
   justify-content: center;
  
   width: 100%;
-  margin-top: 20px;
   flex-wrap: wrap;
 }
 
-.energyInfoContainer .heatingIcons img {
+.EnergyInfo_heatingIcons img {
   width: 60px;
   height: 60px;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
 }
 
-.energyInfoContainer .heatingIcons img:hover {
+.EnergyInfo_heatingIcons img:hover {
   transform: scale(1.1);
 }
 
+/* Key Info row (Fuel, Gas Flag, CO2) */
+.EnergyInfo_keyInfoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.EnergyInfo_keyInfoItem {
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.EnergyInfo_keyInfoItem h4 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.EnergyInfo_keyInfoItem p {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.EnergyInfo_divider {
+  width: 1px;
+  background-color: #ccc;
+  height: 60px;
+  margin: 0 15px;
+}
+
+.EnergyInfo_keyIconsRow {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.EnergyInfo_iconItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.EnergyInfo_iconItem img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+.EnergyInfo_iconItem span {
+  font-size: 0.75rem;
+  margin-top: 4px;
+  color: #777;
+}
+
+/* ======================================== */
 /* Responsive Design */
 @media (max-width: 1024px) {
-  .energyInfoContainer .energyHeader {
+  .EnergyInfo_energyHeader {
     font-size: 26px;
   }
-  .energyInfoContainer .energySection {
+  .EnergyInfo_energySection {
     grid-template-columns: 1fr;
+    grid-template-rows: auto; /* single column layout on smaller screens */
   }
 }
 
 @media (max-width: 768px) {
-  .energyInfoContainer .energyHeader {
+  .EnergyInfo_energyHeader {
     font-size: 22px;
     padding: 10px;
   }
-
-  .energyInfoContainer .energyBox {
+  .EnergyInfo_energyBox {
     width: 100%;
     margin: 0 auto;
+    /* no forced min-height here either */
   }
-
-  .energyInfoContainer .efficiencyStarRatings {
+  .EnergyInfo_efficiencyStarRatings {
     width: 100%;
   }
 }

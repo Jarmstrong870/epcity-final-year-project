@@ -19,3 +19,53 @@
 .starComponent.grey {
     color: gray;
 }
+
+.heart-icon {
+  font-size: 24px; /* Adjust size */
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Filled and outline heart icons */
+
+.heart-emoji {
+  display: inline-flex; /* Ensures it stays in the same line */
+  vertical-align: middle; /* Aligns it with text */
+  
+  font-size: 24px; /* Adjust size */
+  cursor: pointer;
+}
+
+.heart-emoji:hover {
+  transform: scale(1.2); /* Slight zoom on hover */
+}
+
+.starBase {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 200, 200, 0.3); /* Light pink background */
+  border-radius: 50%; /* Makes it circular */
+  transition: background-color 0.3s;
+}
+
+.starBase:hover {
+  background-color: rgba(255, 200, 200, 0.5); /* Darker pink on hover */
+}
+
+.popup {
+  position: absolute;
+  top: 20px; /* adjust to position above the heart */
+  left: -100px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7); /* semi-transparent black */
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none; /* So it doesn't interfere with clicks */
+}

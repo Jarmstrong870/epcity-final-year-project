@@ -716,7 +716,7 @@ body {
 }
 
 /* Card details */
-.property-details {
+.HomePage .property-details {
   padding: 20px;
   flex: 1;
   display: flex;
@@ -831,7 +831,7 @@ body {
 
 
 
-  .property-details {
+  .HomePage .property-details {
     padding: 15px;
   .custom-algorithm-section img {
     width: 100%;
