@@ -30,7 +30,7 @@ export function classifyRoof(description){
 
             console.log("results:", {efficiencyGroup, efficiencyValue, color});
 
-        return {efficiencyGroup, efficiencyValue, color, transmittanceValue: true};
+        return {efficiencyGroup, efficiencyValue, color, transmittanceStatus: true};
     }
 
         const measurementValue = description.match(/(\d+)\s*(\+|>|>=)?\s*mm/i);
@@ -51,14 +51,14 @@ export function classifyRoof(description){
             return {efficiencyGroup, 
                     efficiencyValue: `"${newFormat}mm`, 
                     color: roofInsulationThickness[efficiencyGroup].color, 
-                    transmittanceValue: false};
+                    transmittanceStatus: false};
         }
     }
 
         return {efficiencyGroup: "Unspecified", 
                 efficiencyValue: null, 
                 color: "#7d7c7c", 
-                transmittanceValue: false};
+                transmittanceStatus: false};
     }
 
 
