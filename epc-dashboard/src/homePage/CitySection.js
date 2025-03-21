@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import "../homePage/CitySection.css";
 import { PropertyContext } from '../Components/utils/propertyContext';
 import { useNavigate } from 'react-router-dom';
-import TextToSpeech from "../Components/utils/TextToSpeech";
 import translations from "../locales/translations_homepage";
 
 const cities = [
@@ -20,10 +19,9 @@ const cities = [
 const CitySection = ({ language }) => {
   const { setCity } = useContext(PropertyContext);
   const navigate = useNavigate();
-  
 
   const handleCityChoice = (choice) => {
-    setCity(choice)
+    setCity(choice);
     navigate(`/propertylist`);
   };
 
@@ -31,7 +29,7 @@ const CitySection = ({ language }) => {
 
   return (
     <div className="uk-cities-section">
-      {/* Title with Microphone */}
+      {}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
         <h2 className="uk-cities-title">{"\u{1F30D}"}{t.ukCitiesTitle}</h2>
         <TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />
@@ -67,10 +65,3 @@ const CitySection = ({ language }) => {
 };
 
 export default CitySection;
-
-
-
-
-
-
-

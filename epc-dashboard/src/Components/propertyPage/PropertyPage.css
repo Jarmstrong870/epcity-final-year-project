@@ -2,34 +2,65 @@
 .property-page {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  
   background-color: #f9f9f9;
   min-height: 100vh;
   margin: 0;
   box-sizing: border-box;
 }
-
+.property-header-top {
+  display: flex; /* Makes all items inline */
+  align-items: center; /* Aligns them in the middle */
+  gap: 15px; /* Space between items */
+}
 
 .property-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
-  margin-top: 40px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+  background-color: rgba(235,242,254,var(--tw-bg-opacity,1));
+  width: 100%;
+  height: 150px;
 }
 
 .property-title {
-  font-size: 3rem; /* Large and eye-catching */
-  font-weight: bold;
-  color: #2c5f2d; /* Darker shade for contrast */
+  flex-direction: row;
+  font-size: 2.25rem; /* Large and eye-catching */
   text-align: center;
   margin-bottom: 20px;
-  text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
   letter-spacing: 1px; /* Slight spacing for readability */
   padding-bottom: 10px;
-  border-bottom: 3px solid #2c5f2d; /* Underline effect */
-  display: inline-block; /* Makes border only as wide as text */
   margin: 0;
+}
+.property-text {
+  display: flex;
+  flex-direction: column; /* Stack h2 and p vertically */
+}
+.property-details {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 15px;
+  font-size: 14px;
+  color: black;
+  font-size: 1.25rem;
+}
+
+
+.property-details span {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+}
+
+
+.property-header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 10%;
 }
 
 .property-header h3 {
@@ -49,7 +80,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  display: block;
+  display: inline-flex;
   margin: 15px auto;
 }
 
@@ -181,6 +212,8 @@ footer {
     height: auto;
   }
 
+}
+
   /* 📩 Send to Group Chat Section */
 .send-group-container {
   display: flex;
@@ -215,7 +248,7 @@ footer {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  display: inline-block;
+  display: inline-flex;
   margin-top: 10px;
   text-align: center;
 }
@@ -287,5 +320,4 @@ footer {
 
 .modal-close-button:hover {
   background-color: #c82333;
-}
 }

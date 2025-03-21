@@ -1,15 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropertyCard from '../homePage/PropertyCard';
 import FavouriteStar from './FavouriteStar';
 import './PropertyList.css';
 import translations from '../locales/translations_propertylist';
 import { PropertyContext } from '../Components/utils/propertyContext';
-import TextToSpeech from '../Components/utils/TextToSpeech';
 import { FavouriteContext } from '../Components/utils/favouriteContext';
 
 const PropertyList = ({ user, loading, language }) => {
-  const [viewMode, setViewMode] = useState('table');
+  const [viewMode, setViewMode] = useState('card');
   const [selectedForComparison, setSelectedForComparison] = useState([]);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -20,8 +19,24 @@ const PropertyList = ({ user, loading, language }) => {
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
   const expectedPageSize = 30;
+  
+  useEffect(() => {
 
-  if (loading) return <p>{t.loading}</p>;
+    if (window.innerWidth <= 910) {
+      setViewMode('card');
+    }
+
+    const handleResize = () => {
+      if (window.innerWidth <= 910) {
+        setViewMode('card');
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  if (loading===true) return <p>{t.loading}</p>;
   if (properties.length === 0) return <p>{t.noProperties}</p>;
 
   const handlePageChange = (newPage) => {
@@ -51,6 +66,7 @@ const PropertyList = ({ user, loading, language }) => {
     );
   };
 
+
   const handleCompareClick = () => {
     if (selectedForComparison.length < 2 || selectedForComparison.length > 4) {
       alert("You must select between 2 and 4 properties to compare.");
@@ -58,7 +74,6 @@ const PropertyList = ({ user, loading, language }) => {
     }
     navigate("/compare-results", { state: { selectedProperties: selectedForComparison } });
   };
-
 
   return (
     <div className="property-list">
@@ -68,43 +83,33 @@ const PropertyList = ({ user, loading, language }) => {
         {/* View Mode Toggle (Center) */}
         <div className="view-toggle-container">
           <div className="view-toggle">
-            <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
-              {t.tableView}
-            </button>
             <button onClick={() => setViewMode('card')} className={viewMode === 'card' ? 'active' : ''}>
               {t.cardView}
             </button>
+            <button onClick={() => setViewMode('table')} className={viewMode === 'table' ? 'active' : ''}>
+              {t.tableView}
+            </button>
           </div>
         </div>
+
         {/* Compare Button (Right) */}
         <div className="compare-button-container">
           <button className={`compare-button ${selectedForComparison.length >= 2 ? "green" : "gray"}`} onClick={handleCompareClick} disabled={selectedForComparison.length < 2}>
             {t.compare} ({selectedForComparison.length}/4)
           </button>
-          <TextToSpeech text={t.compareSpeech} language={language} />
         </div>
 
         {/* Sort Container (Right) */}
         <div className="sort-container">
-          <div className="dropdown-with-tts">
-            <label>{t.sortBy}</label>
-            <TextToSpeech
-              text={`${t.sortBy}. ${t.address}, ${t.postcode}, ${t.propertyType}, ${t.currentEnergyRating}, ${t.currentEnergyEfficiency}`}
-              language={language}
-            />
-          </div>
+          <label>{t.sortBy}</label>
           <select value={sortValue} onChange={handleSortChange}>
             <option value="sort_by">{t.sortByDefault}</option>
             <option value="number_bedrooms">Number of bedrooms</option>
             <option value="current_energy_rating">{t.currentEnergyRating}</option>
             <option value="current_energy_efficiency">{t.currentEnergyEfficiency}</option>
-            <option value="number_bedrooms">Number of Bedrooms</option>
           </select>
 
-          <div className="dropdown-with-tts">
-            <label>{t.order}</label>
-            <TextToSpeech text={`${t.order}. ${t.ascending}, ${t.descending}`} language={language} />
-          </div>
+          <label>{t.order}</label>
           <select value={sortOrder} onChange={handleOrderChange}>
             <option value="order">{t.order}</option>
             <option value="asc">{t.ascending}</option>
@@ -112,7 +117,6 @@ const PropertyList = ({ user, loading, language }) => {
           </select>
         </div>
       </div>
-
 
       {viewMode === 'table' ? (
         <table className="table-view">
@@ -132,7 +136,7 @@ const PropertyList = ({ user, loading, language }) => {
             {properties.map((property, index) => (
               <tr key={index}>
                 <td>
-                  <Link to={`/property/${property.uprn}`}>{property.address}</Link>
+                  <Link to={`/property/${property.uprn}`}>{property.address.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())}</Link>
                 </td>
                 <td>{property.postcode}</td>
                 <td>{property.property_type}</td>
@@ -176,25 +180,22 @@ const PropertyList = ({ user, loading, language }) => {
         </div>
       )}
 
-      <div>
-        <div className="pagination-container">
-          <button
-            className="paginationPrevious"
-            onClick={() => handlePageChange(page - 1)}
-            disabled={page === 1}
-          >
-            {t.previous}
-          </button>
+      <div className="pagination-container">
+        <button
+          className="paginationPrevious"
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}
+        >
+          {t.previous}
+        </button>
 
-          <button
-            className="paginationNext"
-            onClick={() => handlePageChange(page + 1)}
-            disabled={properties.length < expectedPageSize}
-          >
-            {t.next}
-          </button>
-        </div>
-
+        <button
+          className="paginationNext"
+          onClick={() => handlePageChange(page + 1)}
+          disabled={properties.length < expectedPageSize}
+        >
+          {t.next}
+        </button>
       </div>
     </div>
   );

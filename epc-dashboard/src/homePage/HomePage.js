@@ -7,7 +7,6 @@ import translations from '../locales/translations_homepage';
 import CitySection from "./CitySection"; 
 import liverpoolVideo from '../assets/liverpool.mp4'; 
 import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png'; 
-import TextToSpeech from '../Components/utils/TextToSpeech';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
 import PropertyCarousel from '../homePage/PropertyCarousel';
 import EPCSection from './EPCSection';
@@ -80,12 +79,8 @@ const HomePage = ({ user, language }) => {
         {/* 🔹 Dark Overlay */}
         <div className="hero-overlay">
           <div className="welcomeText">
-            <h1 className="mainMessage">
-              {t.welcomeMessage}
-            </h1>
-            <p className="subMessage">
-              {t.subMessage}
-            </p>
+            <h1 className="mainMessage">{t.welcomeMessage}</h1>
+            <p className="subMessage">{t.subMessage}</p>
           </div>
 
           {/* 🔍 Search Bar */}
@@ -98,15 +93,13 @@ const HomePage = ({ user, language }) => {
               placeholder={t.searchPlaceholder}
             />
           </div>
-            <button className="stylingSearchButton" onClick={handleSearch}>
-              {t.searchButton}
-            </button>
-          
-          
-          <button className = "scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
-            <span className="scrollDownArrow"> {"\u2193"} </span>
+          <button className="stylingSearchButton" onClick={handleSearch}>
+            {t.searchButton}
           </button>
 
+          <button className="scrollingArrow" onClick={() => clickableArrow("cityGrid")}>
+            <span className="scrollDownArrow"> {"\u2193"} </span>
+          </button>
         </div>
       </div>
 
