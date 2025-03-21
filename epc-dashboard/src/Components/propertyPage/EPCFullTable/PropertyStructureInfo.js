@@ -64,8 +64,8 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
     <div className="propertyInfoContainer">
       <div className="info-dropdown">
         <button onClick={() => toggleDropdown("windows")}>
-          <span className="data-headers">
-            {t.headers.windowsInfo}
+          <span className="data-headers"> 
+            {t.headers.windowsInfo} <span className='dropdown-arrow'>▼</span>
           </span>
         </button>
         {/* Windows Information */}
@@ -75,9 +75,10 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
               <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.headers.multiGlazeProportion)}`} className="greenQuestionMark"></Link>
               {t.headers.multiGlazeProportion}
             </span>
-              <progress className="progressBar" value={properties.multi_glaze_proportion} max={100} />
-              <span>{properties.multi_glaze_proportion}%</span> 
             </p>
+            <p><span className='data-headers'>
+            <progress value={properties.multi_glaze_proportion} max={100} />
+              {properties.multi_glaze_proportion}%</span></p>
           </div>
           <p><span className="data-headers">
             <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.headers.glazedType)}`} className="greenQuestionMark"></Link>
@@ -110,7 +111,7 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
       <div className="info-dropdown">
         <button onClick={() => toggleDropdown("floor")}>
           <span className="data-headers">
-            {t.headers.floorInfo}
+            {t.headers.floorInfo}<span className='dropdown-arrow'>▼</span>
           </span>
         </button>
         {/* Floor Information */}
@@ -158,7 +159,7 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
       <div className="info-dropdown">
         <button onClick={() => toggleDropdown("roof")}>
           <span className="data-headers">
-            {t.headers.roofInfo}
+            {t.headers.roofInfo}<span className='dropdown-arrow'>▼</span>
           </span>
         </button>
         {/* Roof Information */}
@@ -187,7 +188,7 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
       <div className="info-dropdown">
         <button onClick={() => toggleDropdown("walls")}>
           <span className="data-headers">
-            {t.headers.wallsInfo}
+            {t.headers.wallsInfo} <span className='dropdown-arrow'>▼</span>
           </span>
         </button>
         {/* walls Information */}
@@ -215,7 +216,7 @@ const PropertyStructureInfo = ({ properties, maxValues, language }) => {
               <Link to={`/faq/glossary-page?searchTerm=${encodeURIComponent(t.headers.wallsDescription)}`} className="greenQuestionMark"></Link>
               {t.headers.wallsDescription} 
             </span>
-            <span className="data-field">{classifyWall(properties.walls_description)}</span>
+            
           </p>
 
           <ProgressMeter category={classifyWall(properties.walls_description)} />

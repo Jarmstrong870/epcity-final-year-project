@@ -115,6 +115,18 @@ const PropertyPage = ({ user, property, language }) => {
       alert("Failed to send the property to the group chat.");
     }
   };
+  const getEpcRatingColor = (rating) => {
+    const colors = {
+      'A': '#008054',
+      'B': '#19b459', 
+      'C': '#8dce46',
+      'D': '#ffd500',
+      'E': '#fcaa65',
+      'F': '#ef8023',
+      'G': '#e9153b'
+    };
+    return colors[rating] || '#666666';
+  };
 
   return (
     <div className="property-page">
@@ -136,7 +148,8 @@ const PropertyPage = ({ user, property, language }) => {
             <div className="property-details">
               <span>🏠 {propertyData.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
               <span>🛏️ {propertyData.number_bedrooms || "N/A"} Bedrooms</span> {/* 5 Bedrooms */}
-              <span>⚡ {propertyData.current_energy_rating || "N/A"} EPC Rating</span> {/* Energy Rating */}
+              <span>⚡ <span style={{ color: getEpcRatingColor(propertyData.current_energy_rating) }}>
+                {propertyData.current_energy_rating}</span> EPC Rating</span>
             </div>
 
 

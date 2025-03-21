@@ -242,6 +242,31 @@ body {
 .paginationNext:hover {
   background-color: #3a5f41;
 }
+th, td {
+  border: 1px solid #d4d4d4;
+  padding: 12px;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+}
+
+th {
+  background-color: #0a2e15;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+td a {
+  color: #0a2e15;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+td a:hover {
+  color: #183d25;
+}
 
 /* Responsive Fix for Pagination */
 @media (max-width: 768px) {

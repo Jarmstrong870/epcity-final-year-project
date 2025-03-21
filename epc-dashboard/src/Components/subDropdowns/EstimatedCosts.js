@@ -48,21 +48,21 @@ const EstimatedCosts = ({ property, highlightIfBest, maxValues, language }) => {
         <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.heating_cost_current), maxValues?.minHeatingCostCurrent)}`}>
           <img src={radiatorGif} alt="Radiator Heating" className="cost-icon" />
           <p className="floating-label">{t.heatingCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.heating.toFixed(2)}</strong>
+          <strong className="cost-value">£{((animatedCosts.heating.toFixed(2)/365)*2).toFixed(2)}</strong>
         </div>
 
         {/* Hot Water Cost */}
         <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.hot_water_cost_current), maxValues?.minHotWaterCostCurrent)}`}>
           <img src={showerGif} alt="Shower Water" className="cost-icon" />
           <p className="floating-label">{t.hotWaterCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.hotWater.toFixed(2)}</strong>
+          <strong className="cost-value">£{((animatedCosts.hotWater.toFixed(2)/365)).toFixed(2)}</strong>
         </div>
 
         {/* Lighting Cost */}
         <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.lighting_cost_current), maxValues?.minLightingCostCurrent)}`}>
           <img src={bulbGif} alt="Light Bulb" className="cost-icon" />
           <p className="floating-label">{t.lightingCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.lighting.toFixed(2)}</strong>
+          <strong className="cost-value">£{(animatedCosts.lighting.toFixed(2)/365).toFixed(2)}</strong>
         </div>
       </div>
     </div>
