@@ -4,8 +4,9 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import EPCGraph from './EPCGraph';
 import EPCFullTable from './EPCFullTable/EPCFullTable';
 import SimpleMapView from './SimpleMapView';
-import MapView from './MapView'; 
+import MapView from './MapView';
 import StreetView from './StreetView';
+import RecommendationTable from './RecommendationTable';
 import FavouriteStar from '../../propertySearch/FavouriteStar';
 import { fetchPropertyDetails, fetchLocationCoords } from './propertyUtils';
 import './PropertyPage.css';
@@ -21,7 +22,7 @@ const PropertyPage = ({ user, property, language }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [streetViewURL, setStreetViewURL] = useState('');
   const [loading, setLoading] = useState(true);
-  const {favouriteProperties} = useContext(FavouriteContext);
+  const { favouriteProperties } = useContext(FavouriteContext);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [groups, setGroups] = useState([]);
@@ -30,9 +31,10 @@ const PropertyPage = ({ user, property, language }) => {
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
   const [isFavourited, setIsFavourited] = useState(false);
+  const [isLandlord, setIsLandlord] = useState(false);
 
 
-  
+
   useEffect(() => {
     if (uprn) {
       fetchPropertyDetails(uprn, setPropertyData, setErrorMessage, setLoading);
@@ -40,7 +42,7 @@ const PropertyPage = ({ user, property, language }) => {
   }, [uprn]);
 
   useEffect(() => {
-    setPropertyData((previous) => ({...previous}));
+    setPropertyData((previous) => ({ ...previous }));
   }, [favouriteProperties]);
 
   useEffect(() => {
@@ -58,11 +60,15 @@ const PropertyPage = ({ user, property, language }) => {
 
   useEffect(() => {
     if (user) {
+      console.log("user type", user.typeUser)
+      if (user.typeUser === 'landlord') {
+        setIsLandlord(true);
+      }
       axios.get("http://localhost:5000/get-groups", {
         headers: { "User-Email": user.email },
       })
-      .then((response) => setGroups(response.data))
-      .catch((error) => console.error("Error fetching groups:", error));
+        .then((response) => setGroups(response.data))
+        .catch((error) => console.error("Error fetching groups:", error));
     }
   }, [user]);
 
@@ -84,7 +90,7 @@ const PropertyPage = ({ user, property, language }) => {
     return <p>Loading property details...</p>;
   }
   console.log("Property Data:", Object.keys(propertyData));
-  console.log("property floor level",propertyData["glazed_type"])
+  console.log("property floor level", propertyData["glazed_type"])
 
   const sendToGroupChat = async () => {
     if (!selectedGroup) {
@@ -112,7 +118,7 @@ const PropertyPage = ({ user, property, language }) => {
 
   return (
     <div className="property-page">
-      
+
 
       {showPopup && <div className="popup-message">{popupMessage}</div>}
 
@@ -123,19 +129,19 @@ const PropertyPage = ({ user, property, language }) => {
               <h2 className="property-title">
                 <span>{propertyData.address}, {propertyData.local_authority_label}, {propertyData.postcode}</span> <FavouriteStar user={user} property={propertyData} />
               </h2>
-                <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
+              <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
                 📩 Send to Group Chat
-                </div>
+              </div>
             </div>
-                <div className="property-details">
-                  <span>🏠 {propertyData.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
-                  <span>🛏️ {propertyData.number_bedrooms || "N/A"} Bedrooms</span> {/* 5 Bedrooms */}
-                  <span>⚡ {propertyData.current_energy_rating || "N/A"} EPC Rating</span> {/* Energy Rating */}
-                </div>
+            <div className="property-details">
+              <span>🏠 {propertyData.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
+              <span>🛏️ {propertyData.number_bedrooms || "N/A"} Bedrooms</span> {/* 5 Bedrooms */}
+              <span>⚡ {propertyData.current_energy_rating || "N/A"} EPC Rating</span> {/* Energy Rating */}
+            </div>
 
-            
+
           </div>
-          
+
         </div>
       </div>
 
@@ -144,9 +150,9 @@ const PropertyPage = ({ user, property, language }) => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Select a Group</h3>
-            <select 
-              className="group-select-dropdown" 
-              value={selectedGroup} 
+            <select
+              className="group-select-dropdown"
+              value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
             >
               <option value="">Select a Group</option>
@@ -189,6 +195,13 @@ const PropertyPage = ({ user, property, language }) => {
           />
         )}
       </div>
+
+      {isLandlord ? (
+        <div className='Recommendation-Table'>
+          <h3>Efficiency Recommendations</h3>
+          <RecommendationTable property={propertyData}></RecommendationTable>
+        </div>
+      ) : (<></>)}
 
       {/* Added space before MapView */}
       <div className="map-view-section">
