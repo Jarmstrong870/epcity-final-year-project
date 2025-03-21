@@ -24,6 +24,7 @@
   margin-bottom: 20px;
   text-align: center;
   font-weight: 600;
+  margin-bottom: 60px;
 }
 
 /* ====== Group List ====== */
@@ -359,13 +360,15 @@
 }
 
 .message-chat-name {
-  display: inline-block;
-  text-align: left;
-  min-height: 30px;
-  padding: 10px;
-  font-size: 2rem;
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1f2e2d;
+  padding: 8px 0;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #007aff;
   text-transform: capitalize;
-  text-decoration: underline;
+  text-decoration: none !important;
 }
 
 .message-chat-name:hover {
@@ -377,6 +380,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  margin-bottom: 50px;
 }
 
 .message-dropdown-icon {

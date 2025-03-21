@@ -385,7 +385,6 @@ return (
     <div className="sidebar">
       <h2 className="logo">
         {t.groupChats}
-        <TextToSpeech text={t.groupChats} language={language} />
       </h2>
 
       <button className="create-group-button" onClick={() => confirmationPopUp("create")}>
@@ -409,6 +408,7 @@ return (
 
 
       </div>
+      <TextToSpeech text={t.groupChats} language={language} />
     </div>
 
 
