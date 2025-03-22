@@ -141,10 +141,7 @@ h3.glossary {
   margin-bottom: 30px;
 }
 
-h3:hover {
-  background: #e9ecef;
-  transform: scale(1.02);
-}
+
 
 /* Glossary Section */
 .glossary-section {
