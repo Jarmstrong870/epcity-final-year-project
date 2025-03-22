@@ -26,9 +26,18 @@ const Tutorials = ({ language }) => {
   };
 
   return (
-    <div>
-      <h2 className="stylingTitle">{t.title}</h2>
-      <p>{t.description}</p>
+    <div className="tutorials-base">
+      <div className="sidebar-header">
+        <button className="back-to-menu" onClick={() => navigate(-1)}>
+          ← {t.backToProperties || "Back to Menu"}
+        </button>
+        </div>
+      <div className="faq-options-header">
+        <h2 className="tutorials-title">{t.title}</h2>
+        <p className="tutorials-subtitle">{t.description}</p>
+
+    </div>
+
       <div className="tutorialGrid">
         {Object.entries(tutorialOptions).map(([title, { path, image }]) => (
           <div
@@ -36,16 +45,14 @@ const Tutorials = ({ language }) => {
             className="tutorialCard"
             onClick={() => navigate(`/tutorials/${path}`)}
             style={{
-              backgroundImage: `url(${image})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              color: '#ffffff',
-              padding: '20px',
-              borderRadius: '10px',
+              backgroundImage: `url(${image})`
             }}
           >
-            <h3>{title}</h3>
+            <h2 className="tutorial-title">{title}</h2>
+          <div className="tutorial-watch-base">
+            <span className="tutorial-watch"> {"\u{1F50E}"} Watch Now! </span>
           </div>
+        </div>
         ))}
       </div>
     </div>

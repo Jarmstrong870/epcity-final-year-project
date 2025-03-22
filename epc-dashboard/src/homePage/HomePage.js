@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import PropertyCard from '../homePage/PropertyCard';
 import '../homePage/HomePage.css';
 import { PropertyContext } from '../Components/utils/propertyContext';
@@ -10,8 +10,6 @@ import epcLogo from '../assets/EPCITY-LOGO-UPDATED.png';
 import CustomAlgorithm from '../customAlgorithm/CustomAlgorithm';
 import PropertyCarousel from '../homePage/PropertyCarousel';
 import EPCSection from './EPCSection';
-import FavouritePage from '../Components/FavouritePage';
-import GroupChats from '../login&register/messages';
 import AboutUs from '../aboutUs/aboutus';
 //import FAQs from '../FAQ/FAQ';
 
@@ -20,6 +18,7 @@ const HomePage = ({ user, language }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { fetchTopRatedProperties, topRatedProperties } = useContext(PropertyContext);
 
   const t = translations[language] || translations.en;
@@ -36,7 +35,27 @@ const HomePage = ({ user, language }) => {
     };
 
     fetchTopProperties();
-  }, []);
+
+    if (location.search.includes("scrollToCustomAlgorithm=true")) {
+      console.log("Redirect detected!"); // ✅ Debugging
+  
+      if (window.location.pathname !== "/") {
+        console.log("Redirecting back to home...");
+        navigate("/?scrollToCustomAlgorithm=true");
+      } else {
+        setTimeout(() => {
+          const homePageSection = document.getElementById("customAlgorithmSection");
+          if (homePageSection) {
+            console.log("Scrolling to section...");
+            homePageSection.scrollIntoView({ behavior: "smooth" });
+            setTimeout(() => {
+              setCustomAlgorithmPopUp(true);
+            }, 400);
+          }
+        }, 300);
+      }
+    }
+  }, [location, navigate]);
 
   const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
@@ -117,13 +136,13 @@ const HomePage = ({ user, language }) => {
 
     <section className="background-section1">
       <div className="functionality-container">
-      <h1 className="functionality-bar-header">{"\u26A0"}Your Essential Property Resources</h1>
+      <h1 className="functionality-bar-header">Your Essential Property Resources</h1>
 
       <div className="functionalityBar">
           {/* Favouriting Section */}
           <div className="functionality-column">
             <div className="functionality-header">
-              <span className="functionality-icon heart">{"\u2764\uFE0F"}</span>
+              <span className="functionality-icon heart">{"\u2661"}</span>
               <span>Want a place to keep your Favourite properties?</span>
             </div>
             <div className="functionality-content">
@@ -176,7 +195,7 @@ const HomePage = ({ user, language }) => {
         </div>
 
       <div className="custom-algorithm-right">
-            <h2 className="custom-algorithm-title">{"\u2764\uFE0F"}
+            <h2 className="custom-algorithm-title">
               {t.customAlgorithmTitle}
 
               <div className="custom-algorithm-subtitle">

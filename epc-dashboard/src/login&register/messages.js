@@ -97,26 +97,39 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const createGroup = async () => {
-    if (!newGroupName || !groupMembers) return;
+  const createGroup = async (groupName, membersInput) => {
+    if (!groupName || !membersInput) return;
+
+    const allMembers = membersInput.split(",").map((email) => email.trim())
 
     try {
       const response = await axios.post(
         "http://localhost:5000/create-group",
         {
-          name: newGroupName,
-          members: groupMembers.split(",").map((email) => email.trim()),
+          name: groupName,
+          members: allMembers,
         },
         {
           headers: { "User-Email": user.email },
         }
       );
-      setGroups([...groups, response.data]);
-      setNewGroupName("");
-      setNewGroupMembers("");
-    } catch (error) {
-      console.error(t.errorCreatingGroup, error);
-    }
+
+      if (response.status === 201 && response.data.group_id) {
+        const newGroup = response.data;
+
+        setGroups((prevGroups) => [...prevGroups, newGroup]);
+        setSelectedGroup(newGroup);
+  
+        setTimeout(() => fetchGroups(), 200);
+  
+        setNewGroupName("");
+        setNewGroupMembers("");
+      } else {
+        console.error("Failure to create group", response.data.error);
+        }
+      } catch (e) {
+        console.error("Unable to create group");
+      }
   };
 
   const addNewMember = async (groupName, latestUserEmail) => {
@@ -342,13 +355,19 @@ const Messages = ({ user, language }) => {
           title: "Delete Group and Data",
           popupType: "action",
           messageContents: "Are you sure you want to delete this group and its data?",
-          confirmStatus: () => deleteGroup(groupId)
+          confirmStatus: async () => {
+            await deleteGroup(groupId);
+            setSelectedGroup(null);
+          }
         },
         exit: {
           title: "Leave Group",
           popupType: "action",
           messageContents: "Are you sure you want to leave this group chat?",
-          confirmStatus: () => exitGroup(groupId)
+          confirmStatus: async () => {
+            await exitGroup(groupId);
+            setSelectedGroup(null);
+          }
         },
         groupDetails: {
           title: "View All Group Members",

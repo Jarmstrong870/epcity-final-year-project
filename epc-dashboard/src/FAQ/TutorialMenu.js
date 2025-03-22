@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './TutorialMenu.css';
 import introVideo from '../assets/intro.mp4';
 import translations from '../locales/translations_tutorialmenu';
 
 const TutorialMenu = ({ language }) => {
   const { tutorialCategory } = useParams();
+   const navigate = useNavigate();
 
   const [t, setTranslations] = useState(translations[language] || translations.en);
   const [selectedTutorialID, setSelectedTutorialID] = useState(null);
@@ -103,7 +104,12 @@ const TutorialMenu = ({ language }) => {
     <div className="tutorialMenu">
       {/* Navigation sidebar */}
       <div className="navigationSidebar">
-        <h3>{t.categories[checkCategory]}</h3>
+        <div className="sidebar-header">
+          <button className="back-to-tutorials" onClick={() => navigate(-1)}>
+             ← {t.backToProperties || "Back to Tutorials"}
+          </button>
+          <h2 className="title">{t.categories[checkCategory]}</h2>
+        </div>
 
         {/* List all available tutorials for the category */}
         {availableTutorials.map((tutorial) => (
@@ -122,12 +128,12 @@ const TutorialMenu = ({ language }) => {
 
       {/* Main Page view */}
       <div className="contentView">
-        <div className="titleStyle">
-          <h3>{selectedTutorial?.title || t.noTutorialSelected}</h3>
-        </div>
-
+        <div>
+          <h2 className="videoTitle">{selectedTutorial?.title || t.noTutorialSelected}</h2>
+      
         {/* Tutorial description */}
-        <p className="descriptionStyle">{selectedTutorial?.description || t.chooseTutorial}</p>
+          <h2 className="videoSubtitle">{selectedTutorial?.description || t.chooseTutorial}</h2>
+        </div>
 
         {/* Video player for the selected tutorial */}
         {selectedTutorial?.link && (

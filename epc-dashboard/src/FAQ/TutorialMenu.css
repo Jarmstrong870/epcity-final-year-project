@@ -11,10 +11,36 @@
     padding: 20px;
 }
 
-.navigationSidebar h3{
-    font-size: 1.0rem;
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 20px;
-    color: #333333
+}
+
+.sidebar-header .back-to-tutorials {
+    font-size: 16px;
+    padding: 12px 18px;
+}
+  
+.sidebar-header .back-to-tutorials:hover {
+    background: #009a03;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+  
+.sidebar-header .back-to-tutorials:active {
+    transform: scale(0.98);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-header .title{
+    font-size: 1.0rem;
+    margin: 0;
+    color: #333333;
+    font-size: 1.6rem;
+    text-decoration: underline;
 }
 
 .navigationBarElement{
@@ -28,12 +54,12 @@
 
 .navigationBarElement:hover{
     color: #ffffff;
-    background-color: #007bff;
+    background-color: #009a03;
 }
 
 .navigationBarElement.selected{
     color: #ffffff;
-    background-color: #0056b3;
+    background-color: #1e4020;
 }
 
 .errorMessage{
@@ -70,11 +96,10 @@
 .tutorialVideos {
     width: 90%;
     background-color: #ffffff;
-    border-right: 1px solid;
     padding: 20px;
 }
 
-.titleStyle {
+.videoTitle {
     background-color: #ffffff;
     border: 3px solid #000000;
     width: 1100px;
@@ -82,18 +107,18 @@
     padding: 15px 20px;
     margin-bottom: 20px;
     text-align: center;
-}
-
-.titleStyle h3 {
     font-size: 3rem;
     color: #333333;
     margin: 0;
 }
 
-.descriptionStyle {
-    white-space: pre-wrap;
-    font-size: 3.0rem;
-    color: #ff1d1d;
-    margin: 20px;
+.videoSubtitle {
+    background-color: #ffffff;
+    width: 1100px;
+    padding: 40px 20px;
     text-align: center;
+    font-size: 1.25rem;
+    color: #333333;
+    margin: 0;
 }
+
