@@ -26,6 +26,7 @@
     left: 50%;
     transform: translateX(-50%);
     font-weight: bold;
-    color: white;
+    color: #333;
+    font-size: 18px;
   }
   

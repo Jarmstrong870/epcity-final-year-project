@@ -115,3 +115,15 @@
   border-radius: 5px;
   padding: 5px;
 }
+
+.progressBar {
+  margin: 10px auto;
+  text-align: center;
+}
+
+.dropdown-arrow {
+  margin-left: 5px;
+  font-size: 1.2rem;
+  vertical-align: middle;
+  color: inherit;
+}
