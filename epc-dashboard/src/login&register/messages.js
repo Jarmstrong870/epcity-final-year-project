@@ -319,7 +319,7 @@ const Messages = ({ user, language }) => {
   };
 
   const confirmationPopUp = async (action, groupId) => {
-    // Reset state before opening the popup
+    // Resets before opening the popup
       setNewGroupName("");
       setNewGroupMembers("");
       setNewUserEmail("");
