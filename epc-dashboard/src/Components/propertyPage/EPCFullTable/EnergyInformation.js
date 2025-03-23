@@ -403,7 +403,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
     
               {/* Lighting Progress & Star Ratings */}
               <div className={styles.EnergyInfo_visualisedDescriptions}>
-                <div className={styles.progressBase}>
+                
                   <div className={styles.EnergyInfo_progressContainer}>
                     <h4>{t.lowEnergyLighting}</h4>
                     <progress
@@ -423,7 +423,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                       {renderStarRating(properties["lighting_energy_eff"], t)}
                     </p>
                   </div>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -462,6 +462,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </table>
     
               {/* Hot Water Efficiency */}
+              <div className={styles.EnergyInfo_visualisedDescriptions}>
               <div className={styles.EnergyInfo_progressContainer}>
                     <h4>Hot Water Heating System</h4>
                     
@@ -473,6 +474,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               >
                 <h4>{t.hotWaterEnergyEfficiency}:</h4>
                 <p>{renderStarRating(properties["hot_water_energy_eff"], t)}</p>
+              </div>
               </div>
             </div>
           </div>

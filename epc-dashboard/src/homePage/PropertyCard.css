@@ -9,6 +9,7 @@
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   margin: 0 auto; /* centers the card */
+  height: 95%;
 }
 
 .property-card:hover {
@@ -42,6 +43,15 @@
 .property-card__info {
   padding: 16px;
   background-color: #fff;
+
+}
+
+.property-card_info h4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Header: left-aligned address and star icon at the right */

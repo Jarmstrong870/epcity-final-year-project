@@ -50,7 +50,7 @@ const CostComparisonGraph = ({ properties }) => {
             {/* Dropdown to select one metric at a time */}
             <div className="metric-selector">
                 <label>Select a Metric: </label>
-                <select value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
+                <select className="selectMetric" value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
                     <option value="Heating">Heating Costs</option>
                     <option value="Hot Water">Hot Water Costs</option>
                     <option value="Lighting">Lighting Costs</option>

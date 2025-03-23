@@ -39,10 +39,11 @@ const RankingCard = ({ title, metricName, rankData }) => {
     <div className={styles.RankingCard} style={{ backgroundColor: bgColor }}>
       <h4>{title}</h4>
       <p>
-        This property is ranked {ordinalSuffix(rank)} out of {total} for {metricName}
+        This property is ranked <strong>{ordinalSuffix(rank)}</strong> out of {total} for {metricName}
         <br />
         (in this postcode &amp; bedroom category)
       </p>
+
     </div>
   );
 };

@@ -436,7 +436,7 @@ return (
       {selectedGroup ? (
         <>
           <div className="message-chat-header">
-            <h2 className="message-chat-name">{selectedGroup.name}</h2>
+            <h2 className="message-chat-name">Group Name: {selectedGroup.name}</h2>
             <div className="message-profile-icon" onClick={() => setDropdownMenu(!dropdownMenu)}>
               <h4 className="message-dropdown-icon">{"\u2699"} Settings </h4>
 

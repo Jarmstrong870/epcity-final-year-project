@@ -634,6 +634,30 @@ section {
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
+.custom-algorithm-button-homepage {
+  padding: 16px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  text-align: center;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+.custom-algorithm-button-homepage:hover {
+  transform: scale(1.06);
+}
+
+.custom-algorithm-button-homepage:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+}
+
 /* ===========================
    UK Cities Section
    =========================== */
@@ -645,7 +669,7 @@ section {
 
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   position: relative;
   overflow: hidden;
 }

@@ -225,7 +225,7 @@ const HomePage = ({ user, language }) => {
               {"\u{1F3AF}"} Start Now and discover your perfect property - it is that quick and easy!
 
             <div className="custom-algorithm-button">
-              <button className="button" onClick={togglePopUp}> 
+              <button className="custom-algorithm-button-homepage" onClick={togglePopUp}> 
                 Start Now and Find Your Match!
               </button>
 

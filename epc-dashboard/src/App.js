@@ -200,11 +200,11 @@ function App() {
               </div>
 
               <div className="profile-icon" onClick={toggleDropdown}>
-  <img src={profileImage} alt="Profile" className="profile-img" />
-  {dropdownVisible && (
-    <div className="dropdown-menu">
-      {user ? (
-        <>
+          <img src={profileImage} alt="Profile" className="profile-img" />
+          {dropdownVisible && (
+            <div className="dropdown-menu">
+              {user ? (
+                <>
           <p className="welcome-message">Welcome, {user.firstname}</p>
           {user.typeUser === "landlord" && (
             <Link to="/landlord-dashboard">Landlord View</Link>
@@ -254,7 +254,7 @@ function App() {
 </div>
 
 
-
+</div>
             </div>
           </div>
 
