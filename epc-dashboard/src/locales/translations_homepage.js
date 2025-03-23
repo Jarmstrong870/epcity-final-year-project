@@ -1,7 +1,7 @@
 const translations = {
   en: {
     welcomeMessage: "EPCity - Find out about your property",
-    subMessage: "Cut Costs, Not Comfort - Find an Efficiency Property",
+    subMessage: "Cut Costs, Not Comfort - Find an Efficient Property",
     searchPlaceholder: "Search for properties...",
     searchButton: "Search",
     epcInformation: "What is an EPC?",
