@@ -30,12 +30,7 @@ const CitySection = ({ language }) => {
   return (
     <div className="uk-cities-section">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
-<<<<<<< HEAD
         <h2 className="uk-cities-title">{"\u{1F30D}"}{t.ukCitiesTitle}</h2>
-=======
-        <h2 className="uk-cities-title">{t.ukCitiesTitle}</h2>
-        {/*<TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />*/}
->>>>>>> 6f2f0a00246968a5582a2ca9be398f837b2fdbe7
       </div>
 
       <h4 className="uk-cities-subtitle">{t.ukCitiesSubtitle}</h4>
@@ -51,7 +46,6 @@ const CitySection = ({ language }) => {
           </div>
         ))}
       </div>
-<<<<<<< HEAD
 
       <div className="about-us-button-block">
         <h2 className="about-us-button-header"> {"\u{1F4A1}"} {t.unsureWhereToStart}</h2>
@@ -62,8 +56,6 @@ const CitySection = ({ language }) => {
           </button>
         </p>
       </div>
-=======
->>>>>>> 6f2f0a00246968a5582a2ca9be398f837b2fdbe7
     </div>
   );
 };
