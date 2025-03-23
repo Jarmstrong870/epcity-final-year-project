@@ -29,10 +29,8 @@ const CitySection = ({ language }) => {
 
   return (
     <div className="uk-cities-section">
-      {}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
-        <h2 className="uk-cities-title">{t.ukCitiesTitle}</h2>
-        {/*<TextToSpeech text={`${t.ukCitiesTitle} ${t.ukCitiesSubtitle}`} language={language} />*/}
+        <h2 className="uk-cities-title">{"\u{1F30D}"}{t.ukCitiesTitle}</h2>
       </div>
 
       <h4 className="uk-cities-subtitle">{t.ukCitiesSubtitle}</h4>
@@ -47,6 +45,16 @@ const CitySection = ({ language }) => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="about-us-button-block">
+        <h2 className="about-us-button-header"> {"\u{1F4A1}"} {t.unsureWhereToStart}</h2>
+        <p className="about-us-paragraph">
+          {t.viewAllPropertiesText}
+          <button className="about-us-page-button" onClick={() => navigate("/about-us")}>
+            {t.visitAboutUsPage}
+          </button>
+        </p>
       </div>
     </div>
   );

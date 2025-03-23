@@ -10,34 +10,6 @@ import radiatorGif from "./icons/radiator.gif";
 
 const EstimatedCosts = ({ property, highlightIfBest, maxValues, language }) => {
   const t = translations[language] || translations.en;
-  const [animatedCosts, setAnimatedCosts] = useState({
-    heating: 0,
-    hotWater: 0,
-    lighting: 0,
-  });
-
-  useEffect(() => {
-    const animateCost = (targetValue, key) => {
-      let current = 0;
-      const duration = 1200;
-      const stepTime = Math.max(10, Math.floor(duration / targetValue));
-
-      const timer = setInterval(() => {
-        current += Math.ceil(targetValue / 30);
-        if (current >= targetValue) {
-          current = targetValue;
-          clearInterval(timer);
-        }
-        setAnimatedCosts((prev) => ({ ...prev, [key]: current }));
-      }, stepTime);
-    };
-
-    if (property) {
-      setTimeout(() => animateCost(parseNumericValue(property.heating_cost_current) || 0, "heating"), 200);
-      setTimeout(() => animateCost(parseNumericValue(property.hot_water_cost_current) || 0, "hotWater"), 400);
-      setTimeout(() => animateCost(parseNumericValue(property.lighting_cost_current) || 0, "lighting"), 600);
-    }
-  }, [property]);
 
   return (
     <div className="estimated-costs-container">
@@ -45,24 +17,24 @@ const EstimatedCosts = ({ property, highlightIfBest, maxValues, language }) => {
 
       <div className="estimated-costs-content">
         {/* Heating Cost */}
-        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.heating_cost_current), maxValues?.minHeatingCostCurrent)}`}>
+        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.heating_example), maxValues?.minHeatingCostCurrent)}`}>
           <img src={radiatorGif} alt="Radiator Heating" className="cost-icon" />
           <p className="floating-label">{t.heatingCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.heating.toFixed(2)}</strong>
+          <strong className="cost-value">£{parseNumericValue(property.heating_example).toFixed(2)}</strong>
         </div>
 
         {/* Hot Water Cost */}
-        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.hot_water_cost_current), maxValues?.minHotWaterCostCurrent)}`}>
+        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.hot_water_example), maxValues?.minHotWaterCostCurrent)}`}>
           <img src={showerGif} alt="Shower Water" className="cost-icon" />
           <p className="floating-label">{t.hotWaterCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.hotWater.toFixed(2)}</strong>
+          <strong className="cost-value">£{parseNumericValue(property.hot_water_example).toFixed(2)}</strong>
         </div>
 
         {/* Lighting Cost */}
-        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.lighting_cost_current), maxValues?.minLightingCostCurrent)}`}>
+        <div className={`estimated-cost-item ${highlightIfBest(parseNumericValue(property.lighting_example), maxValues?.minLightingCostCurrent)}`}>
           <img src={bulbGif} alt="Light Bulb" className="cost-icon" />
           <p className="floating-label">{t.lightingCostExample}:</p>
-          <strong className="cost-value">£{animatedCosts.lighting.toFixed(2)}</strong>
+          <strong className="cost-value">£{parseNumericValue(property.lighting_example).toFixed(2)}</strong>
         </div>
       </div>
     </div>

@@ -75,7 +75,7 @@ const PropertyCard = ({ user, property, language }) => {
             <span className="detail-value">{property.current_energy_efficiency}</span>
           </div>
           <div className="detail-item">
-            <span className="detail-label">Bedrooms:</span>
+            <span className="detail-label">{t.bedrooms}:</span>
             <span className="detail-value">{property.number_bedrooms}</span>
           </div>
         </div>

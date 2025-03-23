@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Switch from "react-switch";
 import "./TextToSpeech.css";
+import translations from '../../locales/translations_tts';
 
 const languageMap = {
   en: "en-GB",
@@ -20,6 +21,8 @@ const TextToSpeech = ({ language }) => {
   const [currentVoice, setCurrentVoice] = useState(null);
   const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [showSpeechBubble, setShowSpeechBubble] = useState(false);
+
+  const t = translations[language] || translations.en;
 
   const updateVoices = () => {
     const voices = window.speechSynthesis.getVoices();
@@ -98,7 +101,7 @@ const TextToSpeech = ({ language }) => {
 
   return (
     <div className="tts-toggle-container">
-      <label className="tts-label">Text To Speech</label>
+      <label className="tts-label">{t.textToSpeech}</label>
 
       {/* Toggle switch */}
       <Switch
@@ -122,10 +125,9 @@ const TextToSpeech = ({ language }) => {
             X
           </div>
           <ol>
-            <li>You can trigger text to speech in 3 ways:</li>
-            <li>1. Hover over buttons or links.</li>
-            <li>2. Highlight text with your cursor and it will be read aloud.</li>
-            <li>3. Select a dropdown option to hear it spoken.</li>
+            <li>{t.triggerTextToSpeech1}</li>
+            <li>{t.triggerTextToSpeech2}</li>
+            <li>{t.triggerTextToSpeech3}</li>
           </ol>
         </div>
       )}

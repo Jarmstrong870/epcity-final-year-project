@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { fetchGraphData } from "../propertyUtils";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
+import translations from "./locales/translations_costgraph";  
 import "./CostComparisonGraph.css";
 
-const CostComparisonGraph = ({ properties }) => {
+const CostComparisonGraph = ({ properties, language }) => {
+    const t = translations[language] || translations.en; // Get translations for the selected language
     const [graphData, setGraphData] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [selectedMetric, setSelectedMetric] = useState("Heating"); // Default: Heating
@@ -26,10 +28,10 @@ const CostComparisonGraph = ({ properties }) => {
 
     // Y-axis labels for each metric
     const yAxisLabels = {
-        Heating: "£ per year",
-        "Hot Water": "£ per year",
-        Lighting: "£ per year",
-        "Total Floor Area": "Square Meters(m²)"
+        Heating: t.yearlyCost, // Translated text for yearly cost
+        "Hot Water": t.yearlyCost, // Translated text for yearly cost
+        Lighting: t.yearlyCost, // Translated text for yearly cost
+        "Total Floor Area": t.floorArea, // Translated text for floor area
     };
 
     // Custom Tooltip Formatter (Now returns JSX instead of a string)
@@ -42,25 +44,24 @@ const CostComparisonGraph = ({ properties }) => {
         );
     };
 
-
     return (
         <div className="epc-container">
-            <h2 className="sectionHeader">Cost Comparison Graph</h2>
+            <h2 className="sectionHeader">{t.costComparisonGraph}</h2>  {/* Translated text for graph header */}
 
             {/* Dropdown to select one metric at a time */}
             <div className="metric-selector">
-                <label>Select a Metric: </label>
-                <select className="selectMetric" value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
-                    <option value="Heating">Heating Costs</option>
-                    <option value="Hot Water">Hot Water Costs</option>
-                    <option value="Lighting">Lighting Costs</option>
-                    <option value="Total Floor Area">Total Floor Area</option>
+                <label>{t.selectMetric} </label>  {/* Translated label */}
+                <select value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
+                    <option value="Heating">{t.heatingCosts}</option>  {/* Translated options */}
+                    <option value="Hot Water">{t.hotWaterCosts}</option>  {/* Translated options */}
+                    <option value="Lighting">{t.lightingCosts}</option>  {/* Translated options */}
+                    <option value="Total Floor Area">{t.floorArea}</option>  {/* Translated options */}
                 </select>
             </div>
 
             {/* Render Graph */}
             {graphData.length === 0 ? (
-                <p>Loading or no data available...</p>
+                <p>{t.loadingData}</p>  
             ) : (
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -74,11 +75,11 @@ const CostComparisonGraph = ({ properties }) => {
                             {chartData.map((entry, index) => (
                                 <Cell
                                     key={`cell-${index}`}
-                                    fill={entry.uprn === properties.uprn ? "#279f49" : "#2d2d2d" } // Highlight current property in gold
-                                    stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Add a black border for extra emphasis
+                                    fill={entry.uprn === properties.uprn ? "#279f49" : "#2d2d2d"} // Highlight current property in green
+                                    stroke={entry.uprn === properties.uprn ? "#000" : "none"} // Black border for emphasis
                                     strokeWidth={entry.uprn === properties.uprn ? 2 : 0}
-                                    cursor="pointer" // Makes it visually clickable
-                                    onClick={() => window.location.href = `/property/${entry.uprn}`} // Redirect when clicked
+                                    cursor="pointer" // Makes it clickable
+                                    onClick={() => window.location.href = `/property/${entry.uprn}`} // Redirect on click
                                 />
                             ))}
                         </Bar>

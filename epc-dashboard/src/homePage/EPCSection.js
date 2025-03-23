@@ -1,10 +1,9 @@
 import React from 'react';
 import './EPCSection.css';
-// Replace with your own EPC image
 import epcGraphImg from '../assets/epc-image.jpg';
+import translations from '../locales/translations_epcsection';
 
-
-const EPCSection = () => {
+const EPCSection = ({ language }) => {
 
   const epcInformationVideo = (videoId) => {
       window.open(`https://www.youtube.com/embed/${videoId}`,
@@ -12,7 +11,9 @@ const EPCSection = () => {
         "width = 600, height = 400, scrollbars = no"
       )  
   };
-  
+
+  const t = translations[language] || translations.en;  // Load translations
+
   return (
     <div className="epc-section">
       <div className="epc-section__left">
@@ -24,28 +25,24 @@ const EPCSection = () => {
       </div>
       <div className="epc-section__right">
         <div className="epc-question-block">
-          <h2>What is an EPC?</h2>
+          <h2>{t.whatIsEPC}</h2>
           <p>
-            An EPC (Energy Performance Certificate) is a document that provides
-            an energy efficiency rating for a property, offering insights into
-            how to improve its overall efficiency.
+            {t.epcDescription}
           </p>
         </div>
 
         <div className="epc-question-block">
-          <h2>What do we do at EPcity?</h2>
+          <h2>{t.whatDoWeDo}</h2>
           <p>
-            At EPcity, we help you find properties that align with your energy
-            efficiency goals. Our system rates homes based on their EPC score
-            and other factors, making it easier for you to choose the perfect fit.
+            {t.epcCityDescription}
           </p>
         </div>
 
         <div className="epc-question-block">
-          <h2>Want to learn more about EPCs?</h2>
+          <h2>{t.learnMoreAboutEPCs}</h2>
           <p>
-            <button className="epcVideoButton" onClick= {() => epcInformationVideo("4JuAytTMO-Q")}>
-              Find out more about an EPC
+            <button className="epcVideoButton" onClick={() => epcInformationVideo("4JuAytTMO-Q")}>
+              {t.findOutMoreButton}
             </button>
           </p>
         </div>

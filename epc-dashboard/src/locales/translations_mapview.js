@@ -1,5 +1,6 @@
 const translations = {
   en: {
+    loadingMap: "Loading map...",
     showRoute: "Show route to selected location",
     selectDestination: "Select Destination:",
     travelMode: "Travel Mode:",
@@ -14,8 +15,12 @@ const translations = {
       gyms: "🏋️ Gyms & Leisure",
       libraries: "📚 Libraries",
     },
+    planYourJourney: "Plan Your Journey",
+    exploreDistance: "You’ve chosen a property near",
+    exploreDetails: "Explore the distance between some useful locations in",
   },
   fr: {
+    loadingMap: "Chargement de la carte...",
     showRoute: "Afficher l'itinéraire vers l'emplacement sélectionné",
     selectDestination: "Sélectionner la destination :",
     travelMode: "Mode de transport :",
@@ -30,8 +35,12 @@ const translations = {
       gyms: "🏋️ Salles de sport et loisirs",
       libraries: "📚 Bibliothèques",
     },
+    planYourJourney: "Planifiez votre voyage",
+    exploreDistance: "Vous avez choisi une propriété près de",
+    exploreDetails: "Explorez la distance entre certaines lieux utiles à",
   },
   es: {
+    loadingMap: "Cargando mapa...",
     showRoute: "Mostrar ruta al lugar seleccionado",
     selectDestination: "Seleccionar destino:",
     travelMode: "Modo de viaje:",
@@ -46,8 +55,12 @@ const translations = {
       gyms: "🏋️ Gimnasios y ocio",
       libraries: "📚 Bibliotecas",
     },
+    planYourJourney: "Planifica tu viaje",
+    exploreDistance: "Has elegido una propiedad cerca de",
+    exploreDetails: "Explora la distancia entre algunos lugares útiles en",
   },
   pl: {
+    loadingMap: "Ładowanie mapy...",
     showRoute: "Pokaż trasę do wybranej lokalizacji",
     selectDestination: "Wybierz miejsce docelowe:",
     travelMode: "Tryb podróży:",
@@ -62,8 +75,12 @@ const translations = {
       gyms: "🏋️ Siłownie i rekreacja",
       libraries: "📚 Biblioteki",
     },
+    planYourJourney: "Zaplanuj swoją podróż",
+    exploreDistance: "Wybrałeś nieruchomość w pobliżu",
+    exploreDetails: "Zbadaj odległość między przydatnymi lokalizacjami w",
   },
   zh: {
+    loadingMap: "加载地图...",
     showRoute: "显示到选定位置的路线",
     selectDestination: "选择目的地：",
     travelMode: "出行方式：",
@@ -78,6 +95,9 @@ const translations = {
       gyms: "🏋️ 健身房和休闲",
       libraries: "📚 图书馆",
     },
+    planYourJourney: "计划您的行程",
+    exploreDistance: "您选择了一个靠近的房产，位于",
+    exploreDetails: "探索在{nearestCity}和您的新家之间的距离。",
   },
 };
 
