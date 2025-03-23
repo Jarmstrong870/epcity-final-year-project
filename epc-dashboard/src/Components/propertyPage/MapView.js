@@ -201,7 +201,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
     fetchRoute(location);
   };
 
-  if (!isLoaded) return <p className="map-loading">Loading map...</p>;
+  if (!isLoaded) return <p className="map-loading">{t.loadingMap}</p>;
   if (errorMessage) return <p className="map-error">{errorMessage}</p>;
 
   const filteredLocations = Object.entries(locations).filter(([_, loc]) => loc.city === nearestCity);
@@ -215,10 +215,9 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
 
         {/* Extra Container with Updated Instructions */}
         <div className="extra-container">
-          <h4>Plan Your Journey</h4>
+          <h4>{t.planYourJourney}</h4>
           <p>
-          You’ve chosen a property near <strong>{nearestCity}</strong>. 
-          Explore the distance between some useful locations in {nearestCity} and your new home.
+            {t.exploreDistance} <strong>{nearestCity}</strong>. {t.exploreDetails}
           </p>
 
           {/* Dropdown Selector Inside Extra Info Box */}
@@ -237,7 +236,7 @@ const MapView = ({ locationCoords, isLoaded, errorMessage, language }) => {
           {/* Display Travel Time */}
           {travelTime && (
             <p className="map-travel-time">
-              Estimated {travelMode.toLowerCase()} time: <strong>{travelTime}</strong>
+              {t.estimatedTime} <strong>{travelTime}</strong>
             </p>
           )}
         </div>

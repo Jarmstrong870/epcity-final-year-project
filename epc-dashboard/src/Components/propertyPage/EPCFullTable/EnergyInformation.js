@@ -246,48 +246,48 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
     return (
       <div className={styles.EnergyInfo_energyInfoContainer}>
         <div className={styles.EnergyInfo_energyHeader}>{t.energyInformation}</div>
-    
+  
         {/* Main Grid Section */}
         <div className={styles.EnergyInfo_energySection}>
-    
+  
           {/* LEFT COLUMN (Heating), spans two rows */}
           <div className={styles.EnergyInfo_leftColumn}>
             {/* === Heating Section === */}
             <div className={`${styles.EnergyInfo_energyBox} ${styles.heating}`}>
               <h2 className={styles.EnergyInfo_sectionHeader}>{t.heating}</h2>
-    
+  
               {/* Heating Table */}
               <table className={styles.EnergyInfo_costTable}>
                 <thead>
                   <tr>
-                    <th>Time Period</th>
-                    <th>Property Cost</th>
-                    <th>Cost Per Person</th>
+                    <th>{t.timePeriod}</th>
+                    <th>{t.propertyCost}</th>
+                    <th>{t.costPerPerson}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Weekly</td>
+                    <td>{t.weekly}</td>
                     <td>£{weeklyHeatingCost}</td>
                     <td>£{weeklyPerPersonCost}</td>
                   </tr>
                   <tr>
-                    <td>Monthly</td>
+                    <td>{t.monthly}</td>
                     <td>£{monthlyHeatingCost}</td>
                     <td>£{monthlyPerPersonCost}</td>
                   </tr>
                   <tr>
-                    <td>Yearly</td>
+                    <td>{t.yearly}</td>
                     <td>£{yearlyHeatingCost}</td>
                     <td>£{yearlyPerPersonCost}</td>
                   </tr>
                 </tbody>
               </table>
-    
+  
               {/* Key Info (Fuel, Gas Flag, CO2) */}
               <div className={styles.EnergyInfo_visualisedDescriptions}>
                 <div className={styles.EnergyInfo_keyInfoRow}>
-    
+  
                   {/* Main Fuel */}
                   <div className={styles.EnergyInfo_keyInfoItem}>
                     <h4>{t.mainFuel}</h4>
@@ -301,25 +301,25 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                       ))}
                     </div>
                   </div>
-    
+  
                   <div className={styles.EnergyInfo_divider}></div>
-    
+  
                   {/* Mains Gas Flag */}
                   <div className={styles.EnergyInfo_keyInfoItem}>
-                    <h4>Is Gas Connected?</h4>
-                    <p>{properties.mains_gas_flag === "Y" ? "Yes" : "No"}</p>
+                    <h4>{t.isGasConnected}</h4>
+                    <p>{properties.mains_gas_flag === "Y" ? t.yes : t.no}</p>
                   </div>
-    
+  
                   <div className={styles.EnergyInfo_divider}></div>
-    
+  
                   {/* CO₂ Emissions Current */}
                   <div className={styles.EnergyInfo_keyInfoItem}>
-                    <h4>CO₂ Emissions</h4>
-                    <p>{properties.co2_emissions_current} tonnes CO₂/year</p>
+                    <h4>{t.co2Emissions}</h4>
+                    <p>{properties.co2_emissions_current} {t.co2TonsPerYear}</p>
                   </div>
                 </div>
               </div>
-    
+  
               {/* Efficiency Star Ratings */}
               <div
                 className={styles.EnergyInfo_efficiencyStarRatings}
@@ -328,7 +328,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                 <h4>{t.mainheatEnergyEfficiency}:</h4>
                 <p>{renderStarRating(properties["mainheat_energy_eff"], t)}</p>
               </div>
-    
+  
               <div
                 className={styles.EnergyInfo_efficiencyStarRatings}
                 data-value={properties["mainheatc_energy_eff"].toLowerCase()}
@@ -336,12 +336,12 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                 <h4>{t.mainheatControllerEnergyEfficiency}:</h4>
                 <p>{renderStarRating(properties["mainheatc_energy_eff"], t)}</p>
               </div>
-    
+  
               {/* Heating Sources & Controls */}
               <div className={styles.EnergyInfo_iconSection}>
                 {/* Main Heating Sources */}
                 <div className={styles.EnergyInfo_heatingIcons}>
-                  <h4>Main Heating Sources</h4>
+                  <h4>{t.mainHeatingSources}</h4>
                   <div className={styles.EnergyInfo_iconsRow}>
                     {getHeatingIcon(properties["mainheat_description"]).map(({ icon, label }, idx) => (
                       <div key={idx} className={styles.EnergyInfo_iconWithLabel}>
@@ -351,10 +351,10 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                     ))}
                   </div>
                 </div>
-    
+  
                 {/* Extra Heating Controls */}
                 <div className={styles.EnergyInfo_heatingIcons}>
-                  <h4>Extra Heating Controls</h4>
+                  <h4>{t.extraHeatingControls}</h4>
                   <div className={styles.EnergyInfo_iconsRow}>
                     {getHeatingIconCont(properties["mainheatcont_description"]).map(({ icon, label }, idx) => (
                       <div key={idx} className={styles.EnergyInfo_iconWithLabel}>
@@ -367,40 +367,40 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </div>
             </div>
           </div>
-    
+  
           {/* MIDDLE COLUMN (Lighting), row 1 only */}
           <div className={styles.EnergyInfo_middleColumn}>
             <div className={`${styles.EnergyInfo_energyBox} ${styles.lighting}`}>
               <h2 className={styles.EnergyInfo_sectionHeader}>{t.lighting}</h2>
-    
+  
               {/* Lighting Table */}
               <table className={styles.EnergyInfo_costTable}>
                 <thead>
                   <tr>
-                    <th>Time Period</th>
-                    <th>Property Cost</th>
-                    <th>Cost Per Person</th>
+                    <th>{t.timePeriod}</th>
+                    <th>{t.propertyCost}</th>
+                    <th>{t.costPerPerson}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Weekly</td>
+                    <td>{t.weekly}</td>
                     <td>£{weeklyLightingCost}</td>
                     <td>£{weeklyLightingCostPerPerson}</td>
                   </tr>
                   <tr>
-                    <td>Monthly</td>
+                    <td>{t.monthly}</td>
                     <td>£{monthlyLightingCost}</td>
                     <td>£{monthlyLightingCostPerPerson}</td>
                   </tr>
                   <tr>
-                    <td>Yearly</td>
+                    <td>{t.yearly}</td>
                     <td>£{yearlyLightingCost}</td>
                     <td>£{yearlyLightingCostPerPerson}</td>
                   </tr>
                 </tbody>
               </table>
-    
+  
               {/* Lighting Progress & Star Ratings */}
               <div className={styles.EnergyInfo_visualisedDescriptions}>
                 
@@ -413,7 +413,7 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
                     />
                     <p>{progressValue}%</p>
                   </div>
-    
+  
                   <div
                     className={styles.EnergyInfo_efficiencyStarRatings}
                     data-value={properties["lighting_energy_eff"].toLowerCase()}
@@ -427,47 +427,46 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </div>
             </div>
           </div>
-    
+  
           {/* RIGHT COLUMN (Hot Water), row 1 only */}
           <div className={styles.EnergyInfo_rightColumn}>
             <div className={`${styles.EnergyInfo_energyBox} ${styles.hotWater}`}>
               <h2 className={styles.EnergyInfo_sectionHeader}>{t.hotWaterCosts}</h2>
-    
+  
               {/* Hot Water Table */}
               <table className={styles.EnergyInfo_costTable}>
                 <thead>
                   <tr>
-                    <th>Time Period</th>
-                    <th>Property Cost</th>
-                    <th>Cost Per Person</th>
+                    <th>{t.timePeriod}</th>
+                    <th>{t.propertyCost}</th>
+                    <th>{t.costPerPerson}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Weekly</td>
+                    <td>{t.weekly}</td>
                     <td>£{weeklyHotWaterCost}</td>
                     <td>£{weeklyHotWaterCostPerPerson}</td>
                   </tr>
                   <tr>
-                    <td>Monthly</td>
+                    <td>{t.monthly}</td>
                     <td>£{monthlyHotWaterCost}</td>
                     <td>£{monthlyHotWaterCostPerPerson}</td>
                   </tr>
                   <tr>
-                    <td>Yearly</td>
+                    <td>{t.yearly}</td>
                     <td>£{yearlyHotWaterCost}</td>
                     <td>£{yearlyHotWaterCostPerPerson}</td>
                   </tr>
                 </tbody>
               </table>
-    
+  
               {/* Hot Water Efficiency */}
               <div className={styles.EnergyInfo_visualisedDescriptions}>
               <div className={styles.EnergyInfo_progressContainer}>
-                    <h4>Hot Water Heating System</h4>
-                    
-                    <p>{properties["hotwater_description"]}</p>
-                  </div>
+                <h4>{t.hotWaterHeatingSystem}</h4>
+                <p>{properties["hotwater_description"]}</p>
+              </div>
               <div
                 className={styles.EnergyInfo_efficiencyStarRatingsWater}
                 data-value={properties["hot_water_energy_eff"].toLowerCase()}
@@ -478,74 +477,68 @@ const EnergyInformation = ({ properties, maxValues, language }) => {
               </div>
             </div>
           </div>
-    
+  
           {/* KEY INSIGHTS (optional) - row 2 columns 2 & 3 */}
           <div className={styles.EnergyInfo_keyInsights}>
-          <div className={styles.KeyInsights_container}>
-          <div className={styles.KeyInsights_twoColumn}>
-
-            {/* LEFT COLUMN: Title + Insight Boxes */}
-            <div className={styles.KeyInsights_left}>
-              <h2 className={styles.KeyInsights_header}>Key Insights</h2>
-              
-              <div className={styles.KeyInsightCard}>
-                <h4>Bills per m² of Property</h4>
-                <p>£{billsPerSquareMeter.toFixed(2)}/m²</p>
-                <span className={styles.insightRating}>{getBillsRating(billsPerSquareMeter)}</span>
-              </div>
-
-              <div className={styles.KeyInsightCard}>
-                <h4>Total Estimated Heat, Water and Lighting bills</h4>
-                <p>£{(yearlyHeatingCost + yearlyHotWaterCost + yearlyLightingCost).toFixed(2)}/yr</p>
-                
-              </div>
-
-              <div className={styles.KeyInsightCard}>
-                <h4>Area per Person</h4>
-                <p>{(properties.total_floor_area / properties.number_bedrooms).toFixed(1)} m²/bedroom</p>
-                <span className={styles.insightRating}>{areaLabel}</span>
+            <div className={styles.KeyInsights_container}>
+              <div className={styles.KeyInsights_twoColumn}>
+  
+                {/* LEFT COLUMN: Title + Insight Boxes */}
+                <div className={styles.KeyInsights_left}>
+                  <h2 className={styles.KeyInsights_header}>{t.keyInsights}</h2>
+  
+                  <div className={styles.KeyInsightCard}>
+                    <h4>{t.billsPerSquareMeter}</h4>
+                    <p>£{billsPerSquareMeter.toFixed(2)}/m²</p>
+                    <span className={styles.insightRating}>{getBillsRating(billsPerSquareMeter)}</span>
+                  </div>
+  
+                  <div className={styles.KeyInsightCard}>
+                    <h4>{t.totalEstimatedBills}</h4>
+                    <p>£{(yearlyHeatingCost + yearlyHotWaterCost + yearlyLightingCost).toFixed(2)}/yr</p>
+                  </div>
+  
+                  <div className={styles.KeyInsightCard}>
+                    <h4>{t.areaPerPerson}</h4>
+                    <p>{(properties.total_floor_area / properties.number_bedrooms).toFixed(1)} m²/bedroom</p>
+                    <span className={styles.insightRating}>{areaLabel}</span>
+                  </div>
+                </div>
+  
+                {/* RIGHT COLUMN: Ranking Cards (stacked vertically) */}
+                <div className={styles.KeyInsights_right}>
+                  {heatingRankData ? (
+                    <RankingCard title={t.heatingRank} metricName="Heating" rankData={heatingRankData} />
+                  ) : (
+                    <p>{t.loadingRanking}</p>
+                  )}
+  
+                  {hotWaterRankData ? (
+                    <RankingCard title={t.hotWaterRank} metricName="Hot Water" rankData={hotWaterRankData} />
+                  ) : (
+                    <p>{t.loadingRanking}</p>
+                  )}
+  
+                  {lightingRankData ? (
+                    <RankingCard title={t.lightingRank} metricName="Lighting" rankData={lightingRankData} />
+                  ) : (
+                    <p>{t.loadingRanking}</p>
+                  )}
+  
+                  {totalFloorAreaRankData ? (
+                    <RankingCard title={t.totalFloorAreaRank} metricName="Total Floor Area" rankData={totalFloorAreaRankData} />
+                  ) : (
+                    <p>{t.loadingRanking}</p>
+                  )}
+                </div>
+  
               </div>
             </div>
-
-            {/* RIGHT COLUMN: Ranking Cards (stacked vertically) */}
-            <div className={styles.KeyInsights_right}>
-              {heatingRankData ? (
-                <RankingCard title="Heating Rank" metricName="Heating" rankData={heatingRankData} />
-              ) : (
-                <p>Loading ranking...</p>
-              )}
-
-              {hotWaterRankData ? (
-                <RankingCard title="Hot Water Rank" metricName="Hot Water" rankData={hotWaterRankData} />
-              ) : (
-                <p>Loading ranking...</p>
-              )}
-
-              {lightingRankData ? (
-                <RankingCard title="Lighting Rank" metricName="Lighting" rankData={lightingRankData} />
-              ) : (
-                <p>Loading ranking...</p>
-              )}
-
-              {totalFloorAreaRankData ? (
-                <RankingCard title="Total Floor Area Rank" metricName="Total Floor Area" rankData={totalFloorAreaRankData} />
-              ) : (
-                <p>Loading ranking...</p>
-              )}
-            </div>
-
           </div>
-        </div>
-      </div>
-
-              
-          
-    
+  
         </div>
       </div>
     );
-    
+  };
   
-};
-
-export default EnergyInformation;
+  export default EnergyInformation;

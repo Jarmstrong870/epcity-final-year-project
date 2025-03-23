@@ -55,7 +55,7 @@ export const findMaxValues = (properties) => {
   const minTotalEnergyCost = Math.min(...properties.map((p) => parseNumericValue(p.energy_consumption_current * p.total_floor_area * p.cost_per_kwh)));
 
   // Heating costs
-  const minHeatingCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.heating_cost_current)));
+  const minHeatingCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.heating_example)));
   const maxHeatingCostSavings = Math.max(
     ...properties.map((p) => {
       const current = parseNumericValue(p.heating_cost_current);
@@ -65,7 +65,7 @@ export const findMaxValues = (properties) => {
   );
 
   // Lighting costs
-  const minLightingCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.lighting_cost_current)));
+  const minLightingCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.lighting_example)));
   const maxLightingCostSavings = Math.max(
     ...properties.map((p) => {
       const current = parseNumericValue(p.lighting_cost_current);
@@ -75,7 +75,7 @@ export const findMaxValues = (properties) => {
   );
 
   // Hot water costs
-  const minHotWaterCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.hot_water_cost_current)));
+  const minHotWaterCostCurrent = Math.min(...properties.map((p) => parseNumericValue(p.hot_water_example)));
   const maxHotWaterCostSavings = Math.max(
     ...properties.map((p) => {
       const current = parseNumericValue(p.hot_water_cost_current);

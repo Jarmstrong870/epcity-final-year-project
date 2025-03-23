@@ -17,10 +17,7 @@
   background-color: red;
 }
 
-.mark:hover {
-  opacity: 0.8; /* Slight opacity change on hover */
-  transform: scale(1.1); /* Slight scaling for interactivity */
-}
+
 
 /* Text to Speech Toggle Container */
 .tts-toggle-container {
@@ -34,7 +31,7 @@
 
 /* Label styling */
 .tts-label {
-  font-family: 'Roboto', 'Open Sans', sans-serif; /* Use consistent font as body */
+ 
   font-size: 1.05rem; /* Match font size with other dropdown items */
   margin-left: 20px; /* Align label with Messages link */
   color: #ffffff; /* Match the color with other dropdown items */
@@ -44,6 +41,7 @@
   line-height: 24px; /* Align vertically with the toggle */
   transition: color 0.3s ease;
 }
+
 
 /* React Switch Styles */
 .react-switch {
@@ -219,12 +217,3 @@ button {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
-  background-color: #d02e3a;
-  transform: scale(1.05);
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 3px #e63946;
-}
