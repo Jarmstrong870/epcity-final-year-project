@@ -176,7 +176,7 @@ const HomePage = ({ user, language }) => {
         </div>
 
       <div className="custom-algorithm-right">
-            <h2 className="custom-algorithm-title">{"\u2764\uFE0F"}
+            <h2 className="custom-algorithm-title">
               {t.customAlgorithmTitle}
 
               <div className="custom-algorithm-subtitle">
@@ -237,7 +237,7 @@ const HomePage = ({ user, language }) => {
 
         <div className="about-us-section__right">
           <div className="about-us-block">
-            <h2> {"\u{1F3E0}"} Your Ideal Energy-Efficient Home Awaits!!</h2>
+            <h2>Your Ideal Energy-Efficient Home Awaits!!</h2>
             <p className="about-us-subtitle">
               <strong>
                 Finding your perfect property has never been easier! Whether you are:
