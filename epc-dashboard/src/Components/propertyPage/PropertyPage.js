@@ -146,7 +146,12 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
             <div className="property-details">
               <span>🏠 {propertyData?.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
               <span>🛏️ {propertyData?.number_bedrooms || "N/A"} {t.bedrooms}</span> {/* Added translation for Bedrooms */}
-              <span>⚡ {propertyData?.current_energy_rating || "N/A"} {t.epcRating}</span> {/* Added EPC Rating translation */}
+              <span style={{ color: getEpcRatingColor(propertyData?.current_energy_rating) }}>
+                  {propertyData?.current_energy_rating|| "N/A"}
+              </span> 
+              <span>
+                {t.epcRating}
+              </span>
             </div>
           </div>
 
