@@ -1,0 +1,55 @@
+const translations = {
+    en: {
+      costComparisonGraph: "Cost Comparison Graph",
+      selectMetric: "Select a Metric:",
+      heatingCosts: "Heating Costs",
+      hotWaterCosts: "Hot Water Costs",
+      lightingCosts: "Lighting Costs",
+      floorArea: "Total Floor Area",
+      yearlyCost: "£ per year",
+      loadingData: "Loading or no data available...",
+    },
+    fr: {
+      costComparisonGraph: "Graphique de comparaison des coûts",
+      selectMetric: "Sélectionner une métrique :",
+      heatingCosts: "Coûts de chauffage",
+      hotWaterCosts: "Coûts d'eau chaude",
+      lightingCosts: "Coûts d'éclairage",
+      floorArea: "Surface totale",
+      yearlyCost: "€ par an",
+      loadingData: "Chargement ou pas de données disponibles...",
+    },
+    es: {
+      costComparisonGraph: "Gráfico de comparación de costos",
+      selectMetric: "Seleccionar una métrica:",
+      heatingCosts: "Costos de calefacción",
+      hotWaterCosts: "Costos de agua caliente",
+      lightingCosts: "Costos de iluminación",
+      floorArea: "Área total",
+      yearlyCost: "€ por año",
+      loadingData: "Cargando o sin datos disponibles...",
+    },
+    pl: {
+      costComparisonGraph: "Wykres porównania kosztów",
+      selectMetric: "Wybierz wskaźnik:",
+      heatingCosts: "Koszty ogrzewania",
+      hotWaterCosts: "Koszty ciepłej wody",
+      lightingCosts: "Koszty oświetlenia",
+      floorArea: "Całkowita powierzchnia",
+      yearlyCost: "zł rocznie",
+      loadingData: "Ładowanie danych lub brak danych...",
+    },
+    zh: {
+      costComparisonGraph: "成本比较图",
+      selectMetric: "选择一个指标：",
+      heatingCosts: "采暖成本",
+      hotWaterCosts: "热水成本",
+      lightingCosts: "照明成本",
+      floorArea: "总面积",
+      yearlyCost: "每年¥",
+      loadingData: "加载或没有数据...",
+    },
+  };
+  
+  export default translations;
+  

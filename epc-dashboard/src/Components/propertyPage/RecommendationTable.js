@@ -1,27 +1,31 @@
 import "./RecommendationTable.css";
-const RecommendationTable = ({ property }) => {
-    console.log(property)
+import translations from '../../locales/translations_recommendationstable';
+
+const RecommendationTable = ({ property, language }) => {
+    const t = translations[language] || translations.en; // Get translations for the selected language
     const text_list = property.improvement_summary_text;
-    const cost_list = property.indicative_cost
+    const cost_list = property.indicative_cost;
+
     if(!text_list){
         return(
             <div>
-                <p>No Recommendations for this property</p>
+                <p>{t.noRecommendations}</p> 
             </div>
-        )
+        );
     }
+
     return (
         <div className="RecommendationTable">
             <table className="RecommendationTableStyling">
                 <thead>
                     <tr>
-                        <th>Recommendation Description</th>
-                        <th>Estimated Cost</th>
+                        <th>{t.recommendationDescription}</th> {/* Translated text */}
+                        <th>{t.estimatedCost}</th> {/* Translated text */}
                     </tr>
                 </thead>
                 <tbody>
                     {text_list.map((item, index) => (
-                        <tr>
+                        <tr key={index}>
                             <td>{item}</td>
                             <td>{cost_list[index]}</td>
                         </tr>
@@ -29,7 +33,7 @@ const RecommendationTable = ({ property }) => {
                 </tbody>
             </table>
         </div>
-    )
-}
+    );
+};
 
 export default RecommendationTable;

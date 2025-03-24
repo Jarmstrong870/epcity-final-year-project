@@ -19,7 +19,19 @@ const translations = {
     footerEmail: 'Contact Us',
     socialFacebook: 'Facebook',
     socialTwitter: 'Twitter',
-    socialInstagram: 'Instagram'
+    socialInstagram: 'Instagram',
+    welcomeMessage: 'Welcome,',
+    landlordView: 'Landlord View',
+    savedProperties: 'Saved Properties',
+    favouritedProperties: 'Favourited Properties',
+    epcInformation: 'EPC Information',
+    adminUser: 'Admin User',
+    landlordUser: 'Landlord User',
+    studentUser: 'Student User',
+    shortTagline: 'Find your perfect place with EPCity.',
+    navigation: 'Navigation',
+    companyInfo: 'Company',
+    stayConnected: 'Stay Connected'
   },
   fr: {
     login: 'Connexion',
@@ -41,7 +53,19 @@ const translations = {
     footerEmail: 'Nous contacter',
     socialFacebook: 'Facebook',
     socialTwitter: 'Twitter',
-    socialInstagram: 'Instagram'
+    socialInstagram: 'Instagram',
+    welcomeMessage: 'Bienvenue,',
+    landlordView: 'Vue du Propriétaire',
+    savedProperties: 'Propriétés Enregistrées',
+    favouritedProperties: 'Propriétés Favorisées',
+    epcInformation: 'Informations EPC',
+    adminUser: 'Utilisateur Administrateur',
+    landlordUser: 'Utilisateur Propriétaire',
+    studentUser: 'Utilisateur Étudiant',
+    shortTagline: 'Trouvez votre endroit parfait avec EPCity.',
+    navigation: 'Navigation',
+    companyInfo: 'Entreprise',
+    stayConnected: 'Restez Connecté'
   },
   es: {
     login: 'Iniciar sesión',
@@ -63,7 +87,19 @@ const translations = {
     footerEmail: 'Contáctanos',
     socialFacebook: 'Facebook',
     socialTwitter: 'Twitter',
-    socialInstagram: 'Instagram'
+    socialInstagram: 'Instagram',
+    welcomeMessage: 'Bienvenido,',
+    landlordView: 'Vista del Arrendador',
+    savedProperties: 'Propiedades Guardadas',
+    favouritedProperties: 'Propiedades Favoritas',
+    epcInformation: 'Información EPC',
+    adminUser: 'Usuario Administrador',
+    landlordUser: 'Usuario Arrendador',
+    studentUser: 'Usuario Estudiante',
+    shortTagline: 'Encuentra tu lugar perfecto con EPCity.',
+    navigation: 'Navegación',
+    companyInfo: 'Compañía',
+    stayConnected: 'Mantente Conectado'
   },
   pl: {
     login: 'Zaloguj się',
@@ -85,7 +121,19 @@ const translations = {
     footerEmail: 'Skontaktuj się z nami',
     socialFacebook: 'Facebook',
     socialTwitter: 'Twitter',
-    socialInstagram: 'Instagram'
+    socialInstagram: 'Instagram',
+    welcomeMessage: 'Witaj,',
+    landlordView: 'Widok Wynajmującego',
+    savedProperties: 'Zapisane Nieruchomości',
+    favouritedProperties: 'Ulubione Nieruchomości',
+    epcInformation: 'Informacje EPC',
+    adminUser: 'Użytkownik Administratora',
+    landlordUser: 'Użytkownik Wynajmującego',
+    studentUser: 'Użytkownik Studenta',
+    shortTagline: 'Znajdź swoje idealne miejsce z EPCity.',
+    navigation: 'Nawigacja',
+    companyInfo: 'Firma',
+    stayConnected: 'Pozostań w kontakcie'
   },
   zh: {
     login: '登录',
@@ -107,7 +155,19 @@ const translations = {
     footerEmail: '发送邮件',
     socialFacebook: '脸书',
     socialTwitter: '推特',
-    socialInstagram: 'Instagram'
+    socialInstagram: 'Instagram',
+    welcomeMessage: '欢迎，',
+    landlordView: '房东视图',
+    savedProperties: '已保存的房产',
+    favouritedProperties: '收藏的房产',
+    epcInformation: 'EPC信息',
+    adminUser: '管理员用户',
+    landlordUser: '房东用户',
+    studentUser: '学生用户',
+    shortTagline: '在EPCity找到您的完美地方。',
+    navigation: '导航',
+    companyInfo: '公司',
+    stayConnected: '保持联系'
   }
 };
 

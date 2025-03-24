@@ -12,10 +12,9 @@ import { fetchPropertyDetails, fetchLocationCoords } from './propertyUtils';
 import './PropertyPage.css';
 import axios from "axios";
 import { FavouriteContext } from '../utils/favouriteContext';
+import translations from '../../locales/translations_propertypage'; // Import translations
 
-
-
-const PropertyPage = ({ user, property, language }) => {
+const PropertyPage = ({ user, property, language = 'en' }) => {
   const { uprn } = useParams();
   const [propertyData, setPropertyData] = useState(null);
   const [locationCoords, setLocationCoords] = useState({ lat: 0, lng: 0 });
@@ -27,13 +26,14 @@ const PropertyPage = ({ user, property, language }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // NEW: Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal State
   const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
   const [isFavourited, setIsFavourited] = useState(false);
   const [isLandlord, setIsLandlord] = useState(false);
 
-
+  // Get translations for the current language
+  const t = translations[language] || translations.en;
 
   useEffect(() => {
     if (uprn) {
@@ -60,7 +60,6 @@ const PropertyPage = ({ user, property, language }) => {
 
   useEffect(() => {
     if (user) {
-      console.log("user type", user.typeUser)
       if (user.typeUser === 'landlord') {
         setIsLandlord(true);
       }
@@ -86,12 +85,7 @@ const PropertyPage = ({ user, property, language }) => {
     }, 5000);
   };
 
-  if (loading) {
-    return <p>Loading property details...</p>;
-  }
-  console.log("Property Data:", Object.keys(propertyData));
-  console.log("property floor level", propertyData["glazed_type"])
-
+  // Function to send the property to the group chat
   const sendToGroupChat = async () => {
     if (!selectedGroup) {
       alert("Please select a group chat.");
@@ -128,9 +122,13 @@ const PropertyPage = ({ user, property, language }) => {
     return colors[rating] || '#666666';
   };
 
+  // Check if propertyData is not null or undefined
+  if (loading || !propertyData) {
+    return <p>{t.loadingProperty}</p>;
+  }
+
   return (
     <div className="property-page">
-
 
       {showPopup && <div className="popup-message">{popupMessage}</div>}
 
@@ -139,20 +137,17 @@ const PropertyPage = ({ user, property, language }) => {
           <div className="property-text">
             <div className='property-header-top'>
               <h2 className="property-title">
-                <span>{propertyData.address}, {propertyData.local_authority_label}, {propertyData.postcode}</span> <FavouriteStar user={user} property={propertyData} />
+                <span>{propertyData?.address || "Address not available"}, {propertyData?.local_authority_label || "N/A"}, {propertyData?.postcode || "N/A"}</span> <FavouriteStar user={user} property={propertyData} />
               </h2>
               <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
-                📩 Send to Group Chat
+                📩 {t.sendToGroupChat} {/* Added translation */}
               </div>
             </div>
             <div className="property-details">
-              <span>🏠 {propertyData.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
-              <span>🛏️ {propertyData.number_bedrooms || "N/A"} Bedrooms</span> {/* 5 Bedrooms */}
-              <span>⚡ <span style={{ color: getEpcRatingColor(propertyData.current_energy_rating) }}>
-                {propertyData.current_energy_rating}</span> EPC Rating</span>
+              <span>🏠 {propertyData?.property_type || "N/A"}</span> {/* Detached / Semi-Detached */}
+              <span>🛏️ {propertyData?.number_bedrooms || "N/A"} {t.bedrooms}</span> {/* Added translation for Bedrooms */}
+              <span>⚡ {propertyData?.current_energy_rating || "N/A"} {t.epcRating}</span> {/* Added EPC Rating translation */}
             </div>
-
-
           </div>
 
         </div>
@@ -162,21 +157,21 @@ const PropertyPage = ({ user, property, language }) => {
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Select a Group</h3>
+            <h3>{t.selectGroup}</h3> {/* Added translation for "Select a Group" */}
             <select
               className="group-select-dropdown"
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
             >
-              <option value="">Select a Group</option>
+              <option value="">{t.selectGroupOption}</option> {/* Added translation */}
               {groups.map((group) => (
                 <option key={group.group_id} value={group.group_id}>
                   {group.name}
                 </option>
               ))}
             </select>
-            <button onClick={sendToGroupChat} className="modal-send-button">Send</button>
-            <button onClick={() => setIsModalOpen(false)} className="modal-close-button">Cancel</button>
+            <button onClick={sendToGroupChat} className="modal-send-button">{t.send}</button> {/* Added translation */}
+            <button onClick={() => setIsModalOpen(false)} className="modal-close-button">{t.cancel}</button> {/* Added translation */}
           </div>
         </div>
       )}
@@ -184,11 +179,11 @@ const PropertyPage = ({ user, property, language }) => {
       {/* Section to display street view and map view */}
       <div className="image-and-map-section">
         <div className="street-view">
-          <h3 className='title-street-view'>Street View</h3>
+          <h3 className='title-street-view'>{t.streetView}</h3> {/* Added translation */}
           <StreetView streetViewURL={streetViewURL} errorMessage={errorMessage} />
         </div>
         <div className="map-view">
-          <h3 className='title-map-view'>Map View</h3>
+          <h3 className='title-map-view'>{t.mapView}</h3> {/* Added translation */}
           <SimpleMapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} />
         </div>
       </div>
@@ -196,35 +191,34 @@ const PropertyPage = ({ user, property, language }) => {
       {propertyData ? (
         <EPCFullTable properties={[propertyData]} loading={loading} language={language} />
       ) : (
-        <p>{errorMessage || 'Loading property details...'}</p>
+        <p>{errorMessage || t.loadingPropertyDetails}</p>
       )}
 
       <div className="epc-graph-section">
         {propertyData && (
           <EPCGraph
-            currentEnergyEfficiency={propertyData.current_energy_efficiency}
-            potentialEnergyEfficiency={propertyData.potential_energy_efficiency}
+            currentEnergyEfficiency={propertyData?.current_energy_efficiency}
+            potentialEnergyEfficiency={propertyData?.potential_energy_efficiency}
             language={language}
           />
         )}
       </div>
 
       {isLandlord ? (
-  <div className="Recommendation-Table">
-    <h3>Efficiency Recommendations</h3>
-    <RecommendationTable property={propertyData} />
-  </div>
-) : (
-  <></>
-)}
+        <div className="Recommendation-Table">
+          <h3>{t.efficiencyRecommendations}</h3> {/* Added translation */}
+          <RecommendationTable property={propertyData} />
+        </div>
+      ) : (
+        <></>
+      )}
 
-{/* Added space before MapView */}
-<div className="map-view-section">
-  <div className="map-view-header">
-    <h3>Nearby Locations</h3>
-  </div>
-  <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} language={language} />
-</div>
+      <div className="map-view-section">
+        <div className="map-view-header">
+          <h3>{t.nearbyLocations}</h3> {/* Added translation */}
+        </div>
+        <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} language={language} />
+      </div>
 
     </div>
   );

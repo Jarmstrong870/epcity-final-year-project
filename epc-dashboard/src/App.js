@@ -83,7 +83,7 @@ function App() {
     setDropdownVisible(false);
     setLogoutConfirmVisible(false);
     setTimeout(() => {
-      window.alert("Logout successful!");
+      window.alert(t.logoutConfirmation);  // Translated text
       navigate('/');
     }, 1000);
   };
@@ -129,13 +129,13 @@ function App() {
     <PropertyProvider>
       <FavouriteProvider user={user}>
         <div className="App">
-        {logoutConfirmVisible && (
+          {logoutConfirmVisible && (
             <div className="logout-confirmation-modal">
               <div className="logout-modal-content">
-                <p>Are you sure you want to log out?</p>
+                <p>{t.logoutConfirmation}</p> {/* Translated text */}
                 <div className="modal-buttons">
-                  <button onClick={handleLogout} className="confirm-button">Yes, Logout</button>
-                  <button onClick={cancelLogout} className="cancel-button">Cancel</button>
+                  <button onClick={handleLogout} className="confirm-button">{t.yes}</button> {/* Translated text */}
+                  <button onClick={cancelLogout} className="cancel-button">{t.no}</button> {/* Translated text */}
                 </div>
               </div>
             </div>
@@ -193,68 +193,63 @@ function App() {
           
             <div className="header-right">
               {/* Add TextToSpeech toggle button here before language selector */}
-              
-
               <div className="language-selector-container">
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
 
               <div className="profile-icon" onClick={toggleDropdown}>
-          <img src={profileImage} alt="Profile" className="profile-img" />
-          {dropdownVisible && (
-            <div className="dropdown-menu">
-              {user ? (
-                <>
-          <p className="welcome-message">Welcome, {user.firstname}</p>
-          {user.typeUser === "landlord" && (
-            <Link to="/landlord-dashboard">Landlord View</Link>
-          )}
-          <Link to="/account-overview">{t.accountOverview}</Link>
-          {user.typeUser === "landlord" && (
-            <Link to="/favourites">Saved Properties</Link>
-          )}
-          {user.typeUser !== "landlord" && (
-            <Link to="/favourites">Favourited Properties</Link>
-          )}
-          <Link to="/messages">{t.messages}</Link>
-          
-          {/* Add TextToSpeech toggle just above Logout */}
-          <div className="tts-toggle-container" onClick={(e) => e.stopPropagation()}>
-            <TextToSpeech text={t.epcInformation} language={language} />
-          </div>
+                <img src={profileImage} alt="Profile" className="profile-img" />
+                {dropdownVisible && (
+                  <div className="dropdown-menu">
+                    {user ? (
+                      <>
+                        <p className="welcome-message">{t.welcomeMessage} {user.firstname}</p> {/* Translated text */}
+                        {user.typeUser === "landlord" && (
+                          <Link to="/landlord-dashboard">{t.landlordView}</Link> 
+                        )}
+                        <Link to="/account-overview">{t.accountOverview}</Link>
+                        {user.typeUser === "landlord" && (
+                          <Link to="/favourites">{t.savedProperties}</Link> 
+                        )}
+                        {user.typeUser !== "landlord" && (
+                          <Link to="/favourites">{t.favouritedProperties}</Link> 
+                        )}
+                        <Link to="/messages">{t.messages}</Link>
 
-          <button onClick={showLogoutConfirmation} className="logout-button">
-            {t.logout}
-          </button>
-          <p 
-            className={`user-role-label ${
-              user.isAdmin 
-                ? 'user-role-label-admin' 
-                : user.typeUser === 'landlord' 
-                  ? 'user-role-label-landlord' 
-                  : 'user-role-label-student'
-            }`}
-          >
-            {user.isAdmin 
-              ? 'Admin User' 
-              : user.typeUser === 'landlord' 
-                ? 'Landlord User' 
-                : 'Student User'
-            }
-          </p>
-        </>
-      ) : (
-        <>
-          <Link to="/login">{t.login}</Link>
-          <Link to="/register">{t.register}</Link>
-        </>
-      )}
-    </div>
-  )}
-</div>
+                        {/* Add TextToSpeech toggle just above Logout */}
+                        <div className="tts-toggle-container" onClick={(e) => e.stopPropagation()}>
+                          <TextToSpeech text={t.epcInformation} language={language} />
+                        </div>
 
-
-</div>
+                        <button onClick={showLogoutConfirmation} className="logout-button">
+                          {t.logout}
+                        </button>
+                        <p 
+                          className={`user-role-label ${
+                            user.isAdmin 
+                              ? 'user-role-label-admin' 
+                              : user.typeUser === 'landlord' 
+                                ? 'user-role-label-landlord' 
+                                : 'user-role-label-student'
+                          }`}
+                        >
+                          {user.isAdmin 
+                            ? t.adminUser 
+                            : user.typeUser === 'landlord' 
+                              ? t.landlordUser 
+                              : t.studentUser
+                          }
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login">{t.login}</Link>
+                        <Link to="/register">{t.register}</Link>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -300,7 +295,7 @@ function App() {
                   <img src={epcLogo} alt="EPCity Logo" className="footer-logo" />
                 </Link>
                 <p className="footer-tagline">
-                  {t.shortTagline || "Find your perfect place with EPCity."}
+                  {t.shortTagline || "Find your perfect place with EPCity."} {/* Translated text */}
                 </p>
               </div>
 

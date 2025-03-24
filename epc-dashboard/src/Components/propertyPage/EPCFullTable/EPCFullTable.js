@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './EPCFullTable.css';
-import translations from '../../../locales/translations_epcfulltable';
 import GeneralInformation from './GeneralInformation';
 import EPCSpecificInformation from './EPCSpecificInformation';
 import EnergyInformation from './EnergyInformation';
@@ -26,7 +25,7 @@ const EPCFullTable = ({ properties, maxValues, loading, language }) => {
       
       {/*{maxValues && <EPCSpecificInformation properties={property} maxValues={maxValues} language={language} />}*/}
       <EnergyInformation properties={property} maxValues={maxValues} language={language} />
-      <CostComparisonGraph properties={property} />
+      <CostComparisonGraph properties={property} language={language} />
       {<PropertyStructureInfo properties={property} maxValues={maxValues} language={language} />
     }
     </div>

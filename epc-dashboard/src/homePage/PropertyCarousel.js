@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import PropertyCard from '../homePage/PropertyCard';
 import './PropertyCarousel.css';
+import translations from '../locales/translations_epcsection';
 
 const PropertyCarousel = ({ topRatedProperties, user, language }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsToShow = 3; // Number of cards to display at once
   const totalItems = topRatedProperties.length;
+
+  // Load the correct translations
+  const t = translations[language] || translations.en;
 
   const nextSlide = () => {
     if (currentIndex < totalItems - itemsToShow) {
@@ -21,7 +25,7 @@ const PropertyCarousel = ({ topRatedProperties, user, language }) => {
 
   return (
     <div className="property-carousel">
-      <h2 className="carousel-title">Most Energy Efficient Properties</h2>
+      <h2 className="carousel-title">{t.mostEfficientProperties}</h2> {/* Added translation for carousel title */}
       <div className="carousel-wrapper">
         <button 
           className="carousel-button prev" 

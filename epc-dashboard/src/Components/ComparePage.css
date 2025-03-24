@@ -105,12 +105,6 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-.accordion-header:hover {
-    background: linear-gradient(90deg, #2c5f2d, #1e4020);
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(30, 64, 32, 0.4);
-}
-
 /* 📊 Graph Section */
 .graph-section {
     margin-top: 40px;
@@ -118,6 +112,23 @@
     background-color: white;
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Ensure content does not overflow the container */
+    width: 100%; /* Make sure the graph container is responsive */
+    box-sizing: border-box; /* Includes padding and border in width calculation */
+    border: 2px solid #1e4020; /* Border color and thickness */
+}
+
+/* Make sure graph elements stay within bounds */
+.graph-container {
+    max-width: 100%; /* Limit the graph width */
+    overflow-x: auto; /* Allows horizontal scrolling if graph overflows */
+    padding: 0 10px; /* Add padding for better spacing */
+}
+
+/* Ensure the graph content doesn't spill */
+.graph-container canvas {
+    width: 100% !important; /* Make sure the canvas is responsive */
+    height: auto !important; /* Allow height to adjust automatically */
 }
 
 /* 🆕 📊 Estimated Costs Container */
