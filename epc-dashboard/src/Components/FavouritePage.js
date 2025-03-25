@@ -21,7 +21,8 @@ const FavouritePage = ({user, language}) => {
 
     return (
         <div className="favouritedPropertyCards">
-            <h2 className="stylingTitle">{t.title}</h2>              
+            <h2 className="stylingTitle">{t.title}</h2>  
+            <p>To view favourites, first search for properties you are interested in, select the heart icon, and come back to this page anyime to view your favourited properties. </p>            
                 <div className="property-grid">
                 {favouriteProperties.length === 0 ? (
                     <p>No properties have been favourited yet </p>
