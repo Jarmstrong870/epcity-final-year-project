@@ -62,19 +62,20 @@
 
 /* Navbar */
 .navbar {
-  display: flex;
-  justify-content: center;
+  display: none;
+  justify-content: space-between;
   background-color: transparent; 
-  padding: 10px 0;
-  width: 100%;
+  padding: 5px 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .navbar ul {
   list-style-type: none;
   padding: 0;
   display: flex;
-  justify-content: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .navbar li {
@@ -96,8 +97,8 @@
   align-items: center;
   gap: 20px;
   position: absolute;
-  right: 80px; /* Keeps elements to the right */
-  top: 35px;
+  right: 60px; /* Keeps elements to the right */
+  top: 20px;
 }
 
 
@@ -212,16 +213,6 @@
   transform: scale(1.05); 
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* Table Styles */
 .table-container {
@@ -365,33 +356,25 @@
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
 }
 
-/*******************************************************
-  RESPONSIVE BEHAVIOR
-********************************************************/
-@media (max-width: 768px) {
-  .footer-content {
-    grid-template-columns: 1fr 1fr; /* 2 columns on tablets */
-  }
+.responsive-header {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 5px;
+  padding: 10px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 1200;
 }
 
-@media (max-width: 480px) {
-  .footer-content {
-    grid-template-columns: 1fr; /* 1 column on mobile */
-  }
-
-  .footer-column-title {
-    font-size: 1rem;
-  }
-  
-  .footer-link,
-  .footer-email {
-    font-size: 0.9rem;
-  }
+.responsive-header .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #ffffff;
+  transition: all 0.3s ease;
 }
 
-
-
-/* 🏗️ Header Base Styles */
 .header-container {
   /* position: fixed; */
   top: 0;
@@ -399,9 +382,9 @@
   width: 100%;
   height: 100px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 20px 10px;
+  padding: 10px 20px;
   z-index: 1000;
   transition: background-color 0.5s ease, box-shadow 0.4s ease;
   box-shadow: none;
@@ -420,15 +403,17 @@
 }
 
 
-/* 🚀 When User Scrolls Down */
 .header-container.scrolled {
-  background-color: #1a2e2d; /* 🚀 Initially Transparent */
+  background-color: #1a2e2d;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   height: 5%; /* Ensures it's high enough when scrolling */
   padding: 15px 30px;
   justify-content: space-between;
   animation: slideInFromTop 0.6s ease-out forwards;
+}
 
+.header-container.scrolled .navbar {
+  display: flex;
 }
 
 .logo-container {
@@ -470,17 +455,17 @@
 
 
 .header-navigation-links {
-  display: flex;
-  gap: 40px;
+  display: none;
+  gap: 20px;
   flex-grow: 1;
   justify-content: center;
   padding-top: 10px;
-  transition: all 0.6s ease-in-out;
   transition: all 0.6s ease-in-out;
 }
 
 /* Logo Moves Inside the Header When Scrolling */
 .header-container.scrolled .header-navigation-links {
+  display: flex;
   justify-content: center;
   padding: 5px;
 }
@@ -493,7 +478,6 @@
 }
 
 
-/* 👤 Profile Icon */
 .profile-icon {
   display: flex;
   align-items: center;
@@ -524,8 +508,8 @@
 
 .navigation-button {
   display: inline-block;
-  padding: 15px 50px;
-  font-size: 1.2rem;
+  padding: 10px 30px;
+  font-size: 1.1rem;
   font-weight: bold;
   color: #ffffff;
   border: none;
@@ -645,17 +629,6 @@
   background-color: #e2e6ea;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .footer-nav a {
   color: #d4edda; 
   text-decoration: none;
@@ -707,6 +680,147 @@
   transform: scale(1.2);
 }
 
+/*******************************************************
+  RESPONSIVE BEHAVIOR
+********************************************************/
+
+@media (min-width: 1024px) {
+
+  .header-container.scrolled .header-navigation-links {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .header-container {
+    padding: 10px 20px;
+    height: 100px;
+  }
+
+  .navbar ul {
+    flex-direction: row;
+    gap: 20px; /* More spacing */
+    justify-content: center;
+  }
+
+  .header-right {
+    position: absolute;
+    right: 40px;
+    top: 20px;
+  }
+
+  .navigation-button {
+    font-size: 1rem; /* Adjust button size for better fit */
+  }
+
+  .profile-img {
+    width: 45px;
+    height: 45px;
+  }
+
+  .responsive-header {
+    display: none; /* Keep the header normal on tablets and small laptops */
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .header-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .navbar ul {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .header-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .responsive-header {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 10px;
+    padding: 10px;
+    position: relative;
+    right: 20px;
+    top: 20px;
+    z-index: 1200;
+  }
+
+  .responsive-header .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+  }
+
+  .header-navigation-links {
+    display: none; /* Initially hide links */
+    flex-direction: column;
+    background-color: #1a2e2d;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    z-index: 1100;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .header-navigation-links.open {
+    display: flex; /* Show links when burger is clicked */
+  }
+
+  .language-selector-container,
+  .profile-icon,
+  .responsive-header {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+
+  .navigation-button {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1.05rem;
+  }
+
+  .profile-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr 1fr; /* 2 columns on tablets */
+  }
+
+ 
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    grid-template-columns: 1fr; /* 1 column on mobile */
+  }
+
+  .footer-column-title {
+    font-size: 1rem;
+  }
+  
+  .footer-link,
+  .footer-email {
+    font-size: 0.9rem;
+  }
+}
+
 @media (max-width: 768px) {
   .footer-content {
     gap: 15px; /* Reduce spacing on smaller screens */
@@ -737,3 +851,24 @@
   }
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

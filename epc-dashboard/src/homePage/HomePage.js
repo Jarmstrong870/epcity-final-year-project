@@ -196,6 +196,7 @@ const HomePage = ({ user, language }) => {
       <div className="custom-algorithm-right">
             <h2 className="custom-algorithm-title">
               {t.customAlgorithmTitle}
+            </h2>
 
             <div className="custom-algorithm-subtitle">
               {t.customAlgorithmSubtitle}

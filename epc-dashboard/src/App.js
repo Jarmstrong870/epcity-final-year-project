@@ -43,6 +43,7 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isResponsiveMenuOpen, setResponsiveMenu] = useState(false);
 
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
@@ -69,6 +70,7 @@ function App() {
     setLogoutConfirmVisible(true);
     console.log("button displayed");
   };
+
 
   const popUpMessageStatus = (e, userMessage) => {
     e.preventDefault();
@@ -113,7 +115,11 @@ function App() {
   useEffect(() => {
     if (isHomePage) {
       const handleScroll = () => {
-        setIsScrolled(window.scrollY > 50); // If scrolled more than 50px, change header
+        if(window.scrollY > 50) { // If scrolled more than 50px, change header
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
       };
 
       window.addEventListener("scroll", handleScroll);
@@ -153,13 +159,13 @@ function App() {
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
             </div>
               
-              {isScrolled && (
-                <div className="header-navigation-links">
+              {(isScrolled || isResponsiveMenuOpen) && (
+                <div className={`header-navigation-links ${isResponsiveMenuOpen ? "open" : ""}`}>
                   <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-                  <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
+                  {/*<Link to="/FAQs" className="navigation-button">{t.faqs}</Link>*/}
 
                 {user ? (
-                  <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
+                  <Link to="/favourites" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>{t.favourites}</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
@@ -169,17 +175,17 @@ function App() {
                 )}
 
                 {user ? (
-                  <Link to="/custom-algorithm" className="navigation-button">My Property Finder</Link>
+                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Property Finder</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
                      onClick={(e) => popUpMessageStatus(e, "Please login to use my Property Finder")}
-                  >My Property Finder
+                  >My Perfect Match
                   </a>
                 )}
 
                 {user ? (
-                  <Link to="/messages" className="navigation-button">My Group Chats</Link>
+                  <Link to="/messages" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Group Chats</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
@@ -252,6 +258,7 @@ function App() {
               </div>
             </div>
           </div>
+        </div>
 
           {/* Routes */}
           <Routes>

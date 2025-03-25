@@ -525,7 +525,6 @@ section {
 
 .custom-algorithm-icon {
   width: 100%;
-  width: 80%;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
@@ -607,32 +606,10 @@ section {
   font-size: 1.3rem;
 }
 
-.button {
-  padding: 16px 28px;
-  font-size: 18px;
-  font-weight: bold;
-  color: white;
-  background: linear-gradient(135deg, #3a6b36, #1e4020);
-  border: none;
-  border-radius: 35px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  box-shadow: 0 6px 14px rgba(44, 95, 45, 0.3);
+.custom-algorithm-button {
+  align-items: center;
   text-align: center;
   display: inline-block;
-  margin-top: 5px;
-}
-
-.button:hover {
-  background: linear-gradient(135deg, #1e4020, #163017);
-  transform: scale(1.06);
-  box-shadow: 0 8px 18px rgba(44, 95, 45, 0.4);
-}
-
-.button:active {
-  transform: scale(0.96);
-  box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
 
 .custom-algorithm-button-homepage {
