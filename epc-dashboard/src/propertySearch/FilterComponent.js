@@ -55,7 +55,7 @@ const PropertyFilter = ({ language, setLoading  }) => {
 
     useEffect(() => {
         setLoading(true)
-        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange)
+        fetchProperties(searchQuery, propertyTypes, epcRatings, bedroomRange, city)
             .finally(() => setLoading(false));
 
     }, [propertyTypes, epcRatings, bedroomRange, city]);
