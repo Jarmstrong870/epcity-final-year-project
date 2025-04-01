@@ -36,6 +36,7 @@ import TermsAndConditions from './Components/TermsAndConditions';
 import AboutUs from './aboutUs/aboutus';
 import LandlordDashboard from './login&register/LandlordDashboard';
 import TextToSpeech from './Components/utils/TextToSpeech'; // Import the TextToSpeech component
+import { initGA, trackPageView } from "./utils/analytics"; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -60,6 +61,14 @@ function App() {
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
   };
+  
+  useEffect(() => {
+    initGA();
+  }, []);
+  
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);  
 
   useEffect(() => {
     function handleClickOutside(event) {
