@@ -179,7 +179,9 @@ const PropertyList = ({ user, loading, language }) => {
           ))}
         </div>
       )}
-
+      <div className="pageNumber">
+        Page Number: {page}
+      </div>
       <div className="pagination-container">
         <button
           className="paginationPrevious"

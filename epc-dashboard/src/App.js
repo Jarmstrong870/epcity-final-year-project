@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { useRef } from "react";
 import './App.css';
 import './Components/SearchBar.css';
 import profileIcon from './assets/profileicon.png';
@@ -35,6 +36,7 @@ import AboutUs from './aboutUs/aboutus';
 import CustomAlgorithm from './customAlgorithm/CustomAlgorithm';
 import LandlordDashboard from './login&register/LandlordDashboard';
 import TextToSpeech from './Components/utils/TextToSpeech'; // Import the TextToSpeech component
+import { initGA, trackPageView } from "./utils/analytics"; 
 
 function App() {
   const [user, setUser] = useState(null);
@@ -53,15 +55,46 @@ function App() {
   const [showPopUp, setPopUpStatus] = useState(false);
   const location = useLocation(); // Get current page path
   const isHomePage = location.pathname === "/"; // Check if on home page
-
+  const profileRef = useRef(null);
   const t = translations[language] || translations.en; // Load translations;
+  const dropdownRef = useRef(null);
 
   // Persist language selection in localStorage
   const handleLanguageChange = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem('language', newLanguage);
   };
+  
+  useEffect(() => {
+    initGA();
+  }, []);
+  
+  useEffect(() => {
+    trackPageView(location.pathname + location.search);
+  }, [location]);  
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setDropdownVisible(false);
+    }
+  };
+
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, []); 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible);
   };
@@ -203,8 +236,10 @@ function App() {
                 <LanguageSelector setLanguage={handleLanguageChange} language={language} />
               </div>
 
-              <div className="profile-icon" onClick={toggleDropdown}>
+              <div className="profile-dropdown-wrapper" ref={dropdownRef}>
+              <div className="profile-icon" onClick={() => setDropdownVisible(!dropdownVisible)}>
                 <img src={profileImage} alt="Profile" className="profile-img" />
+              </div>
                 {dropdownVisible && (
                   <div className="dropdown-menu">
                     {user ? (
