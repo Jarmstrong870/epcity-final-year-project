@@ -1,8 +1,11 @@
+try:
+    from Repository.resetPasswordRepo import ResetPasswordRepo  
+except ModuleNotFoundError:
+    from backend.Repository.resetPasswordRepo import ResetPasswordRepo 
 import random
 import string
 from datetime import datetime, timedelta
 from bcrypt import hashpw, gensalt
-from Repository.resetPasswordRepo import ResetPasswordRepo  # Import repository layer
 from mailersend import emails
 import os
 
