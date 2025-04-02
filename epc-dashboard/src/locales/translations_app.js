@@ -9,7 +9,7 @@ const translations = {
     faqs: 'Frequently Asked Questions',
     messages: "Messages",  
     favourites: 'My Favourite Properties',
-    logoutConfirmation: 'Are you sure you want to log out?',
+    logoutConfirmation: 'You have been logged out.',
     yes: 'Yes',
     no: 'No',
     footerAboutUs: 'About Us',

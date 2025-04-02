@@ -169,7 +169,7 @@ function AccountOverview({ user, setUser, setProfileImage, language }) {
 
         {/* Profile Image */}
         <div className="profile-section">
-          <img src={profileImage} alt="Profile" className="profile-image" />
+          <img src={profileImage} alt="Profile" className="icon-profile-image" />
           <div className="file-input-wrapper">
             <button className="custom-file-button">{t.chooseFile}</button>
             <input type="file" accept="image/*" onChange={handleProfileImageChange} />
