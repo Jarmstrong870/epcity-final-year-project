@@ -1,7 +1,7 @@
 const translationsTutorials = {
   en: {
     title: 'Step by Step Tutorials',
-    description: 'Welcome to the Step by Step Tutorials page. Select from',
+    description: 'Discover how to make the most out of EPCity with our detailed step-by-step video guides to find, save and manage properties',
     homePageTutorials: 'Home Page Tutorials',
     propertiesTutorials: 'Properties Tutorials',
     accountTutorials: 'User Account Tutorials',

@@ -43,7 +43,7 @@ const Messages = ({ user, language }) => {
     }
   }, [selectedGroup]);
 
-  const fetchGroups = async () => {
+  const fetchGroups = async () => {   /* Fetch Groups from Database Call Method */
     try {
       const response = await axios.get("http://localhost:5000/get-groups", {
         headers: { "User-Email": user.email },
@@ -76,7 +76,7 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const fetchAllGroupMembers = async (groupId) => {
+  const fetchAllGroupMembers = async (groupId) => {   /* Fetch All Group Members API Call Method */
     if (!groupId) {
       return [];
     }
@@ -97,29 +97,42 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const createGroup = async () => {
-    if (!newGroupName || !groupMembers) return;
+  const createGroup = async (groupName, membersInput) => {   /* Create New Group API Call Method */
+    if (!groupName || !membersInput) return;
+
+    const allMembers = membersInput.split(",").map((email) => email.trim())
 
     try {
       const response = await axios.post(
         "http://localhost:5000/create-group",
         {
-          name: newGroupName,
-          members: groupMembers.split(",").map((email) => email.trim()),
+          name: groupName,
+          members: allMembers,
         },
         {
           headers: { "User-Email": user.email },
         }
       );
-      setGroups([...groups, response.data]);
-      setNewGroupName("");
-      setNewGroupMembers("");
-    } catch (error) {
-      console.error(t.errorCreatingGroup, error);
-    }
+
+      if (response.status === 201 && response.data.group_id) {
+        const newGroup = response.data;
+
+        setGroups((prevGroups) => [...prevGroups, newGroup]);
+        setSelectedGroup(newGroup);
+  
+        setTimeout(() => fetchGroups(), 200);
+  
+        setNewGroupName("");
+        setNewGroupMembers("");
+      } else {
+        console.error("Failure to create group", response.data.error);
+        }
+      } catch (e) {
+        console.error("Unable to create group");
+      }
   };
 
-  const addNewMember = async (groupName, latestUserEmail) => {
+  const addNewMember = async (groupName, latestUserEmail) => {    /* Add Member to Team API Call Method */
     try {
 
           const groupFound = groups.find(group => group.name.toLowerCase() === groupName.toLowerCase());
@@ -145,7 +158,7 @@ const Messages = ({ user, language }) => {
       }
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async () => {   /* Aend Message API Call Method */
     if (!selectedGroup || !messageContent.trim()) {
       setErrorMessage(t.messageEmptyError);
       return;
@@ -180,9 +193,9 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const searchMessage = async () => {
+  const searchMessage = async () => {   /* Search Message API Call Method */
     if (!searchedMessage.trim()) {
-      setErrorMessage(t.messageNotFound); // Prevent empty messages
+      setErrorMessage(t.messageNotFound); // Validation to prevent empty messages
       return;
     }
 
@@ -214,7 +227,7 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const deleteGroup = async (groupId) => {
+  const deleteGroup = async (groupId) => {   /* Delete Group API Call Method */
     const updatedGroups = [];
 
     if (!groupId) 
@@ -246,7 +259,7 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const editGroupName = async (groupId, newGroupName) => {
+  const editGroupName = async (groupId, newGroupName) => {   /* Edit Group Name API Call Method */
     try {
       const response = await axios.put("http://localhost:5000/edit-group-name",
         {
@@ -278,7 +291,7 @@ const Messages = ({ user, language }) => {
     }
   };
 
-  const exitGroup = async (groupId) => {
+  const exitGroup = async (groupId) => {  /* Exit Group API Call Method */ 
     const updatedGroups = [];
 
     try {
@@ -306,13 +319,13 @@ const Messages = ({ user, language }) => {
   };
 
   const confirmationPopUp = async (action, groupId) => {
-    // Reset state before opening the popup
+    // Resets before opening the popup
       setNewGroupName("");
       setNewGroupMembers("");
       setNewUserEmail("");
   
       const actionPopups = {
-        create: {
+        create: {  /* Declaring Create Group Input PopUp */ 
           title: "Create Group",
           popupType: "input",
           userInputs: [
@@ -321,7 +334,7 @@ const Messages = ({ user, language }) => {
           ],
           confirmStatus: (inputValues) => createGroup(inputValues["Group Name"], inputValues["Group Members"])
         },
-        add: {
+        add: {  /* Declaring Add Member to Group Input PopUp */ 
           title: "Add Member to Group",
           popupType: "input",
           userInputs: [
@@ -330,7 +343,7 @@ const Messages = ({ user, language }) => {
           ],
           confirmStatus: (inputValues) => addNewMember(inputValues["User Email"], inputValues["Group Name"])
         },
-        edit: {
+        edit: {  /* Declaring Edit Group Name Input PopUp */ 
           title: "Edit Group Name",
           popupType: "input",
           userInputs: [
@@ -338,19 +351,25 @@ const Messages = ({ user, language }) => {
           ],
           confirmStatus: (inputValues) => editGroupName(groupId, inputValues["New Group Name"])
         },
-        delete: {
+        delete: {  /* Declaring Delete Group Action PopUp */ 
           title: "Delete Group and Data",
           popupType: "action",
           messageContents: "Are you sure you want to delete this group and its data?",
-          confirmStatus: () => deleteGroup(groupId)
+          confirmStatus: async () => {
+            await deleteGroup(groupId);
+            setSelectedGroup(null);
+          }
         },
-        exit: {
-          title: "Leave Group",
+        exit: { /* Declaring Leave Group Action PopUp */ 
+          title: "Leave Group", 
           popupType: "action",
           messageContents: "Are you sure you want to leave this group chat?",
-          confirmStatus: () => exitGroup(groupId)
+          confirmStatus: async () => {
+            await exitGroup(groupId);
+            setSelectedGroup(null);
+          }
         },
-        groupDetails: {
+        groupDetails: {  /* Declaring View All Messages Action PopUp */ 
           title: "View All Group Members",
           popupType: "action",
           confirmStatus: async () => {
@@ -381,7 +400,8 @@ const Messages = ({ user, language }) => {
 
 return (
   <div className="messaging-container">
-    {/* === Sidebar === */}
+    
+    {/* Message Sidebar - including Create Group Button and Available Groups */}
     <div className="sidebar">
       <h2 className="logo">
         {t.groupChats}
@@ -411,13 +431,13 @@ return (
     </div>
 
 
-    {/* === Chat Area === */}
+    {/* Message Chat Area including Input/Action Popups */}
     <div className="chat-area">
 
       {selectedGroup ? (
         <>
           <div className="message-chat-header">
-            <h2 className="message-chat-name">{selectedGroup.name}</h2>
+            <h2 className="message-chat-name">Group Name: {selectedGroup.name}</h2>
             <div className="message-profile-icon" onClick={() => setDropdownMenu(!dropdownMenu)}>
               <h4 className="message-dropdown-icon">{"\u2699"} Settings </h4>
 
@@ -449,7 +469,7 @@ return (
             </div>
           </div>
 
-          {/* === Search Bar === */}
+          {/* Search Bar Area/ Input */}
           <div className="search-message-bar">
             <input
               type="text"
@@ -467,9 +487,9 @@ return (
               }}>
               {"\u274C"} {t.clearSearch}
             </button>
-          </div>
+         
 
-          {/* === Messages List === */}
+          {/* List of Messages in Chat Area */}
           <div className="messages-list">
             {(messagesFound.length > 0 ? messagesFound : messages).map((msg, index) => (
               <div key={index} className={`message-bubble ${msg.sender_id === user.id ? "sent" : "received"}`}>
@@ -490,8 +510,10 @@ return (
               </div>
             ))}
           </div>
+        </div>
 
-          {/* === Chat Input Section === */}
+
+          {/* Chat Bar Input */}
           <div className="chat-input">
             <textarea
               className="input-field"
@@ -504,7 +526,7 @@ return (
             </button>
           </div>
 
-          {/* === Error Message Display === */}
+          {/* Error Message Display */}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
         </>
       ) : (
@@ -514,7 +536,7 @@ return (
       )}
     </div>
 
-    {/* Declaring Input and Action Popup */}
+    {/* inputMessagePopUp declare */}
     {defaultPopUp.openStatus && defaultPopUp.popupType === "input" && (
       <InputMessagePopUp
         openStatus={defaultPopUp.openStatus}
@@ -525,6 +547,7 @@ return (
         submitMessage={t.yesButton}
     /> )}
 
+    {/* actionMessagePopUp declare */}
     {defaultPopUp.openStatus && defaultPopUp.popupType === "action" && (
       <ActionMessagePopUp
         openStatus = {defaultPopUp.openStatus}

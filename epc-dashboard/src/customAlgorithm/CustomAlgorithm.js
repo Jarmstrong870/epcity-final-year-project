@@ -44,6 +44,7 @@ import bungalowImg from "../assets/property types/bungalow.png";
 import houseImg from "../assets/property types/house.png";
 import maisonetteImg from "../assets/property types/maisonette.png";
 import { Maximize } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function CustomAlgorithm({ closePopUp }) {
   // Form states
@@ -59,7 +60,7 @@ function CustomAlgorithm({ closePopUp }) {
   const [recommendations, setRecommendations] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate(); 
   const totalSteps = 6;
   const [currentStep, setCurrentStep] = useState(0);
   const progress = (currentStep / totalSteps) * 100;
@@ -179,7 +180,9 @@ function CustomAlgorithm({ closePopUp }) {
     setCurrentStep((prevStep) => Math.max(prevStep, 6));
   };
 
-
+  const closePopUpBox = () => {
+    navigate('/');
+  }
 
   const reverseEPCMapping = {
     1: 'A',
@@ -242,7 +245,7 @@ function CustomAlgorithm({ closePopUp }) {
       <div className="custom-algorithm-container">
         <div className="custom-algorithm-base">
           <div className="custom-algorithm-close">
-            <button className="cancel-button" onClick={closePopUp}>
+            <button className="cancel-button" onClick={closePopUpBox}>
               {"\u2716"}
             </button>
           </div>

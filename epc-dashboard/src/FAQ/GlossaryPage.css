@@ -11,10 +11,9 @@
 .search-bar-container {
   position: sticky;
   top: 100px; /* Adjusted to ensure it starts below the title and doesn't overlap */
-  background: white;
+  background: transparent;
   padding: 15px;
   z-index: 10;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,7 +34,6 @@
 .search-bar:focus {
   border: 1px solid #2d582c;
   outline: none;
-  box-shadow: 0px 0px 10px rgba(45, 88, 44, 0.3); /* Adjusted the blue to green */
 }
 
 /* Save Options Button */
@@ -129,7 +127,7 @@ h3.glossary {
   font-size: 1.6rem;
   color: #222;
   border-left: 4px solid #2d582c; /* Changed to green */
-  padding-left: 10px;
+  padding-left: 30px;
   margin-bottom: 15px;
   cursor: pointer;
   display: flex;
@@ -139,7 +137,8 @@ h3.glossary {
   padding: 15px;
   transition: background 0.3s, transform 0.2s;
   border-radius: 5px;
-  margin-top: 80px; /* Added margin to separate the title from the top */
+  margin-top: 30px; /* Added margin to separate the title from the top */
+  margin-bottom: 30px;
 }
 
 

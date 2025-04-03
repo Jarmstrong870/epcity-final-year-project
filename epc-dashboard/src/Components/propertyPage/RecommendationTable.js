@@ -8,31 +8,23 @@ const RecommendationTable = ({ property, language }) => {
 
     if(!text_list){
         return(
-            <div>
-                <p>{t.noRecommendations}</p> 
+            <div className="recommendation-base">
+                <p className="no-recommendations-table">{t.noRecommendations}</p> 
             </div>
         );
     }
 
     return (
-        <div className="RecommendationTable">
-            <table className="RecommendationTableStyling">
-                <thead>
-                    <tr>
-                        <th>{t.recommendationDescription}</th> {/* Translated text */}
-                        <th>{t.estimatedCost}</th> {/* Translated text */}
-                    </tr>
-                </thead>
-                <tbody>
+    <div className="recommendation-base">
+        <div className="recommendation-cards">
                     {text_list.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item}</td>
-                            <td>{cost_list[index]}</td>
-                        </tr>
+                        <div className="recommendation-card" key={index}>
+                            <p className="recommendation-description">{item}</p>
+                            <p className="recommendation-cost">{cost_list[index]}</p>
+                        </div>
                     ))}
-                </tbody>
-            </table>
-        </div>
+            </div>
+    </div>
     );
 };
 
