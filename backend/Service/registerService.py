@@ -1,5 +1,10 @@
+try:
+    from Repository.registerRepo import RegisterRepo  # When running app
+except ModuleNotFoundError:
+    from backend.Repository.registerRepo import RegisterRepo  # When running tests
+
+
 from bcrypt import hashpw, gensalt
-from Repository.registerRepo import RegisterRepo
 import requests
 import os
 import random

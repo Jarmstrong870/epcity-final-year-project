@@ -37,6 +37,7 @@ import CustomAlgorithm from './customAlgorithm/CustomAlgorithm';
 import LandlordDashboard from './login&register/LandlordDashboard';
 import TextToSpeech from './Components/utils/TextToSpeech'; // Import the TextToSpeech component
 import { initGA, trackPageView } from "./utils/analytics"; 
+import { initHotjar } from "./utils/hotjar";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -67,6 +68,10 @@ function App() {
   
   useEffect(() => {
     initGA();
+  }, []);
+
+  useEffect(() => {
+    initHotjar();
   }, []);
   
   useEffect(() => {

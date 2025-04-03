@@ -375,7 +375,7 @@
   }
   
 
-.profile-image{
+.icon-profile-image{
     width: 120px !important;
     height: 120px !important;
     border-radius: 50%;
@@ -384,12 +384,12 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.profile-images:hover {
+.icon-profile-images:hover {
     transform: scale(1.05); /* Subtle zoom on hover */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.profile-image-input {
+.icon-profile-image-input {
     display: block;
     font-size: 0.9rem;
     color: #0a2e15;
@@ -401,7 +401,7 @@
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.profile-image-input:hover {
+.icon-profile-image-input:hover {
     background-color: #e6e6e6; /* Slightly darker on hover */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
