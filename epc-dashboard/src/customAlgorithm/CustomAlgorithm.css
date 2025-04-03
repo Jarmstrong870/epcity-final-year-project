@@ -430,6 +430,7 @@
   font-size: 1rem;
   margin-top: 1rem;
   color: #555;
+  position: relative;
 }
 
 .property-cards-container {
