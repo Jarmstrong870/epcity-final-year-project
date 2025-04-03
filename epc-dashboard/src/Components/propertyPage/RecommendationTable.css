@@ -1,13 +1,39 @@
-.RecommendationTable{
+.recommendation-base {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    padding: 2rem 1rem;
 }
 
-.RecommendationTableStyling{
-    width:80%;
-    max-width: 1000px;
-    
+.no-recommendations-table{
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+}
+
+.recommendation-cards {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.recommendation-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.recommendation-description {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.recommendation-cost {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a3b26;
 }

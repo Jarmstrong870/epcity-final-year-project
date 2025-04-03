@@ -30,7 +30,7 @@ section {
   background-image: url('../assets/liverpool.jpeg');
   background-size: cover;
   background-position: center;
-  height: 600px;
+  height: 700px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -298,10 +298,18 @@ section {
 }
 
 .functionality-icon {
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   display: block; 
   margin-bottom: 10px;
 }
+
+.functionality-icon.heart {
+  font-size: 3.5rem;
+  display: block; 
+  margin: 0;
+}
+
+
 
 
 .functionality-content {
@@ -517,7 +525,6 @@ section {
 
 .custom-algorithm-icon {
   width: 100%;
-  width: 80%;
   height: auto;
   border-radius: 12px;
   object-fit: cover;
@@ -599,30 +606,32 @@ section {
   font-size: 1.3rem;
 }
 
-.button {
+.custom-algorithm-button {
+  align-items: center;
+  text-align: center;
+  display: inline-block;
+}
+
+.custom-algorithm-button-homepage {
   padding: 16px 28px;
   font-size: 18px;
   font-weight: bold;
   color: white;
-  background: linear-gradient(135deg, #3a6b36, #1e4020);
   border: none;
   border-radius: 35px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
-  box-shadow: 0 6px 14px rgba(44, 95, 45, 0.3);
   text-align: center;
   display: inline-block;
   margin-top: 5px;
 }
 
-.button:hover {
-  background: linear-gradient(135deg, #1e4020, #163017);
+.custom-algorithm-button-homepage:hover {
   transform: scale(1.06);
-  box-shadow: 0 8px 18px rgba(44, 95, 45, 0.4);
 }
 
-.button:active {
+.custom-algorithm-button-homepage:active {
   transform: scale(0.96);
   box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
 }
@@ -638,7 +647,7 @@ section {
 
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  
+  background-color: #ffffff;
   position: relative;
   overflow: hidden;
 }
@@ -650,7 +659,6 @@ section {
   text-align: center;
   margin-bottom: 15px;
   text-transform: uppercase;
-  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 

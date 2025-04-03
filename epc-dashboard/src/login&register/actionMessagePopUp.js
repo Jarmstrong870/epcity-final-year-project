@@ -4,6 +4,14 @@ import "./actionMessagePopUp.css";
 const ActionMessagePopUp = ({ openStatus, title, messageContents, closeStatus, submitStatus, submitMessage }) => {
   if (!openStatus) return null;
 
+  const handleSubmit = () => {
+    if(submitStatus) {
+      submitStatus();
+    }
+      closeStatus(); // Close and reset
+  };
+
+
   return (
    <div className="action-popup-base">
         <div className="action-popup-container">
@@ -15,7 +23,7 @@ const ActionMessagePopUp = ({ openStatus, title, messageContents, closeStatus, s
             <div className="action-popup-buttons">
                 <button className="action-cancel-popup-button" onClick={closeStatus}>Cancel</button>
                 {submitStatus && (
-                <button className="action-submit-popup-button" onClick={submitStatus}>{submitMessage || "Yes"}</button>
+                <button className="action-submit-popup-button" onClick={handleSubmit}>{submitMessage || "Yes"}</button>
                 )}
             </div>
         </div>

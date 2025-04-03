@@ -46,16 +46,6 @@ const CitySection = ({ language }) => {
           </div>
         ))}
       </div>
-
-      <div className="about-us-button-block">
-        <h2 className="about-us-button-header"> {"\u{1F4A1}"} {t.unsureWhereToStart}</h2>
-        <p className="about-us-paragraph">
-          {t.viewAllPropertiesText}
-          <button className="about-us-page-button" onClick={() => navigate("/about-us")}>
-            {t.visitAboutUsPage}
-          </button>
-        </p>
-      </div>
     </div>
   );
 };

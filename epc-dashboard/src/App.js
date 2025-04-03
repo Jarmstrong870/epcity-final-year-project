@@ -31,9 +31,9 @@ import ComparePage from './Components/ComparePage';
 import PrivacyPolicy from './Components/PrivacyPolicy';
 import AdminDashboard from './login&register/AdminDashboard'; 
 import { useLocation } from "react-router-dom"; // Import to detect current page
-import Aboutus from './aboutUs/aboutus';
 import TermsAndConditions from './Components/TermsAndConditions';
 import AboutUs from './aboutUs/aboutus';
+import CustomAlgorithm from './customAlgorithm/CustomAlgorithm';
 import LandlordDashboard from './login&register/LandlordDashboard';
 import TextToSpeech from './Components/utils/TextToSpeech'; // Import the TextToSpeech component
 import { initGA, trackPageView } from "./utils/analytics"; 
@@ -46,11 +46,14 @@ function App() {
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isResponsiveMenuOpen, setResponsiveMenu] = useState(false);
 
   // Initialize language from localStorage or default to 'en'
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [popUpMessage, setPopUpMessage] = useState("");
+  const [showPopUp, setPopUpStatus] = useState(false);
   const location = useLocation(); // Get current page path
   const isHomePage = location.pathname === "/"; // Check if on home page
   const profileRef = useRef(null);
@@ -106,6 +109,14 @@ useEffect(() => {
     console.log("button displayed");
   };
 
+
+  const popUpMessageStatus = (e, userMessage) => {
+    e.preventDefault();
+    setPopUpMessage(userMessage);
+    setPopUpStatus(true);
+    setTimeout(() => setPopUpStatus(false), 3000);
+  };
+
   const handleLogout = () => {
     setUser(null);
     setProfileImage(profileIcon);
@@ -142,7 +153,11 @@ useEffect(() => {
   useEffect(() => {
     if (isHomePage) {
       const handleScroll = () => {
-        setIsScrolled(window.scrollY > 50); // If scrolled more than 50px, change header
+        if(window.scrollY > 50) { // If scrolled more than 50px, change header
+          setIsScrolled(true);
+        } else {
+          setIsScrolled(false);
+        }
       };
 
       window.addEventListener("scroll", handleScroll);
@@ -169,17 +184,56 @@ useEffect(() => {
               </div>
             </div>
           )}
-          <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
-            <div className={`logo-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
-              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>      
-              {isScrolled && (
-                <div className="header-navigation-links">
-                  <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
-                  <Link to="/FAQs" className="navigation-button">{t.faqs}</Link>
-                  <Link to="/favourites" className="navigation-button">{t.favourites}</Link>
-                </div>
-              )}
+
+          {showPopUp && (
+            <div className="popupMessage">
+              {popUpMessage}
             </div>
+          )}
+          
+          <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
+            <div className="header-base">
+            <div className="logo-container">
+              <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
+            </div>
+              
+              {(isScrolled || isResponsiveMenuOpen) && (
+                <div className={`header-navigation-links ${isResponsiveMenuOpen ? "open" : ""}`}>
+                  <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
+                  {/*<Link to="/FAQs" className="navigation-button">{t.faqs}</Link>*/}
+
+                {user ? (
+                  <Link to="/favourites" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>{t.favourites}</Link>
+                ) : (
+                  <a href = "#" 
+                     className="navigation-button" 
+                     onClick={(e) => popUpMessageStatus(e, "Please login to view My Favourites")}
+                  >{t.favourites}
+                  </a>
+                )}
+
+                {user ? (
+                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Property Finder</Link>
+                ) : (
+                  <a href = "#" 
+                     className="navigation-button" 
+                     onClick={(e) => popUpMessageStatus(e, "Please login to use my Property Finder")}
+                  >My Perfect Match
+                  </a>
+                )}
+
+                {user ? (
+                  <Link to="/messages" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Group Chats</Link>
+                ) : (
+                  <a href = "#" 
+                     className="navigation-button" 
+                     onClick={(e) => popUpMessageStatus(e, "Please login to use My Group Chats")}
+                  >My Group Chats
+                  </a>
+                )}  
+              </div>
+            )}
+            
           
             <div className="header-right">
               {/* Add TextToSpeech toggle button here before language selector */}
@@ -244,6 +298,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
+        </div>
 
           {/* Routes */}
           <Routes>
@@ -275,6 +330,7 @@ useEffect(() => {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/landlord-dashboard" element={<LandlordDashboard user={user}/>} />
             <Route path="/terms" element={<TermsAndConditions />} />
+            <Route path="/custom-algorithm" element={<CustomAlgorithm />} />
           </Routes>
 
           {/* Footer */}

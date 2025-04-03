@@ -211,7 +211,7 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
 
       {isLandlord ? (
         <div className="Recommendation-Table">
-          <h3>{t.efficiencyRecommendations}</h3> {/* Added translation */}
+          <h3 className="section-header">{t.efficiencyRecommendations}</h3> {/* Added translation */}
           <RecommendationTable property={propertyData} />
         </div>
       ) : (

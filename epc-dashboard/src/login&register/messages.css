@@ -1,10 +1,9 @@
 .messaging-container {
   display: flex;
-  height: auto;
   width: 100%;
   font-family: "Poppins", sans-serif;
   color: #444;
-  overflow: hidden;
+  max-height: 80%;
 }
 
 /* ====== Sidebar ====== */
@@ -16,6 +15,7 @@
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
+  max-height: 80%; /* Increase height slightly */
 }
 
 .sidebar .logo {
@@ -67,24 +67,22 @@
 /* ====== Chat Area ====== */
 .chat-area {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   background: #ffffff;
-  box-sizing: border-box;
   padding: 15px;
+  height: 60%;
 }
 
 .messages-list {
-  flex: 1;
-  max-height: 450px; /* Increase height slightly */
-  overflow-y: auto;
+  display: flex;
+  max-height: 25%; /* Increase height slightly */
   padding: 10px;
   background: #eef1f5;
-  display: flex;
   flex-direction: column;
   gap: 8px;
   border-radius: 8px;
+  border: 3px solid #dadada;
 }
+
 
 /* Scrollbar styling */
 .messages-list::-webkit-scrollbar {
@@ -97,12 +95,12 @@
 }
 
 .messages-list::-webkit-scrollbar-thumb {
-  background: #007aff;
+  background: #929292;
   border-radius: 8px;
 }
 
 .messages-list::-webkit-scrollbar-thumb:hover {
-  background: #005ecb;
+  background: #969696;
 }
 
 
@@ -196,15 +194,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 12px;
-  background: #ffffff;
-  border-top: 1px solid #e2e2e2;
+  border: 1px solid transparent;
+  margin-top: 20px;
   border-radius: 8px;
   position: sticky;
   bottom: 0;
-  width: 100%;
+  width: 99%;
   z-index: 10;
   height: 45px; 
-  box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.05); 
 }
 
 
@@ -213,7 +210,7 @@
   resize: none;
   padding: 8px 12px; 
   border-radius: 20px; 
-  border: 1px solid #ccc;
+  border: 3px solid #ccc;
   font-size: 0.9rem; 
   font-family: "Poppins", sans-serif; 
   background: #f9f9f9;
@@ -233,9 +230,8 @@
 .send-button {
   min-width: 50px;
   padding: 6px 10px;
-  height: 34px;
   background: #007aff;
-  border: none;
+  border: 3px solid #007aff;
   border-radius: 20px;
   color: #ffffff;
   font-weight: bold;
@@ -251,8 +247,7 @@
 }
 
 .send-button-icon {
-  font-size: 18px;
-  vertical-align: middle;
+  font-size: 20px;
 }
 
 /* ====== No Chat Selected ====== */
@@ -270,14 +265,11 @@
 
 /* ====== Search Bar ====== */
 .search-message-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 10px;
-  margin-bottom: 10px;
   background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  text-align: flex-start;
 }
 
 .search-input-field {
@@ -289,6 +281,8 @@
   font-size: 1rem;
   background: #f7f7f7;
   transition: box-shadow 0.2s ease-in-out;
+  width: 80%;
+  margin-bottom: 20px;
 }
 
 .search-input-field:focus {
@@ -301,8 +295,7 @@
   background: #007aff;
   color: white;
   border: none;
-  padding: 8px 12px;
-  margin-left: 5px;
+  padding: 6px 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
@@ -366,9 +359,8 @@
   color: #1f2e2d;
   padding: 8px 0;
   margin-bottom: 10px;
-  border-bottom: 2px solid #007aff;
+  border-bottom: 2px solid #1f2e2d;
   text-transform: capitalize;
-  text-decoration: none !important;
 }
 
 .message-chat-name:hover {
@@ -396,6 +388,125 @@
 
 .icon-border {
   font-size: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  /* Sidebar should be smaller or collapsible */
+  .sidebar {
+    width: 250px;  /* Slightly narrower sidebar */
+  }
+
+  /* Adjust the Chat Area */
+  .chat-area {
+    padding: 10px; /* Reduce padding */
+  }
+
+  /* Group List font size */
+  .group-name {
+    font-size: 0.9rem; /* Smaller font for group names */
+  }
+
+  /* Message Bubbles font size */
+  .message-bubble {
+    font-size: 0.85rem; /* Reduce font size of messages */
+  }
+
+  /* Search bar padding */
+  .search-message-bar {
+    padding: 8px; /* Reduce padding */
+  }
+
+  /* Adjust Button Sizes */
+  .send-button, .search-button, .clear-search-button {
+    font-size: 0.9rem;  /* Slightly smaller buttons */
+    padding: 8px 10px;
+  }
+}
+
+/* Mobile Devices (Less than 768px wide) */
+@media (max-width: 768px) {
+  /* Stack Sidebar and Chat Area vertically */
+  .messaging-container {
+    flex-direction: column;
+  }
+
+  /* Sidebar should be hidden or collapsible on mobile */
+  .sidebar {
+    width: 100%;  /* Full width on mobile */
+    display: none;  /* Hide sidebar by default */
+  }
+
+  /* Chat area width should occupy full screen */
+  .chat-area {
+    width: 100%;
+  }
+
+  /* Show a toggle button for the sidebar */
+  .sidebar-toggle-button {
+    display: block;
+    background: #007aff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Group List and message font adjustments */
+  .group-item {
+    font-size: 0.9rem;  /* Slightly smaller font */
+  }
+
+  /* Adjust input field and message bubbles on mobile */
+  .input-field {
+    font-size: 0.85rem;  /* Smaller input field */
+  }
+
+  .message-bubble {
+    font-size: 0.8rem; /* Smaller message bubbles */
+  }
+
+  /* Adjust Button Sizes */
+  .send-button, .search-button, .clear-search-button {
+    font-size: 0.85rem;
+    padding: 6px 8px;
+  }
+}
+
+/* Additional Adjustments for Very Small Screens (Phones and Small Tablets) */
+@media (max-width: 480px) {
+  /* Hide certain elements if needed */
+  .message-chat-name {
+    font-size: 1.2rem; /* Smaller font size for group name */
+  }
+
+  /* Reduce message bubble width */
+  .message-bubble {
+    width: 100%; /* Full width for message bubbles */
+  }
+
+  /* Adjust chat input section */
+  .chat-input {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px;
+  }
+
+  /* Adjust the buttons inside chat input */
+  .send-button {
+    font-size: 0.8rem;
+    width: 100%; /* Full width */
+  }
+
+  /* Adjust profile image */
+  .profile-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Adjust text in group list */
+  .group-name {
+    font-size: 0.85rem; /* Even smaller font on very small screens */
+  }
 }
 
 

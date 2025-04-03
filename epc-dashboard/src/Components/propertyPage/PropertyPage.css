@@ -106,6 +106,18 @@
   flex: 1;
 }
 
+.section-header {
+  font-size: 1.8rem; /* Large and eye-catching */
+    font-weight: bold;
+    color: #2c5f2d; /* Darker shade for contrast */
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow for depth */
+    letter-spacing: 1px; /* Slight spacing for readability */
+    padding-bottom: 10px;
+    border-bottom: 3px solid #2c5f2d; /* Underline effect */
+}
+
 .map-view-section {
   background-color: white; /* Change background color to white */
   border-radius: 10px; /* Rounded corners */
