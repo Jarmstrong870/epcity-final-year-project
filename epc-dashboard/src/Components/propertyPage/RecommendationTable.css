@@ -4,36 +4,48 @@
     padding: 2rem 1rem;
 }
 
-.no-recommendations-table{
-    font-size: 1.1rem;
-    color: #666;
-    text-align: center;
-}
-
-.recommendation-cards {
-    display: flex;
-    flex-direction: row;
+.recommendation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    max-width: 800px;
+    max-width: 1000px;
     width: 100%;
 }
 
 .recommendation-card {
-    background: #ffffff;
-    border-radius: 12px;
+    background: #fff;
+    border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.recommendation-description {
-    font-size: 1rem;
+.recommendation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.card-text {
+    font-size: 1.3rem;
     color: #333;
     margin-bottom: 1rem;
-    line-height: 1.5;
+    font-weight: 700;
+    line-height: 1.4;
 }
 
-.recommendation-cost {
+
+.estimated-title {
     font-size: 1.25rem;
+    font-weight: 500;
+    color: #004d26; /* Deep green */
+    font-style: italic;
+}
+
+.estimated-cost {
+    font-size: 1.55rem;
     font-weight: 700;
-    color: #1a3b26;
+    color: #004d26; /* Deep green */
 }

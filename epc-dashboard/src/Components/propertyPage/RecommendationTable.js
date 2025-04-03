@@ -15,15 +15,18 @@ const RecommendationTable = ({ property, language }) => {
     }
 
     return (
-    <div className="recommendation-base">
-        <div className="recommendation-cards">
-                    {text_list.map((item, index) => (
-                        <div className="recommendation-card" key={index}>
-                            <p className="recommendation-description">{item}</p>
-                            <p className="recommendation-cost">{cost_list[index]}</p>
-                        </div>
-                    ))}
-            </div>
+        <div className="recommendation-base">
+        <div className="recommendation-grid">
+            {text_list.map((item, index) => (
+                <div className="recommendation-card" key={index}>
+                    <div className="card-text">{"\u{1F527}"} {item}</div>
+                    <div>
+                        <p className="estimated-title">Estimated Cost: </p>
+                        <p className="estimated-cost"> {cost_list[index]}</p>
+                    </div>
+                </div>
+            ))}
+        </div>
     </div>
     );
 };
