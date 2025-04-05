@@ -165,7 +165,7 @@ const PropertyList = ({ user, loading, language }) => {
         <div className="property-cards-container">
           {properties.map((property, index) => (
             <div key={index} className="property-card">
-              <PropertyCard property={property} language={language} />
+              <PropertyCard user={user} property={property} language={language} />
               <div className="compare-checkbox">
                 <label>
                   <input
