@@ -31,6 +31,22 @@
 
 }
 
+.burger-icon {
+  display: none;
+  font-size: 2.2rem;
+  color: rgb(255, 255, 255);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.left-positioning {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 /* Header Container */
 .header-container {
   display: flex;
@@ -837,6 +853,26 @@
 
   .footer-socials a {
     font-size: 1rem; /* Adjust icon size */
+  }
+
+  .burger-icon {
+    display: block;
+  }
+
+  .header-navigation-links {
+    display: none;
+    flex-direction: column;
+    background-color: #1a2e2d;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    z-index: 1100;
+  }
+
+  .header-navigation-links.open {
+    display: flex;
   }
 }
 

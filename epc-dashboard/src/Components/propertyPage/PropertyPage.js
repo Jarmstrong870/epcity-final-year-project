@@ -137,7 +137,8 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
           <div className="property-text">
             <div className='property-header-top'>
               <h2 className="property-title">
-                <span>{propertyData?.address || "Address not available"}, {propertyData?.local_authority_label || "N/A"}, {propertyData?.postcode || "N/A"}</span> <FavouriteStar user={user} property={propertyData} />
+                <span>{propertyData?.address || "Address not available"}, {propertyData?.local_authority_label || "N/A"}, {propertyData?.postcode || "N/A"}</span> 
+                <FavouriteStar user={user} property={propertyData} />
               </h2>
               <div onClick={() => setIsModalOpen(true)} className="send-to-group-chat-button">
                 📩 {t.sendToGroupChat} {/* Added translation */}

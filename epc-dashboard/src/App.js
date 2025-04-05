@@ -155,6 +155,7 @@ useEffect(() => {
       const handleScroll = () => {
         if(window.scrollY > 50) { // If scrolled more than 50px, change header
           setIsScrolled(true);
+         
         } else {
           setIsScrolled(false);
         }
@@ -167,7 +168,7 @@ useEffect(() => {
     } else {
       setIsScrolled(true); // Keep the header dark on all other pages
     }
-  }, [isHomePage]);
+  }, []);
 
   return (
     <PropertyProvider>
@@ -193,11 +194,18 @@ useEffect(() => {
           
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className="header-base">
+              <div className="left-positioning">
             <div className="logo-container">
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
             </div>
+
+            <button className="burger-icon" 
+                onClick={() => setResponsiveMenu(prev => !prev)}
+                aria-label='Toggle Main Menu'>
+                  {isResponsiveMenuOpen ? '\u2715' : '\u2630'}
+            </button>
+          </div>
               
-              {(isScrolled || isResponsiveMenuOpen) && (
                 <div className={`header-navigation-links ${isResponsiveMenuOpen ? "open" : ""}`}>
                   <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
                   {/*<Link to="/FAQs" className="navigation-button">{t.faqs}</Link>*/}
@@ -232,8 +240,6 @@ useEffect(() => {
                   </a>
                 )}  
               </div>
-            )}
-            
           
             <div className="header-right">
               {/* Add TextToSpeech toggle button here before language selector */}

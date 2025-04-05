@@ -148,6 +148,7 @@ const PropertyList = ({ user, loading, language }) => {
                     user={user}
                     property={property}
                   />
+                  User Object: {user}
                 </td>
                 <td className="compare-checkbox">
                   <input

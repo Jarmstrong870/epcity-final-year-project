@@ -72,5 +72,5 @@ class GroupChatService:
     @staticmethod
     def add_new_member(group_id, user_email):
         """ Searching for a term within group chat messages """
-        return GroupChatRepo.search_group_message(group_id, user_email)
+        return GroupChatRepo.add_new_member(group_id, user_email)
 
