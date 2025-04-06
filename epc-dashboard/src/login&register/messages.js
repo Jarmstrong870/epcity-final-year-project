@@ -145,7 +145,7 @@ const Messages = ({ user, language }) => {
          const newUser = await axios.post("http://localhost:5000/add-new-member",
           {
             group_id: groupFound.group_id,
-            user_email: latestUserEmail
+            user_email: latestUserEmail,
           });
 
           if (newUser.status === 200) {
@@ -341,7 +341,7 @@ const Messages = ({ user, language }) => {
             { label: "User Email", placeholder: "Enter User Email", value: "", onChange: setNewUserEmail },
             { label: "Group Name", placeholder: "Enter Group Name", value: "", onChange: setNewGroupName }
           ],
-          confirmStatus: (inputValues) => addNewMember(inputValues["User Email"], inputValues["Group Name"])
+          confirmStatus: (inputValues) => addNewMember(inputValues["Group Name"], inputValues["User Email"])
         },
         edit: {  /* Declaring Edit Group Name Input PopUp */ 
           title: "Edit Group Name",

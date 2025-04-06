@@ -40,23 +40,80 @@ const Checklist = ({ language }) => {
 
   const downloadingChecklist = () => {
     const checklistDocument = new jsPDF();
-    checklistDocument.setFontSize(14);
-    checklistDocument.text(t.pdfTitle, 12, 12);
+    const pageMargin = 20;
+    let currentY = 30;
+
+    // Title
+    checklistDocument.setFont("helvetica", "bold");
+    checklistDocument.setFontSize(20);
+    checklistDocument.setTextColor(26, 46, 45); // #1a2e2d
+    checklistDocument.text(t.pdfTitle, 105, currentY, { align: "center" });
+
+    // Subtitle line
+    checklistDocument.setDrawColor(26, 46, 45);
+    checklistDocument.setLineWidth(0.8);
+    checklistDocument.line(pageMargin, currentY + 5, 190, currentY + 5);
+    currentY += 15;
+
     checklistDocument.setFontSize(12);
-    checklist.forEach((listItem, index) => {
-      checklistDocument.text(
-        `[${listItem.checkBox ? 'X' : ' '}] ${listItem.description}`,
-        10,
-        20 + index * 10
-      );
+    checklistDocument.setFont("helvetica", "normal");
+
+    const categories = [
+      t.categories.propertyConditions,
+      t.categories.tenancyDocuments,
+      t.categories.studentFinances
+    ];
+
+    categories.forEach((category) => {
+      // Category Heading
+      checklistDocument.setFont("helvetica", "bold");
+      checklistDocument.setFontSize(14);
+      checklistDocument.setTextColor(26, 46, 45); // header color
+      checklistDocument.text(category, pageMargin, currentY);
+      currentY += 10;
+
+      // Checklist Items
+      checklist
+        .filter(item => item.categories === category)
+        .forEach(item => {
+          const checkbox = item.checkBox ? "[X]" : "[ ]";
+          const color = item.checkBox ? [34, 139, 34] : [50, 50, 50]; // green or black
+
+          checklistDocument.setFont("helvetica", "normal");
+          checklistDocument.setFontSize(12);
+          checklistDocument.setTextColor(...color);
+
+          const line = `${checkbox} ${item.description}`;
+          const wrappedLines = checklistDocument.splitTextToSize(line, 170);
+
+          wrappedLines.forEach(line => {
+            checklistDocument.text(line, pageMargin + 5, currentY);
+            currentY += 8;
+
+            // New page if overflow
+            if (currentY > 270) {
+              checklistDocument.addPage();
+              currentY = 30;
+            }
+          });
+
+          currentY += 2; // spacing after item
+        });
+
+      currentY += 8; // spacing after section
     });
+
+  // Footer
+    checklistDocument.setFontSize(10);
+    checklistDocument.setTextColor(150, 150, 150);
+    checklistDocument.text("Generated via EPCity Checklist Tool", pageMargin, 290);
     checklistDocument.save('Student_Property_Checklist.pdf');
   };
 
   return (
     <div className="checklist-main">
       <h1 className="checklist-header">{t.title}</h1>
-      <p>{t.description}</p>
+      <p className="checklist-p">{t.description}</p>
 
       <div className="checklist-groupings">
         {[
