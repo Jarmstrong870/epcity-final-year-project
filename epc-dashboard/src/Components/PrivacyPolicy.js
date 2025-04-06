@@ -49,7 +49,7 @@ const PrivacyPolicy = ({ language }) => {
           {"Your privacy is our top focus."}
         <p>
           {
-            "We employ industry standard security measures to safeguard your personal information against unauthorized access, loss or misuse."
+            "We employ industry standard security measures to comply with GDPR regulations and safeguard your personal information against unauthorized access, loss or misuse."
           }
         </p>
         </p>

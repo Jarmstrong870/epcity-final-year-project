@@ -20,18 +20,27 @@ const TermsAndConditions = () => {
         <h2>2. User Responsibilities</h2>
         <p>By using EPCity, you agree that:</p>
         <ul>
-          <li>You will provide accurate and lawful information when registering an account.</li>
-          <li>You will not use our platform for fraudulent or illegal activities.</li>
-          <li>You will not engage in harmful behaviour such as hacking, spamming, or misusing property listings.</li>
-          <li>You are responsible for safeguarding your login credentials.</li>
+          <li><strong>1.</strong> You will provide accurate and lawful information when registering an account.</li>
+          <li><strong>2.</strong> You will not use our platform for fraudulent or illegal activities.</li>
+          <li><strong>3.</strong> You will not engage in harmful behaviour such as hacking, spamming, or misusing property listings.</li>
+          <li><strong>4.</strong> You are responsible for safeguarding your login credentials.</li>
         </ul>
 
         <h2>3. Property Listings & Accuracy</h2>
         <p>
           While we strive to provide accurate property data, EPCity does not guarantee the 
-          completeness, reliability, or accuracy of property listings. Property details 
-          are provided by third parties, and users should conduct independent research 
-          before making decisions.
+          completeness, reliability, or accuracy of property listings.
+        </p>
+        <p>
+          Property details provided by third parties including: 
+        </p>
+        <ul>
+          <li><strong>1. EPC Open Data Communities</strong></li>
+          <li><strong>2. Google Maps API</strong></li>
+          <li><strong>3.Office of National Statistics</strong> </li>
+        </ul>
+        <p>
+          Users should ensure they conduct independent research before making final decisions.
         </p>
 
         <h2>4. Third-Party Services</h2>
