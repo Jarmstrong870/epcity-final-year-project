@@ -52,6 +52,7 @@ function App() {
   const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'en');
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
   const [popUpMessage, setPopUpMessage] = useState("");
   const [showPopUp, setPopUpStatus] = useState(false);
   const location = useLocation(); // Get current page path
@@ -151,23 +152,26 @@ useEffect(() => {
   }, [user]);
 
   useEffect(() => {
-    if (isHomePage) {
-      const handleScroll = () => {
-        if(window.scrollY > 50) { // If scrolled more than 50px, change header
-          setIsScrolled(true);
-        } else {
-          setIsScrolled(false);
-        }
+    const handleResize = () => {
+        setIsDesktop(window.innerWidth > 768);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50);
       };
 
       window.addEventListener("scroll", handleScroll);
       return () => {
         window.removeEventListener("scroll", handleScroll);
       };
-    } else {
-      setIsScrolled(true); // Keep the header dark on all other pages
-    }
-  }, [isHomePage]);
+  }, []);
 
   return (
     <PropertyProvider>
@@ -193,12 +197,19 @@ useEffect(() => {
           
           <div className={`header-container ${isHomePage ? (isScrolled ? "scrolled" : "transparent") : "scrolled"}`}>
             <div className="header-base">
+              <div className="left-positioning">
             <div className="logo-container">
               <Link to="/"><img src={epcLogo} alt="EPCity Logo" className="logo-img" /></Link>
             </div>
+
+            <button className="burger-icon" 
+                onClick={() => setResponsiveMenu(prev => !prev)}
+                aria-label='Toggle Main Menu'>
+                  {isResponsiveMenuOpen ? '\u2715' : '\u2630'}
+            </button>
+          </div>
               
-              {(isScrolled || isResponsiveMenuOpen) && (
-                <div className={`header-navigation-links ${isResponsiveMenuOpen ? "open" : ""}`}>
+                <div className={`header-navigation-links ${ isDesktop ? (isScrolled ? "open" : "") : (isResponsiveMenuOpen ? "open" : "")}`}>
                   <Link to="/propertylist" className="navigation-button">{t.viewAllProperties}</Link>
                   {/*<Link to="/FAQs" className="navigation-button">{t.faqs}</Link>*/}
 
@@ -213,11 +224,11 @@ useEffect(() => {
                 )}
 
                 {user ? (
-                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Property Finder</Link>
+                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Perfect Match</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
-                     onClick={(e) => popUpMessageStatus(e, "Please login to use my Property Finder")}
+                     onClick={(e) => popUpMessageStatus(e, "Please login to find your Perfect Match")}
                   >My Perfect Match
                   </a>
                 )}
@@ -232,8 +243,6 @@ useEffect(() => {
                   </a>
                 )}  
               </div>
-            )}
-            
           
             <div className="header-right">
               {/* Add TextToSpeech toggle button here before language selector */}

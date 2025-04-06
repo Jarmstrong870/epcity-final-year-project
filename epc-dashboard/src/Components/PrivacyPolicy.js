@@ -9,7 +9,7 @@ const PrivacyPolicy = ({ language }) => {
   return (
     <div className="privacy-policy-container">
       {/* EPCity Logo */}
-      <img src={epcLogo} alt="EPCity Logo" className="epc-logo" />
+      <img src={epcLogo} alt="EPCity Logo" className="privacy-epc-logo" />
 
       <h1>{t.footerPrivacyPolicy}</h1>
 
@@ -17,7 +17,7 @@ const PrivacyPolicy = ({ language }) => {
         <h2>{t.dataCollection || "Data Collection"}</h2>
         <p>
           {t.dataCollectionContent ||
-            "We collect personal information such as your name, email address, and property preferences when you register on our platform."}
+            "To help personalise your experience, we collect personal information including your name, email address, and property preferences when you register on our platform."}
         </p>
       </section>
 
@@ -33,23 +33,36 @@ const PrivacyPolicy = ({ language }) => {
         <h2>{t.thirdPartySharing || "Third-Party Sharing"}</h2>
         <p>
           {t.thirdPartySharingContent ||
-            "We do not share your personal data with third parties without your consent, except where required by law."}
+            "We do not share your personal data with third parties without your consent unless it is necessary to devlier our services or required by law."}
+        <p>
+            {
+              "All third-party partners are subject to strict confidentiality obligations."
+            }
         </p>
+          
+      </p>
       </section>
 
       <section>
         <h2>{t.dataProtection || "Data Protection"}</h2>
         <p>
-          {t.dataProtectionContent ||
-            "We employ strong security measures to protect your personal information from unauthorized access."}
+          {"Your privacy is our top focus."}
+        <p>
+          {
+            "We employ industry standard security measures to comply with GDPR regulations and safeguard your personal information against unauthorized access, loss or misuse."
+          }
+        </p>
         </p>
       </section>
 
       <section>
         <h2>{t.contactUs || "Contact Us"}</h2>
         <p>
-          {t.contactUsContent ||
-            "If you have any questions regarding this privacy policy, please contact us at support@epcity.com."}
+           If you have any questions or concerns regarding our privacy practices, please reach out to us at <strong>support@epcity.com</strong>
+        </p>
+
+        <p>
+           Here at EPCity, we are happy to help!
         </p>
       </section>
     </div>
