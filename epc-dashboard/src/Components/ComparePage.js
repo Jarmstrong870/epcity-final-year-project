@@ -59,14 +59,14 @@ const ComparePage = ({ language }) => {
           property.address,
           property.postcode,
           GOOGLE_MAPS_API_KEY,
-          () => {},
+          MAPBOX_KEY,
+          () => {}, // coords ignored here
           (streetViewURL) => {
             setStreetViewURLs((prev) => ({
               ...prev,
               [property.uprn]: streetViewURL,
             }));
-          },
-          () => {}
+          }
         );
       });
     } catch (error) {
