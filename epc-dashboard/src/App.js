@@ -224,22 +224,22 @@ useEffect(() => {
                 )}
 
                 {user ? (
-                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Perfect Match</Link>
+                  <Link to="/custom-algorithm" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>{t.perfectMatch}</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
                      onClick={(e) => popUpMessageStatus(e, "Please login to find your Perfect Match")}
-                  >My Perfect Match
+                  >{t.perfectMatch}
                   </a>
                 )}
 
                 {user ? (
-                  <Link to="/messages" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>My Group Chats</Link>
+                  <Link to="/messages" className="navigation-button" onClick = {() => setResponsiveMenu(false)}>{t.groupChats}</Link>
                 ) : (
                   <a href = "#" 
                      className="navigation-button" 
                      onClick={(e) => popUpMessageStatus(e, "Please login to use My Group Chats")}
-                  >My Group Chats
+                  >{t.groupChats}
                   </a>
                 )}  
               </div>
