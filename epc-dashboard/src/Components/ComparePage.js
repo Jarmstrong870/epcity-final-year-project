@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import StreetView from "./propertyPage/StreetView";
 import PropertyInfoDropdown from "./PropertyInfoDropdown";
 import EstimatedCosts from "./subDropdowns/EstimatedCosts"; 
 import { fetchLocationCoords } from "./propertyPage/propertyUtils";
@@ -21,6 +20,7 @@ const ComparePage = ({ language }) => {
   const [streetViewURLs, setStreetViewURLs] = useState({});
 
   const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const MAPBOX_KEY = process.env.REACT_APP_MAPBOX_API_KEY;
   const t = translations[language] || translations.en;
 
   useEffect(() => {
@@ -59,14 +59,14 @@ const ComparePage = ({ language }) => {
           property.address,
           property.postcode,
           GOOGLE_MAPS_API_KEY,
-          () => {},
+          MAPBOX_KEY,
+          () => {}, // coords ignored here
           (streetViewURL) => {
             setStreetViewURLs((prev) => ({
               ...prev,
               [property.uprn]: streetViewURL,
             }));
-          },
-          () => {}
+          }
         );
       });
     } catch (error) {
@@ -79,14 +79,12 @@ const ComparePage = ({ language }) => {
 
   return (
     <div className="compare-container">
-      {/* Back to Properties link */}
       <div className="compare-header">
         <button className="back-to-properties" onClick={() => navigate(-1)}>
           ← {t.backToProperties || "Back to Properties"}
         </button>
       </div>
 
-      {/* Display loading, error, or property details */}
       {loading ? (
         <p>{t.loading}</p>
       ) : error ? (
@@ -96,17 +94,23 @@ const ComparePage = ({ language }) => {
           <div className="property-grid">
             {propertyDetails.map((property) => (
               <div key={property.uprn} className="property-column">
-                {/* Property Image */}
-                <div className="property-image">
-                  {streetViewURLs[property.uprn] ? (
-                    <StreetView streetViewURL={streetViewURLs[property.uprn]} errorMessage="" />
-                  ) : (
-                    <img
-                      src={property.image_url || "/default-image.jpg"}
-                      alt={`${t.propertyAt} ${property.address}`}
-                    />
-                  )}
-                </div>
+                <Link to={`/property/${property.uprn}`}>
+                  <div className="property-image">
+                    {streetViewURLs[property.uprn] ? (
+                      <img
+                        src={streetViewURLs[property.uprn]}
+                        alt={`Street View of ${property.address}`}
+                        className="property-image"
+                      />
+                    ) : (
+                      <img
+                        src={property.image_url || "/default-image.jpg"}
+                        alt={`${t.propertyAt} ${property.address}`}
+                        className="property-image"
+                      />
+                    )}
+                  </div>
+                </Link>
 
                 <div className="property-info">
                   <p>
@@ -154,14 +158,12 @@ const ComparePage = ({ language }) => {
                     </strong>
                   </p>
 
-                  {/* EPC Information Dropdown */}
                   <PropertyInfoDropdown property={property} allProperties={propertyDetails} language={language} />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* 🔹 New Estimated Costs Section */}
           <div className="estimated-costs-section">
             {propertyDetails.map((property) => (
               <div key={property.uprn} className="estimated-costs-card">
@@ -175,7 +177,6 @@ const ComparePage = ({ language }) => {
             ))}
           </div>
 
-          {/* Graph Section */}
           <div className="graph-section">
             <ComparePropertiesGraph properties={propertyDetails} maxValues={maxValues} language={language} />
           </div>
