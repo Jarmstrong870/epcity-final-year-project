@@ -1,6 +1,6 @@
 // utils.js
 
-export const fetchPropertyDetails = async (uprn, setPropertyData, setLoading) => {
+export const fetchPropertyDetails = async (uprn, setPropertyData, setErrorMessage, setLoading) => {
   try {
     const response = await fetch(
       `http://127.0.0.1:5000/api/property/getInfo?uprn=${encodeURIComponent(uprn)}`
@@ -13,10 +13,11 @@ export const fetchPropertyDetails = async (uprn, setPropertyData, setLoading) =>
       setPropertyData(data[0]);
       console.log("Available Property Data:", Object.keys(data[0]));
     } else {
-      console.warn('No property data available.');
+      setErrorMessage('No property data available.');
     }
   } catch (error) {
     console.error('Error fetching property data:', error);
+    setErrorMessage('Failed to fetch property details.');
   } finally {
     setLoading(false);
   }
@@ -28,7 +29,8 @@ export const fetchLocationCoords = async (
   googleMapsApiKey,
   mapboxApiKey,
   setLocationCoords,
-  setStreetViewURL
+  setStreetViewURL,
+  setErrorMessage
 ) => {
   try {
     const cleanedAddress = fullAddress
@@ -38,6 +40,7 @@ export const fetchLocationCoords = async (
 
     const sanitizedAddress = `${cleanedAddress}, ${postcode}`.replace(/,+/g, ',').trim();
 
+    // --- MAPBOX GEOCODING (now used always to match card view) ---
     const mapboxRes = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
         sanitizedAddress
@@ -53,16 +56,17 @@ export const fetchLocationCoords = async (
       const streetViewURL = `https://maps.googleapis.com/maps/api/streetview?size=800x800&location=${lat},${lng}&fov=90&heading=235&pitch=10&key=${googleMapsApiKey}`;
       setStreetViewURL(streetViewURL);
     } else {
-      console.warn("Mapbox failed to find the location.");
+      setErrorMessage("Mapbox failed to find the location.");
       setStreetViewURL("");
     }
   } catch (error) {
     console.error("Geocoding failed:", error);
+    setErrorMessage("Failed to fetch location data.");
     setStreetViewURL("");
   }
 };
 
-export const fetchGraphData = async (numberOfBedrooms, postcode, setGraphData) => {
+export const fetchGraphData = async (numberOfBedrooms, postcode, setGraphData, setErrorMessage) => {
   try {
     const response = await fetch(
       `http://127.0.0.1:5000/api/property/graph?num_bedrooms=${numberOfBedrooms}&postcode=${postcode}`
@@ -72,9 +76,10 @@ export const fetchGraphData = async (numberOfBedrooms, postcode, setGraphData) =
     if (data && data.length > 0) {
       setGraphData(data);
     } else {
-      console.warn('No graph data available.');
+      setErrorMessage('No graph data available.');
     }
   } catch (error) {
     console.error('Failed to fetch graph data:', error);
+    setErrorMessage('Failed to fetch graph data.');
   }
 };
