@@ -27,10 +27,12 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-  const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
   const [isFavourited, setIsFavourited] = useState(false);
   const [isLandlord, setIsLandlord] = useState(false);
+
+  const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+  const mapboxApiKey = process.env.REACT_APP_MAPBOX_API_KEY;
+  const { isLoaded } = useJsApiLoader({ googleMapsApiKey });
 
   const t = translations[language] || translations.en;
 
@@ -54,6 +56,7 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
         propertyData.address,
         propertyData.postcode,
         googleMapsApiKey,
+        mapboxApiKey,
         (coords) => {
           console.log("[Geocoding] Coordinates found:", coords);
           setLocationCoords(coords);
@@ -200,6 +203,7 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
           <SimpleMapView
             locationCoords={locationCoords}
             isLoaded={isLoaded}
+            mapboxApiKey={mapboxApiKey}
             errorMessage={errorMessage}
             address={propertyData.address}
             postcode={propertyData.postcode}
@@ -235,7 +239,13 @@ const PropertyPage = ({ user, property, language = 'en' }) => {
         <div className="map-view-header">
           <h3>{t.nearbyLocations}</h3>
         </div>
-        <MapView locationCoords={locationCoords} isLoaded={isLoaded} errorMessage={errorMessage} language={language} />
+        <MapView
+          locationCoords={locationCoords}
+          isLoaded={isLoaded}
+          mapboxApiKey={mapboxApiKey}
+          errorMessage={errorMessage}
+          language={language}
+        />
       </div>
     </div>
   );
