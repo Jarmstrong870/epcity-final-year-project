@@ -31,7 +31,10 @@ const translations = {
     shortTagline: 'Find your perfect place with EPCity.',
     navigation: 'Navigation',
     companyInfo: 'Company',
+    groupChats: 'My Group Chats',
+  perfectMatch: 'My Perfect Match',
     stayConnected: 'Stay Connected'
+    
   },
   fr: {
     login: 'Connexion',
@@ -65,6 +68,8 @@ const translations = {
     shortTagline: 'Trouvez votre endroit parfait avec EPCity.',
     navigation: 'Navigation',
     companyInfo: 'Entreprise',
+    groupChats: 'Mes Groupes de Discussion',
+    perfectMatch: 'Ma Correspondance Parfaite',
     stayConnected: 'Restez Connecté'
   },
   es: {
@@ -99,6 +104,8 @@ const translations = {
     shortTagline: 'Encuentra tu lugar perfecto con EPCity.',
     navigation: 'Navegación',
     companyInfo: 'Compañía',
+    groupChats: 'Mis Grupos de Chat',
+  perfectMatch: 'Mi Pareja Perfecta',
     stayConnected: 'Mantente Conectado'
   },
   pl: {
@@ -133,6 +140,8 @@ const translations = {
     shortTagline: 'Znajdź swoje idealne miejsce z EPCity.',
     navigation: 'Nawigacja',
     companyInfo: 'Firma',
+    groupChats: 'Moje Czat Grupy',
+  perfectMatch: 'Moje Idealne Dopasowanie',
     stayConnected: 'Pozostań w kontakcie'
   },
   zh: {
@@ -167,6 +176,8 @@ const translations = {
     shortTagline: '在EPCity找到您的完美地方。',
     navigation: '导航',
     companyInfo: '公司',
+    groupChats: '我的群聊',
+  perfectMatch: '我的完美匹配',
     stayConnected: '保持联系'
   }
 };
