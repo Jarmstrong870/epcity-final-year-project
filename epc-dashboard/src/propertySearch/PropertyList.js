@@ -18,7 +18,7 @@ const PropertyList = ({ user, loading, language }) => {
   const { properties, getNewPage, sortProperties, page } = useContext(PropertyContext);
   const [sortValue, setSortValue] = useState("sort_by");
   const [sortOrder, setSortOrder] = useState("order");
-  const expectedPageSize = 10;
+  const expectedPageSize = 30;
   
   useEffect(() => {
 

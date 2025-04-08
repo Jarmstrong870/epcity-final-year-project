@@ -303,7 +303,7 @@ def get_data_from_db(property_types=None, energy_ratings=None, search=None, min_
             query += f" ORDER BY {sort_by} {order.lower()}"
 
         # Pagination
-        per_page = 10
+        per_page = 30
         offset = (page - 1) * per_page
         query += " LIMIT %s OFFSET %s"
         params.extend([per_page, offset])

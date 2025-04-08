@@ -20,7 +20,7 @@ body {
 .cityDropDown{
     width: 22%;
 }
-/* 🔹 Base Container for Filtering */
+/* Base Container for Filtering */
 .filterSection {
     /* padding: 40px 20px; */
     padding-bottom: 10px;
@@ -52,7 +52,7 @@ body {
     gap: 10px;
 }
 
-/* 🔹 Filter Title Buttons */
+/* Filter Title Buttons */
 .filterTitleButton {
     flex: 1;
     width: 31%;
@@ -76,7 +76,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* 🔹 Expandable Filter Sections */
+/* Expandable Filter Sections */
 .filterBox {
     width: 97%;
     margin-left: 1.5%;
@@ -104,7 +104,7 @@ body {
     padding: 10px;
 }
 
-/* 🔹 Checkboxes and Labels */
+/* Checkboxes and Labels */
 .checkboxContainer {
     padding-left: 5%;
     padding-right: 5%;
@@ -136,11 +136,12 @@ body {
 .bedroomRangeLabel{
     color: white;
     margin-top: -2%;
-    margin-bottom: -1%;
+    margin-bottom: 1%;
 }
 .bedroomSliderContainer{
     margin-left: 20px;
     width: 30%;
+    padding-top: 0.5%;
 }
 
 input[type="checkbox"] {
@@ -200,7 +201,7 @@ input[type="checkbox"]:checked::after {
 
 
 
-/* 🔹 Bedroom Slider */
+/* Bedroom Slider */
 .bedroomSlider {
     width: 100%;
     accent-color: #ffffff;
@@ -250,7 +251,7 @@ input[type="checkbox"]:checked::after {
     box-shadow: 0px 0px 8px rgba(245, 166, 35, 0.5);
 }
 
-/* 🔹 Search Button */
+/* Search Button */
 .searchButton {
     background: #ffffff;
     color: #1a2e2d;
@@ -270,7 +271,7 @@ input[type="checkbox"]:checked::after {
     box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* 🔹 Responsive Design */
+/* Responsive Design */
 @media (max-width:  768px) {
     .filtersContainer {
         flex-direction: column;
@@ -279,6 +280,7 @@ input[type="checkbox"]:checked::after {
     .bedroomSliderContainer{
         margin-left: 0px;
         width: 100%;
+        padding-top: 0.5%;
     }
     .dropdown{
         width:100%
