@@ -32,17 +32,17 @@ Unlike traditional property platforms, EPCity focuses on financial impact, susta
 
 ## Setup & Installation
 
-**Clone the Repository**
+**Clone the Repository**  
 bash  
 git clone https://gitlab-se.eeecs.qub.ac.uk/CSC3032-2425/CSC3032-2425-TEAM4.git    
 cd CSC3032-2425-TEAM4  
 
-**Frontend**
+**Frontend**  
 cd epc-dashboard  
 npm install  
 npm run start  
 
-**Backend**
+**Backend**  
 cd backend  
 pip install -r requirements.txt  
 python main.py  
@@ -53,11 +53,11 @@ python main.py
 Create a .env file within the epc-dashboard and backend folders with the following key names.  
 Refer to the project's Gitlab CI/CD variables for the keys.  
 
-**Frontend**
+**Frontend**  
 REACT_APP_GOOGLE_MAPS_API_KEY  
 REACT_APP_MAPBOX_API_KEY  
 
-**Backend**
+**Backend**  
 EPC_API_KEY  
 SUPABASE_URL  
 SUPABASE_KEY  
@@ -80,16 +80,16 @@ Custom SQL functions for favouriting
 
 
 ## Testing & CI/CD
-**pytest for backend unit testing**
+**pytest for backend unit testing**  
 Navigate to the Controller/Service/Repository test folder within the terminal  
 pytest command: python -m pytest test_file  
 
-**Cypress for frontend E2E testing**
+**Cypress for frontend E2E testing**  
 Navigate to epc-dashboard in the terminal  
 cypress command: npx cypress open  
 Select E2E Testing  
 Choose a browser  
-Click on desired test 
+Click on desired test  
 
 **Peer code reviews were carried out using Gitlab Merge Requests**
 
