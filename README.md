@@ -89,6 +89,15 @@ Navigate to epc-dashboard in the terminal
 cypress command: npx cypress open  
 Select E2E Testing  
 Choose a browser  
-Click on desired test  
+Click on desired test 
 
 **Peer code reviews were carried out using Gitlab Merge Requests**
+
+
+## Contributors
+This application was developed as part of a university dissertation project by:  
+Jack Armstrong  
+Erin Harvey  
+Carl Kennedy  
+John McAtamney  
+Matthew Moore  
