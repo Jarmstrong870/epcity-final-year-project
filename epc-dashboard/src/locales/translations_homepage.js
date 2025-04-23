@@ -59,8 +59,8 @@ const translations = {
   },
 
   fr: {
-    welcomeMessage: "Bienvenue à Liverpool",
-    subMessage: "Il est temps de trouver un endroit que vous pouvez appeler chez vous.",
+    welcomeMessage: "EPCity – Découvrez votre logement",
+    subMessage: "Réduisez les coûts, pas le confort – Trouvez un logement économe",
     searchPlaceholder: "Rechercher des propriétés...",
     searchButton: "Rechercher",
     functionalityHeader: "Vos Ressources Essentielles pour Trouver une Propriété",
@@ -118,7 +118,7 @@ const translations = {
   },
 
   es: {
-    welcomeMessage: "Bienvenido a EPCity",
+    welcomeMessage: "EPCity – Infórmate sobre tu vivienda",
     subMessage: "Reduce costos, no comodidad: encuentra una propiedad eficiente",
     searchPlaceholder: "Buscar propiedades...",
     searchButton: "Buscar",
@@ -177,7 +177,7 @@ const translations = {
   },
 
   pl: {
-    welcomeMessage: "Witamy w EPCity",
+    welcomeMessage: "EPCity – Dowiedz się więcej o swojej nieruchomości",
     subMessage: "Obniż koszty, nie komfort – znajdź efektywną nieruchomość",
     searchPlaceholder: "Szukaj nieruchomości...",
     searchButton: "Szukaj",
@@ -236,7 +236,7 @@ const translations = {
   },
 
   zh: {
-    welcomeMessage: "欢迎来到 EPCity",
+    welcomeMessage: "EPCity – 了解您的房产信息",
     subMessage: "节省成本，不牺牲舒适——寻找高效物业",
     searchPlaceholder: "搜索物业...",
     searchButton: "搜索",
