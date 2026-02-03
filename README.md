@@ -97,7 +97,7 @@ Click on desired test
 ## Contributors
 This application was developed as part of a university dissertation project by:  
 Jack Armstrong  
-Erin Harvey  
-Carl Kennedy  
-John McAtamney  
-Matthew Moore  
+E H  
+C K 
+J McA 
+M M 
