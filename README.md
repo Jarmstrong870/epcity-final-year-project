@@ -34,8 +34,8 @@ Unlike traditional property platforms, EPCity focuses on financial impact, susta
 
 **Clone the Repository**  
 bash  
-git clone https://gitlab-se.eeecs.qub.ac.uk/CSC3032-2425/CSC3032-2425-TEAM4.git    
-cd CSC3032-2425-TEAM4  
+git clone https://github.com/Jarmstrong870/epcity-final-year-project.git  
+cd epcity-final-year-project  
 
 **Frontend**  
 cd epc-dashboard  
@@ -49,9 +49,33 @@ python main.py
 
 
 ## Environment Variables
+Create a .env file in both the epc-dashboard and backend folders using the variable names below.
+Security note: real credentials are not included in this repository. To run the project locally, you will need to create your own API keys / services.
 
-Create a .env file within the epc-dashboard and backend folders with the following key names.  
-Refer to the project's Gitlab CI/CD variables for the keys.  
+**What you need to create**
+
+**Google Maps API key (Frontend)**
+Create a Google Cloud project, enable the required Google Maps APIs (e.g., Maps JavaScript / Places / Directions depending on your usage), and generate an API key.
+Used for: map display, geocoding/address search, route planning.
+Mapbox API key (Frontend)
+Create a Mapbox account and generate an access token.
+Used as a fallback mapping provider.
+
+**EPC API key (Backend)**
+Register for an API key for the UK EPC / Open Data Communities EPC data source used by this project.
+Used for: retrieving EPC certificate data.
+
+**Supabase project (Backend)**
+Create a Supabase project and obtain the project URL and API key (anon/service role depending on implementation).
+Used for: storage (e.g., images) and any Supabase-backed functionality used by the backend.
+
+**PostgreSQL database credentials (Backend)**
+Create a PostgreSQL database (AWS RDS recommended to match the original setup, but local PostgreSQL can also be used).
+Used for: application data storage (users, properties, favourites, groups, etc.).
+
+**MailerSend API key (Backend)**
+Create a MailerSend account and generate an API key.
+Used for: OTP / account emails.
 
 **Frontend**  
 REACT_APP_GOOGLE_MAPS_API_KEY  
